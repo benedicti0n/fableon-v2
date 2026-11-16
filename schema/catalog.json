@@ -114,7 +114,18 @@
           "facing": 180,
           "description": "The mango tree in the courtyard.",
           "view": 178,
-          "context": "world:palace.mango canopy"
+          "box": [
+            -16.4,
+            1.62,
+            43.6,
+            -11.6,
+            9.27,
+            48.4
+          ],
+          "ids": [
+            "world:palace.mango trunk",
+            "world:palace.mango canopy"
+          ]
         },
         {
           "name": "tree",
@@ -126,7 +137,18 @@
           "facing": 180,
           "description": "The mango tree in the courtyard.",
           "view": 178,
-          "context": "world:palace.mango canopy"
+          "box": [
+            -16.4,
+            1.62,
+            43.6,
+            -11.6,
+            9.27,
+            48.4
+          ],
+          "ids": [
+            "world:palace.mango trunk",
+            "world:palace.mango canopy"
+          ]
         },
         {
           "name": "plate",
@@ -459,7 +481,18 @@
           ],
           "facing": 180,
           "description": "The lacquer house building.",
-          "view": 180
+          "view": 180,
+          "box": [
+            -170,
+            1.5,
+            55,
+            -150,
+            12,
+            85
+          ],
+          "ids": [
+            "world:lac.lacquer house"
+          ]
         }
       ]
     },
@@ -501,7 +534,18 @@
           ],
           "facing": 180,
           "description": "The giant bow on its stand.",
-          "view": 166
+          "view": 166,
+          "box": [
+            162.2,
+            1.65,
+            65.4,
+            165.8,
+            3.1,
+            66.6
+          ],
+          "ids": [
+            "bigBow"
+          ]
         },
         {
           "name": "bowstand",
@@ -512,7 +556,18 @@
           ],
           "facing": 180,
           "description": "The giant bow and its stand.",
-          "view": 166
+          "view": 166,
+          "box": [
+            162.2,
+            1.65,
+            65.4,
+            165.8,
+            3.1,
+            66.6
+          ],
+          "ids": [
+            "bigBow"
+          ]
         },
         {
           "name": "pole",
@@ -523,7 +578,18 @@
           ],
           "facing": 180,
           "description": "The target pole at the arena centre.",
-          "view": 166
+          "view": 166,
+          "box": [
+            169.7,
+            1.5,
+            69.7,
+            170.3,
+            18.9,
+            70.3
+          ],
+          "ids": [
+            "world:arena.target pole"
+          ]
         },
         {
           "name": "target",
@@ -534,7 +600,18 @@
           ],
           "facing": 180,
           "description": "The target at the top of the contest pole.",
-          "view": 172
+          "view": 172,
+          "box": [
+            169.7,
+            17.4,
+            69.7,
+            170.3,
+            18.9,
+            70.3
+          ],
+          "ids": [
+            "world:arena.target pole"
+          ]
         },
         {
           "name": "seats",
@@ -642,7 +719,18 @@
           ],
           "facing": 180,
           "description": "The edge of the Khandava forest.",
-          "view": 180
+          "view": 180,
+          "box": [
+            20,
+            1.5,
+            -240,
+            60,
+            16,
+            -200
+          ],
+          "ids": [
+            "world:city.forest canopy"
+          ]
         },
         {
           "name": "palace",

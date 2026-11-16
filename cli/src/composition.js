@@ -8,8 +8,10 @@ export const BANDS = {
   full: { metric: 'body', min: 0.30, max: 0.85, floor: 0.30 },        // head-to-feet / frame
   wide: { metric: 'body', min: 0.15, max: 0.50, floor: 0.10 },        // primary 15-50, other >=10
   establishing: { metric: 'body', min: 0.05, max: 2.00, floor: 0.05 },
-  insert: { metric: 'body', min: 0.30, max: 0.85, floor: 0.30 },
+  insert: { metric: 'fill', min: 0.55, max: 0.90, floor: 0.55 },
 };
+// Per-class medians from the reference film (2E calibration; recomputed after the label fix in F5).
+export const TARGETS = { close: 0.27, medium: 0.17, full: 0.34, wide: 0.24, insert: 0.725 };
 export const HIDDEN_FRACTION = 0.60;      // subject visible pixels / solo pixels
 export const CONTEXT_AREA = 0.02;         // `with` item minimum frame area
 export const CONTEXT_VISIBLE = 0.40;      // `with` item minimum visible fraction

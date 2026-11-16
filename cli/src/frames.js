@@ -300,11 +300,32 @@ export function checkFrames(dirArg, opts = {}) {
 
 function keyForProjection(k, f, start) { return { ...k, pos: k.pos, look: k.look }; }
 
+const findMark = (ctx, id) => {
+  const raw = String(id).startsWith('mark:') ? String(id).slice(5) : String(id);
+  const [set, name] = raw.includes('.') ? [raw.split('.')[0], raw.split('.').slice(1).join('.')] : [null, raw];
+  for (const s of ctx.catalog.sets) {
+    if (set && s.name !== set) continue;
+    const m = s.marks?.find((x) => x.name === name); if (m) return { set: s.name, ...m };
+  }
+  return null;
+};
 const normalizeWith = (id, ctx) => {
-  if (String(id).startsWith('mark:')) id = String(id).slice(5);
-  const hit = ctx.catalog.sets.flatMap((s) => s.marks.map((m) => ({ set: s.name, m }))).find((x) => `${x.set}.${x.m.name}` === id);
-  if (hit) return hit.m.context ?? `mark:${id}`;
-  return id;
+  const mark = findMark(ctx, id); if (mark?.ids?.length) return mark.ids;
+  return mark ? `mark:${mark.set}.${mark.name}` : id;
+};
+const withGroups = (id, ctx) => {
+  const mark = findMark(ctx, id); if (mark?.ids?.length) return { id, ids: mark.ids, box: mark.box };
+  return { id, ids: [normalizeWith(id, ctx)], box: mark?.box };
+};
+const projectBoxFill = (ctx, k, box, f) => {
+  if (!box) return 0;
+  const pos = pointAt(ctx, k.pos, f), look = pointAt(ctx, k.look, f), b = basis(pos, look, k.roll ?? 0);
+  let x0 = 1, y0 = 1, x1 = 0, y1 = 0;
+  for (const x of [box[0], box[3]]) for (const y of [box[1], box[4]]) for (const z of [box[2], box[5]]) {
+    const q = project([x, y, z], b, pos, k.fov ?? 40); if (!q) continue;
+    x0 = Math.min(x0, q.u); x1 = Math.max(x1, q.u); y0 = Math.min(y0, q.v); y1 = Math.max(y1, q.v);
+  }
+  return Math.max(x1 - x0, y1 - y0);
 };
 const talkAt = (actor, f, start, ctx) => {
   let talk = actor.talk;
@@ -367,12 +388,13 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       if (k.cut && (k.move === 'glide' || k.move === 'crane' || k.glide !== undefined)) { const code = k.semantic ? preErrors : preWarnings; code.push({ shot: shot.id, key: ki, frame: kf, subject: k.subjects?.[0] ?? '-', code: 'glide with cut', message: 'glide/crane cannot be combined with cut', fix: FIX.glideCut }); }
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? crossfade / 2 : 0;
       const frames = sampleKeyFrames(k, kf, end, xf);
-      const withIds = (k.with ?? []).map((id) => normalizeWith(id, ctx));
+      const withSpecs = (k.with ?? []).map((id) => withGroups(id, ctx));
+      const withIds = [...new Set(withSpecs.flatMap((x) => x.ids))];
       const edgeIds = (shot.actors ?? []).map((a) => a.id ?? a.who).filter((id) => !(k.subjects ?? []).includes(id) && id !== k.over);
       for (const f of frames) {
         const idx = jobs.length;
         jobs.push({ frame: f, subjects: k.subjects ?? [], over: k.over ?? null, with: withIds, edge: edgeIds });
-        keyMeta.push({ si, ki, shot, shotId: shot.id, k, start, kf, end, f, idx, with: withIds, edge: edgeIds });
+        keyMeta.push({ si, ki, shot, shotId: shot.id, k, start, kf, end, f, idx, with: withSpecs, withIds, edge: edgeIds });
       }
     });
   }
@@ -408,7 +430,12 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       const add = (list, code, id, message, fix = '') => list.push({ shot: m.shotId, key: m.ki, frame: m.f, subject: id, code, message, fix });
       const sev = k.semantic ? 'error' : 'warning';
       const push = (code, id, message, fix) => add(sev === 'error' ? errors : warnings, code, id, message, fix);
-      if (primary && metric !== null) {
+      const markBox = primary ? findMark(ctx, primary)?.box : null;
+      if (primary && size === 'insert' && markBox) {
+        const fill = projectBoxFill(ctx, keyForProjection(k, m.f, m.start), markBox, m.f);
+        if (fill < band.min) push('subject too small', primary, `subject too small ${primary}: insert fill ${(fill * 100).toFixed(0)}% below ${(band.min * 100).toFixed(0)}%`, FIX.tooSmall);
+        else if (fill > band.max) push('subject too large', primary, `subject too large ${primary}: insert fill ${(fill * 100).toFixed(0)}% above ${(band.max * 100).toFixed(0)}%`, FIX.tooLarge);
+      } else if (primary && metric !== null) {
         if (metric < band.min) push('subject too small', primary, `subject too small ${primary}: ${(metric * 100).toFixed(0)}% below ${size} floor ${(band.min * 100).toFixed(0)}%`, FIX.tooSmall);
         else if (metric > band.max) push('subject too large', primary, `subject too large ${primary}: ${(metric * 100).toFixed(0)}% above ${size} ceiling ${(band.max * 100).toFixed(0)}%`, FIX.tooLarge);
       }
@@ -472,13 +499,14 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           if (id.distance < nearest - 0.05 && (area > BLOCKER_AREA || (area > BLOCKER_MIN_AREA && primary && overlap(id.bbox, primaryStat?.bbox) > BLOCKER_OVERLAP))) push('blocker', id.id, `blocker ${id.id}: fills ${(area * 100).toFixed(0)}% in front of ${primary}`, FIX.blocker);
         }
       }
-      for (const id of m.with) {
-        const stat = idsById.get(id), vis = r.subjects?.[id] ?? 0;
-        if (!stat || stat.pixels / (180 * 320) < CONTEXT_AREA || vis < CONTEXT_VISIBLE) push('context missing', id, `context missing ${id}: ${stat ? (stat.pixels / (180 * 320) * 100).toFixed(1) + '% area, ' : ''}${(vis * 100).toFixed(0)}% visible`, FIX.context);
+      for (const group of m.with ?? []) {
+        let pixels = 0, vis = 0, any = false;
+        for (const id of group.ids) { const stat = idsById.get(id); if (stat) { any = true; pixels += stat.pixels; vis = Math.max(vis, r.subjects?.[id] ?? 0); } }
+        if (!any || pixels / (180 * 320) < CONTEXT_AREA || vis < CONTEXT_VISIBLE) push('context missing', group.id, `context missing ${group.id}: ${(pixels / (180 * 320) * 100).toFixed(1)}% area, ${(vis * 100).toFixed(0)}% visible`, FIX.context);
       }
       if (primary && (size === 'wide' || size === 'establishing')) {
         for (const bg of r.ids ?? []) {
-          if (subjects.includes(bg.id) || bg.id === k.over || (m.with ?? []).includes(bg.id)) continue;
+          if (subjects.includes(bg.id) || bg.id === k.over || (m.withIds ?? []).includes(bg.id)) continue;
           const area = bg.pixels / (180 * 320);
           const isBg = ['sky', 'ground', 'water'].includes(bg.id) || /wall|arcade/i.test(bg.id);
           if (isBg && area > FLAT_WIDE_AREA) push('flat wide', bg.id, `flat wide: ${bg.id} fills ${(area * 100).toFixed(0)}% of the frame`, FIX.flat);
@@ -506,14 +534,14 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           if ((stat?.pixels ?? 0) / (180 * 320) < SPEAKER_AREA && !k.reaction) add(warnings, 'speaker off-screen', id, `speaker off-screen ${id}: talking but <4% of frame`, FIX.speaker);
         }
       }
-      rows.push({ shot: m.shotId, key: m.ki, frame: m.f, size, primary, primaryHeight: metric === null ? null : +(metric * 100).toFixed(1), visible: primary ? r.subjects?.[primary] ?? 0 : null, eye: ppl ? +(ppl.eye.y * 100).toFixed(1) : null, subjects: subjects.map((id) => ({ id, height: +( (band.metric === 'head' ? Math.max(0, (peopleById.get(id)?.headBox.y1 ?? 0) - (peopleById.get(id)?.headBox.y0 ?? 0)) : Math.max(0, (idsById.get(id)?.bbox.y1 ?? 0) - (idsById.get(id)?.bbox.y0 ?? 0))) * 100).toFixed(1), visible: r.subjects?.[id] ?? 0, headBox: peopleById.get(id)?.headBox ?? null, eye: peopleById.get(id)?.eye ?? null })), blockers: (r.ids ?? []).filter((x) => !subjects.includes(x.id) && !['sky', 'ground', 'water'].includes(x.id) && x.distance < (nearest ?? Infinity)).map((x) => x.id), context: m.with.map((id) => ({ id, pixels: idsById.get(id)?.pixels ?? 0, visible: r.subjects?.[id] ?? 0 })) });
+      rows.push({ shot: m.shotId, key: m.ki, frame: m.f, size, primary, primaryHeight: metric === null ? null : +(metric * 100).toFixed(1), visible: primary ? r.subjects?.[primary] ?? 0 : null, eye: ppl ? +(ppl.eye.y * 100).toFixed(1) : null, subjects: subjects.map((id) => ({ id, height: +( (band.metric === 'head' ? Math.max(0, (peopleById.get(id)?.headBox.y1 ?? 0) - (peopleById.get(id)?.headBox.y0 ?? 0)) : Math.max(0, (idsById.get(id)?.bbox.y1 ?? 0) - (idsById.get(id)?.bbox.y0 ?? 0))) * 100).toFixed(1), visible: r.subjects?.[id] ?? 0, headBox: peopleById.get(id)?.headBox ?? null, eye: peopleById.get(id)?.eye ?? null })), blockers: (r.ids ?? []).filter((x) => !subjects.includes(x.id) && !['sky', 'ground', 'water'].includes(x.id) && x.distance < (nearest ?? Infinity)).map((x) => x.id), context: (m.with ?? []).map((g) => ({ id: g.id, pixels: g.ids.reduce((n, id) => n + (idsById.get(id)?.pixels ?? 0), 0), visible: Math.max(...g.ids.map((id) => r.subjects?.[id] ?? 0)) })) });
     }
     // rebuild key rows grouped from per-frame rows
     const keyRows = [];
     for (const [kid, meta] of byKey) {
       const frameRows = rows.filter((r) => r.shot === meta.shotId && r.key === meta.ki);
       const first = frameRows[0];
-      keyRows.push({ shot: meta.shotId, key: meta.ki, anchor: meta.k.at, size: first?.size, primary: first?.primary, frames: [...new Set(meta.frames)].sort((a, b) => a - b), subjects: first?.subjects ?? [], errors: errors.filter((e) => e.shot === meta.shotId && e.key === meta.ki), warnings: warnings.filter((w) => w.shot === meta.shotId && w.key === meta.ki) });
+      keyRows.push({ shot: meta.shotId, key: meta.ki, anchor: meta.k.at, size: first?.size, primary: first?.primary, frames: [...new Set(meta.frames)].sort((a, b) => a - b), subjects: first?.subjects ?? [], context: first?.context ?? [], errors: errors.filter((e) => e.shot === meta.shotId && e.key === meta.ki), warnings: warnings.filter((w) => w.shot === meta.shotId && w.key === meta.ki) });
     }
     const flat = [...byKey.values()].map((meta) => {
       const first = rows.find((r) => r.shot === meta.shotId && r.key === meta.ki);

@@ -48,14 +48,19 @@ const flatten = (ids, groups, out = []) => {
 
 const setInfo = (catalog, set) => catalog.sets.find((s) => s.name === set);
 
-const markPos = (name, sets, catalog) => {
+const markInfo = (name, sets, catalog) => {
   const [a, b] = String(name).includes('.') ? String(name).split('.', 2) : [null, String(name)];
   const candidates = b === null ? sets : [a, ...sets.filter((s) => s !== a)];
   for (const set of candidates) {
     const info = setInfo(catalog, set);
     const mark = info?.marks?.find((m) => m.name === b);
-    if (mark) return mark.pos;
+    if (mark) return mark;
   }
+  return null;
+};
+const markPos = (name, sets, catalog) => {
+  const mark = markInfo(name, sets, catalog);
+  if (mark) return mark.pos;
   if (catalog.places[name]) return catalog.places[name];
   throw new Error(`unknown mark "${name}" (sets: ${sets.join(', ') || 'none'})`);
 };
@@ -404,8 +409,9 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
     const samples = Array.from({ length: Math.max(1, Math.ceil((keyEnd - keyStart) / 6)) }, (_, i) => motionAt(setp.motion, Math.min(keyEnd - 1, keyStart + i * 6), setp.pos ? pointAt(setp.pos, keyStart + i * 6, ctx) : [0, 0, 0], ctx));
     return { kind: 'setPiece', id, moveId: id, pos: p, samples, measure: { standing: 0.8, seated: 0.8, eye: 0.4, eyeSeated: 0.4, head: 0.3, halfWidth: 0.8 }, scale: 1, seated: false };
   }
-  const p = markPos(id, shot.sets ?? [], ctx.catalog);
-  return { kind: 'mark', id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false, view: markViewOf(id, shot.sets ?? [], ctx.catalog) };
+  const info = markInfo(id, shot.sets ?? [], ctx.catalog);
+  const p = info?.pos ?? markPos(id, shot.sets ?? [], ctx.catalog);
+  return { kind: 'mark', id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false, view: markViewOf(id, shot.sets ?? [], ctx.catalog), ...(info?.box ? { box: info.box, ids: info.ids } : {}) };
 };
 
 const lookPointFor = (id, out, keyStart, keyEnd, ctx, shot) => {
@@ -520,7 +526,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       if (k.cut && (k.move === 'glide' || k.move === 'crane' || k.glide !== undefined)) throw new Error(`shot ${shot.id} key ${ki}: glide/crane cannot be combined with cut`);
       let solved;
       try { solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps), startFrame) }, subjects, over, toLook, context, setInfo: info, keepout }); } catch (e) { throw new Error(`shot ${shot.id} key ${ki}: ${e.message}`); }
-      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)) };
+      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id) || (k.size === 'insert' && !!markInfo(id, sets, catalog))) };
       if (k.later) key.later = [...k.later];
       if (k.scenery) key.scenery = true;
       if (k.with) key.with = [...k.with];

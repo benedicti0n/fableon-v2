@@ -1,7 +1,7 @@
 // Deterministic framing solver: semantic camera key + measured subjects + keep-out volumes -> v1 camera key.
 // Rules and constants are documented in docs/AUTHORING.md.
 const DEG = Math.PI / 180;
-import { BANDS } from './composition.js';
+import { BANDS, TARGETS } from './composition.js';
 export const ASPECT = 9 / 16;
 
 export const SIZE = {
@@ -36,6 +36,7 @@ export function blocked(from, to, keepout) {
 }
 
 const subjBox = (s) => {
+  if (s.box) { const b = s.box; return { h: b[4] - b[1], half: Math.max(b[3] - b[0], b[5] - b[2]) / 2, y: b[1], eye: b[1] + 0.6 * (b[4] - b[1]), x0: b[0], x1: b[3], z0: b[2], z1: b[5], y0: b[1], y1: b[4] }; }
   const m = s.measure, scale = s.scale ?? 1, h = (s.seated ? m.seated : m.standing) * scale, half = m.halfWidth * scale;
   const ps = s.samples?.length ? s.samples : [s.pos];
   const y0 = Math.min(...ps.map((p) => p[1])), y1 = Math.max(...ps.map((p) => p[1])) + h;
@@ -66,19 +67,20 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const primary = subjects[0];
   const pb = primary ? subjBox(primary) : null;
   const band = BANDS[size] ?? BANDS.medium;
-  const targetMetric = (band.min + band.max) / 2;
+  const targetMetric = TARGETS[size] ?? (band.min + band.max) / 2;
   const metricWorld = primary ? (band.metric === 'head' ? primary.measure.head : primary.measure.standing) * (primary.scale ?? 1) : 1;
   const targetDistance = metricWorld / (2 * targetMetric * Math.tan((vfov0 * DEG) / 2));
   const ob = over ? subjBox(over) : null;
   const box = subjects.length ? unionBox(subjects) : null;
+  const boxC = primary?.box ? [(primary.box[0] + primary.box[3]) / 2, (primary.box[1] + primary.box[4]) / 2, (primary.box[2] + primary.box[5]) / 2] : null;
   const target = size === "establishing"
     ? [(setInfo.bounds.min[0] + setInfo.bounds.max[0]) / 2, (setInfo.bounds.min[1] + setInfo.bounds.max[1]) / 2, (setInfo.bounds.min[2] + setInfo.bounds.max[2]) / 2]
     : size === "wide"
       ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, (box.z0 + box.z1) / 2]
-      : [primary.kind === 'mark' ? primary.pos[0] : (pb.x0 + pb.x1) / 2, primary.kind === 'mark' ? primary.pos[1] : pb.eye, primary.kind === 'mark' ? primary.pos[2] : (pb.z0 + pb.z1) / 2];
+      : size === 'insert' && boxC ? boxC : [primary.kind === 'mark' ? primary.pos[0] : (pb.x0 + pb.x1) / 2, primary.kind === 'mark' ? primary.pos[1] : pb.eye, primary.kind === 'mark' ? primary.pos[2] : (pb.z0 + pb.z1) / 2];
   let spanV, spanH;
   if (size === "establishing") { spanV = setInfo.bounds.max[1] - setInfo.bounds.min[1]; spanH = setInfo.bounds.max[0] - setInfo.bounds.min[0]; }
-  else if (size === "insert") { spanV = 0.8; spanH = 0.8; }
+  else if (size === "insert") { spanV = primary?.box ? primary.box[4] - primary.box[1] : 0.8; spanH = primary?.box ? primary.box[3] - primary.box[0] : 0.8; }
   else { spanV = 2 * targetDistance * Math.tan((vfov0 * DEG) / 2); spanH = spanV * aspect; }
   const baseAngle = (primary?.view ?? setInfo.front ?? 0) + (sideOffset[key.side ?? "front"] ?? 0);
   const angleY = key.angle ?? "eye";
@@ -87,8 +89,10 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const highY = primary ? primary.pos[1] + Math.max(2.5, Math.min(4, 0.8 * pb.h)) : target[1] + 3;
   const overheadY = primary ? primary.pos[1] + 8 : target[1] + 8;
   const camY = angleY === "low" ? waistY : angleY === "high" ? highY : angleY === "overhead" ? overheadY : eyeY;
-  let vfov = vfov0, distance = size === 'establishing' ? fitDistance(spanV * 1.1, spanH * 1.1, vfov, aspect) : targetDistance * 1.03;
-  if (size !== 'establishing' && subjects.length) {
+  let vfov = vfov0, distance = size === 'establishing' ? fitDistance(spanV * 1.1, spanH * 1.1, vfov, aspect)
+    : size === 'insert' && primary?.box ? Math.max(spanH / (2 * targetMetric * Math.tan((vfov * DEG) / 2) * aspect), spanV / (2 * targetMetric * Math.tan((vfov * DEG) / 2))) * 1.03
+      : targetDistance * 1.03;
+  if (size !== 'establishing' && size !== 'insert' && subjects.length) {
     const b = unionBox(subjects);
     const width = Math.max(b.x1 - b.x0, b.z1 - b.z0);
     const groupDist = width / (2 * Math.tan((vfov * DEG) / 2) * aspect);
@@ -118,7 +122,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   }
   let yawOffset = 0, raised = 0, closer = false;
   const lookBase = () => {
-    const ly = size === 'insert' && primary?.kind === 'mark' ? primary.pos[1] : size === "close" || size === "medium" ? (primary ? pb.eye - (0.5 - cfg.eyeLine) * spanV : target[1]) : size === "full" ? (primary ? primary.pos[1] + 0.5 * pb.h : target[1]) : target[1];
+    const ly = size === 'insert' && boxC ? boxC[1] : size === 'insert' && primary?.kind === 'mark' ? primary.pos[1] : size === "close" || size === "medium" ? (primary ? pb.eye - (0.5 - cfg.eyeLine) * spanV : target[1]) : size === "full" ? (primary ? primary.pos[1] + 0.5 * pb.h : target[1]) : target[1];
     return [target[0], ly, target[2]];
   };
   const cameraAt = (yaw, dist, y) => {

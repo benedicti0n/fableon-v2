@@ -2,7 +2,7 @@
 // direction (`front`, degrees, 0 = +z) and its establishing box (`bounds`, world metres).
 import { ARENA, CITY, DEER, G, HERM, LAC, NAGA, PAL, VIL } from "./places";
 
-export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string; view?: number; context?: string };
+export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string; view?: number; box?: number[]; ids?: string[] };
 export type SetInfo = { front: number; bounds: { min: [number, number, number]; max: [number, number, number] }; marks: Mark[] };
 
 const at = (p: readonly [number, number, number], d: [number, number, number]): [number, number, number] => [p[0] + d[0], p[1] + d[1], p[2] + d[2]];
@@ -154,9 +154,20 @@ export const SET_INFO: Record<string, SetInfo> = {
   },
 };
 
+// World-space boxes and coverage ids for the objects the marks name (F4). Boxes are [minX,minY,minZ,maxX,maxY,maxZ].
+const MARK_META: Record<string, { box?: number[]; ids?: string[] }> = {
+  'palace.tree': { box: [-16.4, 1.62, 43.6, -11.6, 9.27, 48.4], ids: ['world:palace.mango trunk', 'world:palace.mango canopy'] },
+  'palace.mango': { box: [-16.4, 1.62, 43.6, -11.6, 9.27, 48.4], ids: ['world:palace.mango trunk', 'world:palace.mango canopy'] },
+  'arena.bow': { box: [162.2, 1.65, 65.4, 165.8, 3.1, 66.6], ids: ['bigBow'] },
+  'arena.bowstand': { box: [162.2, 1.65, 65.4, 165.8, 3.1, 66.6], ids: ['bigBow'] },
+  'arena.pole': { box: [169.7, 1.5, 69.7, 170.3, 18.9, 70.3], ids: ['world:arena.target pole'] },
+  'arena.target': { box: [169.7, 17.4, 69.7, 170.3, 18.9, 70.3], ids: ['world:arena.target pole'] },
+  'lac.house': { box: [-170, 1.5, 55, -150, 12, 85], ids: ['world:lac.lacquer house'] },
+  'city.forest': { box: [20, 1.5, -240, 60, 16, -200], ids: ['world:city.forest canopy'] },
+};
 // The first derivation (median camera heading near the mark) put two cameras behind the burning set.
 const MARK_VIEW_OVERRIDES: Record<string, number> = { "city.agni": 172, "lac.house": 180 };
-for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) mark.view = MARK_VIEW_OVERRIDES[`${set}.${mark.name}`] ?? MARK_VIEWS[`${set}.${mark.name}`] ?? mark.facing;
 for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) {
-  if (set === 'palace' && (mark.name === 'tree' || mark.name === 'mango')) mark.context = 'world:palace.mango canopy';
+  mark.view = MARK_VIEW_OVERRIDES[`${set}.${mark.name}`] ?? MARK_VIEWS[`${set}.${mark.name}`] ?? mark.facing;
+  const meta = MARK_META[`${set}.${mark.name}`]; if (meta) Object.assign(mark, meta);
 }

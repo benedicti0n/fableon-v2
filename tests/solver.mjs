@@ -24,9 +24,15 @@ export function runSolver() {
   ok('fallback rotates', r.debug.yawOffset !== 0, JSON.stringify(r.debug));
   ok('fallback clear', !blocked(r.key.pos, head, [box]), JSON.stringify(r.key.pos));
   const wideOne = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], setInfo });
-  ok('wide band centre', wideOne.debug.primaryHeight >= 0.25 && wideOne.debug.primaryHeight <= 0.40, String(wideOne.debug.primaryHeight));
+  ok('wide band centre', wideOne.debug.primaryHeight >= 0.18 && wideOne.debug.primaryHeight <= 0.30, String(wideOne.debug.primaryHeight));
   const ctx = { kind: 'mark', id: 'ctx', pos: [3, 1.5, 0], measure, scale: 1, seated: false };
   const withCtx = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], context: [ctx], setInfo });
+  const boxCtx = { kind: 'mark', id: 'tree', pos: [3, 1.5, 0], box: [2, 1.5, -1, 4, 9, 1], measure: { standing: 1.65, seated: 1.13, eye: 1.39, eyeSeated: 0.87, head: 0.46, halfWidth: 0.28 }, scale: 1, seated: false };
+  const withBox = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], context: [boxCtx], setInfo });
+  ok('with mark box widens', withBox.debug.distance > wideOne.debug.distance, `${withBox.debug.distance} > ${wideOne.debug.distance}`);
+  const bow = { kind: 'mark', id: 'bow', pos: [0, 1.5, 0], box: [-2.6, 1.5, -0.5, 2.6, 3.1, 0.5], measure: { standing: 1.65, seated: 1.13, eye: 1.39, eyeSeated: 0.87, head: 0.46, halfWidth: 0.28 }, scale: 1, seated: false };
+  const ins = solveCamera({ key: { at: 'a', size: 'insert', move: 'hold' }, subjects: [bow], setInfo });
+  ok('insert fills a wide prop', ins.debug.distance > 8, String(ins.debug.distance));
   ok('with context widens', withCtx.debug.distance > wideOne.debug.distance, `${withCtx.debug.distance} > ${wideOne.debug.distance}`);
   let groupMsg = ''; try { solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a', -5), subject('b', 5)], setInfo }); } catch (e) { groupMsg = e.message; }
   ok('group too wide hint', /group too wide/.test(groupMsg) && /split into keys/.test(groupMsg), groupMsg);
