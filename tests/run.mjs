@@ -4,6 +4,8 @@ import { copyFileSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { NPM, RENDER_CJS, ROOT, capture, findPython, run } from '../cli/src/env.js';
+import { runParity } from './parity.mjs';
+import { runValidator } from './validator.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -63,6 +65,10 @@ try {
   await typecheck();
   await stills();
   await audio();
+  const validator = await runValidator();
+  check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
+  const parity = await runParity();
+  check('storyboard parity', parity.ok, `${parity.frames} frames, max ${parity.worst.toFixed(3)} <= 0.5`);
 } catch (e) {
   failed++;
   console.error(`\nFAIL suite: ${e.message}`);
