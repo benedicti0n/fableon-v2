@@ -390,14 +390,16 @@
           "verdict": "ok",
           "facts": [],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 1,
           "verdict": "unsupported",
           "facts": [],
           "note": "The source does not say they carried a ladder.",
-          "fix": "Cite F1 or make the climb a joke."
+          "fix": "Cite F1 or make the climb a joke.",
+          "craft": "ok"
         },
         {
           "n": 2,
@@ -405,8 +407,9 @@
           "facts": [
             "F1"
           ],
-          "note": "supported",
-          "fix": ""
+          "note": "Repeats the climbing beat.",
+          "fix": "",
+          "craft": "weak"
         },
         {
           "n": 3,
@@ -415,37 +418,40 @@
             "F1"
           ],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 4,
-          "verdict": "ok",
-          "facts": [
-            "F1"
-          ],
-          "note": "supported",
-          "fix": ""
+          "verdict": "unsupported",
+          "facts": [],
+          "note": "The source does not say they carried a ladder.",
+          "fix": "Cite F1 or make the climb a joke.",
+          "craft": "ok"
         },
         {
           "n": 5,
           "verdict": "ok",
           "facts": [],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 6,
           "verdict": "ok",
           "facts": [],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 7,
           "verdict": "ok",
           "facts": [],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 8,
@@ -454,13 +460,38 @@
             "F1"
           ],
           "note": "supported",
-          "fix": ""
+          "fix": "",
+          "craft": "ok"
         },
         {
           "n": 9,
           "verdict": "ok",
           "facts": [],
           "note": "supported",
+          "fix": "",
+          "craft": "ok"
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "lines": [
+        {
+          "n": 1,
+          "verdict": "unsupported",
+          "craft": "ok",
+          "facts": [],
+          "note": "Confirmed: no ladder in the source.",
+          "fix": "Cite F1 or make the climb a joke."
+        },
+        {
+          "n": 4,
+          "verdict": "ok",
+          "craft": "ok",
+          "facts": [
+            "F1"
+          ],
+          "note": "Confirmation found support in F1.",
           "fix": ""
         }
       ]
@@ -469,83 +500,13 @@
       "version": 1,
       "lines": [
         {
-          "n": 0,
-          "verdict": "ok",
-          "facts": [],
-          "note": "supported",
-          "fix": ""
-        },
-        {
           "n": 1,
           "verdict": "ok",
+          "craft": "ok",
           "facts": [
             "F1"
           ],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 2,
-          "verdict": "ok",
-          "facts": [
-            "F1"
-          ],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 3,
-          "verdict": "ok",
-          "facts": [
-            "F1"
-          ],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 4,
-          "verdict": "ok",
-          "facts": [
-            "F1"
-          ],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 5,
-          "verdict": "ok",
-          "facts": [],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 6,
-          "verdict": "ok",
-          "facts": [],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 7,
-          "verdict": "ok",
-          "facts": [],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 8,
-          "verdict": "ok",
-          "facts": [
-            "F1"
-          ],
-          "note": "supported",
-          "fix": ""
-        },
-        {
-          "n": 9,
-          "verdict": "ok",
-          "facts": [],
-          "note": "supported",
+          "note": "Revised line is supported by F1.",
           "fix": ""
         }
       ]

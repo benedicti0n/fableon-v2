@@ -130,5 +130,7 @@ export function statusTable(projectDir) {
     const u = s.state?.usage ?? {};
     return { stage: s.name, status: s.status, approved: s.approved ? 'yes' : 'no', lastRun: s.state?.lastRun ?? '-', tokens: `${u.promptTokens ?? 0}/${u.completionTokens ?? 0}`, cost: u.costUsd == null ? '-' : `$${Number(u.costUsd).toFixed(4)}` };
   });
-  return { rows, todos: pronunciationTodos(projectDir), state };
+  const reviewPath = join(projectDir, 'script.review.json');
+  const craft = existsSync(reviewPath) ? readJson(reviewPath).lines?.filter((l) => l.craft === 'weak').map((l) => ({ n: l.n, note: l.note })) ?? [] : [];
+  return { rows, todos: pronunciationTodos(projectDir), craft, state };
 }

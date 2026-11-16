@@ -50,7 +50,8 @@ export function main(argv = process.argv) {
     .description('approve the current output of one pipeline stage')
     .requiredOption('--project <dir>', 'project folder')
     .requiredOption('--stage <name>', 'stage name')
-    .action((opts) => approveCommand(opts.project, opts.stage));
+    .option('--override <reason>', 'accept the currently flagged fact-check lines and record why')
+    .action((opts) => approveCommand(opts.project, opts.stage, opts.override ?? null));
 
   program
     .command('run')

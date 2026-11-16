@@ -149,7 +149,7 @@ export class ModelRouter {
     const c = this.config(stage);
     const model = await this.resolveModel(stage);
     const base = this.baseUrl(stage);
-    const p = { temperature: c.temperature, maxTokens: c.maxTokens, jsonMode: params.jsonMode ?? true, thinking: c.thinking, reasoningEffort: c.reasoningEffort, mockKey: params.mockKey ?? null };
+    const p = { temperature: params.temperature ?? c.temperature, maxTokens: c.maxTokens, jsonMode: params.jsonMode ?? true, thinking: c.thinking, reasoningEffort: c.reasoningEffort, mockKey: params.mockKey ?? null };
     const hash = this.requestHash(c.provider, base, model, messages, p);
     const cacheFile = this.cachePath(hash);
     const t0 = Date.now();
@@ -173,13 +173,13 @@ export class ModelRouter {
     return { content: r.content, usage: r.usage ?? {}, cached: false, finishReason: r.finishReason };
   }
 
-  async callJson(stage, messages, { validate = null, mockKey = null, repairHint = null } = {}) {
+  async callJson(stage, messages, { validate = null, mockKey = null, repairHint = null, temperature = null } = {}) {
     const c = this.config(stage);
     const msgs = messages.map((m) => ({ ...m }));
     if (!msgs.some((m) => m.role === 'system' && /json/i.test(m.content))) msgs.unshift({ role: 'system', content: 'Return one valid json object only.' });
     let lastErrors = [];
     for (let repair = 0; repair <= (c.maxRepairs ?? 2); repair++) {
-      const r = await this.chat(stage, msgs, { jsonMode: true, mockKey });
+      const r = await this.chat(stage, msgs, { jsonMode: true, mockKey, temperature });
       let data;
       try {
         data = parseJsonObject(r.content);

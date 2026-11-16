@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { loadDotEnv } from '../env.js';
 import { newProject } from '../core/new-project.js';
 import { approve, statusTable } from '../core/state.js';
+import { recordFactcheckOverride } from '../stages/factcheck.js';
 
 export async function newCommand(dir, opts) {
   loadDotEnv();
@@ -15,16 +16,21 @@ export async function newCommand(dir, opts) {
 
 export function statusCommand(dirArg) {
   loadDotEnv();
-  const { rows, todos } = statusTable(dirArg);
+  const { rows, todos, craft } = statusTable(dirArg);
   console.log('stage         status      approved  last run                  tokens (p/c)    cost');
   console.log('------------  ----------  --------  ------------------------  --------------  ------');
   for (const r of rows) console.log(`${r.stage.padEnd(13)} ${r.status.padEnd(11)} ${r.approved.padEnd(9)} ${String(r.lastRun).padEnd(25)} ${r.tokens.padEnd(15)} ${r.cost}`);
   if (todos.length) console.log(`\npronunciation TODO (add to pronunciations.json): ${todos.join(', ')}`);
+  if (craft.length) console.log(`\ncraft notes (advisory, never block): ${craft.map((c) => `line ${c.n}: ${c.note}`).join('; ')}`);
 }
 
-export async function approveCommand(dir, stage) {
+export async function approveCommand(dir, stage, overrideReason = null) {
   loadDotEnv();
   const project = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
+  if (stage === 'factcheck' && overrideReason) {
+    const o = recordFactcheckOverride(dir, overrideReason);
+    console.log(`factcheck override: ${o.count} flagged line(s) ${o.lines.join(', ')} — ${overrideReason}`);
+  }
   const s = approve(dir, project, stage);
   console.log(`approve: ${stage} ${s.hash.slice(0, 12)}`);
 }

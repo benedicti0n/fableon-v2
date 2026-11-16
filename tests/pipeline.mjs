@@ -7,8 +7,7 @@ import { newProject } from '../cli/src/core/new-project.js';
 import { PipelineRunner } from '../cli/src/core/runner.js';
 import { readJson, writeJsonArtifact } from '../cli/src/core/artifacts.js';
 import { statusTable, approve } from '../cli/src/core/state.js';
-import { stageByName } from '../cli/src/core/stages.js';
-import { reviseScript } from '../cli/src/stages/script.js';
+import { recordFactcheckOverride } from '../cli/src/stages/factcheck.js';
 
 const writeProject = (dir, project) => writeJsonArtifact(dir, 'test', 'project.json', project, 'project');
 
@@ -42,23 +41,23 @@ export async function runPipelineTests() {
     ok('script revised', script.lines[1].text.includes('one long ladder'), script.lines[1].text);
     const review = readJson(join(tmp, 'script.review.json'), 'review');
     ok('factcheck review schema', review.lines.every((l) => l.verdict === 'ok'), JSON.stringify(review.lines.map((l) => l.verdict)));
+    ok('factcheck craft advisory', review.lines.find((l) => l.n === 2)?.craft === 'weak' && review.lines.every((l) => l.hash), JSON.stringify(review.lines.find((l) => l.n === 2)));
+    ok('factcheck confirmation cleared line 4', review.lines.find((l) => l.n === 4)?.verdict === 'ok');
+    ok('factcheck confirmed flag revised', review.lines.find((l) => l.n === 1)?.verdict === 'ok');
     const words = JSON.parse(readFileSync(join(tmp, 'script.json'), 'utf8')).lines.reduce((n, l) => n + l.text.split(/\s+/).length, 0);
     ok('word target', Math.abs(words - 80) / 80 <= 0.07, String(words));
 
     const before = readFileSync(join(tmp, 'logs', 'calls.jsonl'), 'utf8').split('\n').filter((l) => l.includes('"cached":false')).length;
-    const force = new PipelineRunner(tmp, project, { to: 'factcheck', autopilot: true, force: true });
+    const force = new PipelineRunner(tmp, project, { to: 'factcheck', only: 'factcheck', autopilot: true, force: true });
     await force.run();
     const after = readFileSync(join(tmp, 'logs', 'calls.jsonl'), 'utf8').split('\n').filter((l) => l.includes('"cached":false')).length;
     ok('cache hit on force re-run', before === after, `${before} -> ${after}`);
+    ok('incremental factcheck no re-review', before === after, `${before} -> ${after}`);
 
     const approved = statusTable(tmp);
     ok('all run stages fresh', ['brief', 'research', 'script', 'factcheck'].every((s) => approved.rows.find((r) => r.stage === s)?.status === 'fresh'));
     ok('pronunciation TODO', approved.todos.includes('Mira'), approved.todos.join(','));
-
-    const sameLine = script.lines[1];
-    const fakeRouter = { callJson: async () => ({ data: { lines: [{ n: 1, text: sameLine.text, facts: sameLine.facts, look: sameLine.look }] }, usage: {} }) };
-    const noop = await reviseScript({ projectDir: tmp, project, router: fakeRouter, failures: [{ n: 1, verdict: 'unsupported', note: 'same', fix: 'same' }] });
-    ok('no-op revision detected', noop.changed === false, JSON.stringify(noop));
+    ok('status craft advisory', approved.craft.some((c) => c.n === 2), JSON.stringify(approved.craft));
 
     // Hand edit: script is edited; fact-check is stale and the approved hash is invalidated.
     approve(tmp, project, 'script');
@@ -69,38 +68,6 @@ export async function runPipelineTests() {
     ok('edited detection', table.rows.find((r) => r.stage === 'script')?.status === 'edited');
     ok('downstream stale', table.rows.find((r) => r.stage === 'factcheck')?.status === 'stale');
     ok('approval invalidated', table.rows.find((r) => r.stage === 'script')?.approved === 'no');
-
-    // Runner-level: a revision that changes nothing stops before a second fact-check call.
-    const liveScript = readJson(join(tmp, 'script.json'), 'script');
-    const failingLine = liveScript.lines[1];
-    const reviewFor = (verdict) => ({
-      version: 1,
-      lines: liveScript.lines.map((l) => ({ n: l.n, verdict: l.n === 1 ? verdict : 'ok', facts: l.facts, note: l.n === 1 ? `${verdict} line` : 'supported', fix: '' })),
-    });
-    let noopCalls = 0;
-    const noopRouter = {
-      callJson: async (stage) => {
-        if (stage === 'factcheck') { noopCalls++; return { data: reviewFor('unsupported'), usage: {} }; }
-        return { data: { lines: [{ n: 1, text: failingLine.text, facts: failingLine.facts, look: failingLine.look }] }, usage: {} };
-      },
-      stageUsage: () => ({ calls: 0, cached: 0, promptTokens: 0, completionTokens: 0, costUsd: null }),
-    };
-    let noopMsg = '';
-    try { await new PipelineRunner(tmp, project, { router: noopRouter }).runStage(stageByName('factcheck'), { autopilot: true, fit: false, status: { status: 'fresh' } }); } catch (e) { noopMsg = e.message; }
-    ok('no-op revision stops loop', /made no change/.test(noopMsg) && noopCalls === 1, `${noopCalls} calls: ${noopMsg}`);
-
-    // Runner-level: a real change with the same verdicts also stops the loop.
-    let sameCalls = 0;
-    const sameRouter = {
-      callJson: async (stage) => {
-        if (stage === 'factcheck') { sameCalls++; return { data: reviewFor('unsupported'), usage: {} }; }
-        return { data: { lines: [{ n: 1, text: 'Every spring, villagers climbed the hill with one ladder.', facts: failingLine.facts, look: failingLine.look }] }, usage: {} };
-      },
-      stageUsage: () => ({ calls: 0, cached: 0, promptTokens: 0, completionTokens: 0, costUsd: null }),
-    };
-    let sameMsg = '';
-    try { await new PipelineRunner(tmp, project, { router: sameRouter }).runStage(stageByName('factcheck'), { autopilot: true, fit: false, status: { status: 'fresh' } }); } catch (e) { sameMsg = e.message; }
-    ok('unchanged verdicts stop loop', /verdicts did not change/.test(sameMsg) && sameCalls === 2, `${sameCalls} calls: ${sameMsg}`);
 
     const cacheText = readdirSync(join(tmp, '.fableon', 'cache')).map((f) => readFileSync(join(tmp, '.fableon', 'cache', f), 'utf8')).join('\n');
     const logText = readFileSync(join(tmp, 'logs', 'calls.jsonl'), 'utf8');

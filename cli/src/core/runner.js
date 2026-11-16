@@ -65,6 +65,7 @@ export class PipelineRunner extends EventEmitter {
       const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`];
       if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit });
       else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot });
+      if (stage.name === 'factcheck') this.log(`factcheck reviewed ${result.reviewed ?? 0} line(s); factual flags ${result.failures?.length ?? 0}; craft weak ${result.craft?.length ?? 0}`);
       if (stage.name === 'factcheck' && result.failures?.length) {
         if (!autopilot) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check needs revision' });

@@ -6,6 +6,24 @@
   "required": ["version", "lines"],
   "properties": {
     "version": { "const": 1 },
+    "reviewedAt": { "type": "string" },
+    "model": { "type": ["string", "null"] },
+    "settings": { "type": "object" },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["line", "verdict", "reason", "ts"],
+        "properties": {
+          "line": { "type": "integer", "minimum": 0 },
+          "verdict": { "type": "string" },
+          "reason": { "type": "string", "minLength": 1 },
+          "ts": { "type": "string" },
+          "hash": { "type": ["string", "null"] }
+        }
+      }
+    },
     "lines": {
       "type": "array",
       "items": {
@@ -18,7 +36,9 @@
         "craft": { "enum": ["ok", "weak"] },
           "facts": { "type": "array", "items": { "type": "string" } },
           "note": { "type": "string" },
-          "fix": { "type": "string" }
+          "fix": { "type": "string" },
+          "hash": { "type": ["string", "null"] },
+          "confirmed": { "type": "boolean" }
         }
       }
     }
