@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, LOOK_AWAY_TOL, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, LOOK_AWAY_TOL, MIN_KEY_FRAMES, ENTRY_GRACE, ACTION_AREA, FLAT_WIDE_AREA, JUMP_CUT_DEG, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -350,6 +350,7 @@ const overlapArea = (a, b) => {
 
 export async function checkFramesMeasured(dirArg, opts = {}) {
   const dir = projectDir(dirArg);
+  const preErrors = [], preWarnings = [];
   const ctx = makeContext(dir);
   const shots = ctx.sb.shots ?? [];
   const jobs = [], keyMeta = [];
@@ -361,6 +362,9 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
     const keys = (shot.camera ?? []).map((k) => ({ k, f: ctx.anchor(k.at, start) })).sort((a, b) => a.f - b.f);
     keys.forEach(({ k, f: kf }, ki) => {
       const end = ki + 1 < keys.length ? keys[ki + 1].f : endShot;
+      if (ki === 0 && kf > start) { const code = k.semantic ? preErrors : preWarnings; code.push({ shot: shot.id, key: ki, frame: kf, subject: k.subjects?.[0] ?? '-', code: 'first key late', message: `first key late: starts ${kf - start} frames after the shot`, fix: FIX.firstKey }); }
+      if (end - kf < MIN_KEY_FRAMES) { const code = k.semantic ? preErrors : preWarnings; code.push({ shot: shot.id, key: ki, frame: kf, subject: k.subjects?.[0] ?? '-', code: 'key too short', message: `key too short: ${end - kf} frames (< ${MIN_KEY_FRAMES})`, fix: FIX.keyShort }); }
+      if (k.cut && (k.move === 'glide' || k.move === 'crane' || k.glide !== undefined)) { const code = k.semantic ? preErrors : preWarnings; code.push({ shot: shot.id, key: ki, frame: kf, subject: k.subjects?.[0] ?? '-', code: 'glide with cut', message: 'glide/crane cannot be combined with cut', fix: FIX.glideCut }); }
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? crossfade / 2 : 0;
       const frames = sampleKeyFrames(k, kf, end, xf);
       const withIds = (k.with ?? []).map((id) => normalizeWith(id, ctx));
@@ -378,7 +382,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
     writeFileSync(jobsFile, JSON.stringify(jobs));
     await run(process.execPath, [RENDER_CJS, 'coverage', '--jobs', jobsFile, '--out', outFile, '--project', dir, '--size', '180x320', '--msaa', '0'], { cwd: ROOT });
     const cov = JSON.parse(readFileSync(outFile, 'utf8'));
-    const errors = [], warnings = [], rows = [];
+    const errors = [...preErrors], warnings = [...preWarnings], rows = [], actionSeen = new Set();
     const byKey = new Map();
     for (const m of keyMeta) {
       const keyId = `${m.si}/${m.ki}`;
@@ -472,6 +476,29 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         const stat = idsById.get(id), vis = r.subjects?.[id] ?? 0;
         if (!stat || stat.pixels / (180 * 320) < CONTEXT_AREA || vis < CONTEXT_VISIBLE) push('context missing', id, `context missing ${id}: ${stat ? (stat.pixels / (180 * 320) * 100).toFixed(1) + '% area, ' : ''}${(vis * 100).toFixed(0)}% visible`, FIX.context);
       }
+      if (primary && (size === 'wide' || size === 'establishing')) {
+        for (const bg of r.ids ?? []) {
+          if (subjects.includes(bg.id) || bg.id === k.over || (m.with ?? []).includes(bg.id)) continue;
+          const area = bg.pixels / (180 * 320);
+          const isBg = ['sky', 'ground', 'water'].includes(bg.id) || /wall|arcade/i.test(bg.id);
+          if (isBg && area > FLAT_WIDE_AREA) push('flat wide', bg.id, `flat wide: ${bg.id} fills ${(area * 100).toFixed(0)}% of the frame`, FIX.flat);
+        }
+      }
+      const actionFrames = new Map();
+      for (const a of m.shot.actors ?? []) {
+        const id = a.id ?? a.who, frames = new Set();
+        for (const b of a.beats ?? []) if (b.offscreen !== true && (b.pose !== undefined || b.expr !== undefined || b.prop !== undefined)) frames.add(ctx.anchor(b.at, m.start));
+        if (a.visible?.from) frames.add(ctx.anchor(a.visible.from, m.start));
+        if (a.visible?.to) frames.add(ctx.anchor(a.visible.to, m.start));
+        if (a.appear?.at) frames.add(ctx.anchor(a.appear.at, m.start));
+        for (const f of frames) if (f >= m.kf && f < m.end && f >= m.start) {
+          const seen = `${m.shotId}/${m.ki}/${id}/${f}`; if (actionSeen.has(seen)) continue; actionSeen.add(seen);
+          const st = actorState(ctx, m.shot, a, f, m.start);
+          if (!st) continue;
+          const pr = projectState(ctx, keyForProjection(k, f, m.start), { ...st, kind: 'actor' }, f);
+          if (pr.area < ACTION_AREA) add(warnings, 'action off-screen', id, `action off-screen ${id}: beat at ${f} covers ${(pr.area * 100).toFixed(0)}% of the frame`, FIX.action);
+        }
+      }
       if (primary && ppl && (size === 'close' || size === 'medium') && (ppl.eye.y < EYE_MIN || ppl.eye.y > EYE_MAX)) add(warnings, 'eye line', primary, `eye line ${(ppl.eye.y * 100).toFixed(0)}% outside 30-50%`, FIX.eye);
       for (const a of m.shot.actors ?? []) {
         if (talkAt(a, m.f, m.start, ctx)) {
@@ -487,6 +514,23 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       const frameRows = rows.filter((r) => r.shot === meta.shotId && r.key === meta.ki);
       const first = frameRows[0];
       keyRows.push({ shot: meta.shotId, key: meta.ki, anchor: meta.k.at, size: first?.size, primary: first?.primary, frames: [...new Set(meta.frames)].sort((a, b) => a - b), subjects: first?.subjects ?? [], errors: errors.filter((e) => e.shot === meta.shotId && e.key === meta.ki), warnings: warnings.filter((w) => w.shot === meta.shotId && w.key === meta.ki) });
+    }
+    const flat = [...byKey.values()].map((meta) => {
+      const first = rows.find((r) => r.shot === meta.shotId && r.key === meta.ki);
+      return { shot: meta.shotId, key: meta.ki, sets: meta.shot.sets ?? [], semantic: meta.k.semantic, primary: first?.primary, size: first?.size, side: meta.k.side ?? 'front', angle: meta.k.angle ?? 'eye', kf: meta.kf, end: meta.end, cut: !!meta.k.cut, start: meta.start };
+    }).sort((a, b) => a.kf - b.kf);
+    const sideDeg = { front: 0, left: -30, right: 30, frontLeft: -15, frontRight: 15 };
+    const angleDeg = { eye: 0, low: -20, high: 20, overhead: 45 };
+    for (let i = 1; i < flat.length; i++) {
+      const prev = flat[i - 1], cur = flat[i];
+      if (cur.shot === prev.shot ? !cur.cut : !(cur.sets ?? []).some((x) => (prev.sets ?? []).includes(x))) continue;
+      if (!cur.primary || cur.primary !== prev.primary || cur.size !== prev.size) continue;
+      const side = Math.abs((sideDeg[cur.side] ?? 0) - (sideDeg[prev.side] ?? 0));
+      const angle = Math.abs((angleDeg[cur.angle] ?? 0) - (angleDeg[prev.angle] ?? 0));
+      if (side < JUMP_CUT_DEG && angle < JUMP_CUT_DEG) {
+        const code = cur.semantic ? errors : warnings;
+        code.push({ shot: cur.shot, key: cur.key, frame: cur.kf, subject: cur.primary, code: 'jump cut', message: `jump cut: ${prev.shot} key ${prev.key} -> ${cur.shot} key ${cur.key} keeps ${cur.primary} at ${cur.size}`, fix: FIX.jumpCut });
+      }
     }
     const payload = { measured: true, coverageMs: +(totalMs / Math.max(1, keyMeta.length)).toFixed(1), keys: keyRows, rows, errors, warnings };
     writeFileSync(join(dir, 'frames.json'), JSON.stringify(payload, null, 2) + '\n');

@@ -1254,6 +1254,23 @@
             "pan",
             "reveal"
           ]
+        },
+        "side": {
+          "enum": [
+            "front",
+            "left",
+            "right",
+            "frontLeft",
+            "frontRight"
+          ]
+        },
+        "angle": {
+          "enum": [
+            "eye",
+            "low",
+            "high",
+            "overhead"
+          ]
         }
       }
     },
@@ -1924,6 +1941,9 @@
         },
         "face": {
           "type": "string"
+        },
+        "offscreen": {
+          "type": "boolean"
         }
       }
     },

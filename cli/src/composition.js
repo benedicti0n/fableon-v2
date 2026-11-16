@@ -25,7 +25,11 @@ export const EDGE_INTRUDER_AREA = 0.01;   // non-subject cut by an edge, minimum
 export const EDGE_INTRUDER_VISIBLE = 0.50; // ... and less than half of its solo silhouette visible
 export const MERGE_OVERLAP = 0.10;        // over actor box overlap / smaller box
 export const LOOK_AWAY_TOL = 0.02;        // screen-u difference before a gaze counts as sideways
-
+export const MIN_KEY_FRAMES = 18;          // a camera key shorter than 0.6 s is an editing error
+export const ENTRY_GRACE = 15;             // frames (0.5 s) where an entering/appearing subject still counts as present
+export const ACTION_AREA = 0.04;           // an action beat below 4 % actor area is off-screen
+export const FLAT_WIDE_AREA = 0.55;        // one background id filling a wide/establishing frame
+export const JUMP_CUT_DEG = 30;            // side/angle change that makes two keys different shots
 const MOVING = new Set(['tiltUp', 'tiltDown', 'pan', 'reveal', 'glide', 'follow', 'crane']);
 export const isMovingKey = (k) => MOVING.has(k.move) || k.type === 'tilt' || k.dur !== undefined || k.push?.rate === 0;
 export const SETTLE_CUT = 6;              // frames after a cut before measuring
@@ -44,5 +48,11 @@ export const FIX = {
   edgeIntruder: 'keep the background actor out of the frame edge or hide it',
   looksAway: 'set `face` so the actor/prop points at its target',
   merge: 'move the over actor and subject to opposite thirds',
+  jumpCut: 'merge the keys, change size by a step, or move the camera >= 30 degrees',
+  keyShort: 'merge the key into a neighbour or hold it for at least 18 frames',
+  firstKey: 'start the shot on its first camera key',
+  glideCut: 'remove the cut or use a normal push instead of glide',
+  action: 'keep the action on screen or mark the beat `offscreen: true`',
+  flat: 'add `with` context, change side/angle, or use a different size',
 };
 export const inferSize = (fov = 40) => fov <= 38 ? 'close' : fov <= 40 ? 'medium' : fov <= 43 ? 'full' : fov <= 47 ? 'wide' : 'establishing';

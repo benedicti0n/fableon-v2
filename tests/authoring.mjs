@@ -50,6 +50,9 @@ export function runAuthoring() {
   };
   const ride = compileBoard(rideBoard, words, catalog).storyboard.shots[0].actors[0];
   ok('ride compiles', ride.ride === 'boat' && JSON.stringify(ride.rideOffset) === '[0,0.12,0]', JSON.stringify(ride));
+  let glideMsg = '';
+  try { compileBoard({ version: 1, cast: { kunti: { spec: 'C.kunti' } }, shots: [{ id: 'G', start: '1.Vyasa', light: 'day', sets: ['village'], actors: [{ cast: 'kunti', id: 'kunti', at: 'village.front' }], camera: [{ at: '1.Vyasa', size: 'medium', on: ['kunti'], move: 'glide', cut: true }] }] }, words, catalog); } catch (e) { glideMsg = e.message; }
+  ok('glide with cut rejected', /glide\/crane cannot be combined with cut/.test(glideMsg), glideMsg);
   const faceBoard = (side, over = false) => ({ version: 1, cast: { pandu: { spec: 'C.pandu' }, deer: { spec: { skin: '#b9773f' } } }, shots: [{ id: 'F', start: '13.Pandu', light: 'day', sets: ['deer'], actors: [{ cast: 'pandu', id: 'pandu', at: 'deer.deer', nudge: [0, 0, 2], prop: 'bowDrawn', ...(over ? {} : { face: 'deer' }) }, { cast: 'deer', id: 'deer', special: 'deer', at: 'deer.deer' }], camera: [{ at: '13.Pandu', size: 'wide', on: ['deer'], side, move: 'hold', ...(over ? { over: 'pandu' } : {}) }] }] });
   const faceBeat = (side, over = false) => compileBoard(faceBoard(side, over), words, catalog).storyboard.shots[0].actors.find((a) => a.id === 'pandu').beats?.find((b) => b.facing !== undefined);
   const fl = faceBeat('left'), fr = faceBeat('right');

@@ -366,10 +366,13 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
   const a = (compiled.actors ?? []).find((x) => x.id === id || x.who === id);
   if (a) {
     if (!visibleAt(a, keyStart, ctx.anchorFrame(shot.start), ctx)) {
-      if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, a, ctx.anchorFrame(shot.start), ctx));
       let first = null;
-      for (let f = keyStart; f < keyEnd; f++) if (visibleAt(a, f, ctx.anchorFrame(shot.start), ctx)) { first = f; break; }
-      if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      for (let f = keyStart; f < Math.min(keyEnd, keyStart + 15); f++) if (visibleAt(a, f, ctx.anchorFrame(shot.start), ctx)) { first = f; break; }
+      if (first === null) {
+        if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, a, ctx.anchorFrame(shot.start), ctx));
+        for (let f = keyStart; f < keyEnd; f++) if (visibleAt(a, f, ctx.anchorFrame(shot.start), ctx)) { first = f; break; }
+        if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      }
       keyStart = first;
     }
     const moving = !!a.motion || !!a.ride;
@@ -380,10 +383,13 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
   const fx = (compiled.fx ?? []).find((x) => x.id === id);
   if (fx) {
     if (!visibleAt(fx, keyStart, ctx.anchorFrame(shot.start), ctx, true)) {
-      if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, fx, ctx.anchorFrame(shot.start), ctx, true));
       let first = null;
-      for (let f = keyStart; f < keyEnd; f++) if (visibleAt(fx, f, ctx.anchorFrame(shot.start), ctx, true)) { first = f; break; }
-      if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      for (let f = keyStart; f < Math.min(keyEnd, keyStart + 15); f++) if (visibleAt(fx, f, ctx.anchorFrame(shot.start), ctx, true)) { first = f; break; }
+      if (first === null) {
+        if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, fx, ctx.anchorFrame(shot.start), ctx, true));
+        for (let f = keyStart; f < keyEnd; f++) if (visibleAt(fx, f, ctx.anchorFrame(shot.start), ctx, true)) { first = f; break; }
+        if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      }
       keyStart = first;
     }
     const moving = !!fx.motion;
@@ -479,6 +485,7 @@ const applyFaces = (out, cameras, ctx) => {
 const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
+  const startFrame = ctx.anchorFrame(start);
   const out = { id: shot.id, start, light: shot.light ?? 'day', sets };
   if (shot.end !== undefined) out.end = parseAnchor(shot.end, fps);
   if (shot.sun) out.sun = shot.sun;
@@ -494,13 +501,13 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   if (shot.fx) out.fx = shot.fx.map((e) => compileEffect(e, { ...shot, sets }, ctx));
   if (shot.set) out.set = shot.set.map((x) => convertSetAction(x, { ...shot, sets }, ctx));
   const cameras = [], dofs = [];
-  const keyFrames = (shot.camera ?? []).map((k) => ctx.anchorFrame(parseAnchor(k.at ?? k.raw?.at, fps), start));
+  const keyFrames = (shot.camera ?? []).map((k) => ctx.anchorFrame(parseAnchor(k.at ?? k.raw?.at, fps), startFrame));
   for (let ki = 0; ki < (shot.camera ?? []).length; ki++) {
     const k = shot.camera[ki];
     const semantic = k.size !== undefined || k.on !== undefined || k.scenery === true;
     if (semantic) {
       const on = k.on === undefined ? (out.actors ?? []).map((a) => a.id ?? a.who) : Array.isArray(k.on) ? k.on : [k.on];
-      const f = ctx.anchorFrame(parseAnchor(k.at, fps), start);
+      const f = ctx.anchorFrame(parseAnchor(k.at, fps), startFrame);
       const keyEnd = ki + 1 < keyFrames.length ? keyFrames[ki + 1] : shotEnd;
       let subjects = on.map((id) => subjectSamples(id, out, out, f, keyEnd, k.later ?? [], ctx, k.at));
       if (!subjects.length && k.scenery && !k.size) k.size = 'establishing';
@@ -510,14 +517,15 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       const over = k.over ? subjectSamples(k.over, out, out, f, keyEnd, [], ctx, k.at) : null;
       const toLook = k.to ? lookPointFor(k.to, out, f, keyEnd, ctx, out) : null;
       const context = (k.with ?? []).map((id) => subjectSamples(id, out, out, f, keyEnd, [], ctx, k.at));
+      if (k.cut && (k.move === 'glide' || k.move === 'crane' || k.glide !== undefined)) throw new Error(`shot ${shot.id} key ${ki}: glide/crane cannot be combined with cut`);
       let solved;
-      try { solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, over, toLook, context, setInfo: info, keepout }); } catch (e) { throw new Error(`shot ${shot.id} key ${ki}: ${e.message}`); }
+      try { solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps), startFrame) }, subjects, over, toLook, context, setInfo: info, keepout }); } catch (e) { throw new Error(`shot ${shot.id} key ${ki}: ${e.message}`); }
       const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)) };
       if (k.later) key.later = [...k.later];
       if (k.scenery) key.scenery = true;
       if (k.with) key.with = [...k.with];
       if (k.over) key.over = k.over;
-      key.semantic = true; key.move = k.move ?? 'push'; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
+      key.semantic = true; key.move = k.move ?? 'push'; if (k.side) key.side = k.side; if (k.angle) key.angle = k.angle; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {

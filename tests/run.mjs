@@ -17,6 +17,7 @@ import { runSchemaTests } from './schema.mjs';
 import { runPartial } from './partial.mjs';
 import { runMeasured } from './measured.mjs';
 import { runMeasurement } from './measurement.mjs';
+import { runEditing } from './editing.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -94,6 +95,8 @@ try {
   check('measured frames', measured.ok, `${measured.checks.filter((c) => c.ok).length}/${measured.checks.length} checks`);
   const measurement = await runMeasurement();
   check('measurement fixes', measurement.ok, `${measurement.checks.filter((c) => c.ok).length}/${measurement.checks.length} checks`);
+  const editing = await runEditing();
+  check('editing rules', editing.ok, `${editing.checks.filter((c) => c.ok).length}/${editing.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();
