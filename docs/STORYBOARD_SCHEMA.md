@@ -163,7 +163,6 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "scale": { "salt": 4, "min": 0.92, "span": 0.12 }, "facing": -1, "seated": false, "noBlob": false }
 ```
 Members expand deterministically with the legacy `hh(i, salt)` hash; `seedBase + i` is the identity (blink seed).
-```
 
 ## Rules the validator enforces (CLI `fableon validate`)
 - Schema-valid; every who, spec, set, place, pose, expression, prop, effect kind and set piece exists in the catalog.
