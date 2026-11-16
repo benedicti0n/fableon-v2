@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Cartoon 3D short renderer: flat lit character cards in a three.js toon world, ink + lens blur + grade post chain",
   "scripts": {
-    "build": "bash scripts/build.sh",
+    "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "stills": "node scripts/render.cjs stills",
     "render": "node scripts/render.cjs"

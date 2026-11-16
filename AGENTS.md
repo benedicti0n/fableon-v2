@@ -31,7 +31,7 @@ before you change anything.
 ## Layout (seed)
 - `engine/` — TypeScript renderer (three.js + postprocessing, no React). `src/main.ts` is the page entry that exposes
   `window.renderFrame(f)`; `src/story.ts` is (for now) the hand-written Adi Parva timeline; `scripts/render.cjs` drives
-  headless Chromium via Playwright and pipes JPEG frames into ffmpeg; `scripts/build.sh` bundles with esbuild.
+  headless Chromium via Playwright and pipes JPEG frames into ffmpeg; `scripts/build.mjs` bundles with esbuild.
 - `audio/` — Python sound: `score.py` (original synthesized score), `sfx.py` (effects + ambience), `mix.py` (final mix),
   `timeline.py` (word anchors), `dsp.py` + `instruments.py` (synthesis toolkit). All read `PROJECT_DIR`.
 - `voice/make_voice.py` — Kokoro TTS narration + word timings (reads `PROJECT_DIR/SCRIPT.md` + `pronunciations.json`).

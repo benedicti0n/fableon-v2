@@ -27,7 +27,7 @@ On Windows use `.venv\Scripts\python.exe -m pip install -r requirements.txt`. Th
 ## Quick check (seed)
 ```bash
 npm install && npm run typecheck && npm run build
-node engine/scripts/render.cjs stills ../work/test/f_ 640 540 960 0     # compare with fixtures/adi-parva/reference-stills/frame_640.jpg
+node engine/scripts/render.cjs stills --out work/test/f_ --frames 640 --size 540x960 --msaa 0     # compare with fixtures/adi-parva/reference-stills/frame_640.jpg
 ```
 On a machine without a usable GPU set `RENDER_GL=swiftshader`.
 

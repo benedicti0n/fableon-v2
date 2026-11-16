@@ -1,33 +1,58 @@
 // Frame driver (Playwright + WebGL): loads engine/dist/index.html, calls window.renderFrame(f), pipes JPEGs into ffmpeg.
 // Env: CHROME_PATH (optional browser binary), RENDER_GL = gpu (default) | swiftshader (CPU-only machines).
-//   stills: node engine/render.cjs stills <outPrefix> <f,f,...> [w h ms] [off=ink,lens,...]
-//   video : node engine/render.cjs video <out.mp4> <from> <to> [w h ms]   (frames [from, to), JPEG -> ffmpeg x264 crf 16)
+//
+//   node engine/scripts/render.cjs stills   --out <prefix> --frames 60,640 [--size 540x960] [--msaa 0] [--off ink,lens]
+//   node engine/scripts/render.cjs video    --out <out.mp4> --from 0 --to 90 [--size 1440x2560] [--msaa 0]
+//   node engine/scripts/render.cjs segments --jobs <jobs.json> [--size …] [--msaa …]
+//   node engine/scripts/render.cjs list     --out <shots.json>
+//   node engine/scripts/render.cjs qa       --out <qa_meta.json>
+//   node engine/scripts/render.cjs cuts     --out <cuts.json>
+//
+// --jobs is a JSON array of [from, to, outfile] triples: one browser, many clips (existing clips are skipped).
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path'), { spawn } = require('child_process');
 const root = path.join(__dirname, '..', 'dist');
-const [mode, out, a1, a2, ...rest] = process.argv.slice(2);
+const usage = fs.readFileSync(__filename, 'utf8').split('\n').slice(0, 11).join('\n');
+
+function parse(argv) {
+  const o = { _: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (!a.startsWith('--')) { o._.push(a); continue; }
+    const k = a.slice(2), v = argv[i + 1];
+    if (v === undefined || v.startsWith('--')) o[k] = true;
+    else { o[k] = v; i++; }
+  }
+  return o;
+}
+const opt = parse(process.argv.slice(2));
+const mode = opt._[0];
+if (!mode || opt.help) { console.log(usage); process.exit(mode ? 0 : 1); }
+const [W, H] = String(opt.size || '1440x2560').split(/[x:]/).map(Number);
+const MS = +(opt.msaa ?? 4), OFF = String(opt.off || '');
+const need = (k) => { if (opt[k] === undefined || opt[k] === true) { console.error(`render.cjs ${mode}: missing --${k}\n\n${usage}`); process.exit(1); } return String(opt[k]); };
 const port = 8800 + Math.floor(Math.random() * 900);
 const srv = http.createServer((q, s) => { const p = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (!fs.existsSync(p)) { s.statusCode = 404; return s.end(); } s.setHeader('Content-Type', p.endsWith('.js') ? 'text/javascript' : 'text/html'); s.end(fs.readFileSync(p)); }).listen(port);
 const EXE = process.env.CHROME_PATH || undefined;
 const GL_ARGS = process.env.RENDER_GL === 'swiftshader'
   ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
   : ['--ignore-gpu-blocklist', '--enable-gpu']; // Phase 1: measure and pick the fastest working flags per OS
+const framesCsv = mode === 'stills' ? need('frames') : '';
+const out = ['stills', 'video', 'list', 'qa', 'cuts'].includes(mode) ? need('out') : '';
+const jobsFile = mode === 'segments' ? need('jobs') : '';
 (async () => {
-  const opts = mode === 'stills' ? [a2, ...rest] : rest;
-  const [w = '1440', h = '2560', ms = '4'] = opts.filter((x) => x && !x.startsWith('off='));
-  const off = (opts.find((x) => x && x.startsWith('off=')) || 'off=').slice(4);
   const b = await chromium.launch({ ...(EXE ? { executablePath: EXE } : {}), args: GL_ARGS });
   const pg = await b.newPage({ viewport: { width: 400, height: 400 } });
   pg.on('pageerror', (e) => console.log('PAGEERR', e.message));
   pg.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('CONSOLE', m.type(), m.text().slice(0, 300)); });
   const t0 = Date.now();
-  await pg.goto(`http://localhost:${port}/index.html?w=${w}&h=${h}&ms=${ms}&off=${off}`);
+  await pg.goto(`http://localhost:${port}/index.html?w=${W}&h=${H}&ms=${MS}&off=${OFF}`);
   await pg.waitForFunction(() => window.ready, null, { timeout: 300000 });
   const total = await pg.evaluate(() => window.TOTAL);
   console.log('ready', ((Date.now() - t0) / 1000).toFixed(1) + 's', 'TOTAL', total);
   if (mode === 'segments') {
-    // a1 = JSON file with [[from, to, outfile], ...]: one browser, many clips (skips clips that already exist)
-    const jobs = JSON.parse(fs.readFileSync(a1, 'utf8'));
+    // one browser, many clips (skips clips that already exist)
+    const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
     for (const [from, to, file] of jobs) {
       if (fs.existsSync(file)) { console.log('skip', file); continue; }
       const tmp = file + '.part.mp4', ts = Date.now();
@@ -42,18 +67,18 @@ const GL_ARGS = process.env.RENDER_GL === 'swiftshader'
     }
   }
   else if (mode === 'qa') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.QA))); console.log('qa json', out); }
-  else if (mode === 'cuts') { console.log('CUTS ' + JSON.stringify(await pg.evaluate(() => window.camJumps()))); }
-  else if (mode === 'list') { console.log(JSON.stringify(await pg.evaluate(() => window.SHOTLIST))); }
+  else if (mode === 'cuts') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.camJumps()))); console.log('cuts json', out); }
+  else if (mode === 'list') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.SHOTLIST))); console.log('shots json', out); }
   else if (mode === 'stills') {
     fs.mkdirSync(path.dirname(out), { recursive: true });
-    for (const f of a1.split(',').map(Number)) {
+    for (const f of framesCsv.split(',').map(Number)) {
       const t = Date.now();
       const d = await pg.evaluate((f) => window.renderFrame(f), f);
       fs.writeFileSync(`${out}${f}.jpg`, Buffer.from(d.split(',')[1], 'base64'));
       console.log('still', f, ((Date.now() - t) / 1000).toFixed(1) + 's', JSON.stringify(await pg.evaluate(() => Object.fromEntries(Object.entries(window.PROF).map(([k, v]) => [k, Math.round(v)])))));
     }
   } else {
-    const from = +a1, to = Math.min(+a2, total);
+    const from = +(opt.from ?? 0), to = Math.min(+(opt.to ?? total), total);
     fs.mkdirSync(path.dirname(out), { recursive: true });
     const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', '30', out], { stdio: ['pipe', 'inherit', 'inherit'] });
     let last = Date.now();
