@@ -6,7 +6,7 @@ import { ctex, cloudHD, waterNear, waterFar } from "./paint";
 import { LIGHTS, LOOK, LightName } from "./lights";
 import { TONE, CHAR, LFB, untone } from "./shade";
 import { NOINK } from "./ink";
-import { Pool, Actor, Fx, Stage, CamInfo, FPS } from "./cast";
+import { Pool, Actor, Fx, Stage, CamInfo, FPS, Place } from "./cast";
 import { buildSets, Sets } from "./sets";
 import { WATER_Y, RIVER_Z, V3 } from "./places";
 
@@ -39,6 +39,7 @@ const starTex = () => ctex("stars2", 4096, 1024, (g, r) => {
 export class World {
   root = new THREE.Group();
   sets: Sets;
+  coverageCards: { places: Place[]; actors: Actor[]; fxs: { p: any; mesh: THREE.Mesh }[] } = { places: [], actors: [], fxs: [] };
   private pool = new Pool();
   private actors: Actor[] = [];
   private fxs: Fx[] = [];
@@ -199,7 +200,7 @@ export class World {
     s.stage(t, f, st, info);
     this.frustum.setFromProjectionMatrix(this.m4.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse));
     let ai = 0;
-    const used: Actor[] = [];
+    const used: { a: Actor; p: Place }[] = [];
     for (const p of st.places) {
       const sc2 = p.scale ?? 1;
       if (!this.frustum.intersectsSphere(this.sph.set(this.v.set(p.x, p.y + 1.1 * sc2, p.z), 3.5 * sc2))) continue;
@@ -212,11 +213,11 @@ export class World {
       a.mesh.rotation.set(0, p.yaw ?? Math.atan2(cam.position.x - p.x, cam.position.z - p.z), p.roll ?? 0);
       a.mesh.scale.set(p.mirror ? -sc2 : sc2, sc2, sc2);
       a.mesh.castShadow = L.actorShadow;
-      used.push(a);
+      used.push({ a, p });
     }
     for (let i = ai; i < this.actors.length; i++) this.actors[i].mesh.visible = false;
     let fi = 0;
-    const fused: Fx[] = [];
+    const fused: { e: Fx; p: any }[] = [];
     for (const p of st.fx) {
       if (!this.frustum.intersectsSphere(this.sph.set(this.v.set(p.x, p.y, p.z), Math.max(p.w, p.h)))) continue;
       const e = this.fx(fi++);
@@ -227,12 +228,13 @@ export class World {
       if (p.flat) e.mesh.rotation.set(-Math.PI / 2, 0, p.rot ?? 0);
       else { e.mesh.quaternion.copy(cam.quaternion); e.mesh.rotateZ(p.rot ?? 0); }
       e.mesh.scale.set(p.w, p.h, 1);
-      fused.push(e);
+      fused.push({ e, p });
     }
     for (let i = fi; i < this.fxs.length; i++) this.fxs[i].mesh.visible = false;
     this.pool.flush();
-    for (const a of used) a.bind();
-    for (const e of fused) e.bind();
+    for (const { a } of used) a.bind();
+    for (const { e } of fused) e.bind();
+    this.coverageCards = { places: used.map((x) => x.p), actors: used.map((x) => x.a), fxs: fused.map((x) => ({ p: x.p, mesh: x.e.mesh })) };
     return focus;
   }
 }

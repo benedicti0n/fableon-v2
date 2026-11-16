@@ -29,7 +29,8 @@ export function main(argv = process.argv) {
     .description('validate a project storyboard (schema, catalog, word anchors, time order)')
     .requiredOption('--project <dir>', 'project folder')
     .option('--deep', 'also run the in-frame/occlusion check')
-    .action((opts) => validateCommand(opts.project, opts.deep));
+    .option('--fast', 'use the analytical in-frame checker')
+    .action((opts) => validateCommand(opts.project, opts.deep, opts.fast));
 
   program
     .command('schema')
@@ -57,7 +58,8 @@ export function main(argv = process.argv) {
     .command('frames')
     .description('check every named camera subject against the safe area and scenery occlusion')
     .requiredOption('--project <dir>', 'project folder')
-    .action((opts) => { try { framesCommand(opts.project); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+    .option('--fast', 'use the analytical in-frame checker')
+    .action(async (opts) => { try { await framesCommand(opts.project, opts.fast); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('compile')

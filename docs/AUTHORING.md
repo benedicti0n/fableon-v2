@@ -111,6 +111,17 @@ The compiler writes the v1 shot `end`, so the selected ranges do not stretch acr
 - `fableon review --project <dir> --compare <fixture> --shots … --out sheet.jpg` writes the labelled side-by-side sheet
   (compiled left of each pair, comparison right; start/mid/end per shot).
 
+## Measured composition checks (F3)
+
+`fableon frames` (default) renders an object-ID coverage pass for every checked key and writes `frames.json` beside the
+board. Each key lists checked frames, size, primary subject height/visibility/head box/eye line, blockers, context
+items, errors and warnings; each finding carries a one-line fix hint. Use `--fast` for the old analytic path.
+
+Settle frames are the first safe frame after a cut/glide/tilt; mid and end-2 follow, plus every 12 frames in long keys.
+Checks are `subject hidden`, `subject too small/large` (size bands), `head cut`, `blocker`, `context missing`, the
+speaker-off-screen warning and the measured eye-line warning. Semantic board keys are errors; hand-written v1 keys are
+warnings. `with` context and `reaction` cutaways are part of the key contract.
+
 ## Strict schemas and model cards
 
 `schema/authoring.schema.json` is closed: every effect kind, set piece, crowd, motion, animate value, special params

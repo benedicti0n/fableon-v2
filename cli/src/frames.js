@@ -1,10 +1,12 @@
 // `fableon frames`: project every named camera subject into the frame at the key and every 6th frame, check the
 // Shorts safe area, head visibility and line-of-sight occlusion. Works on any v1 storyboard.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
-import { ROOT } from './env.js';
+import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, SPEAKER_AREA, EYE_MIN, EYE_MAX, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -284,12 +286,143 @@ export function checkFrames(dirArg, opts = {}) {
 
 function keyForProjection(k, f, start) { return { ...k, pos: k.pos, look: k.look }; }
 
-export function framesCommand(dirArg) {
-  const r = checkFrames(dirArg);
-  for (const row of r.rows) console.log(`${row.shot.padEnd(5)} key ${String(row.key).padStart(4)} frame ${String(row.frame).padStart(5)} ${row.subject.padEnd(16)} outside ${String(row.outside * 100).padStart(5)}%  eye ${String(row.eye * 100).padStart(3)}%${row.blocked ? `  BLOCKED ${row.blocked}` : ''}`);
-  for (const e of r.errors) console.log(`ERROR ${e.shot} key ${e.key} frame ${e.frame} ${e.subject}: ${e.error}`);
-  for (const w of r.warnings) console.log(`WARN  ${w.shot} key ${w.key} frame ${w.frame} ${w.subject}: ${w.warning}`);
-  console.log(`frames: ${r.rows.length} checks, ${r.errors.length} error(s), ${r.warnings.length} warning(s) — ${r.file}`);
+const normalizeWith = (id, ctx) => {
+  if (String(id).startsWith('mark:')) return String(id);
+  if (ctx.catalog.sets.some((s) => s.marks.some((m) => `${s.name}.${m.name}` === id))) return `mark:${id}`;
+  return id;
+};
+const talkAt = (actor, f, start, ctx) => {
+  let talk = actor.talk;
+  for (const b of actor.beats ?? []) if (f >= ctx.anchor(b.at, start) && b.talk !== undefined) talk = b.talk;
+  return !!talk;
+};
+const overlap = (a, b) => {
+  if (!a || !b) return 0;
+  const w = Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0));
+  const h = Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+  return (w * h) / Math.max(1e-9, (a.x1 - a.x0) * (a.y1 - a.y0));
+};
+export async function checkFramesMeasured(dirArg, opts = {}) {
+  const dir = projectDir(dirArg);
+  const ctx = makeContext(dir);
+  const shots = ctx.sb.shots ?? [];
+  const jobs = [], keyMeta = [];
+  const crossfade = ctx.sb.crossfade ?? 10;
+  for (let si = 0; si < shots.length; si++) {
+    const shot = shots[si];
+    const start = ctx.anchor(shot.start);
+    const endShot = shot.end ? ctx.anchor(shot.end, start) : si + 1 < shots.length ? ctx.anchor(shots[si + 1].start) : ctx.END + (ctx.sb.tailFrames ?? 36);
+    const keys = (shot.camera ?? []).map((k) => ({ k, f: ctx.anchor(k.at, start) })).sort((a, b) => a.f - b.f);
+    keys.forEach(({ k, f: kf }, ki) => {
+      const end = ki + 1 < keys.length ? keys[ki + 1].f : endShot;
+      const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? crossfade / 2 : 0;
+      const finish = Math.max(k.cut ? SETTLE_CUT : 0, k.dur ?? 0, k.tiltDur ?? 0, xf);
+      const settle = Math.min(Math.max(kf, end - 1), kf + finish);
+      const mid = Math.floor((settle + end - 1) / 2);
+      const frames = [...new Set([settle, mid, Math.max(settle, end - 2)])];
+      if (end - settle > 60) for (let f = settle + SAMPLE_EVERY; f < end - 2; f += SAMPLE_EVERY) frames.push(f);
+      const withIds = (k.with ?? []).map((id) => normalizeWith(id, ctx));
+      for (const f of frames.sort((a, b) => a - b)) {
+        const idx = jobs.length;
+        jobs.push({ frame: f, subjects: k.subjects ?? [], over: k.over ?? null, with: withIds });
+        keyMeta.push({ si, ki, shot, shotId: shot.id, k, start, kf, end, settle, f, idx, with: withIds });
+      }
+      // keep the key's sample list on its first job for report assembly
+    });
+  }
+  const tmp = mkdtempSync(join(tmpdir(), 'fableon-cov-'));
+  try {
+    const jobsFile = join(tmp, 'jobs.json'), outFile = join(tmp, 'cov.json');
+    writeFileSync(jobsFile, JSON.stringify(jobs));
+    await run(process.execPath, [RENDER_CJS, 'coverage', '--jobs', jobsFile, '--out', outFile, '--project', dir, '--size', '180x320', '--msaa', '0'], { cwd: ROOT });
+    const cov = JSON.parse(readFileSync(outFile, 'utf8'));
+    const errors = [], warnings = [], rows = [];
+    const byKey = new Map();
+    for (const m of keyMeta) {
+      const keyId = `${m.si}/${m.ki}`;
+      if (!byKey.has(keyId)) byKey.set(keyId, { ...m, frames: [] });
+      byKey.get(keyId).frames.push(m.f);
+    }
+    let totalMs = 0;
+    for (let i = 0; i < keyMeta.length; i++) {
+      const m = keyMeta[i], r = cov[i]; totalMs += r?.ms ?? 0;
+      if (!r) continue;
+      const k = m.k, size = k.size ?? inferSize(k.fov);
+      const band = BANDS[size] ?? BANDS.medium;
+      const subjects = k.subjects ?? [];
+      const itemsById = new Map((r.items ?? []).map((x) => [x.id, x]));
+      const idsById = new Map((r.ids ?? []).map((x) => [x.id, x]));
+      const peopleById = new Map((r.people ?? []).map((x) => [x.id, x]));
+      const primary = subjects[0];
+      const ppl = primary ? peopleById.get(primary) : null;
+      const pstat = primary ? idsById.get(primary) : null;
+      const head = ppl ? Math.max(0, ppl.headBox.y1 - ppl.headBox.y0) : null;
+      const body = pstat ? Math.max(0, pstat.bbox.y1 - pstat.bbox.y0) : null;
+      const metric = band.metric === 'head' ? head : body;
+      const add = (list, code, id, message, fix = '') => list.push({ shot: m.shotId, key: m.ki, frame: m.f, subject: id, code, message, fix });
+      const sev = k.semantic ? 'error' : 'warning';
+      const push = (code, id, message, fix) => add(sev === 'error' ? errors : warnings, code, id, message, fix);
+      if (primary && metric !== null) {
+        if (metric < band.min) push('subject too small', primary, `subject too small ${primary}: ${(metric * 100).toFixed(0)}% below ${size} floor ${(band.min * 100).toFixed(0)}%`, FIX.tooSmall);
+        else if (metric > band.max) push('subject too large', primary, `subject too large ${primary}: ${(metric * 100).toFixed(0)}% above ${size} ceiling ${(band.max * 100).toFixed(0)}%`, FIX.tooLarge);
+      }
+      for (const id of subjects.slice(1)) {
+        const p = peopleById.get(id), s = idsById.get(id), h = p ? Math.max(0, p.headBox.y1 - p.headBox.y0) : null, b = s ? Math.max(0, s.bbox.y1 - s.bbox.y0) : null;
+        const v = band.metric === 'head' ? h : b;
+        if (v !== null && v < band.floor) push('subject too small', id, `subject too small ${id}: ${(v * 100).toFixed(0)}% below ${size} floor ${(band.floor * 100).toFixed(0)}%`, FIX.tooSmall);
+      }
+      for (const id of [...subjects, ...(k.over ? [k.over] : [])]) {
+        const p = peopleById.get(id); if (!p) continue;
+        const hb = p.headBox, close = size === 'close';
+        if (hb.x0 < 0 || hb.x1 > 1 || hb.y0 < 0 || (hb.y1 > 1 && !(close && p.chin?.y <= 1))) push('head cut', id, `head cut ${id}: head box crosses the frame edge`, FIX.headCut);
+        if (id !== k.over && (r.subjects?.[id] ?? 0) < HIDDEN_FRACTION) push('subject hidden', id, `subject hidden ${id}: ${((r.subjects?.[id] ?? 0) * 100).toFixed(0)}% visible`, FIX.hidden);
+      }
+      const primaryStat = primary ? idsById.get(primary) : null;
+      const nearest = primaryStat?.distance ?? (primary ? itemsById.get(primary)?.distance : null);
+      if (nearest !== undefined && nearest !== null) {
+        for (const id of r.ids ?? []) {
+          if (['sky', 'ground', 'water'].includes(id.id) || subjects.includes(id.id) || id.id === k.over || id.id.startsWith('blob') || id.id.startsWith('mark:')) continue;
+          const it = itemsById.get(id.id), base = String(id.id).split('#')[0];
+          if (!it || it.kind === 'sky' || it.kind === 'ground' || it.kind === 'water') continue;
+          if (it.kind === 'effect' && AMBIENT_EFFECTS.has(base)) continue;
+          const area = id.pixels / (180 * 320);
+          if (id.distance < nearest - 0.05 && (area > BLOCKER_AREA || (primary && overlap(id.bbox, primaryStat?.bbox) > BLOCKER_OVERLAP))) push('blocker', id.id, `blocker ${id.id}: fills ${(area * 100).toFixed(0)}% in front of ${primary}`, FIX.blocker);
+        }
+      }
+      for (const id of m.with) {
+        const stat = idsById.get(id), vis = r.subjects?.[id] ?? 0;
+        if (!stat || stat.pixels / (180 * 320) < CONTEXT_AREA || vis < CONTEXT_VISIBLE) push('context missing', id, `context missing ${id}: ${stat ? (stat.pixels / (180 * 320) * 100).toFixed(1) + '% area, ' : ''}${(vis * 100).toFixed(0)}% visible`, FIX.context);
+      }
+      if (primary && ppl && (size === 'close' || size === 'medium') && (ppl.eye.y < EYE_MIN || ppl.eye.y > EYE_MAX)) add(warnings, 'eye line', primary, `eye line ${(ppl.eye.y * 100).toFixed(0)}% outside 30-50%`, FIX.eye);
+      for (const a of m.shot.actors ?? []) {
+        if (talkAt(a, m.f, m.start, ctx)) {
+          const id = a.id ?? a.who, stat = idsById.get(id);
+          if ((stat?.pixels ?? 0) / (180 * 320) < SPEAKER_AREA && !k.reaction) add(warnings, 'speaker off-screen', id, `speaker off-screen ${id}: talking but <4% of frame`, FIX.speaker);
+        }
+      }
+      rows.push({ shot: m.shotId, key: m.ki, frame: m.f, size, primary, primaryHeight: metric === null ? null : +(metric * 100).toFixed(1), visible: primary ? r.subjects?.[primary] ?? 0 : null, eye: ppl ? +(ppl.eye.y * 100).toFixed(1) : null, subjects: subjects.map((id) => ({ id, height: +( (band.metric === 'head' ? Math.max(0, (peopleById.get(id)?.headBox.y1 ?? 0) - (peopleById.get(id)?.headBox.y0 ?? 0)) : Math.max(0, (idsById.get(id)?.bbox.y1 ?? 0) - (idsById.get(id)?.bbox.y0 ?? 0))) * 100).toFixed(1), visible: r.subjects?.[id] ?? 0, headBox: peopleById.get(id)?.headBox ?? null, eye: peopleById.get(id)?.eye ?? null })), blockers: (r.ids ?? []).filter((x) => !subjects.includes(x.id) && !['sky', 'ground', 'water'].includes(x.id) && x.distance < (nearest ?? Infinity)).map((x) => x.id), context: m.with.map((id) => ({ id, pixels: idsById.get(id)?.pixels ?? 0, visible: r.subjects?.[id] ?? 0 })) });
+    }
+    // rebuild key rows grouped from per-frame rows
+    const keyRows = [];
+    for (const [kid, meta] of byKey) {
+      const frameRows = rows.filter((r) => r.shot === meta.shotId && r.key === meta.ki);
+      const first = frameRows[0];
+      keyRows.push({ shot: meta.shotId, key: meta.ki, anchor: meta.k.at, size: first?.size, primary: first?.primary, frames: [...new Set(meta.frames)].sort((a, b) => a - b), subjects: first?.subjects ?? [], errors: errors.filter((e) => e.shot === meta.shotId && e.key === meta.ki), warnings: warnings.filter((w) => w.shot === meta.shotId && w.key === meta.ki) });
+    }
+    const outDir = join(dir, 'qa'); mkdirSync(outDir, { recursive: true });
+    const payload = { measured: true, coverageMs: +(totalMs / Math.max(1, keyMeta.length)).toFixed(1), keys: keyRows, rows, errors, warnings };
+    writeFileSync(join(dir, 'frames.json'), JSON.stringify(payload, null, 2) + '\n');
+    writeFileSync(join(outDir, 'frames.json'), JSON.stringify(payload, null, 2) + '\n');
+    return { ok: errors.length === 0, ...payload, file: join(dir, 'frames.json') };
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+}
+
+export async function framesCommand(dirArg, fast = false) {
+  const r = fast ? checkFrames(dirArg) : await checkFramesMeasured(dirArg);
+  for (const row of r.keys ?? r.rows) console.log(`${row.shot.padEnd(5)} key ${String(row.key).padStart(2)} ${row.primary ?? '-'} ${row.size ?? ''} ${row.primaryHeight ?? ''}`);
+  for (const e of r.errors) console.log(`ERROR ${e.shot} key ${e.key} frame ${e.frame} ${e.subject}: ${e.message}`);
+  for (const w of r.warnings) console.log(`WARN  ${w.shot} key ${w.key} frame ${w.frame} ${w.subject}: ${w.message}`);
+  console.log(`frames: ${r.keys?.length ?? r.rows.length} keys, ${r.errors.length} error(s), ${r.warnings.length} warning(s)${r.coverageMs ? `, ${r.coverageMs} ms/frame coverage` : ''} — ${r.file}`);
   if (!r.ok) throw new Error(`${r.errors.length} in-frame error(s)`);
   return r;
 }
