@@ -5,10 +5,11 @@ world (ink outlines, lens blur, colour grade), synthesized narration (Kokoro), a
 effects. Every stage (brief → research → script → voice → storyboard → animatic → look & sound → render → QA/export)
 produces an editable artifact and can use a different AI model.
 
-**Status: Phase 1 (foundation).** One `fableon` CLI rebuilds the Adi Parva fixture film end to end (shots → render →
-audio → assemble → QA) on this machine, with regression tests against the prototype's reference stills and audio
-metrics. The renderer still has the fixture timeline compiled in; storyboards and custom projects arrive in Phase 2.
-See `docs/ARCHITECTURE.md`, `docs/ROADMAP.md` and `docs/BENCHMARKS.md`. Coding agents: read `AGENTS.md` first.
+**Status: Phase 2A (storyboard v1).** Ten of the 39 fixture shots render from `storyboard.json` through the new
+interpreter; the other 29 still use the compiled-in `story.ts` timeline (`"legacy": true`). The CLI rebuilds the film,
+validates the storyboard and proves pixel parity for the ported shots. Storyboard/custom projects beyond the fixture
+arrive in Phase 2B/2C. See `docs/STORYBOARD_SCHEMA.md`, `docs/ARCHITECTURE.md`, `docs/ROADMAP.md` and
+`docs/BENCHMARKS.md`. Coding agents: read `AGENTS.md` first.
 
 ## Requirements
 - Node 20+ (`.nvmrc` says 20), npm.
@@ -58,6 +59,7 @@ That writes `work/adi/final.mp4` (540x960, 30 fps, 3639 frames, 121.3 s, AAC) pl
 | Command | What it does |
 |---|---|
 | `fableon doctor` | Node, Python 3.12 + packages, ffmpeg/ffprobe, Playwright Chromium + WebGL renderer, engine `dist/`, free disk. Each failure prints a one-line fix. |
+| `fableon validate --project <dir>` | Validate `storyboard.json`: JSON Schema v1, catalog names, word anchors, strictly increasing shot starts and ordered camera keys/beats. |
 | `fableon init <name> [--from fixtures/adi-parva]` | Copy a fixture project's inputs into `work/<name>/` (never overwrites a non-empty folder). |
 | `fableon voice --project <dir> [--speed 1.35] [--voice am_michael]` | Regenerate narration + word timings with Kokoro (optional for the fixture; rewrites `voice.wav` and `words.json`). |
 | `fableon shots --project <dir>` | Write `shots.json`, `qa_meta.json`, `cuts.json` from the engine. |
@@ -72,13 +74,16 @@ Quality presets: `preview` = 540x960, `final` = 1440x2560 (both MSAA 0 + SMAA, t
 Every command accepts `--project`; render defaults to 2 workers (use 1–2 on an 8 GB machine).
 
 Phase 1 only draws the fixture timeline: commands that render check that the project's `words.json` is identical to
-`engine/src/words.json` and stop with a clear message otherwise (custom projects arrive in Phase 2).
+`engine/src/words.json` and stop with a clear message otherwise (custom projects arrive in Phase 2). From Phase 2A a
+project with a storyboard is validated first; legacy shots still require the fixture words, while a fully ported
+storyboard may use its own.
 
 ## A project folder
 
 ```
 work/<name>/
   SCRIPT.md pronunciations.json voice.wav words.json  inputs
+  storyboard.json                                     v1 shot contract (optional in Phase 2A)
   shots.json qa_meta.json cuts.json                   engine metadata
   stills/f_<frame>.jpg                                selected stills
   render/seg_XX.mp4 render/jobs_N.json                per-shot clips (resumable)

@@ -3,7 +3,8 @@ import { existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, wri
 import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
-import { assertFixtureTimeline, initProject, projectDir, quality, requireFile } from './project.js';
+import { assertFixtureTimeline, assertRenderable, initProject, projectDir, quality, requireFile } from './project.js';
+import { validateStoryboard } from './validate.js';
 import { balance } from './jobs.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -13,6 +14,15 @@ function readShots(dir) {
   const shots = JSON.parse(readFileSync(requireFile(dir, 'shots.json', 'run: fableon shots --project <dir>'), 'utf8'));
   if (!Array.isArray(shots) || !shots.length) throw new Error(`${join(dir, 'shots.json')} is empty or malformed`);
   return shots;
+}
+
+/** Validate a storyboard project before touching the engine; legacy-only projects skip the schema and use the old gate. */
+function prepare(dir) {
+  if (existsSync(join(dir, 'storyboard.json'))) {
+    const r = validateStoryboard(dir);
+    if (!r.ok) throw new Error(`storyboard validation failed (${r.errors.length} error(s)); fix them before rendering`);
+  }
+  assertRenderable(dir);
 }
 
 function segments(dir, shots) {
@@ -31,7 +41,7 @@ async function writeMeta(dir) {
 
 export async function shotsCommand(dirArg) {
   const dir = projectDir(dirArg);
-  assertFixtureTimeline(dir);
+  prepare(dir);
   await writeMeta(dir);
   console.log(`shots: wrote shots.json, qa_meta.json, cuts.json in ${dir}`);
 }
@@ -44,7 +54,7 @@ export async function initCommand(name, from) {
 
 export async function stillsCommand(dirArg, framesCsv, qualityName) {
   const dir = projectDir(dirArg);
-  assertFixtureTimeline(dir);
+  prepare(dir);
   const q = quality(qualityName);
   if (!framesCsv) throw new Error('missing --frames 60,640');
   await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', framesCsv, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
@@ -97,7 +107,7 @@ async function workers(dir, segs, q, n) {
 
 export async function renderCommand(dirArg, { qualityName = 'preview', workers: n = 2, detach = false } = {}) {
   const dir = projectDir(dirArg);
-  assertFixtureTimeline(dir);
+  prepare(dir);
   const q = quality(qualityName);
   if (!Number.isInteger(n) || n < 1 || n > 16) throw new Error('--workers must be an integer 1..16');
   const segs = segments(dir, readShots(dir));
@@ -120,7 +130,7 @@ export async function renderCommand(dirArg, { qualityName = 'preview', workers: 
 
 export async function audioCommand(dirArg) {
   const dir = projectDir(dirArg);
-  assertFixtureTimeline(dir);
+  assertRenderable(dir);
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
   await run(py, [join(ROOT, 'audio', 'mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });

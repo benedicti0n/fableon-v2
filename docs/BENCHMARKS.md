@@ -51,3 +51,17 @@ Phase 1 acceptance run on the machine above: `fableon all --project work/adi --q
 | **`fableon all` total** | **129 s** | warm run; 152 s on the first (cold shader cache) run; `work/adi` is 316 MB |
 
 Steady-state stills at 540x960 are ~0.03–0.05 s/frame per worker with the Metal path.
+
+## Phase 2A — storyboard mode and final quality
+
+The storyboard interpreter adds a validation pass and, for the 10 ported shots, the same camera/actor/effect calls as
+story.ts (parity: 80 frames, max MAD 0.000). Timings on the same M1, 2 workers:
+
+| Run | Wall | Render stage | Notes |
+|---|---:|---:|---|
+| preview 540x960, `work/adi` | 186.5 s | 55 s | storyboard mode; QA PASS, identical summary to Phase 1; 50 MB `final.mp4` |
+| **final 1440x2560, `work/adi-final`** | **626.8 s** | **520 s** | 3639 frames at 0.143 s/frame wall (~0.286 s/frame/worker); peak summed RSS ~1.1 GB (sampled); QA PASS |
+
+Final outputs: 1440x2560, 30 fps, 3639 frames, 121.300 s, AAC 48 kHz; `final.mp4` 183 MB; project folder 685 MB
+(render clips 349 MB, audio 133 MB, QA sheets 21 MB). The full final render completed with 2 workers on the 8 GB
+machine; memory did not force a fallback to `--workers 1`.

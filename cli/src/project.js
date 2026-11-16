@@ -33,8 +33,17 @@ export function assertFixtureTimeline(dir) {
   const mine = readFileSync(requireFile(dir, 'words.json'), 'utf8');
   const fixture = readFileSync(join(ENGINE, 'src', 'words.json'), 'utf8');
   if (mine !== fixture) {
-    throw new Error(`${join(dir, 'words.json')} differs from engine/src/words.json — custom projects arrive in Phase 2`);
+    throw new Error(`${join(dir, 'words.json')} differs from engine/src/words.json — legacy shots need the compiled timeline (custom projects arrive in Phase 2B)`);
   }
+}
+
+/** A storyboard with legacy shots depends on the compiled-in timeline; a fully ported one may use its own words. */
+export function assertRenderable(dir) {
+  const sbPath = join(dir, 'storyboard.json');
+  if (!existsSync(sbPath)) { assertFixtureTimeline(dir); return null; }
+  const sb = JSON.parse(readFileSync(sbPath, 'utf8'));
+  if ((sb.shots ?? []).some((s) => s.legacy)) assertFixtureTimeline(dir);
+  return sb;
 }
 
 // Copy a project's inputs into work/<name>/. Derived folders (reference stills, audio, render, qa) stay out.
