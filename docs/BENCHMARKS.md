@@ -38,8 +38,16 @@ Other platforms: `gpu` uses `--use-angle=d3d11` on Windows and no extra ANGLE fl
 
 ## Full pipeline
 
-Filled in by the Phase 1 acceptance run (39 shots, 3639 frames, preview 540x960):
+Phase 1 acceptance run on the machine above: `fableon all --project work/adi --quality preview --workers 2`
+(39 shots, 3639 frames, 121.3 s of film).
 
-- preview render: _pending_ s/frame, _pending_ min total with 2 workers
-- final render: measured above; not run end-to-end (time)
-- `fableon all --quality preview --workers 2`: _pending_
+| Stage | Time | Notes |
+|---|---:|---|
+| shots (list + qa + cuts) | 1.2 s | three browser launches |
+| preview render | 55 s | 2 workers, 0.03 s/frame wall (~0.06 s/frame/worker); 106 MB of clips |
+| audio mix | 20 s | score + sfx + limiter, −14.5 LUFS, −1.3 dBTP |
+| assemble | 5 s | concat + AAC mux, 48 MB `final.mp4` |
+| QA (3639 frames) | 41 s | report + 61 contact sheets, 21 MB |
+| **`fableon all` total** | **129 s** | warm run; 152 s on the first (cold shader cache) run; `work/adi` is 316 MB |
+
+Steady-state stills at 540x960 are ~0.03–0.05 s/frame per worker with the Metal path.

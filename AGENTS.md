@@ -30,8 +30,11 @@ before you change anything.
 
 ## Layout (seed)
 - `engine/` — TypeScript renderer (three.js + postprocessing, no React). `src/main.ts` is the page entry that exposes
-  `window.renderFrame(f)`; `src/story.ts` is (for now) the hand-written Adi Parva timeline; `scripts/render.cjs` drives
-  headless Chromium via Playwright and pipes JPEG frames into ffmpeg; `scripts/build.mjs` bundles with esbuild.
+  `window.renderFrame(f)` and `window.GLINFO`; `src/story.ts` is (for now) the hand-written Adi Parva timeline;
+  `scripts/render.cjs` drives headless Chromium via Playwright and pipes JPEG frames into ffmpeg; `scripts/build.mjs`
+  bundles with esbuild; `scripts/assemble.mjs` concatenates clips and muxes the mix.
+- `cli/` — the `fableon` CLI (plain Node ESM): `doctor`, project workspace and the fixture pipeline.
+- `tests/` — regression suite for the reference stills and the audio metrics.
 - `audio/` — Python sound: `score.py` (original synthesized score), `sfx.py` (effects + ambience), `mix.py` (final mix),
   `timeline.py` (word anchors), `dsp.py` + `instruments.py` (synthesis toolkit). All read `PROJECT_DIR`.
 - `voice/make_voice.py` — Kokoro TTS narration + word timings (reads `PROJECT_DIR/SCRIPT.md` + `pronunciations.json`).
@@ -40,8 +43,11 @@ before you change anything.
 
 ## Running (seed)
 ```bash
-cd engine && npm install && npm run build
-# one still (frame 640) at preview size; RENDER_GL=swiftshader only on machines without a usable GPU
-node scripts/render.cjs stills ../work/test/f_ 640 540 960 0
-cd ../audio && PROJECT_DIR=../work/adi-parva python mix.py
+npm install && npm run build
+npx fableon doctor
+npx fableon init adi --from fixtures/adi-parva
+npx fableon all --project work/adi --quality preview --workers 2
+npm test
 ```
+`work/` is gitignored. `RENDER_GL=swiftshader` only on machines without a usable GPU (the default picks the fastest
+working set per OS; see `docs/BENCHMARKS.md`).
