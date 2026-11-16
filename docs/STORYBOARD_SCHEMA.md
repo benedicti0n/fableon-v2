@@ -84,6 +84,7 @@ A shot runs from its `start` to the next shot's `start` (the last one to TOTAL).
 ```jsonc
 {
   "at": Anchor,                       // first key = shot start
+  "subjects": ["kunti"],              // optional cast ids the shot is about (in-frame validator)
   "cut": true,                        // hard cut; otherwise a glide of `dur` frames (default 24, smootherstep) from the previous key
   "dur": 24,
   "type": "dolly",                    // dolly | fixed | tilt
@@ -197,3 +198,18 @@ A shot's content (camera, actors, beats, visibility, effects, set pieces and spe
 frame on which the shot is drawn**, including the crossfade frames after its end (outgoing) and before its start
 (incoming). The interpreter never clamps content to `[start, end)`; beats and visibility follow their anchors only.
 Stage functions are plain formulas of the global frame `f`.
+
+## In-frame subjects (Phase 2C)
+
+A camera key may list `"subjects": ["kunti", …]` — the cast ids the shot is about. `fableon frames --project <dir>`
+(and `fableon validate --deep`) samples each key's first frame and every 6th frame while it is active, projects each
+subject's measured card box and checks:
+
+- ERROR if more than 10 % of the box is outside the Shorts safe area (4 % left/right, 6 % top, 15 % bottom) or the head
+  is outside the frame;
+- ERROR if the line of sight from the camera to the head or chest is blocked by a catalog keep-out volume, or the
+  camera is inside one;
+- WARNING if a close/medium primary subject's eyes are outside the 30-50 % vertical band (inferred from fov <= 40).
+
+The checker writes `qa/frames.json` with every sampled row, error and warning. Subjects that leave the framed area are
+not listed for that key; those keys remain valid scenery/transition keys with an empty list.

@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
 import { validateCommand } from './validate.js';
 import { compileCommand } from './compile.js';
+import { framesCommand } from './frames.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -24,7 +25,14 @@ export function main(argv = process.argv) {
     .command('validate')
     .description('validate a project storyboard (schema, catalog, word anchors, time order)')
     .requiredOption('--project <dir>', 'project folder')
-    .action((opts) => validateCommand(opts.project));
+    .option('--deep', 'also run the in-frame/occlusion check')
+    .action((opts) => validateCommand(opts.project, opts.deep));
+
+  program
+    .command('frames')
+    .description('check every named camera subject against the safe area and scenery occlusion')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => { try { framesCommand(opts.project); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('compile')

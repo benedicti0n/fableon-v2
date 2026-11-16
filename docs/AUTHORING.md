@@ -157,5 +157,5 @@ Constants as implemented (`cli/src/solver.js`):
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
   camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
-- The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt` and the default DOF entry. `subjects` is added
-  to v1 camera keys in F5.
+- The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt`, the default DOF entry and `subjects` on the
+  v1 camera key.

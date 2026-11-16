@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { ROOT, fail } from './env.js';
 import { projectDir, requireFile } from './project.js';
+import { checkFrames } from './frames.js';
 
 const schema = JSON.parse(readFileSync(join(ROOT, 'schema', 'storyboard.schema.json'), 'utf8'));
 const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
@@ -149,7 +150,12 @@ export function validateStoryboard(dirArg) {
   return { ok: true, errors: [], dir, file };
 }
 
-export function validateCommand(dirArg) {
+export function validateCommand(dirArg, deep = false) {
   const r = validateStoryboard(dirArg);
   if (!r.ok) fail(`${r.errors.length} storyboard error(s)`);
+  if (deep) {
+    const f = checkFrames(dirArg);
+    console.log(`validate --deep: in-frame ${f.rows.length} checks, ${f.errors.length} error(s), ${f.warnings.length} warning(s)`);
+    if (!f.ok) fail(`${f.errors.length} in-frame error(s)`);
+  }
 }

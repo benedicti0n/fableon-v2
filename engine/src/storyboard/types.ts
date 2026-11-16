@@ -25,7 +25,7 @@ export type Motion = PathMotion | BallisticMotion;
 export type Push = { from: Anchor; rate?: number; punch?: number; punchAt?: Anchor };
 export type CamKey = {
   at: Anchor; cut?: boolean; dur?: number; type: "dolly" | "fixed" | "tilt";
-  pos: Point; look: Point; fov: number; roll?: number; push?: Push; lookTo?: Point; tiltDur?: number;
+  pos: Point; look: Point; fov: number; roll?: number; push?: Push; lookTo?: Point; tiltDur?: number; subjects?: string[];
 };
 export type DofEntry = { at: Anchor; cInf: number; dur?: number; focus?: Point | null };
 export type Talk = { base: Expr; rate?: number };

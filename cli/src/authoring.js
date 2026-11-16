@@ -337,7 +337,6 @@ const compileShot = (shot, board, words, catalog, fps, ctx) => {
       const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, setInfo: info, keepout });
       const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look };
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
-      delete key.subjects; // F5 adds the v1 subjects field
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {
         if (!primary.moveId) throw new Error(`shot ${shot.id}: follow camera needs a moving id on "${primary.id}"`);
