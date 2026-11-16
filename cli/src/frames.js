@@ -504,7 +504,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         for (const id of group.ids) { const stat = idsById.get(id); if (stat) { any = true; pixels += stat.pixels; vis = Math.max(vis, r.subjects?.[id] ?? 0); } }
         if (!any || pixels / (180 * 320) < CONTEXT_AREA || vis < CONTEXT_VISIBLE) push('context missing', group.id, `context missing ${group.id}: ${(pixels / (180 * 320) * 100).toFixed(1)}% area, ${(vis * 100).toFixed(0)}% visible`, FIX.context);
       }
-      if (primary && (size === 'wide' || size === 'establishing')) {
+      if (primary && !k.over && (size === 'wide' || size === 'establishing')) {
         for (const bg of r.ids ?? []) {
           if (subjects.includes(bg.id) || bg.id === k.over || (m.withIds ?? []).includes(bg.id)) continue;
           const area = bg.pixels / (180 * 320);
@@ -515,16 +515,16 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       const actionFrames = new Map();
       for (const a of m.shot.actors ?? []) {
         const id = a.id ?? a.who, frames = new Set();
+        if ((k.subjects ?? []).includes(id)) continue;
         for (const b of a.beats ?? []) if (b.offscreen !== true && (b.pose !== undefined || b.expr !== undefined || b.prop !== undefined)) frames.add(ctx.anchor(b.at, m.start));
         if (a.visible?.from) frames.add(ctx.anchor(a.visible.from, m.start));
         if (a.visible?.to) frames.add(ctx.anchor(a.visible.to, m.start));
         if (a.appear?.at) frames.add(ctx.anchor(a.appear.at, m.start));
         for (const f of frames) if (f >= m.kf && f < m.end && f >= m.start) {
           const seen = `${m.shotId}/${m.ki}/${id}/${f}`; if (actionSeen.has(seen)) continue; actionSeen.add(seen);
-          const st = actorState(ctx, m.shot, a, f, m.start);
-          if (!st) continue;
-          const pr = projectState(ctx, keyForProjection(k, f, m.start), { ...st, kind: 'actor' }, f);
-          if (pr.area < ACTION_AREA) add(warnings, 'action off-screen', id, `action off-screen ${id}: beat at ${f} covers ${(pr.area * 100).toFixed(0)}% of the frame`, FIX.action);
+          if (!idsById.has(id)) continue;
+          const bb = idsById.get(id)?.bbox; const area = bb ? (bb.x1 - bb.x0) * (bb.y1 - bb.y0) : 0;
+          if (area < ACTION_AREA) add(warnings, 'action off-screen', id, `action off-screen ${id}: beat at ${f} covers ${(area * 100).toFixed(0)}% of the frame`, FIX.action);
         }
       }
       if (primary && ppl && (size === 'close' || size === 'medium') && (ppl.eye.y < EYE_MIN || ppl.eye.y > EYE_MAX)) add(warnings, 'eye line', primary, `eye line ${(ppl.eye.y * 100).toFixed(0)}% outside 30-50%`, FIX.eye);

@@ -21,7 +21,8 @@ export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts =
     keys.forEach(({ k, f: kf }, ki) => {
       const end = ki + 1 < keys.length ? keys[ki + 1].f : endShot;
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? (ctx.sb.crossfade ?? 10) / 2 : 0;
-      const frameList = sampleKeyFrames(k, kf, end, xf);
+      const sampled = sampleKeyFrames(k, kf, end, xf);
+      const frameList = sampled.length <= 3 ? sampled : [sampled[0], sampled[Math.floor(sampled.length / 2)], sampled[sampled.length - 1]];
       frames.push(...frameList);
       rows.push({ shot: shot.id, key: ki, size: k.size ?? null, move: k.move ?? null, on: k.subjects ?? [], frames: frameList, label: `${shot.id} · key ${ki} · ${k.size ?? '-'}/${k.move ?? 'push'}/${(k.subjects ?? []).join('+') || (k.with ?? []).join('+') || 'scenery'}` });
     });

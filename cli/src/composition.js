@@ -11,7 +11,8 @@ export const BANDS = {
   insert: { metric: 'fill', min: 0.55, max: 0.90, floor: 0.55 },
 };
 // Per-class medians from the reference film (2E calibration; recomputed after the label fix in F5).
-export const TARGETS = { close: 0.27, medium: 0.17, full: 0.34, wide: 0.24, insert: 0.725 };
+export const GROUP_SAFE = 0.86;             // leave a 6 % side margin when fitting a group in the frame
+export const TARGETS = { close: 0.262, medium: 0.158, full: 0.338, wide: 0.238, insert: 0.725 };
 export const HIDDEN_FRACTION = 0.60;      // subject visible pixels / solo pixels
 export const CONTEXT_AREA = 0.02;         // `with` item minimum frame area
 export const CONTEXT_VISIBLE = 0.40;      // `with` item minimum visible fraction

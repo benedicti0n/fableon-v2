@@ -1,7 +1,7 @@
 // Deterministic framing solver: semantic camera key + measured subjects + keep-out volumes -> v1 camera key.
 // Rules and constants are documented in docs/AUTHORING.md.
 const DEG = Math.PI / 180;
-import { BANDS, TARGETS } from './composition.js';
+import { BANDS, TARGETS, GROUP_SAFE } from './composition.js';
 export const ASPECT = 9 / 16;
 
 export const SIZE = {
@@ -95,7 +95,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   if (size !== 'establishing' && size !== 'insert' && subjects.length) {
     const b = unionBox(subjects);
     const width = Math.max(b.x1 - b.x0, b.z1 - b.z0);
-    const groupDist = width / (2 * Math.tan((vfov * DEG) / 2) * aspect);
+    const groupDist = width / (2 * Math.tan((vfov * DEG) / 2) * aspect * GROUP_SAFE);
     if (groupDist > distance) distance = groupDist;
     const metricNow = metricWorld / (2 * distance * Math.tan((vfov * DEG) / 2));
     if (metricNow < band.floor) throw new Error(`group too wide for a vertical frame (${width.toFixed(2)} m); fix: split into keys, use pan, curve the row or reduce spacing`);

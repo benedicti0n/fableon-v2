@@ -8957,8 +8957,8 @@
     },
     "deer": {
       "description": "Stag in side view",
-      "standing": 1.28088,
-      "seated": 1.28088,
+      "standing": 0.7044840000000001,
+      "seated": 0.7044840000000001,
       "eye": 0.9568800000000001,
       "eyeSeated": 0.9568800000000001,
       "head": 0.216,

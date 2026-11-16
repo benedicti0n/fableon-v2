@@ -552,7 +552,7 @@
           "on": [
             "ganesha"
           ],
-          "angle": "eye",
+          "angle": "high",
           "side": "front",
           "move": "push"
         }
@@ -742,17 +742,6 @@
           "angle": "eye",
           "side": "front",
           "move": "push"
-        },
-        {
-          "at": "5.father's",
-          "size": "medium",
-          "on": [
-            "fisher"
-          ],
-          "angle": "eye",
-          "side": "front",
-          "move": "push",
-          "cut": true
         }
       ]
     },
@@ -760,7 +749,7 @@
       "id": "L12",
       "start": "12.A",
       "end": "13.Pandu",
-      "light": "golden",
+      "light": "day",
       "sets": [
         "palace"
       ],
@@ -809,8 +798,7 @@
           ],
           "angle": "eye",
           "side": "front",
-          "move": "glide",
-          "glide": 0.8,
+          "move": "push",
           "cut": true
         }
       ]
@@ -828,7 +816,7 @@
           "cast": "deer",
           "special": "deer",
           "at": "deer.deer",
-          "scale": 1.1,
+          "scale": 1.3,
           "mirror": true,
           "blobScale": 1.6,
           "params": {
@@ -861,7 +849,8 @@
             [
               "13.The",
               {
-                "pose": "point"
+                "pose": "point",
+                "offscreen": true
               }
             ]
           ]
@@ -893,17 +882,11 @@
             ]
           ],
           "nudge": [
-            2.5,
+            3.5,
             0,
-            -4.3
-          ]
-        },
-        {
-          "cast": "kunti",
-          "at": "deer.kunti",
-          "pose": "pray",
-          "expr": "nervous",
-          "enter": "13.and"
+            -6
+          ],
+          "face": "deer"
         }
       ],
       "fx": [
@@ -928,9 +911,9 @@
           "fromPoint": {
             "mark": "deer.pandu",
             "nudge": [
-              2.5,
+              3.5,
               1.5,
-              -4.3
+              -6
             ]
           },
           "to": {
@@ -991,10 +974,10 @@
           "cut": true
         },
         {
-          "at": "13.and",
+          "at": "13.The",
           "size": "medium",
           "on": [
-            "kunti"
+            "pandu"
           ],
           "angle": "eye",
           "side": "front",
@@ -1007,7 +990,7 @@
       "id": "L16",
       "start": "16.Five",
       "end": "17.Meanwhile",
-      "light": "golden",
+      "light": "day",
       "sets": [
         "palace"
       ],
@@ -1022,11 +1005,7 @@
           ],
           "pose": "stand",
           "expr": "grin",
-          "scale": 1.08,
-          "appear": {
-            "at": "16.Five",
-            "stagger": 0.0
-          }
+          "scale": 1.0
         },
         {
           "cast": "bro1",
@@ -1038,11 +1017,7 @@
           ],
           "pose": "flex",
           "expr": "grin",
-          "scale": 1.08,
-          "appear": {
-            "at": "16.Five",
-            "stagger": 0.08
-          }
+          "scale": 1.0
         },
         {
           "cast": "bro2",
@@ -1054,11 +1029,7 @@
           ],
           "pose": "hips",
           "expr": "grin",
-          "scale": 1.08,
-          "appear": {
-            "at": "16.Five",
-            "stagger": 0.16
-          }
+          "scale": 1.0
         },
         {
           "cast": "bro3",
@@ -1070,11 +1041,7 @@
           ],
           "pose": "stand",
           "expr": "grin",
-          "scale": 1.08,
-          "appear": {
-            "at": "16.Five",
-            "stagger": 0.24
-          }
+          "scale": 1.0
         },
         {
           "cast": "bro4",
@@ -1086,16 +1053,12 @@
           ],
           "pose": "stand",
           "expr": "grin",
-          "scale": 1.08,
-          "appear": {
-            "at": "16.Five",
-            "stagger": 0.32
-          }
+          "scale": 1.0
         }
       ],
       "camera": [
         {
-          "at": "16.Five+1s",
+          "at": "16.Five",
           "size": "wide",
           "on": [
             "bro0",
@@ -1235,7 +1198,7 @@
           ],
           "pose": "armsUp",
           "expr": "shock",
-          "scale": 1.0,
+          "scale": 1.2,
           "noBlob": true,
           "enter": "21.shaking+1s",
           "motion": {
@@ -1259,13 +1222,13 @@
           "cast": "kaurava2",
           "at": "palace.tree",
           "nudge": [
-            0.9,
+            1.8,
             2.7,
-            -1.6
+            -2.8
           ],
           "pose": "armsUp",
           "expr": "shock",
-          "scale": 1.0,
+          "scale": 1.4,
           "noBlob": true,
           "enter": "21.shaking+1s",
           "motion": {
@@ -1283,66 +1246,6 @@
             ],
             "floorY": 1.7,
             "delay": -0.03
-          }
-        },
-        {
-          "cast": "kaurava3",
-          "at": "palace.tree",
-          "nudge": [
-            -2.7,
-            3.9,
-            -2.5
-          ],
-          "pose": "armsUp",
-          "expr": "shock",
-          "scale": 0.85,
-          "noBlob": true,
-          "enter": "21.shaking+1s",
-          "motion": {
-            "type": "ballistic",
-            "at": "21.shaking+1s",
-            "v": [
-              0,
-              0,
-              0
-            ],
-            "a": [
-              0,
-              -4.9,
-              0
-            ],
-            "floorY": 1.7,
-            "delay": -0.06
-          }
-        },
-        {
-          "cast": "kaurava4",
-          "at": "palace.tree",
-          "nudge": [
-            2.6,
-            3.9,
-            -2.5
-          ],
-          "pose": "armsUp",
-          "expr": "shock",
-          "scale": 0.85,
-          "noBlob": true,
-          "enter": "21.shaking+1s",
-          "motion": {
-            "type": "ballistic",
-            "at": "21.shaking+1s",
-            "v": [
-              0,
-              0,
-              0
-            ],
-            "a": [
-              0,
-              -4.9,
-              0
-            ],
-            "floorY": 1.7,
-            "delay": -0.09
           }
         }
       ],
@@ -1495,11 +1398,10 @@
           "size": "wide",
           "on": [
             "kidBhima",
-            "kaurava1",
-            "kaurava2"
+            "kaurava1"
           ],
           "angle": "eye",
-          "side": "front",
+          "side": "left",
           "move": "push",
           "cut": true,
           "with": [
@@ -1524,76 +1426,6 @@
           "prop": "axe",
           "expr": "stern",
           "noBlob": true,
-          "enter": "25.They",
-          "exit": "25.torch"
-        },
-        {
-          "cast": "adult0",
-          "at": "lac.house",
-          "nudge": [
-            -2,
-            0,
-            1
-          ],
-          "pose": "stand",
-          "expr": "smile",
-          "facing": "right",
-          "enter": "25.They",
-          "exit": "25.torch"
-        },
-        {
-          "cast": "adult1",
-          "at": "lac.house",
-          "nudge": [
-            -1,
-            0,
-            1
-          ],
-          "pose": "stand",
-          "expr": "smile",
-          "facing": "right",
-          "enter": "25.They",
-          "exit": "25.torch"
-        },
-        {
-          "cast": "adult2",
-          "at": "lac.house",
-          "nudge": [
-            0,
-            0,
-            1
-          ],
-          "pose": "stand",
-          "expr": "smile",
-          "facing": "right",
-          "enter": "25.They",
-          "exit": "25.torch"
-        },
-        {
-          "cast": "adult3",
-          "at": "lac.house",
-          "nudge": [
-            1,
-            0,
-            1
-          ],
-          "pose": "stand",
-          "expr": "smile",
-          "facing": "right",
-          "enter": "25.They",
-          "exit": "25.torch"
-        },
-        {
-          "cast": "adult4",
-          "at": "lac.house",
-          "nudge": [
-            2,
-            0,
-            1
-          ],
-          "pose": "stand",
-          "expr": "smile",
-          "facing": "right",
           "enter": "25.They",
           "exit": "25.torch"
         }
@@ -1719,7 +1551,11 @@
           "cut": true,
           "scenery": true
         }
-      ]
+      ],
+      "sun": {
+        "az": 70,
+        "el": 18
+      }
     },
     {
       "id": "S27",
@@ -1735,18 +1571,6 @@
           "at": "arena.dais",
           "pose": "hold",
           "expr": "smile"
-        },
-        {
-          "cast": "kingA0",
-          "at": "arena.bowstand",
-          "nudge": [
-            -1.3,
-            0.15,
-            -0.6
-          ],
-          "pose": "hips",
-          "expr": "stern",
-          "facing": "right"
         }
       ],
       "rows": [
@@ -1797,11 +1621,12 @@
           "at": "26.In",
           "size": "wide",
           "on": [
-            "draupadi"
+            "arena.floor"
           ],
           "angle": "eye",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "scenery": true
         },
         {
           "at": "26.string",
@@ -1815,8 +1640,8 @@
           "cut": true
         },
         {
-          "at": "26.monster",
-          "size": "wide",
+          "at": "26.monster+0.3s",
+          "size": "insert",
           "on": [
             "arena.bow"
           ],
@@ -1824,8 +1649,7 @@
           "side": "front",
           "move": "hold",
           "cut": true,
-          "scenery": true,
-          "fov": 75
+          "scenery": true
         },
         {
           "at": "26.target",
@@ -1838,7 +1662,6 @@
           "side": "front",
           "move": "tiltUp",
           "cut": true,
-          "glide": 1.0,
           "scenery": true
         }
       ]
@@ -1886,7 +1709,7 @@
               0
             ]
           },
-          "size": 1.6
+          "size": 4.0
         }
       ],
       "camera": [
@@ -1911,7 +1734,11 @@
           "move": "follow",
           "cut": true
         }
-      ]
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
     },
     {
       "id": "S38",
@@ -1946,7 +1773,7 @@
               "ease": "linear"
             }
           },
-          "enter": "35.fire",
+          "enter": "35.The",
           "do": [
             [
               "35.ghee",
@@ -1954,6 +1781,11 @@
                 "expr": "relief_open"
               }
             ]
+          ],
+          "nudge": [
+            2,
+            0,
+            2
           ]
         }
       ],
@@ -1962,8 +1794,8 @@
           "kind": "fire",
           "at": "35.The",
           "pos": "city.forest",
-          "spread": 24,
-          "pop": 0.4,
+          "spread": 2,
+          "pop": 0.2,
           "hashSalt": 8,
           "yLift": 1.6,
           "sizeLift": 0.45,
@@ -2039,7 +1871,7 @@
       ],
       "camera": [
         {
-          "at": "35.fire",
+          "at": "35.The",
           "size": "wide",
           "on": [
             "agni"
@@ -2047,13 +1879,9 @@
           "angle": "low",
           "side": "front",
           "move": "push",
-          "later": [
-            "agni"
-          ],
           "with": [
             "forestFire"
-          ],
-          "fov": 60
+          ]
         },
         {
           "at": "35.Too",
@@ -2062,15 +1890,18 @@
             "agni"
           ],
           "angle": "eye",
-          "side": "front",
+          "side": "left",
           "move": "push",
           "cut": true,
           "with": [
             "forestFire"
-          ],
-          "fov": 60
+          ]
         }
-      ]
+      ],
+      "sun": {
+        "az": 10,
+        "el": 12
+      }
     }
   ]
 }

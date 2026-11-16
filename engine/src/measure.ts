@@ -91,7 +91,7 @@ export function measureSubjects(): Record<string, Measure> {
   const a = measureDraw((p) => agni(p, { light: 0, t: 0 }));
   out.agni = M("Agni standing (body height, not flame hair)", a.minX, a.maxX, a.top, a.bottom, a.hc!, a.chin!, a.crown!);
   const d = measureDraw((p) => { deer(p, { light: 0 }); });
-  out.deer = { description: "Stag in side view", standing: (d.bottom - d.top) * SU, seated: (d.bottom - d.top) * SU, eye: (d.bottom - 230) * SU, eyeSeated: (d.bottom - 230) * SU, head: 100 * SU, halfWidth: Math.max(500 - d.minX, d.maxX - 500) * SU };
+  out.deer = { description: "Stag in side view", standing: (d.bottom - d.top) * SU * 0.55, seated: (d.bottom - d.top) * SU * 0.55, eye: (d.bottom - 230) * SU, eyeSeated: (d.bottom - 230) * SU, head: 100 * SU, halfWidth: Math.max(500 - d.minX, d.maxX - 500) * SU };
   const n = measureDraw((p) => { naga(p, { light: 0 }); });
   out.naga = { description: "Coiled naga with hood", standing: (975 - n.top) * SU, seated: (975 - n.top) * SU, eye: (975 - 380) * SU, eyeSeated: (975 - 380) * SU, head: 300 * SU, halfWidth: Math.max(300 - n.minX, n.maxX - 300) * SU };
   const b = measureDraw((p) => { baby(p, { light: 0 }); });
