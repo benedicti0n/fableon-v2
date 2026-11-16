@@ -108,19 +108,26 @@ The compiler writes the v1 shot `end`, so the selected ranges do not stretch acr
 
 - `fableon stills --project <dir> --shots S14,S27 --frames start,mid,end` renders only those ranges.
 - `fableon render --project <dir> --shots S14,S27` renders only those clips.
-- `fableon review --project <dir> --compare <fixture> --shots … --out sheet.jpg` writes the labelled side-by-side sheet
-  (compiled left of each pair, comparison right; start/mid/end per shot).
+- `fableon review --project <dir> --compare <fixture> --coverage --split --out <dir>` writes one row per camera key
+  (settle frame and key end-2, never a crossfade) with compiled / comparison / coverage columns, `review.json`, and
+  one `--split` image per shot at most 1600 px tall.
 
-## Measured composition checks (F3)
+## Measured composition checks
 
 `fableon frames` (default) renders an object-ID coverage pass for every checked key and writes `frames.json` beside the
 board. Each key lists checked frames, size, primary subject height/visibility/head box/eye line, blockers, context
 items, errors and warnings; each finding carries a one-line fix hint. Use `--fast` for the old analytic path.
 
 Settle frames are the first safe frame after a cut/glide/tilt; mid and end-2 follow, plus every 12 frames in long keys.
-Checks are `subject hidden`, `subject too small/large` (size bands), `head cut`, `blocker`, `context missing`, the
-speaker-off-screen warning and the measured eye-line warning. Semantic board keys are errors; hand-written v1 keys are
-warnings. `with` context and `reaction` cutaways are part of the key contract.
+Checks are `subject hidden` (<60 % visible), `subject too small/large` (screen bands), `head cut`, `blocker` (>12 % of
+frame or >25 % overlap with the primary and at least 1 % area), `context missing` (`with` <2 % area or <40 % visible),
+the speaker-off-screen warning (talking >=1 s at <4 % unless `reaction:true`) and the measured eye-line warning.
+Semantic board keys are errors; hand-written v1 keys are warnings. Ambient effect kinds and mark proxies are exempt
+from blockers; the `over` actor is exempt while it stays in its corner.
+
+`frames.json` sits beside the board and the v1 storyboard. It contains `coverageMs`, `keys[]` (shot, key, anchor, size,
+primary, checked frames, subject summaries, errors, warnings) and flat `errors`/`warnings`/`rows` arrays. Every finding
+has `code`, `subject`, `message` and a one-line `fix`; this is the Phase 3 repair-loop input.
 
 ## Strict schemas and model cards
 
@@ -141,25 +148,20 @@ A shot, actor or effect may carry a `"raw": { …v1 fields… }` object. It is m
 validated as v1 by `fableon validate`. Raw is intended for fields the authoring layer does not yet express; the
 compiler reports the number of raw escapes.
 
-Camera keys in this commit (F3) are explicit v1 keys through raw:
-
-```jsonc
-"camera": [{ "raw": { "at": "6.Problem", "type": "dolly", "pos": {...}, "look": {...}, "fov": 40 } }]
-```
-
-The semantic camera solver is added in F4 and documented below when enabled.
-
-## Semantic camera keys (F4 solver)
+## Semantic camera keys
 
 ```jsonc
 {
   "at": "5.Her",
   "cut": true,
-  "size": "close",
+  "size": "medium",
   "on": ["kunti"],
+  "with": ["palace.tree"],
   "angle": "eye",
   "side": "front",
   "move": "push",
+  "fov": 45,
+  "reaction": false,
   "punch": "5.king",
   "roll": 4,
   "glide": 0.8
@@ -168,63 +170,80 @@ The semantic camera solver is added in F4 and documented below when enabled.
 
 `size` is `close`, `medium`, `full`, `wide`, `establishing` or `insert`. `on` lists cast/moving ids or one mark.
 `angle` is `eye`, `low`, `high` or `overhead`; `side` is `front`, `left`, `right`, `frontLeft` or `frontRight`
-relative to the set's `front`; `move` is `push`, `hold`, `glide`, `tiltUp`, `tiltDown`, `follow` or `crane`.
+relative to the subject mark's `view`; `move` is `push`, `hold`, `glide`, `tiltUp`, `tiltDown`, `follow` or `crane`.
+`fov` overrides the size's default lens. `reaction: true` marks a deliberate off-screen cutaway (speaker warning
+suppressed). `with` is context that must be in frame but is not a subject:
 
-Constants as implemented (`cli/src/solver.js`):
+```jsonc
+{ "at": "21.Bhima", "size": "wide", "on": ["kidBhima"], "with": ["palace.tree"] }
+```
 
-| size | default fov | coverage | push rate | DOF |
-|---|---:|---|---:|---:|
-| close | 37 | 2.4 head heights | 0.003 | 13 |
-| medium | 39 | 0.62 standing heights | 0.0025 | 11 |
-| full | 41 | 1.12 standing heights | 0.0022 | 8 |
-| wide | 45 | subject box + 30 % | 0.002 | 0 |
-| establishing | 48 | set bounds | 0.0018 | 0 |
-| insert | 35 | 0.8 m around the mark | 0.0025 | 11 |
+A `with` item may be a mark, set-piece id, effect id or actor id. The solver includes it while keeping the primary in
+its band; if impossible it fails `cannot frame <with> at size <size>`. Mark `palace.tree` maps to the mango-canopy world
+volume for measurement (`context` on the catalog mark); a fire effect must carry an `id` (e.g. `"forestFire"`).
+
+### Screen targets (calibrated)
+
+Sizes are **screen targets**, not a request to fit. `head` is the head-box height / frame height; `body` is the top of
+the head to the feet / frame height. The solver aims the primary subject at the band centre; other listed subjects
+only need the floor.
+
+| size | metric | band | floor | centre |
+|---|---|---:|---:|---:|
+| close | head | 25–60 % | 25 % | 42.5 % |
+| medium | head | 12–42 % | 12 % | 27 % |
+| full | body | 30–85 % | 30 % | 57.5 % |
+| wide | body, primary | 15–50 % | 15 % | 32.5 % |
+| wide | body, other subjects | — | 10 % | — |
+| establishing | body, listed subjects | ≥ 5 % | 5 % | set bounds |
+| insert | target box | 30–85 % | 30 % | 57.5 % |
+
+The floors were calibrated against the 38 acted keys of the hand-tuned full fixture (the original synthetic floors
+rejected all six close and 8/9 medium reference keys). If the key's subjects cannot all reach the floor inside 9:16, compile
+fails with `group too wide for a vertical frame (<width> m)`; split the key, pan, curve the row or reduce spacing. The
+solver never shrinks silently.
+
+### Two-plane over, thirds, targets
+
+- `"over": "<id>"` puts that actor's head fully in the lower-left/right third (per `side`), head height 18–30 %, facing
+  the `on` subject; the subject sits in the opposite upper third at its band. Both heads stay in the safe area. The over
+  actor is exempt from hidden/blocker checks while it stays in its corner. Do not list it in `on`.
+- `"third": "left" | "right"` offsets the look point by one sixth of the coverage width (look room).
+- `"to": "<id or mark>"` with `move: "tiltUp" | "tiltDown" | "pan"` becomes a v1 tilt key whose `lookTo` is the target's
+  eye (or mark position); `move: "reveal"` compiles to two keys: the start framing at the anchor and the target framing
+  at `glide` seconds later.
+- `size: "insert"` on a mark/prop frames the mark. Use `fov` to fit a wide prop (S27 uses `wide` + `fov:75` for the
+  giant bow). New marks: `arena.bowstand`, `arena.target`, `palace.tree`, `lac.house`, `village.hutDoor`,
+  `city.palace`.
+- The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt`, the default DOF entry and `subjects` on the
+  v1 camera key.
+
+### Ride and follow
+
+`"ride": "boat"` on an actor makes its feet follow the moving set piece, offset by `nudge`; this replaces a duplicated
+actor path (S5). The actor's id becomes a moving target, so a camera key `"move":"follow"` on it tracks the boat. A
+camera may also follow a moving set-piece id directly. A `ride` target without a motion is a compile error.
+
+### Mark views
+
+Every catalog mark has `view`: the camera heading that puts the set's characteristic background behind the subject.
+It was derived as the median heading of fixture camera keys whose look point is within 4 m of the mark, with two
+measured corrections (`lac.house` 180°, `city.agni` 172°). `side` is relative to this view; the full table is in the
+Phase 2E report (`docs/reports/phase-2e.md`).
+
+### Occlusion and validation
 
 - Both frame directions fit: horizontal fov = `2·atan(tan(vfov/2)·9/16)`; distance is the larger of the vertical and
-  horizontal fits.
-- Eye line: close/medium eye height at 40 % from the top (the look point is `span·0.10` below the eyes).
-- Angles: eye = subject eye height; low = 45 % of body height; high = 2.5-4 m above; overhead = 8 m above.
+  horizontal fits, plus a safe-area margin. Eye line: close/medium eyes at 40 % from the top.
+- Angles: eye = subject eye height; low = 45 % of body height; high = 2.5–4 m above; overhead = 8 m above.
 - `hold` settles at rate 0.0015. `punch` adds 0.006 over 30 frames at that anchor. `glide`/`crane` use a 0.8 s key
   transition; `tiltUp`/`tiltDown` compile to a v1 tilt key.
 - Subjects must be visible at the key start. A key frames the union of a moving subject's positions sampled every 6
   frames over its active span. An invisible subject is a compile error; `"later": ["kunti"]` waits for its first
   visible frame inside the key (use rarely). Effects with an id (e.g. pigeon) are subjects too and use their catalog
   `measure` entry.
-- `follow` requires a moving id and compiles camera `pos`/`look` as Points relative to that id.
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
   camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
-#### Size bands and context (F4)
-
-Sizes are screen targets: close head 40-60 %, medium head 26-42 %, full body 50-85 %, wide primary 15-50 % (others
->=10 %), establishing listed subjects >=5 %, insert target 30-85 %. The solver centres the primary subject in its band.
-
-`"with": ["palace.tree"]` adds context that must be in frame; `"ride": "boat"` makes an actor's feet follow a moving set
-piece (plus `nudge`), so the boat path is not duplicated. `"reaction": true` marks a deliberate off-screen cutaway.
-Marks carry a derived `view` heading; `side` is relative to it.
-
-## Validator contract (F3)
-
-`fableon frames` / `validate --deep` fail on: a listed subject invisible for more than six checked frames; an
-unmarked key with no subjects (`"scenery": true` is the explicit intent for establishing, transition or effect-only
-keys); a subject head not fully in frame or projected height > 3x frame; a visible non-subject actor/special/effect
-card that covers > 30 % of the frame while in front of the primary subject, or is closer than 1.2 m. Deliberate
-over-shoulder foreground (`over`, or a card whose centre is in a lower side corner) is exempt. Full fixture data only
-adds `subjects`, `later`, and `scenery`.
-
-### Composition grammar (F2)
-
-- `"over": "<id>"` places that actor's head/shoulder large in the lower front corner (left/right per `side`) while
-  `"on"` is framed by `size` behind it. The camera sits behind and beside the over actor; the over actor is exempt from
-  the foreground-blocker check.
-- `"third": "left" | "right"` offsets the look point by one sixth of the coverage width so the primary subject sits on
-  a vertical third (look room).
-- `"to": "<id or mark>"` with `move: "tiltUp" | "tiltDown" | "pan"` becomes a v1 tilt key whose `lookTo` is the target's
-  eye (or mark position); `move: "reveal"` compiles to two keys: the start framing at the key anchor and the target
-  framing at `glide` seconds later, with the v1 glide transition.
-- `size: "insert"` on a mark/prop frames the mark tightly (0.8 m). New marks: `arena.bowstand`, `arena.target`,
-  `palace.tree`, `lac.house`, `village.hutDoor`, `city.palace` (plus the existing prop marks).
-- Occlusion fallback applies to all of these.
-- The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt`, the default DOF entry and `subjects` on the
-  v1 camera key.
+- `fableon frames` / `validate --deep` are the measured contract: size bands, hidden subjects, head cuts, blockers,
+  `with` context, the speaker rule and eye line. Each finding carries a fix hint in `frames.json`.
