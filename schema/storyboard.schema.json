@@ -1241,6 +1241,19 @@
         },
         "reaction": {
           "type": "boolean"
+        },
+        "move": {
+          "enum": [
+            "push",
+            "hold",
+            "glide",
+            "follow",
+            "crane",
+            "tiltUp",
+            "tiltDown",
+            "pan",
+            "reveal"
+          ]
         }
       }
     },

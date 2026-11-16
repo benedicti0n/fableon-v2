@@ -124,7 +124,15 @@ const covHead = (p: Place) => {
   const m = MEASURE[p.measure ?? "adult"] ?? MEASURE.adult;
   const sc = p.scale ?? 1, top = p.y + (p.seated ? m.seated : m.standing) * sc, chin = top - m.head * sc, eye = p.y + (p.seated ? m.eyeSeated : m.eye) * sc;
   const hw = m.head * 0.35 * sc;
-  return { headBox: { x0: covProject([p.x - hw, top, p.z]).x, y0: covProject([p.x, top, p.z]).y, x1: covProject([p.x + hw, top, p.z]).x, y1: covProject([p.x, chin, p.z]).y }, eye: covProject([p.x, eye, p.z]), chin: covProject([p.x, chin, p.z]) };
+  const l = covProject([p.x - hw, top, p.z]), r = covProject([p.x + hw, top, p.z]);
+  const t = covProject([p.x, top, p.z]), b = covProject([p.x, chin, p.z]);
+  const e = covProject([p.x, eye, p.z]);
+  // Normalised screen box: the old direct projection could invert x0/x1 when the card was mirrored or past the
+  // camera plane, which made left/right edge checks miss real cuts.
+  return {
+    headBox: { x0: Math.min(l.x, r.x), y0: Math.min(t.y, b.y), x1: Math.max(l.x, r.x), y1: Math.max(t.y, b.y) },
+    eye: e, chin: b,
+  };
 };
 function covAddDynamicPiece(obj: THREE.Object3D, id: string) {
   if (!obj.visible) return;
@@ -191,7 +199,27 @@ function coverageFrame(f: number, opts: any = {}) {
   }
   for (const item of items) { const s = stats.get(item.id); if (s) s.distance = Math.min(s.distance, item.distance); }
   const ids = [...stats.values()].map((s) => ({ ...s, bbox: { x0: s.x0, y0: s.y0, x1: s.x1, y1: s.y1 } }));
-  const request = [...new Set([...(opts.subjects ?? []), ...(opts.over ? [opts.over] : []), ...(opts.with ?? [])])];
+  // Headwear (buns, crowns, turbans, hair) is not in the rig measure. For each person, find the topmost ID pixel
+  // inside the head's horizontal band and above the eye point; that is the silhouette top used by edge checks.
+  const people = items.filter((i) => i.person);
+  for (const p of people) {
+    const hb = p.headBox; if (!hb) continue;
+    const pad = Math.max(0.008, (hb.x1 - hb.x0) * 0.18);
+    const x0 = hb.x0 - pad, x1 = hb.x1 + pad;
+    let top = hb.y0;
+    for (let yy = 0; yy < COV_H; yy++) {
+      const y = 1 - (yy + 1) / COV_H;
+      if (y < p.eye.y - 0.01) break;
+      for (let xx = 0; xx < COV_W; xx++) {
+        const x = (xx + 0.5) / COV_W;
+        if (x < x0 || x > x1) continue;
+        const o = (yy * COV_W + xx) * 4;
+        if (byColor.get(colorKey(raw[o], raw[o + 1], raw[o + 2])) === p.id) { top = Math.min(top, y); break; }
+      }
+    }
+    hb.y0 = top;
+  }
+  const request = [...new Set([...(opts.subjects ?? []), ...(opts.over ? [opts.over] : []), ...(opts.with ?? []), ...(opts.edge ?? [])])];
   const visible: Record<string, number> = {};
   for (const id of request) {
     for (const m of covMeshes) m.visible = m.userData.id === id;
@@ -205,7 +233,7 @@ function coverageFrame(f: number, opts: any = {}) {
   renderer.setRenderTarget(null); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace;
   let png = "";
   if (opts.png) { const img = covCtx.createImageData(COV_W, COV_H); for (let y = 0; y < COV_H; y++) for (let x = 0; x < COV_W; x++) { const o = ((COV_H - 1 - y) * COV_W + x) * 4, q = (y * COV_W + x) * 4; img.data[q] = raw[o]; img.data[q + 1] = raw[o + 1]; img.data[q + 2] = raw[o + 2]; img.data[q + 3] = 255; } covCtx.putImageData(img, 0, 0); png = covCanvas.toDataURL("image/png"); }
-  return { frame: f, shot: shot.id, ms: performance.now() - t0, ids, people: items.filter((i) => i.person), subjects: visible, items, png };
+  return { frame: f, shot: shot.id, ms: performance.now() - t0, ids, people, subjects: visible, items, png };
 }
 (window as unknown as Record<string, unknown>).coverageFrame = coverageFrame;
 

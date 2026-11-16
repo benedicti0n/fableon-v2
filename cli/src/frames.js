@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -209,6 +209,21 @@ export function projectSubject(ctx, shot, actor, key, f, start, keepout = [], ov
   return { ...r, blocked: blockedBy?.name ?? null, cameraInside, _state: s };
 }
 
+/** Frames sampled for a key: static keys settle/mid/end-2; moving keys start/mid/end-2. */
+export function sampleKeyFrames(k, kf, end, xfade = 0) {
+  const cutWait = k.cut ? SETTLE_CUT : 0;
+  let settle;
+  if (isMovingKey(k)) settle = Math.min(Math.max(kf, end - 1), kf + Math.max(cutWait, xfade));
+  else {
+    const finish = Math.max(cutWait, k.dur ?? 0, k.tiltDur ?? 0, xfade);
+    settle = Math.min(Math.max(kf, end - 1), kf + finish);
+  }
+  const mid = Math.floor((settle + end - 1) / 2);
+  const frames = [settle, mid, Math.max(settle, end - 2)];
+  if (end - settle > 60) for (let f = settle + SAMPLE_EVERY; f < end - 2; f += SAMPLE_EVERY) frames.push(f);
+  return [...new Set(frames)].sort((a, b) => a - b);
+}
+
 export function checkFrames(dirArg, opts = {}) {
   const dir = projectDir(dirArg);
   const ctx = makeContext(dir);
@@ -278,8 +293,7 @@ export function checkFrames(dirArg, opts = {}) {
       }
     });
   }
-  const outDir = join(dir, 'qa'); mkdirSync(outDir, { recursive: true });
-  const file = join(outDir, 'frames.json');
+  const file = join(dir, 'frames.json');
   writeFileSync(file, JSON.stringify({ rows, errors, warnings }, null, 2) + '\n');
   return { ok: errors.length === 0, rows, errors, warnings, file };
 }
@@ -317,18 +331,14 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
     keys.forEach(({ k, f: kf }, ki) => {
       const end = ki + 1 < keys.length ? keys[ki + 1].f : endShot;
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? crossfade / 2 : 0;
-      const finish = Math.max(k.cut ? SETTLE_CUT : 0, k.dur ?? 0, k.tiltDur ?? 0, xf);
-      const settle = Math.min(Math.max(kf, end - 1), kf + finish);
-      const mid = Math.floor((settle + end - 1) / 2);
-      const frames = [...new Set([settle, mid, Math.max(settle, end - 2)])];
-      if (end - settle > 60) for (let f = settle + SAMPLE_EVERY; f < end - 2; f += SAMPLE_EVERY) frames.push(f);
+      const frames = sampleKeyFrames(k, kf, end, xf);
       const withIds = (k.with ?? []).map((id) => normalizeWith(id, ctx));
-      for (const f of frames.sort((a, b) => a - b)) {
+      const edgeIds = (shot.actors ?? []).map((a) => a.id ?? a.who).filter((id) => !(k.subjects ?? []).includes(id) && id !== k.over);
+      for (const f of frames) {
         const idx = jobs.length;
-        jobs.push({ frame: f, subjects: k.subjects ?? [], over: k.over ?? null, with: withIds });
-        keyMeta.push({ si, ki, shot, shotId: shot.id, k, start, kf, end, settle, f, idx, with: withIds });
+        jobs.push({ frame: f, subjects: k.subjects ?? [], over: k.over ?? null, with: withIds, edge: edgeIds });
+        keyMeta.push({ si, ki, shot, shotId: shot.id, k, start, kf, end, f, idx, with: withIds, edge: edgeIds });
       }
-      // keep the key's sample list on its first job for report assembly
     });
   }
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cov-'));
@@ -373,10 +383,19 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         if (v !== null && v < band.floor) push('subject too small', id, `subject too small ${id}: ${(v * 100).toFixed(0)}% below ${size} floor ${(band.floor * 100).toFixed(0)}%`, FIX.tooSmall);
       }
       for (const id of [...subjects, ...(k.over ? [k.over] : [])]) {
-        const p = peopleById.get(id); if (!p) continue;
+        const p = peopleById.get(id); if (!p || !p.headBox) continue;
         const hb = p.headBox, close = size === 'close';
-        if (hb.x0 < 0 || hb.x1 > 1 || hb.y0 < 0 || (hb.y1 > 1 && !(close && p.chin?.y <= 1))) push('head cut', id, `head cut ${id}: head box crosses the frame edge`, FIX.headCut);
+        const x0 = Math.min(hb.x0, hb.x1), x1 = Math.max(hb.x0, hb.x1), y0 = Math.min(hb.y0, hb.y1), y1 = Math.max(hb.y0, hb.y1);
+        if (x0 < 0 || x1 > 1 || y0 < 0 || (y1 > 1 && !(close && p.chin?.y <= 1))) push('head cut', id, `head cut ${id}: head box crosses the frame edge`, FIX.headCut);
+        if (x0 < EDGE_X || x1 > 1 - EDGE_X || y0 < EDGE_TOP) push('edge', id, `edge ${id}: head crosses the ${(y0 < EDGE_TOP ? 'top' : x0 < EDGE_X ? 'left' : 'right')} safe margin`, FIX.edge);
         if (id !== k.over && (r.subjects?.[id] ?? 0) < HIDDEN_FRACTION) push('subject hidden', id, `subject hidden ${id}: ${((r.subjects?.[id] ?? 0) * 100).toFixed(0)}% visible`, FIX.hidden);
+      }
+      for (const id of m.edge ?? []) {
+        const stat = idsById.get(id); if (!stat) continue;
+        const area = stat.pixels / (180 * 320);
+        const cut = stat.bbox.x0 < 0.005 || stat.bbox.x1 > 0.995 || stat.bbox.y0 < 0.005;
+        const vis = r.subjects?.[id] ?? 1;
+        if (area >= EDGE_INTRUDER_AREA && cut && vis < EDGE_INTRUDER_VISIBLE) add(warnings, 'edge intruder', id, `edge intruder ${id}: cut by an edge, ${(vis * 100).toFixed(0)}% visible`, FIX.edgeIntruder);
       }
       const primaryStat = primary ? idsById.get(primary) : null;
       const nearest = primaryStat?.distance ?? (primary ? itemsById.get(primary)?.distance : null);
@@ -410,10 +429,8 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       const first = frameRows[0];
       keyRows.push({ shot: meta.shotId, key: meta.ki, anchor: meta.k.at, size: first?.size, primary: first?.primary, frames: [...new Set(meta.frames)].sort((a, b) => a - b), subjects: first?.subjects ?? [], errors: errors.filter((e) => e.shot === meta.shotId && e.key === meta.ki), warnings: warnings.filter((w) => w.shot === meta.shotId && w.key === meta.ki) });
     }
-    const outDir = join(dir, 'qa'); mkdirSync(outDir, { recursive: true });
     const payload = { measured: true, coverageMs: +(totalMs / Math.max(1, keyMeta.length)).toFixed(1), keys: keyRows, rows, errors, warnings };
     writeFileSync(join(dir, 'frames.json'), JSON.stringify(payload, null, 2) + '\n');
-    writeFileSync(join(outDir, 'frames.json'), JSON.stringify(payload, null, 2) + '\n');
     return { ok: errors.length === 0, ...payload, file: join(dir, 'frames.json') };
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 }

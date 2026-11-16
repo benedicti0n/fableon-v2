@@ -19,6 +19,12 @@ export const BLOCKER_MIN_AREA = 0.01;     // ignore tiny fx (an arrow) when only
 export const SPEAKER_AREA = 0.04;         // talking actor minimum frame area
 export const SPEAKER_SECONDS = 1;         // talk duration before the warning
 export const EYE_MIN = 0.30, EYE_MAX = 0.50;
+export const EDGE_X = 0.04;               // side margin for a head region (4 %)
+export const EDGE_TOP = 0.02;             // top margin for a head region (2 %)
+export const EDGE_INTRUDER_AREA = 0.01;   // non-subject cut by an edge, minimum frame area
+export const EDGE_INTRUDER_VISIBLE = 0.50; // ... and less than half of its solo silhouette visible
+const MOVING = new Set(['tiltUp', 'tiltDown', 'pan', 'reveal', 'glide', 'follow', 'crane']);
+export const isMovingKey = (k) => MOVING.has(k.move) || k.type === 'tilt' || k.dur !== undefined || k.push?.rate === 0;
 export const SETTLE_CUT = 6;              // frames after a cut before measuring
 export const SAMPLE_EVERY = 12;           // extra samples in long keys
 export const AMBIENT_EFFECTS = new Set(['halo', 'fire', 'smoke', 'burst', 'splash', 'petals', 'puff', 'stars']);
@@ -31,5 +37,7 @@ export const FIX = {
   context: 'add the context item to `with` framing or choose a wider size',
   speaker: 'keep the speaker on screen or mark the key `reaction: true`',
   eye: 'adjust the look/angle to put the eyes near 40 % from the top',
+  edge: 'move the head inside the 4 % side / 2 % top margins',
+  edgeIntruder: 'keep the background actor out of the frame edge or hide it',
 };
 export const inferSize = (fov = 40) => fov <= 38 ? 'close' : fov <= 40 ? 'medium' : fov <= 43 ? 'full' : fov <= 47 ? 'wide' : 'establishing';

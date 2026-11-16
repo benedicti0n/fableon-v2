@@ -7,7 +7,8 @@ from PIL import Image, ImageDraw, ImageFont
 spec = json.load(open(sys.argv[1]))
 left, right, cover, out, split, split_dir = spec["left"], spec.get("right"), spec.get("coverage"), spec["out"], spec.get("split"), spec.get("splitDir")
 W, H, label_h, header = 270, 480, 30, 40
-cols = 2 * (1 + (1 if right else 0) + (1 if cover else 0))
+max_frames = max(len(r["frames"]) for r in spec["rows"])
+cols = max_frames * (1 + (1 if right else 0) + (1 if cover else 0))
 rows = spec["rows"]
 sheet = Image.new("RGB", (W * cols, header + len(rows) * (H + label_h)), (20, 20, 24))
 d = ImageDraw.Draw(sheet)

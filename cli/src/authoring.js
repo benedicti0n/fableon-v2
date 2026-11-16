@@ -453,7 +453,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       if (k.scenery) key.scenery = true;
       if (k.with) key.with = [...k.with];
       if (k.over) key.over = k.over;
-      key.semantic = true; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
+      key.semantic = true; key.move = k.move ?? 'push'; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {

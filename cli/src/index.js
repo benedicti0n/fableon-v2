@@ -58,7 +58,7 @@ export function main(argv = process.argv) {
 
   program
     .command('frames')
-    .description('check every named camera subject against the safe area and scenery occlusion')
+    .description('render object-ID coverage and check measured size, visibility, blockers, edges and editing rules')
     .requiredOption('--project <dir>', 'project folder')
     .option('--fast', 'use the analytical in-frame checker')
     .action(async (opts) => { try { await framesCommand(opts.project, opts.fast); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });

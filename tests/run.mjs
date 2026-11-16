@@ -16,6 +16,7 @@ import { runVisibility } from './visibility.mjs';
 import { runSchemaTests } from './schema.mjs';
 import { runPartial } from './partial.mjs';
 import { runMeasured } from './measured.mjs';
+import { runMeasurement } from './measurement.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -91,6 +92,8 @@ try {
   check('partial boards', partial.ok, `${partial.checks.filter((c) => c.ok).length}/${partial.checks.length} checks`);
   const measured = await runMeasured();
   check('measured frames', measured.ok, `${measured.checks.filter((c) => c.ok).length}/${measured.checks.length} checks`);
+  const measurement = await runMeasurement();
+  check('measurement fixes', measurement.ok, `${measurement.checks.filter((c) => c.ok).length}/${measurement.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

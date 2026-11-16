@@ -93,7 +93,7 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
     fs.mkdirSync(path.dirname(out), { recursive: true });
     const rows = [];
     for (const job of jobs) {
-      const r = await pg.evaluate(([f, o]) => window.coverageFrame(f, o), [job.frame, { subjects: job.subjects || [], over: job.over || null, with: job.with || [], png: !!opt.png }]);
+      const r = await pg.evaluate(([f, o]) => window.coverageFrame(f, o), [job.frame, { subjects: job.subjects || [], over: job.over || null, with: job.with || [], edge: job.edge || [], png: !!opt.png }]);
       if (opt.png && r.png) {
         const dir = path.resolve(String(opt.png)); fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(path.join(dir, `${job.frame}.png`), Buffer.from(r.png.split(',')[1], 'base64'));

@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { projectDir } from './project.js';
-import { checkFramesMeasured, makeContext } from './frames.js';
+import { checkFramesMeasured, makeContext, sampleKeyFrames } from './frames.js';
 
 export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts = {}) {
   const dir = projectDir(dirArg);
@@ -21,12 +21,9 @@ export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts =
     keys.forEach(({ k, f: kf }, ki) => {
       const end = ki + 1 < keys.length ? keys[ki + 1].f : endShot;
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? (ctx.sb.crossfade ?? 10) / 2 : 0;
-      const finish = Math.max(k.cut ? 6 : 0, k.dur ?? 0, k.tiltDur ?? 0, xf);
-      const settle = Math.min(Math.max(kf, end - 1), kf + finish);
-      const last = Math.max(settle, end - 2);
-      const framePair = [settle, last];
-      frames.push(...framePair);
-      rows.push({ shot: shot.id, key: ki, size: k.size ?? null, move: k.move ?? null, on: k.subjects ?? [], frames: framePair, label: `${shot.id} · key ${ki} · ${k.size ?? '-'}/${k.move ?? 'push'}/${(k.subjects ?? []).join('+') || (k.with ?? []).join('+') || 'scenery'}` });
+      const frameList = sampleKeyFrames(k, kf, end, xf);
+      frames.push(...frameList);
+      rows.push({ shot: shot.id, key: ki, size: k.size ?? null, move: k.move ?? null, on: k.subjects ?? [], frames: frameList, label: `${shot.id} · key ${ki} · ${k.size ?? '-'}/${k.move ?? 'push'}/${(k.subjects ?? []).join('+') || (k.with ?? []).join('+') || 'scenery'}` });
     });
   }
   if (!rows.length) throw new Error(`no camera keys matched --shots ${shotsCsv}`);
@@ -58,7 +55,7 @@ export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts =
   const sheet = split ? join(out, 'sheet.jpg') : out;
   mkdirSync(split ? out : dirname(sheet), { recursive: true });
   const manifest = join(base, 'review.json');
-  const payload = { left, right: compare ? right : null, coverage: covDir, out: sheet, splitDir: split ? out : null, split, cover: !!opts.coverage, rows: rows.map((r) => ({ ...r, label: `${r.label} · f${r.frames[0]}/${r.frames[1]} · ${r.verdict}` })) };
+  const payload = { left, right: compare ? right : null, coverage: covDir, out: sheet, splitDir: split ? out : null, split, cover: !!opts.coverage, rows: rows.map((r) => ({ ...r, label: `${r.label} · f${r.frames.join('/')} · ${r.verdict}` })) };
   writeFileSync(manifest, JSON.stringify(payload, null, 2));
   const py = findPython();
   if (!py) throw new Error('review needs Python/Pillow (set FABLEON_PYTHON or create .venv)');
