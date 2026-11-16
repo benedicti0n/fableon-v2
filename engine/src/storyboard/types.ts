@@ -8,8 +8,18 @@ export type Anchor =
   | { frame: number; offset?: number }
   | { end: true; offset?: number }
   | { shot: true; offset?: number };
-export type Point = [number, number, number] | { at: string; d: [number, number, number] };
+export type Point = [number, number, number] | { at: string; d: [number, number, number]; screen?: [number, number, number] };
 export type Animated = number | { keys: [Anchor, number][]; ease?: "linear" | "smooth" | "glide" | "step" };
+
+export type PathMotion = {
+  type: "path"; keys: [Anchor, Point][]; ease?: "linear" | "smooth" | "glide" | "step";
+  walk?: { rate: number; offset?: number }; bob?: { amp: number; freq: number };
+};
+export type BallisticMotion = {
+  type: "ballistic"; at: Anchor; v: [number, number, number]; a: [number, number, number];
+  floorY?: number; spin?: number;
+};
+export type Motion = PathMotion | BallisticMotion;
 
 export type Push = { from: Anchor; rate?: number; punch?: number; punchAt?: Anchor };
 export type CamKey = {
@@ -26,17 +36,18 @@ export type Beat = {
   headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null; visible?: Visible | null;
 };
 export type Actor = {
-  who: string; special?: SpecialK | null; params?: Record<string, unknown>; pos?: Point; scale?: number; mirror?: boolean;
+  who: string; id?: string; special?: SpecialK | null; params?: Record<string, unknown>; pos?: Point; motion?: Motion;
+  animate?: Record<string, Animated>; scale?: number; mirror?: boolean;
   noBlob?: boolean; blobScale?: number; yaw?: number | null; pose?: Pose; expr?: Expr; prop?: PropK; facing?: -1 | 0 | 1;
   look?: number; seated?: boolean; headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null;
   visible?: Visible | null; beats?: Beat[];
 };
 export type Sparkle = {
-  kind: "sparkle"; at: Anchor; pos: Point; size?: number; count?: number; offsets?: [number, number, number][];
+  kind: "sparkle"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; count?: number; offsets?: [number, number, number][];
   pop?: { stagger?: number }; twinkle?: { freq: number; depth: number };
 };
-export type Halo = { kind: "halo"; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" };
-export type Knot = { kind: "knot"; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
+export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire" };
+export type Knot = { kind: "knot"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
 export type Effect = Sparkle | Halo | Knot;
 export type SetAction = { piece: "pages"; height?: Animated };
 export type Shot = {

@@ -92,6 +92,12 @@
               "minItems": 3,
               "maxItems": 3,
               "items": { "type": "number" }
+            },
+            "screen": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": { "type": "number" }
             }
           }
         }
@@ -120,6 +126,54 @@
               }
             },
             "ease": { "enum": ["linear", "smooth", "glide", "step"] }
+          }
+        }
+      ]
+    },
+    "Motion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "keys"],
+          "properties": {
+            "type": { "const": "path" },
+            "keys": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [{ "$ref": "#/$defs/Anchor" }, { "$ref": "#/$defs/Point" }],
+                "items": false
+              }
+            },
+            "ease": { "enum": ["linear", "smooth", "glide", "step"] },
+            "walk": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": { "rate": { "type": "number" }, "offset": { "type": "number" } }
+            },
+            "bob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["amp", "freq"],
+              "properties": { "amp": { "type": "number" }, "freq": { "type": "number" } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "at", "v", "a"],
+          "properties": {
+            "type": { "const": "ballistic" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "v": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+            "a": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+            "floorY": { "type": "number" },
+            "spin": { "type": "number" }
           }
         }
       ]
@@ -243,9 +297,12 @@
       "required": ["who"],
       "properties": {
         "who": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 },
         "special": { "enum": [null, "ganesha", "agni", "deer", "naga", "baby", "pot", "flat"] },
         "params": { "type": "object" },
         "pos": { "$ref": "#/$defs/Point" },
+        "motion": { "$ref": "#/$defs/Motion" },
+        "animate": { "type": "object", "additionalProperties": { "$ref": "#/$defs/Animated" } },
         "scale": { "type": "number" },
         "mirror": { "type": "boolean" },
         "noBlob": { "type": "boolean" },
@@ -382,6 +439,8 @@
           "required": ["kind", "at", "pos"],
           "properties": {
             "kind": { "const": "sparkle" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
             "at": { "$ref": "#/$defs/Anchor" },
             "pos": { "$ref": "#/$defs/Point" },
             "size": { "type": "number", "exclusiveMinimum": 0 },
@@ -406,12 +465,14 @@
           "required": ["kind", "at", "pos"],
           "properties": {
             "kind": { "const": "halo" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
             "at": { "$ref": "#/$defs/Anchor" },
             "pos": { "$ref": "#/$defs/Point" },
             "size": { "type": "number", "exclusiveMinimum": 0 },
             "pop": { "type": "number", "exclusiveMinimum": 0 },
             "color": { "type": "string" },
-            "card": { "enum": ["soft", "glow", "cut"] }
+            "card": { "enum": ["soft", "glow", "cut", "fire"] }
           }
         },
         {
@@ -420,6 +481,8 @@
           "required": ["kind", "at", "pos"],
           "properties": {
             "kind": { "const": "knot" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
             "at": { "$ref": "#/$defs/Anchor" },
             "pos": { "$ref": "#/$defs/Point" },
             "size": { "type": "number", "exclusiveMinimum": 0 },

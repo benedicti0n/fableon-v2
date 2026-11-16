@@ -21,9 +21,17 @@ Word matching: lower-case, keep only letters and apostrophes (same `norm()` as s
 [x, y, z]                                   // absolute
 { "at": "HERM", "d": [-1.15, 0.33, -0.25] } // relative to a named place (places.ts / catalog) or another named point
 { "at": "boat", "d": [0.8, 1.5, -4.2] }     // relative to a MOVING target (registered by a set action or an actor path)
+{ "at": "AR", "d": [0, 1.35, -0.15], "screen": [0.45, 0, 0] } // + right/up/forward metres along the current camera axes
 ```
 
 Named points can also be declared once per storyboard in "points" (e.g. "VY": {"at": "HERM", "d": [...]}) and reused.
+
+### Motion (actors, effects and set pieces)
+```jsonc
+{ "type": "path", "keys": [[Anchor, Point], …], "ease": "linear", "walk": { "rate": 1.8, "offset": 0.3 }, "bob": { "amp": 0.05, "freq": 2 } }
+{ "type": "ballistic", "at": Anchor, "v": [vx, vy, vz], "a": [ax, ay, az], "floorY": 0.4, "spin": 9 }
+```
+Path keys are clamped before/after; `walk.rate` is cycles per second and sets the actor's walk phase; `bob` adds `amp·sin(2π·freq·t)` on y. Ballistic position is `p0 + v·u + a·u²` with `u` seconds since `at` (p0 comes from the actor/effect `pos`), optionally clamped to `floorY` and spun. Any actor/effect/set piece with an `"id"` becomes a moving target that Points and camera keys can follow (`{"at": "pigeon"}`).
 
 ### Animated number
 ```jsonc
@@ -85,10 +93,12 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 ```jsonc
 {
   "who": "vyasa",                     // cast id
+  "id": null,                         // optional moving-target id (Point {"at": id} follows it)
   "special": null,                    // null = person(); or "ganesha" | "agni" | "deer" | "naga" | "baby" | "pot" | "flat"
   "params": {},                       // typed per special (see Catalog); ganesha: write, writeSpeed, puzzled, down, look, pen, ear, expr
-  "pos": Point,                       // feet position; or use "path" instead:
-  "path": null,                       // { "keys": [[Anchor, Point], ...], "ease": "linear", "walk": true }  (walk phase from speed)
+  "pos": Point,                       // feet position; ballistic motion starts here
+  "motion": null,                     // path or ballistic (see Motion)
+  "animate": {},                      // numeric Spec fields animated over time, e.g. { "belly": Animated }
   "scale": 1, "mirror": false, "noBlob": false, "blobScale": 1, "yaw": null,
   "pose": "talk", "expr": "smile", "prop": null, "facing": 0, "look": 0, "seated": true, "headTilt": 0, "tilt": 0,
   "talk": null,                       // { "base": "smile", "rate": 1 } -> expr cycles grin/base/relief_open/base/grin/smile (story.ts talk())
@@ -102,7 +112,7 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 
 ## Effect (unlit cards; Phase 2A implements the first three)
 ```jsonc
-{ "kind": "sparkle", "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
+{ "kind": "sparkle", "id": null, "motion": null, "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
 { "kind": "halo", "at": Anchor, "pos": Point, "size": 2.8, "pop": 0.4, "color": "#fff0a0", "card": "soft" }
 { "kind": "knot", "at": Anchor, "pos": Point, "size": 0.55, "pop": 0.18, "bob": 0.05 }
 // 2B adds: heart, emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, petals, fire(spots|treetops), smoke, pigeon(path), mango, sweat, lump ...

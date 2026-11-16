@@ -10,13 +10,14 @@ import { C, KIDS } from "../castlist";
 import type { Spec } from "../people";
 import { makeAnchors, Wd } from "../core/anchors";
 import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
+import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../core/motion";
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
 import { fxSparkle, fxKnot, fxHalo } from "../people";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
-import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Point, Shot, Storyboard } from "./types";
+import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Motion, Point, Shot, Storyboard } from "./types";
 
 export type Runtime = {
   SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
@@ -40,14 +41,40 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     return A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
   };
   const named = sb.points ?? {};
-  const point = (p: Point, f: number, depth = 0): V3 => {
+  const motionTargets: Targets = new Map(targets);
+  const point = (p: Point, f: number, cam?: CamInfo, depth = 0): V3 => {
     if (Array.isArray(p)) return [p[0], p[1], p[2]];
     if (depth > 16) throw new Error(`point cycle at "${p.at}"`);
-    const base = named[p.at] ? point(named[p.at], f, depth + 1)
-      : targets.has(p.at) ? targets.get(p.at)!(f)
+    const base = named[p.at] ? point(named[p.at], f, cam, depth + 1)
+      : motionTargets.has(p.at) ? motionTargets.get(p.at)!(f)
       : PLACES[p.at as PlaceName];
     if (!base) throw new Error(`unknown point "${p.at}"`);
-    return add(base, p.d);
+    const out = add(base, p.d);
+    if (!p.screen) return out;
+    if (!cam) throw new Error(`screen-relative point "${p.at}" needs a camera`);
+    const right: V3 = [cam.right.x, cam.right.y, cam.right.z], up: V3 = [0, 1, 0];
+    const fwd: V3 = [right[1] * up[2] - right[2] * up[1], right[2] * up[0] - right[0] * up[2], right[0] * up[1] - right[1] * up[0]];
+    return addScreen(out, right, up, fwd, p.screen);
+  };
+  type Moving = { at: (f: number) => V3; spin: (f: number) => number; phase: (f: number) => number | undefined };
+  const motionFn = (m: Motion, base: Point | undefined, shotStart: number): Moving => {
+    if (m.type === "path") return {
+      at: (f) => {
+        const keys = m.keys.map(([at, p]) => ({ f: anchor(at, shotStart), v: point(p, f) }));
+        const p = samplePath(keys, f, m.ease);
+        p[1] += bobOffset(T(f), m.bob);
+        return p;
+      },
+      spin: () => 0,
+      phase: (f) => (m.walk ? walkPhase(T(f), m.walk.rate, m.walk.offset ?? 0) : undefined),
+    };
+    const f0 = anchor(m.at, shotStart);
+    let p0: V3 | null = null;
+    return {
+      at: (f) => { if (!p0) p0 = base ? point(base, f0) : [0, 0, 0]; return ballisticAt(p0, m.v, m.a, Math.max(0, T(f) - T(f0)), m.floorY); },
+      spin: (f) => (m.spin ? m.spin * Math.max(0, T(f) - T(f0)) : 0),
+      phase: () => undefined,
+    };
   };
   const animated = (a: Animated, f: number, shotStart: number): number => {
     if (typeof a === "number") return a;
@@ -104,8 +131,9 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const vis = st.visible;
     if (vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return;
     const p = st.pos;
-    if (!p) throw new Error(`actor "${a.who}" has no pos`);
-    const pos = point(p, f);
+    const moving = a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
+    if (!p && !a.motion) throw new Error(`actor "${a.who}" has no pos or motion`);
+    const pos = a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f, cam);
     const ap = st.appear;
     const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at, shotStart)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
     if (scale === 0) return;
@@ -123,14 +151,19 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
     if (a.special) throw new Error(`special "${a.special}" is not implemented in Phase 2A (shot frame ${f})`);
     const e = cast[a.who];
+    const sp = { ...spec(a.who) };
+    for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, shotStart);
+    const phase = a.motion?.type === "path" && a.motion.walk ? (moving ? moving.phase(f) : motionFn(a.motion, p, shotStart).phase(f)) : undefined;
     const opts = {
-      pose: st.pose, expr, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f),
+      pose: st.pose, phase, expr, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f),
     };
-    who(out, cam, e.seed, spec(a.who), opts, pos[0], pos[1], pos[2], common);
+    who(out, cam, e.seed, sp, opts, pos[0], pos[1], pos[2], common);
   };
 
-  const effect = (out: Stage, e: Effect, f: number, shotStart: number) => {
-    const a = anchor(e.at, shotStart), pos = point(e.pos, f);
+  const effect = (out: Stage, e: Effect, f: number, shotStart: number, cam: CamInfo) => {
+    const a = anchor(e.at, shotStart);
+    const moving = e.motion ? (e.id && motionTargets.has(e.id) ? null : motionFn(e.motion, e.pos, shotStart)) : null;
+    const pos = e.motion ? (e.id && motionTargets.has(e.id) ? motionTargets.get(e.id)!(f) : moving!.at(f)) : point(e.pos, f, cam);
     if (e.kind === "sparkle") {
       const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
       const offs = e.offsets ?? [[0, 0, 0]];
@@ -153,6 +186,11 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const defs: Def[] = [];
   const dofs: Dof[] = [];
   const shots = [...(sb.shots ?? [])].map((s) => ({ s, start: anchor(s.start) })).sort((x, y) => x.start - y.start);
+  // register moving targets before cameras/stages resolve Points that refer to them
+  for (const { s, start } of shots) {
+    for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
+    for (const e of s.fx ?? []) if (e.id) motionTargets.set(e.id, e.motion ? (() => { const m = motionFn(e.motion!, e.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(e.pos, f));
+  }
   shots.forEach(({ s, start }, i) => {
     const b = i + 1 < shots.length ? shots[i + 1].start : TOTAL;
     if (s.legacy) {
@@ -166,7 +204,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {
         for (const a of s.actors ?? []) actor(out, cam, a, f, start);
-        for (const e of s.fx ?? []) effect(out, e, f, start);
+        for (const e of s.fx ?? []) effect(out, e, f, start, cam);
       },
       pose: (t, f, sets: Sets) => {
         for (const x of s.set ?? []) if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? (defaults.setPieces?.pages?.height ?? 0.3) : animated(x.height, f, start), 1);
