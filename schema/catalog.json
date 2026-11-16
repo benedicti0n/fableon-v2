@@ -559,7 +559,7 @@
     },
     {
       "name": "agni",
-      "status": "planned",
+      "status": "implemented",
       "description": "The fire god: red skin, flame hair, round belly he holds when full."
     },
     {
@@ -569,7 +569,7 @@
     },
     {
       "name": "naga",
-      "status": "planned",
+      "status": "implemented",
       "description": "Coiled cobra with a hood; optional king crown and sway."
     },
     {
@@ -579,12 +579,12 @@
     },
     {
       "name": "pot",
-      "status": "planned",
+      "status": "implemented",
       "description": "Cooking pot drawn with jarShape (body card)."
     },
     {
       "name": "flat",
-      "status": "planned",
+      "status": "implemented",
       "description": "A person drawn lying flat on a wide card (knocked-down kings)."
     }
   ],
@@ -631,17 +631,17 @@
     },
     {
       "name": "splash",
-      "status": "planned",
+      "status": "implemented",
       "description": "Water splash crown on an 800x800 card."
     },
     {
       "name": "bubbles",
-      "status": "planned",
+      "status": "implemented",
       "description": "Rising bubble column."
     },
     {
       "name": "burst",
-      "status": "planned",
+      "status": "implemented",
       "description": "Impact burst of rays on a 500x500 card."
     },
     {
@@ -651,17 +651,17 @@
     },
     {
       "name": "fire",
-      "status": "planned",
+      "status": "implemented",
       "description": "Flickering fire on a 512x512 card, fog-free."
     },
     {
       "name": "smoke",
-      "status": "planned",
+      "status": "implemented",
       "description": "Rising smoke puffs."
     },
     {
       "name": "pigeon",
-      "status": "planned",
+      "status": "implemented",
       "description": "Flying pigeon carrying a scroll."
     },
     {
@@ -678,6 +678,11 @@
       "name": "lump",
       "status": "implemented",
       "description": "The lump of flesh card."
+    },
+    {
+      "name": "dust",
+      "status": "implemented",
+      "description": "One-shot rising dust/smoke puff."
     }
   ],
   "setPieces": [
@@ -698,12 +703,12 @@
     },
     {
       "name": "wheel",
-      "status": "planned",
+      "status": "implemented",
       "description": "The contest wheel; spins and can stop at an anchor."
     },
     {
       "name": "city",
-      "status": "planned",
+      "status": "implemented",
       "description": "Indraprastha rising from the ground."
     },
     {
@@ -713,12 +718,12 @@
     },
     {
       "name": "nectar",
-      "status": "planned",
+      "status": "implemented",
       "description": "Eight nectar pots that disappear while Bhima drinks."
     },
     {
       "name": "bigBow",
-      "status": "planned",
+      "status": "implemented",
       "description": "The giant contest bow; wobbles on impact."
     }
   ],

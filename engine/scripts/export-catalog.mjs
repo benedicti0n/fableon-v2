@@ -48,7 +48,7 @@ const specials = ${JSON.stringify({
   pot: "Cooking pot drawn with jarShape (body card).",
   flat: "A person drawn lying flat on a wide card (knocked-down kings).",
 })};
-const plannedSpecial = new Set(["agni", "naga", "pot", "flat"]);
+const plannedSpecial = new Set();
 const effects = ${JSON.stringify({
   sparkle: "Four-point star card; per-index pop and optional twinkle.",
   halo: "Soft radial glow; card kind soft, glow or fire.",
@@ -68,8 +68,10 @@ const effects = ${JSON.stringify({
   mango: "Mango card.",
   sweat: "Sweat drop.",
   lump: "The lump of flesh card.",
+  pigeon: "Flying pigeon carrying a scroll.",
+  dust: "One-shot rising dust/smoke puff.",
 })};
-const fStatus = new Set(["sparkle", "halo", "knot", "sweat", "heart", "petals", "puff", "arrow", "stars", "emblem", "lump", "mango"]);
+const fStatus = new Set(["sparkle", "halo", "knot", "sweat", "heart", "petals", "puff", "arrow", "stars", "emblem", "lump", "mango", "splash", "bubbles", "burst", "fire", "smoke", "pigeon", "dust"]);
 const pieces = ${JSON.stringify({
   pages: "Palm-leaf stack growing at the writing desk.",
   boat: "Satyavati's boat on the river; motion and roll.",
@@ -80,7 +82,7 @@ const pieces = ${JSON.stringify({
   nectar: "Eight nectar pots that disappear while Bhima drinks.",
   bigBow: "The giant contest bow; wobbles on impact.",
 })};
-const pStatus = new Set(["pages", "boat", "jars", "ladduPlate"]);
+const pStatus = new Set(["pages", "boat", "jars", "ladduPlate", "nectar", "wheel", "bigBow", "city"]);
 const poses = ${JSON.stringify({
   stand: "Standing, arms by the sides.", walk: "Walking cycle.", run: "Running cycle.", sit: "Seated cross-legged.",
   point: "One arm pointing.", vow: "Hand raised in a vow.", pray: "Palms together.", shout: "Hands cupped at the mouth.",

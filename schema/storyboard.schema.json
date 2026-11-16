@@ -64,6 +64,22 @@
       "additionalProperties": false,
       "properties": { "graze": { "type": "number" }, "phase": { "type": "number" }, "expr": { "enum": ["neutral", "shock"] } }
     },
+    "AgniParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "burp": { "$ref": "#/$defs/Animated" } }
+    },
+    "PotParams": { "type": "object", "additionalProperties": false, "properties": {} },
+    "FlatParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "pose": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] } }
+    },
+    "NagaParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "col": { "type": "string" }, "king": { "type": "boolean" } }
+    },
     "BabyParams": {
       "type": "object",
       "additionalProperties": false,
@@ -473,6 +489,22 @@
           "then": { "properties": { "params": { "$ref": "#/$defs/BabyParams" } } }
         },
         {
+          "if": { "properties": { "special": { "const": "naga" } }, "required": ["special"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/NagaParams" } } }
+        },
+        {
+          "if": { "properties": { "special": { "const": "flat" } }, "required": ["special"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/FlatParams" } } }
+        },
+        {
+          "if": { "properties": { "special": { "const": "agni" } }, "required": ["special"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/AgniParams" } } }
+        },
+        {
+          "if": { "properties": { "special": { "const": "pot" } }, "required": ["special"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/PotParams" } } }
+        },
+        {
           "if": { "properties": { "special": { "const": null } }, "required": ["special"] },
           "then": { "properties": { "params": { "type": "object", "additionalProperties": false, "maxProperties": 0 } } }
         }
@@ -565,7 +597,8 @@
               "additionalProperties": false,
               "required": ["freq", "depth"],
               "properties": { "freq": { "type": "number" }, "depth": { "type": "number", "minimum": 0, "maximum": 1 } }
-            }
+            },
+            "until": { "$ref": "#/$defs/Anchor" }
           }
         },
         {
@@ -579,9 +612,12 @@
             "at": { "$ref": "#/$defs/Anchor" },
             "pos": { "$ref": "#/$defs/Point" },
             "size": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
             "pop": { "type": "number", "exclusiveMinimum": 0 },
             "color": { "type": "string" },
-            "card": { "enum": ["soft", "glow", "cut", "fire"] }
+            "card": { "enum": ["soft", "glow", "cut", "fire"] },
+            "peak": { "type": "number" },
+            "visible": { "$ref": "#/$defs/Window" }
           }
         },
         {
@@ -646,7 +682,8 @@
             "from": { "$ref": "#/$defs/Point" },
             "to": { "$ref": "#/$defs/Point" },
             "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
-            "rot": { "type": "number" }
+            "rot": { "type": "number" },
+            "stuck": { "type": "boolean" }
           }
         },
         {
@@ -661,7 +698,8 @@
             "pos": { "$ref": "#/$defs/Point" },
             "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
             "period": { "type": "number", "exclusiveMinimum": 0 },
-            "dur": { "type": "number", "exclusiveMinimum": 0 }
+            "dur": { "type": "number", "exclusiveMinimum": 0 },
+            "from": { "$ref": "#/$defs/Anchor" }
           }
         },
         {
@@ -707,6 +745,123 @@
             "size": { "type": "number", "exclusiveMinimum": 0 },
             "until": { "$ref": "#/$defs/Anchor" },
             "rotOffset": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "splash" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "dur": { "type": "number", "exclusiveMinimum": 0 },
+            "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "bubbles" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "count": { "type": "integer", "minimum": 1 },
+            "area": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "offset": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+            "rise": { "type": "number" },
+            "rate": { "type": "number" },
+            "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "saltX": { "type": "number" }, "saltZ": { "type": "number" }, "saltPhase": { "type": "number" },
+            "saltSize": { "type": "number" }, "jitter": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "burst" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "pop": { "type": "number", "exclusiveMinimum": 0 },
+            "color": { "type": "string" },
+            "phase": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "fire" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "spots": { "type": "array", "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } } },
+            "source": { "enum": ["cityTreetops"] },
+            "filter": {
+              "type": "object", "additionalProperties": false,
+              "properties": { "zAfter": { "type": "number" }, "radius": { "type": "number" } }
+            },
+            "yLift": { "type": "number" },
+            "sizeLift": { "type": "number" },
+            "spread": { "type": "number" },
+            "pop": { "type": "number", "exclusiveMinimum": 0 },
+            "hashSalt": { "type": "number" },
+            "visible": { "$ref": "#/$defs/Window" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "smoke" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "count": { "type": "integer", "minimum": 1 },
+            "area": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "offset": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+            "rise": { "type": "number" },
+            "rate": { "type": "number" },
+            "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "saltX": { "type": "number" }, "saltZ": { "type": "number" }, "saltPhase": { "type": "number" },
+            "saltSize": { "type": "number" }, "jitter": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos", "motion"],
+          "properties": {
+            "kind": { "const": "pigeon" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "size": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "dust" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "dur": { "type": "number", "exclusiveMinimum": 0 },
+            "rise": { "type": "number" },
+            "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "seed": { "type": "number" }
           }
         },
         {
@@ -834,6 +989,57 @@
         {
           "type": "object",
           "additionalProperties": false,
+          "required": ["piece", "since", "to", "origin"],
+          "properties": {
+            "piece": { "const": "nectar" },
+            "id": { "type": "string", "minLength": 1 },
+            "since": { "$ref": "#/$defs/Anchor" },
+            "to": { "$ref": "#/$defs/Anchor" },
+            "origin": { "$ref": "#/$defs/Point" },
+            "count": { "type": "integer", "minimum": 1 },
+            "radius": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+            "y": { "type": "number" },
+            "zOffset": { "type": "number" },
+            "scale": { "type": "number" },
+            "angleStart": { "type": "number" },
+            "angleSpan": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece", "from", "to"],
+          "properties": {
+            "piece": { "const": "city" },
+            "from": { "$ref": "#/$defs/Anchor" },
+            "to": { "$ref": "#/$defs/Anchor" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece"],
+          "properties": {
+            "piece": { "const": "wheel" },
+            "spin": { "type": "number" },
+            "stopAt": { "$ref": "#/$defs/Anchor" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece", "at"],
+          "properties": {
+            "piece": { "const": "bigBow" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "dur": { "type": "number" },
+            "amp": { "type": "number" },
+            "rate": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
           "required": ["piece", "at", "pos"],
           "properties": {
             "piece": { "const": "ladduPlate" },
@@ -843,6 +1049,12 @@
           }
         }
       ]
+    },
+    "Window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": { "from": { "$ref": "#/$defs/Anchor" }, "to": { "$ref": "#/$defs/Anchor" } }
     },
     "JarOverride": {
       "type": "object",

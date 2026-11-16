@@ -29,7 +29,7 @@ Named points can also be declared once per storyboard in "points" (e.g. "VY": {"
 ### Motion (actors, effects and set pieces)
 ```jsonc
 { "type": "path", "keys": [[Anchor, Point], …], "ease": "linear", "walk": { "rate": 1.8, "offset": 0.3 }, "bob": { "amp": 0.05, "freq": 2 } }
-{ "type": "ballistic", "at": Anchor, "v": [vx, vy, vz], "a": [ax, ay, az], "floorY": 0.4, "spin": 9 }
+{ "type": "ballistic", "at": Anchor, "v": [vx, vy, vz], "a": [ax, ay, az], "floorY": 0.4, "spin": 9, "delay": -0.08 }
 ```
 Path keys are clamped before/after; `walk.rate` is cycles per second and sets the actor's walk phase; `bob` adds `amp·sin(2π·freq·t)` on y. Ballistic position is `p0 + v·u + a·u²` with `u` seconds since `at` (p0 comes from the actor/effect `pos`), optionally clamped to `floorY` and spun. Any actor/effect/set piece with an `"id"` becomes a moving target that Points and camera keys can follow (`{"at": "pigeon"}`).
 
@@ -96,7 +96,8 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "id": null,                         // optional moving-target id (Point {"at": id} follows it)
   "special": null,                    // null = person(); or "ganesha" | "agni" | "deer" | "naga" | "baby" | "pot" | "flat"
   "params": {},                       // typed per special: ganesha {write, writeSpeed, puzzled, down, look, pen, ear, expr};
-                                      // deer {graze, phase, expr}; baby {wrap, skin}; others are added with status implemented
+                                      // deer {graze, phase, expr}; baby {wrap, skin}; naga {col, king}; agni {burp};
+                                      // pot {}; flat {pose}
   "pos": Point,                       // feet position; ballistic motion starts here
   "motion": null,                     // path or ballistic (see Motion)
   "animate": {},                      // numeric Spec fields animated over time, e.g. { "belly": Animated }
@@ -111,7 +112,7 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 }
 ```
 
-## Effect (unlit cards; implemented: sparkle, halo, knot, sweat, heart, petals, puff, arrow, stars, emblem)
+## Effect (unlit cards; all Phase 2B kinds implemented)
 ```jsonc
 { "kind": "sparkle", "id": null, "motion": null, "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
 { "kind": "halo", "at": Anchor, "pos": Point, "size": 2.8, "pop": 0.4, "color": "#fff0a0", "card": "soft" }
@@ -125,7 +126,14 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 { "kind": "emblem", "at": Anchor, "pos": Point, "variant": "wheel", "size": 1.15, "pop": 0.18, "bob": 0.12, "until": Anchor }
 { "kind": "lump", "at": Anchor, "pos": Point, "size": 0.6, "pop": 0.18 }
 { "kind": "mango", "at": Anchor, "pos": Point, "motion": { "type": "ballistic", … }, "size": 0.34, "until": Anchor }
-// 2B adds: splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path) ...
+{ "kind": "splash", "at": Anchor, "pos": Point, "dur": 20, "size": [3.2, 3.2] }
+{ "kind": "bubbles", "at": Anchor, "pos": Point, "count": 14, "area": [6, 3], "offset": [-3, 0, -1], "rise": 7, "rate": 0.6, "size": [0.18, 0.30] }
+{ "kind": "burst", "at": Anchor, "pos": Point, "size": 3, "pop": 0.18, "color": "#fff3b0", "phase": 0.7 }
+{ "kind": "fire", "at": Anchor, "pos": Point, "spots": [[dx, dy, dz, size]], "spread": 24, "pop": 0.4, "hashSalt": 8 }
+{ "kind": "fire", "at": Anchor, "pos": Point, "source": "cityTreetops", "filter": { "zAfter": -178, "radius": 55 } }
+{ "kind": "smoke", "at": Anchor, "pos": Point, "count": 8, "area": [6, 3], "offset": [-3, 10, -1], "rise": 12, "rate": 0.25, "size": [5, 11] }
+{ "kind": "pigeon", "id": "pigeon", "at": Anchor, "pos": Point, "motion": { "type": "ballistic", … }, "size": 0.9 }
+{ "kind": "dust", "at": Anchor, "pos": Point, "dur": 36, "rise": 3, "size": [1, 6], "seed": 0 }
 ```
 
 ## SetAction (dynamic set pieces)
@@ -140,7 +148,10 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "kids": { "since": Anchor, "windowEnd": Anchor, "seedBase": 100, "cullDistance": 22, "sink": 0.95, "rise": 1.45,
             "scale": 0.78, "pose": "armsUp", "expr": "grin", "generator": "kaurava", "overrides": [{ "index": 3, "at": Anchor, "who": "…", "expr": "smile" }] } }
 { "piece": "ladduPlate", "at": Anchor, "pos": Point, "scale": [1.6, 1, 1.6] }
-// 2B adds: wheel(spin, stopAt), city(rise), nectar(drink window), bigBow(wobble)
+{ "piece": "nectar", "since": Anchor, "to": Anchor, "origin": Point, "count": 8, "radius": [1.3, 0.9], "y": 0.25, "zOffset": 0.7, "scale": 0.7 }
+{ "piece": "wheel", "spin": 2.2, "stopAt": Anchor }
+{ "piece": "bigBow", "at": Anchor, "dur": 10, "amp": 0.15, "rate": 2 }
+{ "piece": "city", "from": Anchor, "to": Anchor }
 ```
 
 ## Crowds (deterministic generators)
@@ -165,3 +176,9 @@ Members expand deterministically with the legacy `hh(i, salt)` hash; `seedBase +
 - Every word anchor exists in words.json; shot starts strictly increase; camera keys and beats are in time order.
 - `"shot": true` anchors are only valid inside a shot.
 - Phase 2C adds: every actor named in a camera key's subjects is inside the frame at that key.
+
+## Crossfade semantics
+A shot's content (camera, actors, beats, visibility, effects, set pieces and special params) is evaluated for **every
+frame on which the shot is drawn**, including the crossfade frames after its end (outgoing) and before its start
+(incoming). The interpreter never clamps content to `[start, end)`; beats and visibility follow their anchors only.
+This matches `story.ts`, whose stage functions are plain formulas of the global frame `f`.

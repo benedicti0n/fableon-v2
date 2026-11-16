@@ -3,11 +3,12 @@
 import * as THREE from "three";
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
-import { who, fx, petals, card, hh } from "../cast";
+import { who, fx, petals, card, hh, lidAt } from "../cast";
 import type { Sets } from "../sets";
 import type { V3 } from "../places";
 import { PLACES, PlaceName } from "../places";
 import { C, KIDS, KAURAVA } from "../castlist";
+import { CITY_TREES } from "../sets";
 import type { Spec } from "../people";
 import { makeAnchors, Wd } from "../core/anchors";
 import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
@@ -15,8 +16,8 @@ import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../cor
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
-import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
-import { fxStars, fxPuff } from "../toon";
+import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
+import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
@@ -164,12 +165,24 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       card(out, cam, `baby|${String(params.wrap ?? "")}|${String(params.skin ?? "")}`, (p, light) => baby(p, { light, wrap: typeof params.wrap === "string" ? params.wrap : undefined, skin: typeof params.skin === "string" ? params.skin : undefined }), pos[0], pos[1], pos[2], { geo: "baby", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 0.6 });
       return;
     }
+    if (a.special === "naga") {
+      const col = typeof params.col === "string" ? params.col : "#3f9a6a", king = params.king === true;
+      card(out, cam, `naga|${col}|${Math.floor(T(f) * 6) % 12}|${king}|${expr}`, (p, light) => naga(p, { col, king, t: T(f), light, expr: expr === "grin" ? "grin" : "smile" }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.4 });
+      return;
+    }
+    if (a.special === "agni") {
+      const pv = (key: string, d = 0) => { const v = params[key]; return v && typeof v === "object" && "keys" in v ? animated(v as Animated, f, shotStart) : num(v, d); };
+      const tq = Math.floor(T(f) * 8) / 8, burp = pv("burp");
+      card(out, cam, `agni|${Math.floor(T(f) * 8) % 6}|${expr}|${burp.toFixed(3)}|${lidAt(T(f), 90)}`, (p, light) => agni(p, { t: tq, light, expr: expr === "relief_open" ? "relief_open" : "pained", burp, blink: lidAt(T(f), 90) }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2 });
+      return;
+    }
     if (a.special === "pot") {
       card(out, cam, "pot", (p) => jarShape(p, 300, 700, 140, 2.4, false), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2 });
       return;
     }
     if (a.special === "flat") {
-      card(out, cam, `flat|${expr}|${st.pose ?? "stand"}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: st.pose ?? "armsUp", expr, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
+      const fpose = (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"];
+      card(out, cam, `flat|${expr}|${fpose}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: fpose, expr, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
       return;
     }
     if (a.special) throw new Error(`special "${a.special}" is not implemented yet (shot frame ${f})`);
@@ -243,6 +256,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const moving = em.motion ? (em.id && motionTargets.has(em.id) ? null : motionFn(em.motion, em.pos, shotStart)) : null;
     const pos = em.motion ? (em.id && motionTargets.has(em.id) ? motionTargets.get(em.id)!(f) : moving!.at(f)) : em.pos ? point(em.pos, f, cam) : ([0, 0, 0] as V3);
     if (e.kind === "sparkle") {
+      if (e.until && f >= anchor(e.until, shotStart)) return;
       const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
       const offs = e.offsets ?? [[0, 0, 0]];
       const tw = e.twinkle, stagger = e.pop?.stagger ?? 0;
@@ -256,14 +270,16 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       const dur = e.dur ?? 12;
       if (f >= a && f < a + dur) { const k = (f - a) / dur, size = e.size ?? 2.6; fx(out, `puff|${Math.round(k * 12)}`, 300, 300, (p) => fxPuff(p, k), pos[0], pos[1], pos[2], size, size, { kind: "soft" }); }
     } else if (e.kind === "arrow") {
+      const [aw, ah] = e.size ?? [0.9, 0.45];
+      if (e.stuck) { if (f >= a) { const p = point(e.to, f, cam); fx(out, "arrow", 256, 128, (q) => fxArrow(q), p[0], p[1], p[2], aw, ah, { rot: e.rot }); } return; }
       const to = anchor(e.toAt, shotStart), u = to === a ? 1 : (f - a) / (to - a);
       if (u > 0 && u < 1) {
         const p0 = point(e.from, f, cam), p1 = point(e.to, f, cam), [w, h] = e.size ?? [0.9, 0.45];
         fx(out, "arrow", 256, 128, (p) => fxArrow(p), p0[0] + (p1[0] - p0[0]) * u, p0[1] + (p1[1] - p0[1]) * u, p0[2] + (p1[2] - p0[2]) * u, w, h, { rot: e.rot });
       }
     } else if (e.kind === "stars") {
-      const period = e.period ?? 12, dur = e.dur;
-      if (f >= a && (dur === undefined || f < a + dur)) {
+      const period = e.period ?? 12, dur = e.dur, startF = e.from ? anchor(e.from, shotStart) : a;
+      if (f >= startF && (dur === undefined || f < a + dur)) {
         const ph = ((f - a) / period) % 1, [w, h] = e.size ?? [1.5, 0.79];
         fx(out, `stars|${Math.round(ph * 20)}`, 420, 220, (p) => fxStars(p, ph), pos[0], pos[1], pos[2], w, h);
       }
@@ -279,14 +295,52 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       fx(out, "heart", 256, 256, (p) => fxHeart(p), pos[0], pos[1] + bob, pos[2], size, size);
     } else if (e.kind === "petals") {
       petals(out, T(f), pos[0], pos[2], pos[1], e.count ?? 1, e.spread ?? 1, T(a));
+    } else if (e.kind === "pigeon") {
+      if (f >= a) { const flap = Math.floor(T(f) * 10) % 4, w = e.size ?? 0.9; fx(out, `pigeon|${flap}`, 512, 320, (p) => fxPigeon(p, flap / 4), pos[0], pos[1], pos[2], w, w * 0.6222); }
+    } else if (e.kind === "dust") {
+      const dur = e.dur ?? 36;
+      if (f >= a && f < a + dur) { const k = (f - a) / dur, [s0, s1] = e.size ?? [1, 6], size = s0 + k * (s1 - s0); fx(out, `smoke${(e.seed ?? 0) % 3}`, 256, 256, (p) => fxSmoke(p, e.seed ?? 0), pos[0], pos[1] + k * (e.rise ?? 3), pos[2], size, size, { kind: "soft" }); }
     } else if (e.kind === "sweat") {
       if (f >= a) for (let i = 0, n = e.count ?? 1; i < n; i++) {
         const ph = (((T(f) * (e.rate ?? 1) + i / n) % 1) + 1) % 1, size = e.size ?? 0.12;
         fx(out, "sweat", 128, 128, (p) => p.ell(64, 64, 18, 26, "#9fd4ff", 5), pos[0] + (e.spread ?? 0) * i, pos[1] - (e.drop ?? 0) * ph, pos[2], size, size);
       }
     } else if (e.kind === "halo") {
-      const k = pop(T(f), T(a), e.pop ?? 0.4), size = (e.size ?? 2.8) * k;
-      fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0"), pos[0], pos[1], pos[2], size, size, { kind: e.card ?? "soft" });
+      if (e.visible && (f < anchor(e.visible.from, shotStart) || f >= anchor(e.visible.to, shotStart))) return;
+      const k = e.pop === undefined ? 1 : pop(T(f), T(a), e.pop), size = (e.size ?? 2.8) * k, h = (e.height ?? e.size ?? 2.8) * k;
+      fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0", e.peak ?? 1), pos[0], pos[1], pos[2], size, h, { kind: e.card ?? "soft" });
+    } else if (e.kind === "splash") {
+      const dur = e.dur ?? 20;
+      if (f >= a && f < a + dur) { const [w, h] = e.size ?? [3.2, 3.2]; fx(out, `splash|${f - a}`, 800, 800, (p) => fxSplash(p, (f - a) / dur), pos[0], pos[1], pos[2], w, h); }
+    } else if (e.kind === "bubbles") {
+      const [ax, az] = e.area ?? [1, 1], off = e.offset ?? [0, 0, 0], [s0, s1] = e.size ?? [0.18, 0.3];
+      for (let i = 0, n = e.count ?? 1; i < n; i++) {
+        const ph = (((T(f) * (e.rate ?? 0.6) + hh(i, e.saltPhase ?? 5)) % 1) + 1) % 1;
+        const size = s0 + hh(i, e.saltSize ?? 3) * (s1 - s0), jitter = (e.jitter ?? 0) * Math.sin(T(f) * 3 + i);
+        fx(out, "bubble", 128, 128, (p) => fxBubble(p), pos[0] + off[0] + hh(i, e.saltX ?? 1) * ax + jitter, pos[1] + off[1] + ph * (e.rise ?? 7), pos[2] + off[2] + hh(i, e.saltZ ?? 2) * az, size, size, { kind: "soft" });
+      }
+    } else if (e.kind === "burst") {
+      const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 3.2) * k;
+      fx(out, "burst", 500, 500, (p) => fxBurst(p, e.phase ?? 0.6, e.color ?? "#fff3b0"), pos[0], pos[1], pos[2], size, size, { kind: "glow" });
+    } else if (e.kind === "fire") {
+      if (e.visible && (f < anchor(e.visible.from, shotStart) || f >= anchor(e.visible.to, shotStart))) return;
+      const spots = e.spots ?? (e.source === "cityTreetops"
+        ? CITY_TREES.filter(([x, , z]) => z > (e.filter?.zAfter ?? -Infinity) && Math.hypot(x - pos[0], z - pos[2]) < (e.filter?.radius ?? Infinity)).map(([x, y, z]) => [x, y, z, 8.5] as [number, number, number, number])
+        : []);
+      const lift = e.yLift ?? 0, sl = e.sizeLift ?? 0.5;
+      const absolute = e.source === "cityTreetops";
+      spots.forEach(([dx, dy, dz, sz], i) => {
+        const start = a + Math.round(hh(i, e.hashSalt ?? 8) * (e.spread ?? 24)); if (f < start) return;
+        const k = pop(T(f), T(start), e.pop ?? 0.4), st = Math.floor(T(f) * 8 + i) % 6, w = sz * k;
+        const x = absolute ? dx : pos[0] + dx, y = absolute ? dy : pos[1] + dy, z = absolute ? dz : pos[2] + dz;
+        fx(out, `fire|${st}|${i % 3}`, 512, 512, (p) => fxFire(p, st / 8, i % 3), x, y + lift + w * sl, z, w, w, { kind: "fire" });
+      });
+    } else if (e.kind === "smoke") {
+      const [ax, az] = e.area ?? [1, 1], off = e.offset ?? [0, 0, 0], [s0, s1] = e.size ?? [5, 6];
+      for (let i = 0, n = e.count ?? 1; i < n; i++) {
+        const ph = (((T(f) * (e.rate ?? 0.25) + hh(i, e.saltPhase ?? 5)) % 1) + 1) % 1, size = s0 + ph * (s1 - s0);
+        fx(out, `smoke${i % 3}`, 256, 256, (p) => fxSmoke(p, i), pos[0] + off[0] + hh(i, e.saltX ?? 1) * ax, pos[1] + off[1] + ph * (e.rise ?? 12), pos[2] + off[2] + hh(i, e.saltZ ?? 2) * az, size, size, { kind: "soft" });
+      }
     } else if (e.kind === "lump") {
       const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.6) * k;
       fx(out, "lump", 256, 256, (p) => fxLump(p), pos[0], pos[1], pos[2], size, size);
@@ -339,6 +393,26 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
             sets.dyn.ladduPlate.visible = f >= anchor(x.at, start);
             const p = point(x.pos, f); sets.dyn.ladduPlate.position.set(p[0], p[1], p[2]);
             sets.dyn.ladduPlate.scale.set(...(x.scale ?? [1, 1, 1]));
+          } else if (x.piece === "city") {
+            const k = glide((f - anchor(x.from, start)) / Math.max(1, anchor(x.to, start) - anchor(x.from, start)));
+            sets.dyn.city.scale.set(1, Math.max(0.001, k), 1); sets.dyn.city.visible = k > 0.002;
+          } else if (x.piece === "wheel") {
+            const stop = x.stopAt ? anchor(x.stopAt, start) : null;
+            if (stop === null || f < stop) sets.dyn.wheel.rotation.z = t * (x.spin ?? 2.2);
+            else sets.dyn.wheel.rotation.z = ((stop - 1) / 30) * (x.spin ?? 2.2);
+          } else if (x.piece === "bigBow") {
+            const a = anchor(x.at, start), n = f - a;
+            sets.dyn.bigBow.rotation.z = n >= 0 && n < (x.dur ?? 10) ? (x.amp ?? 0.15) * Math.sin(n * (x.rate ?? 2)) : 0;
+          } else if (x.piece === "nectar") {
+            const d0 = anchor(x.since, start), d1 = anchor(x.to, start), n = x.count ?? 8, o = point(x.origin, f);
+            const [rx, rz] = x.radius ?? [1.3, 0.9], sc = x.scale ?? 0.7, M = new THREE.Matrix4();
+            for (let i = 0; i < n; i++) {
+              const gone = f > d0 + ((d1 - d0) * (i + 1)) / n, a = ((i / n) * (x.angleSpan ?? 1.2) + (x.angleStart ?? -0.6)) * Math.PI;
+              M.makeScale(gone ? 1e-4 : sc, gone ? 1e-4 : sc, gone ? 1e-4 : sc);
+              M.setPosition(o[0] + Math.sin(a) * rx, o[1] + (x.y ?? 0.25), o[2] + Math.cos(a) * rz + (x.zOffset ?? 0.7));
+              sets.dyn.nectar.setMatrixAt(i, M);
+            }
+            sets.dyn.nectar.instanceMatrix.needsUpdate = true;
           }
         }
       },

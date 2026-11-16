@@ -20,7 +20,7 @@ export async function runValidator() {
     const sb = JSON.parse(readFileSync(join(FIX, 'storyboard.json'), 'utf8'));
     const broken = [
       { name: 'unknown pose', expect: 'unknown pose "banana"', mutate: (x) => { x.shots[1].actors[0].pose = 'banana'; } },
-      { name: 'planned special', expect: 'special "agni" is not implemented yet', mutate: (x) => { x.shots[1].actors[0].special = 'agni'; } },
+      { name: 'unknown special', expect: 'unknown special "dragon"', mutate: (x) => { x.shots[1].actors[0].special = 'dragon'; } },
       { name: 'word not in line', expect: 'no word 0:zzzz', mutate: (x) => { x.shots[0].start = { line: 0, word: 'zzzz' }; } },
       { name: 'decreasing shot starts', expect: 'is not after the previous start', mutate: (x) => { x.shots[2].start = { frame: 0 }; } },
     ];

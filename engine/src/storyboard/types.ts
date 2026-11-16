@@ -44,20 +44,27 @@ export type Actor = {
 };
 export type Sparkle = {
   kind: "sparkle"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; count?: number; offsets?: [number, number, number][];
-  pop?: { stagger?: number }; twinkle?: { freq: number; depth: number };
+  pop?: { stagger?: number }; twinkle?: { freq: number; depth: number }; until?: Anchor;
 };
-export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire" };
+export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; height?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire"; peak?: number; visible?: { from: Anchor; to: Anchor } };
 export type Knot = { kind: "knot"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
 export type Sweat = { kind: "sweat"; id?: string; motion?: Motion; at: Anchor; pos: Point; count?: number; rate?: number; spread?: number; drop?: number; size?: number };
 export type Heart = { kind: "heart"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: { amp: number; freq: number } };
 export type Petals = { kind: "petals"; id?: string; motion?: Motion; at: Anchor; pos: Point; count?: number; spread?: number };
 export type Puff = { kind: "puff"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; dur?: number };
-export type Arrow = { kind: "arrow"; id?: string; motion?: Motion; at: Anchor; toAt: Anchor; from: Point; to: Point; size?: [number, number]; rot?: number };
-export type Stars = { kind: "stars"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: [number, number]; period?: number; dur?: number };
+export type Arrow = { kind: "arrow"; id?: string; motion?: Motion; at: Anchor; toAt: Anchor; from: Point; to: Point; size?: [number, number]; rot?: number; stuck?: boolean };
+export type Stars = { kind: "stars"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: [number, number]; period?: number; dur?: number; from?: Anchor };
 export type Emblem = { kind: "emblem"; id?: string; at: Anchor; pos: Point; variant: "wheel" | "wind" | "bolt" | "horse"; size?: number; pop?: number; bob?: number; until?: Anchor };
 export type Lump = { kind: "lump"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number };
 export type Mango = { kind: "mango"; id?: string; at: Anchor; pos: Point; motion: Motion; size?: number; until?: Anchor; rotOffset?: number };
-export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals | Puff | Arrow | Stars | Emblem | Lump | Mango;
+export type Splash = { kind: "splash"; id?: string; at: Anchor; pos: Point; dur?: number; size?: [number, number] };
+export type Bubbles = { kind: "bubbles"; id?: string; at: Anchor; pos: Point; count?: number; area?: [number, number]; offset?: [number, number, number]; rise?: number; rate?: number; size?: [number, number]; saltX?: number; saltZ?: number; saltPhase?: number; saltSize?: number; jitter?: number };
+export type Burst = { kind: "burst"; id?: string; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; phase?: number };
+export type Fire = { kind: "fire"; id?: string; at: Anchor; pos: Point; spots?: [number, number, number, number][]; source?: "cityTreetops"; filter?: { zAfter?: number; radius?: number }; yLift?: number; sizeLift?: number; spread?: number; pop?: number; hashSalt?: number; visible?: { from: Anchor; to: Anchor } };
+export type Smoke = { kind: "smoke"; id?: string; at: Anchor; pos: Point; count?: number; area?: [number, number]; offset?: [number, number, number]; rise?: number; rate?: number; size?: [number, number]; saltX?: number; saltZ?: number; saltPhase?: number; saltSize?: number; jitter?: number };
+export type Pigeon = { kind: "pigeon"; id?: string; at: Anchor; pos: Point; motion: Motion; size?: number };
+export type Dust = { kind: "dust"; id?: string; at: Anchor; pos: Point; dur?: number; rise?: number; size?: [number, number]; seed?: number };
+export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals | Puff | Arrow | Stars | Emblem | Lump | Mango | Splash | Bubbles | Burst | Fire | Smoke | Pigeon | Dust;
 export type PagesAction = { piece: "pages"; height?: Animated };
 export type BoatAction = { piece: "boat"; id?: string; motion: Motion; yaw?: number; roll?: number; rollBob?: { amp: number; freq: number } };
 export type JarOverride = { index: number; at: Anchor; who?: string; expr?: Expr };
@@ -68,7 +75,11 @@ export type JarsAction = {
   kids?: { since?: Anchor; windowEnd?: Anchor; hashSalt?: number; overrides?: JarOverride[]; seedBase?: number; cullDistance?: number; sink?: number; rise?: number; scale?: number; pose?: Pose; expr?: Expr; noBlob?: boolean; generator?: "kaurava" };
 };
 export type LadduAction = { piece: "ladduPlate"; at: Anchor; pos: Point; scale?: [number, number, number] };
-export type SetAction = PagesAction | BoatAction | JarsAction | LadduAction;
+export type NectarAction = { piece: "nectar"; id?: string; since: Anchor; to: Anchor; origin: Point; count?: number; radius?: [number, number]; y?: number; zOffset?: number; scale?: number; angleStart?: number; angleSpan?: number };
+export type CityAction = { piece: "city"; from: Anchor; to: Anchor };
+export type WheelAction = { piece: "wheel"; spin?: number; stopAt?: Anchor };
+export type BigBowAction = { piece: "bigBow"; at: Anchor; dur?: number; amp?: number; rate?: number };
+export type SetAction = PagesAction | BoatAction | JarsAction | LadduAction | NectarAction | WheelAction | BigBowAction | CityAction;
 export type Pick<T> = { salt: number; below: number; a: T; b: T };
 export type Crowd = {
   count: number; seedBase: number; generator?: "kaurava"; cast?: string[];
