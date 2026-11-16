@@ -410,7 +410,9 @@
     {
       "id": "L1",
       "start": {
-        "frame": 88
+        "line": 1,
+        "word": "Vyasa",
+        "offset": -2
       },
       "legacy": false,
       "light": "golden",
@@ -557,7 +559,7 @@
           "blobScale": 1.6,
           "expr": "neutral",
           "params": {
-            "writeRate": 2.0,
+            "writeSpeed": 2.0,
             "look": -0.6,
             "down": 1
           },
@@ -630,13 +632,15 @@
             "keys": [
               [
                 {
-                  "frame": 90
+                  "shot": true,
+                  "offset": 2
                 },
                 0.3
               ],
               [
                 {
-                  "frame": 180
+                  "shot": true,
+                  "offset": 92
                 },
                 0.4
               ]
@@ -649,7 +653,9 @@
     {
       "id": "L2",
       "start": {
-        "frame": 205
+        "line": 2,
+        "word": "His",
+        "offset": -2
       },
       "legacy": false,
       "light": "golden",
@@ -801,7 +807,9 @@
     {
       "id": "S4",
       "start": {
-        "frame": 293
+        "line": 3,
+        "word": "So",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -816,7 +824,9 @@
     {
       "id": "S5",
       "start": {
-        "frame": 422
+        "line": 4,
+        "word": "Our",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -828,7 +838,9 @@
     {
       "id": "L5",
       "start": {
-        "frame": 508
+        "line": 5,
+        "word": "Her",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -965,7 +977,9 @@
     {
       "id": "L6",
       "start": {
-        "frame": 573
+        "line": 6,
+        "word": "Problem",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1094,7 +1108,9 @@
     {
       "id": "L7",
       "start": {
-        "frame": 668
+        "line": 7,
+        "word": "Devavrata",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1264,7 +1280,9 @@
     {
       "id": "L8",
       "start": {
-        "frame": 778
+        "line": 8,
+        "word": "So",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1346,7 +1364,9 @@
     {
       "id": "S10",
       "start": {
-        "frame": 821
+        "line": 9,
+        "word": "The",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -1357,7 +1377,9 @@
     {
       "id": "L10",
       "start": {
-        "frame": 932
+        "line": 10,
+        "word": "Luckily",
+        "offset": -2
       },
       "legacy": false,
       "light": "golden",
@@ -1485,7 +1507,9 @@
     {
       "id": "S12",
       "start": {
-        "frame": 1027
+        "line": 11,
+        "word": "Unluckily",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -1500,7 +1524,9 @@
     {
       "id": "L12",
       "start": {
-        "frame": 1105
+        "line": 12,
+        "word": "A",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1625,7 +1651,9 @@
     {
       "id": "S14",
       "start": {
-        "frame": 1220
+        "line": 13,
+        "word": "Pandu",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -1636,7 +1664,9 @@
     {
       "id": "L14",
       "start": {
-        "frame": 1337
+        "line": 14,
+        "word": "Conveniently",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1791,7 +1821,9 @@
     {
       "id": "S16",
       "start": {
-        "frame": 1435
+        "line": 15,
+        "word": "She",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -1802,7 +1834,9 @@
     {
       "id": "L16",
       "start": {
-        "frame": 1547
+        "line": 16,
+        "word": "Five",
+        "offset": -2
       },
       "legacy": false,
       "light": "day",
@@ -1975,7 +2009,9 @@
     {
       "id": "S18",
       "start": {
-        "frame": 1593
+        "line": 17,
+        "word": "Meanwhile",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -1986,7 +2022,9 @@
     {
       "id": "S19",
       "start": {
-        "frame": 1725
+        "line": 18,
+        "word": "Vyasa",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -1997,7 +2035,9 @@
     {
       "id": "S20",
       "start": {
-        "frame": 1836
+        "line": 19,
+        "word": "Out",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2008,7 +2048,9 @@
     {
       "id": "S21",
       "start": {
-        "frame": 1917
+        "line": 20,
+        "word": "Five",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2019,7 +2061,9 @@
     {
       "id": "S22",
       "start": {
-        "frame": 1978
+        "line": 21,
+        "word": "Bhima",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2030,7 +2074,9 @@
     {
       "id": "S23",
       "start": {
-        "frame": 2080
+        "line": 22,
+        "word": "So",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2041,7 +2087,9 @@
     {
       "id": "S24",
       "start": {
-        "frame": 2181
+        "line": 23,
+        "word": "Bhima",
+        "offset": -2
       },
       "legacy": true,
       "light": "deep",
@@ -2052,7 +2100,9 @@
     {
       "id": "S25",
       "start": {
-        "frame": 2298
+        "line": 24,
+        "word": "Next",
+        "offset": -2
       },
       "legacy": true,
       "light": "night",
@@ -2067,7 +2117,9 @@
     {
       "id": "S26",
       "start": {
-        "frame": 2395
+        "line": 25,
+        "word": "They",
+        "offset": -2
       },
       "legacy": true,
       "light": "night",
@@ -2082,7 +2134,9 @@
     {
       "id": "S27",
       "start": {
-        "frame": 2511
+        "line": 26,
+        "word": "In",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2093,7 +2147,9 @@
     {
       "id": "S28",
       "start": {
-        "frame": 2673
+        "line": 27,
+        "word": "Kings",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2104,7 +2160,9 @@
     {
       "id": "S29",
       "start": {
-        "frame": 2735
+        "line": 28,
+        "word": "Arjuna",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2115,7 +2173,9 @@
     {
       "id": "S30",
       "start": {
-        "frame": 2798
+        "line": 29,
+        "word": "They",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2130,7 +2190,9 @@
     {
       "id": "S31",
       "start": {
-        "frame": 2861
+        "line": 30,
+        "word": "Kunti",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2145,7 +2207,9 @@
     {
       "id": "S32",
       "start": {
-        "frame": 2917
+        "line": 31,
+        "word": "Her",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2160,7 +2224,9 @@
     {
       "id": "S33",
       "start": {
-        "frame": 2999
+        "line": 32,
+        "word": "You",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2175,7 +2241,9 @@
     {
       "id": "S34",
       "start": {
-        "frame": 3103
+        "line": 33,
+        "word": "Bhishma's",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2190,7 +2258,9 @@
     {
       "id": "S35",
       "start": {
-        "frame": 3125
+        "line": 33,
+        "word": "Kunti's",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2205,7 +2275,9 @@
     {
       "id": "S36",
       "start": {
-        "frame": 3145
+        "line": 33,
+        "word": "even",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",
@@ -2220,7 +2292,9 @@
     {
       "id": "S37",
       "start": {
-        "frame": 3237
+        "line": 34,
+        "word": "The",
+        "offset": -2
       },
       "legacy": true,
       "light": "day",
@@ -2231,7 +2305,9 @@
     {
       "id": "S38",
       "start": {
-        "frame": 3340
+        "line": 35,
+        "word": "The",
+        "offset": -2
       },
       "legacy": true,
       "light": "night",
@@ -2246,7 +2322,9 @@
     {
       "id": "S39",
       "start": {
-        "frame": 3479
+        "line": 36,
+        "word": "Oh",
+        "offset": -2
       },
       "legacy": true,
       "light": "golden",

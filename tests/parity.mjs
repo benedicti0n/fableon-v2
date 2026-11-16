@@ -18,7 +18,7 @@ export function framePlan(storyboard, words) {
     if (!hits[nth]) throw new Error(`parity: no word ${line}:${word}`);
     return Math.max(0, Math.round(hits[nth].a * fps));
   };
-  const at = (a) => ("frame" in a ? a.frame + (a.offset ?? 0) : "end" in a ? END + (a.offset ?? 0) : A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0));
+  const at = (a, shotStart = 0) => ("shot" in a ? shotStart + (a.offset ?? 0) : "frame" in a ? a.frame + (a.offset ?? 0) : "end" in a ? END + (a.offset ?? 0) : A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0));
   const shots = [...storyboard.shots].map((s) => ({ s, a: at(s.start) })).sort((x, y) => x.a - y.a);
   const plan = [];
   shots.forEach(({ s, a }, i) => {
@@ -26,15 +26,15 @@ export function framePlan(storyboard, words) {
     const b = i + 1 < shots.length ? shots[i + 1].a : TOTAL;
     const base = [a, a + 1, Math.floor((a + b) / 2), b - 1].filter((f) => f >= a && f < b);
     const anchors = [a];
-    for (const k of s.camera ?? []) { anchors.push(at(k.at)); if (k.push) { anchors.push(at(k.push.from)); if (k.push.punchAt) anchors.push(at(k.push.punchAt)); } }
-    for (const d of s.dof ?? []) anchors.push(at(d.at));
+    for (const k of s.camera ?? []) { anchors.push(at(k.at, a)); if (k.push) { anchors.push(at(k.push.from, a)); if (k.push.punchAt) anchors.push(at(k.push.punchAt, a)); } }
+    for (const d of s.dof ?? []) anchors.push(at(d.at, a));
     for (const x of s.actors ?? []) {
-      for (const bt of x.beats ?? []) anchors.push(at(bt.at));
-      if (x.appear) anchors.push(at(x.appear.at));
-      if (x.visible) { anchors.push(at(x.visible.from)); anchors.push(at(x.visible.to)); }
+      for (const bt of x.beats ?? []) anchors.push(at(bt.at, a));
+      if (x.appear) anchors.push(at(x.appear.at, a));
+      if (x.visible) { anchors.push(at(x.visible.from, a)); anchors.push(at(x.visible.to, a)); }
     }
-    for (const e of s.fx ?? []) anchors.push(at(e.at));
-    for (const x of s.set ?? []) if (x.height && typeof x.height === "object") for (const [kf] of x.height.keys) anchors.push(at(kf));
+    for (const e of s.fx ?? []) anchors.push(at(e.at, a));
+    for (const x of s.set ?? []) if (x.height && typeof x.height === "object") for (const [kf] of x.height.keys) anchors.push(at(kf, a));
     const frames = [...base];
     for (const f of [...new Set(anchors)].sort((x, y) => x - y)) {
       for (const q of [f, f + 1]) if (q >= a && q < b && !frames.includes(q)) frames.push(q);

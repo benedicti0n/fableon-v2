@@ -6,7 +6,8 @@ import type { Expr } from "../toon";
 export type Anchor =
   | { line: number; word: string; nth?: number; offset?: number }
   | { frame: number; offset?: number }
-  | { end: true; offset?: number };
+  | { end: true; offset?: number }
+  | { shot: true; offset?: number };
 export type Point = [number, number, number] | { at: string; d: [number, number, number] };
 export type Animated = number | { keys: [Anchor, number][]; ease?: "linear" | "smooth" | "glide" | "step" };
 

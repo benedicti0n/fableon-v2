@@ -11,11 +11,12 @@ const ajv = new Ajv2020({ allErrors: true, strict: false });
 const validateSchema = ajv.compile(schema);
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
-const C = new Set(catalog.cast.C), KIDS = new Set(catalog.cast.KIDS);
+const byName = (arr) => new Map(arr.map((e) => [e.name, e]));
+const C = new Set(catalog.cast.C.map((e) => e.name)), KIDS = new Set(catalog.cast.KIDS.map((e) => e.name));
 const places = new Set(Object.keys(catalog.places));
-const sets = new Set(catalog.sets), poses = new Set(catalog.poses), exprs = new Set(catalog.expressions);
-const props = new Set(catalog.props), specials = new Set(catalog.specials), effects = new Set(catalog.effects);
-const pieces = new Set(catalog.setPieces), lights = new Set(catalog.lights);
+const sets = byName(catalog.sets), poses = byName(catalog.poses), exprs = byName(catalog.expressions);
+const props = byName(catalog.props), specials = byName(catalog.specials), effects = byName(catalog.effects);
+const pieces = byName(catalog.setPieces), lights = byName(catalog.lights);
 
 export function validateStoryboard(dirArg) {
   const dir = projectDir(dirArg);
@@ -33,30 +34,41 @@ export function validateStoryboard(dirArg) {
 
   const fps = sb.fps ?? 30;
   const END = Math.round((words[words.length - 1]?.b ?? 0) * fps);
-  const wordFrame = (a) => {
+  const wordFrame = (a, shotFrame = null) => {
+    if (a.shot) return shotFrame === null ? null : shotFrame + (a.offset ?? 0);
     if (a.frame !== undefined) return a.frame + (a.offset ?? 0);
     if (a.end) return END + (a.offset ?? 0);
     const line = words.filter((w) => w.line === a.line && norm(w.w) === norm(a.word));
     const hit = line[a.nth ?? 0];
     return hit ? Math.max(0, Math.round(hit.a * fps)) + (a.offset ?? 0) : null;
   };
+  const check = (map, name, path, kind) => {
+    const e = map.get(name);
+    if (!e) { err(path, `unknown ${kind} "${name}"`); return false; }
+    if (e.status === 'planned') { err(path, `${kind} "${name}" is not implemented yet`); return false; }
+    return true;
+  };
 
   // ---- word anchors: every anchor must exist, with one clear message ----
-  const walk = (v, path) => {
-    if (Array.isArray(v)) { v.forEach((x, i) => walk(x, `${path}/${i}`)); return; }
+  const walk = (v, path, inShot) => {
+    if (Array.isArray(v)) { v.forEach((x, i) => walk(x, `${path}/${i}`, inShot)); return; }
     if (!v || typeof v !== 'object') return;
-    if (v.line !== undefined || v.end !== undefined || (v.frame !== undefined && Object.keys(v).every((k) => ['frame', 'offset'].includes(k)))) {
+    if (v.line !== undefined || v.end !== undefined || v.shot !== undefined || (v.frame !== undefined && Object.keys(v).every((k) => ['frame', 'offset'].includes(k)))) {
       if (v.line !== undefined) {
         if (typeof v.word !== 'string' || typeof v.line !== 'number') return;
         const hits = words.filter((w) => w.line === v.line && norm(w.w) === norm(v.word));
         if (!hits[v.nth ?? 0]) err(path, `no word ${v.line}:${v.word}${v.nth ? ` #${v.nth}` : ''} in words.json`);
       }
+      if (v.shot !== undefined) {
+        if (v.shot !== true) err(path, 'shot must be true');
+        if (!inShot) err(path, 'shot-relative anchor is only allowed inside a shot');
+      }
       if (v.end !== undefined && v.end !== true) err(path, 'end must be true');
       return;
     }
-    for (const [k, x] of Object.entries(v)) walk(x, `${path}/${k}`);
+    for (const [k, x] of Object.entries(v)) walk(x, `${path}/${k}`, inShot || (path === '' && k === 'shots'));
   };
-  walk(sb, '');
+  walk(sb, '', false);
 
   // ---- shots, catalog names, anchors in time order ----
   const shots = Array.isArray(sb.shots) ? sb.shots : [];
@@ -67,16 +79,17 @@ export function validateStoryboard(dirArg) {
     const sp = `/shots/${i}`;
     if (!s || typeof s !== 'object') return;
     const sf = s.start ? wordFrame(s.start) : null;
+    if (s.start?.shot) err(`${sp}/start`, 'a shot start cannot be shot-relative');
     if (sf !== null) {
       if (!(sf > prevStart)) err(`${sp}/start`, `shot start ${sf} is not after the previous start ${prevStart}`);
       prevStart = sf;
     }
-    if (s.light && !lights.has(s.light)) err(`${sp}/light`, `unknown light "${s.light}"`);
-    for (const [j, x] of (s.sets ?? []).entries()) if (!sets.has(x)) err(`${sp}/sets/${j}`, `unknown set "${x}"`);
+    if (s.light) check(lights, s.light, `${sp}/light`, 'light');
+    for (const [j, x] of (s.sets ?? []).entries()) check(sets, x, `${sp}/sets/${j}`, 'set');
     if (s.camera) {
       let prev = -Infinity;
       s.camera.forEach((k, j) => {
-        const f = k?.at ? wordFrame(k.at) : null;
+        const f = k?.at ? wordFrame(k.at, sf) : null;
         if (f !== null) { if (f < prev) err(`${sp}/camera/${j}/at`, `camera key ${f} is before ${prev}`); prev = f; }
       });
     }
@@ -84,25 +97,25 @@ export function validateStoryboard(dirArg) {
       const ap = `${sp}/actors/${j}`;
       if (!a || typeof a !== 'object') return;
       if (a.who !== undefined && !(a.who in cast)) err(`${ap}/who`, `unknown cast id "${a.who}" (declare it under cast)`);
-      if (a.special != null && !specials.has(a.special)) err(`${ap}/special`, `unknown special "${a.special}"`);
-      if (a.pose && !poses.has(a.pose)) err(`${ap}/pose`, `unknown pose "${a.pose}"`);
-      if (a.expr && !exprs.has(a.expr)) err(`${ap}/expr`, `unknown expression "${a.expr}"`);
-      if (a.prop != null && !props.has(a.prop)) err(`${ap}/prop`, `unknown prop "${a.prop}"`);
+      if (a.special != null) check(specials, a.special, `${ap}/special`, 'special');
+      if (a.pose) check(poses, a.pose, `${ap}/pose`, 'pose');
+      if (a.expr) check(exprs, a.expr, `${ap}/expr`, 'expression');
+      if (a.prop != null) check(props, a.prop, `${ap}/prop`, 'prop');
       if (a.pos && typeof a.pos === 'object' && !Array.isArray(a.pos) && !points.has(a.pos.at)) err(`${ap}/pos/at`, `unknown point "${a.pos.at}"`);
       let prev = -Infinity;
       (a.beats ?? []).forEach((b, k) => {
-        const bf = b?.at ? wordFrame(b.at) : null;
+        const bf = b?.at ? wordFrame(b.at, sf) : null;
         if (bf !== null) { if (bf < prev) err(`${ap}/beats/${k}/at`, `beat ${bf} is before ${prev}`); prev = bf; }
-        if (b?.pose && !poses.has(b.pose)) err(`${ap}/beats/${k}/pose`, `unknown pose "${b.pose}"`);
-        if (b?.expr && !exprs.has(b.expr)) err(`${ap}/beats/${k}/expr`, `unknown expression "${b.expr}"`);
+        if (b?.pose) check(poses, b.pose, `${ap}/beats/${k}/pose`, 'pose');
+        if (b?.expr) check(exprs, b.expr, `${ap}/beats/${k}/expr`, 'expression');
       });
     });
     (s.fx ?? []).forEach((e, j) => {
       if (!e || typeof e !== 'object') return;
-      if (e.kind && !effects.has(e.kind)) err(`${sp}/fx/${j}/kind`, `unknown effect "${e.kind}"`);
+      if (e.kind) check(effects, e.kind, `${sp}/fx/${j}/kind`, 'effect');
       if (e.pos && typeof e.pos === 'object' && !Array.isArray(e.pos) && !points.has(e.pos.at)) err(`${sp}/fx/${j}/pos/at`, `unknown point "${e.pos.at}"`);
     });
-    (s.set ?? []).forEach((x, j) => { if (x?.piece && !pieces.has(x.piece)) err(`${sp}/set/${j}/piece`, `unknown set piece "${x.piece}"`); });
+    (s.set ?? []).forEach((x, j) => { if (x?.piece) check(pieces, x.piece, `${sp}/set/${j}/piece`, 'set piece'); });
   });
 
   // ---- named points, cast specs ----

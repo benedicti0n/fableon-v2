@@ -42,141 +42,719 @@
     ]
   },
   "sets": [
-    "palace",
-    "village",
-    "hermitage",
-    "deer",
-    "lac",
-    "arena",
-    "city",
-    "naga"
+    {
+      "name": "palace",
+      "status": "implemented",
+      "description": "Hastinapura palace courtyard, arcades, ghat and mango trees."
+    },
+    {
+      "name": "village",
+      "status": "implemented",
+      "description": "Fisher village on the south bank: huts, sand, palms, boats."
+    },
+    {
+      "name": "hermitage",
+      "status": "implemented",
+      "description": "Vyasa's forest hermitage: banyan, open hut, writing desk and palm leaves."
+    },
+    {
+      "name": "deer",
+      "status": "implemented",
+      "description": "Pandu's forest clearing."
+    },
+    {
+      "name": "lac",
+      "status": "implemented",
+      "description": "The lacquer house at Varanavata and its tunnel."
+    },
+    {
+      "name": "arena",
+      "status": "implemented",
+      "description": "The Panchala contest arena, bow stand, target pole and wheel."
+    },
+    {
+      "name": "city",
+      "status": "implemented",
+      "description": "The clearing where Indraprastha rises, with the Khandava forest."
+    },
+    {
+      "name": "naga",
+      "status": "implemented",
+      "description": "The snake kingdom under the river."
+    }
   ],
   "cast": {
     "C": [
-      "vyasa",
-      "shantanu",
-      "satyavati",
-      "fisher",
-      "devavrata",
-      "bhishmaOld",
-      "dhritarashtra",
-      "pandu",
-      "kunti",
-      "madri",
-      "gandhari",
-      "yudhi",
-      "bhima",
-      "arjuna",
-      "nakula",
-      "sahadeva",
-      "duryodhana",
-      "draupadi",
-      "king1",
-      "king2",
-      "sage",
-      "priest"
+      {
+        "name": "vyasa",
+        "status": "implemented",
+        "description": "Cast spec C.vyasa"
+      },
+      {
+        "name": "shantanu",
+        "status": "implemented",
+        "description": "Cast spec C.shantanu"
+      },
+      {
+        "name": "satyavati",
+        "status": "implemented",
+        "description": "Cast spec C.satyavati"
+      },
+      {
+        "name": "fisher",
+        "status": "implemented",
+        "description": "Cast spec C.fisher"
+      },
+      {
+        "name": "devavrata",
+        "status": "implemented",
+        "description": "Cast spec C.devavrata"
+      },
+      {
+        "name": "bhishmaOld",
+        "status": "implemented",
+        "description": "Cast spec C.bhishmaOld"
+      },
+      {
+        "name": "dhritarashtra",
+        "status": "implemented",
+        "description": "Cast spec C.dhritarashtra"
+      },
+      {
+        "name": "pandu",
+        "status": "implemented",
+        "description": "Cast spec C.pandu"
+      },
+      {
+        "name": "kunti",
+        "status": "implemented",
+        "description": "Cast spec C.kunti"
+      },
+      {
+        "name": "madri",
+        "status": "implemented",
+        "description": "Cast spec C.madri"
+      },
+      {
+        "name": "gandhari",
+        "status": "implemented",
+        "description": "Cast spec C.gandhari"
+      },
+      {
+        "name": "yudhi",
+        "status": "implemented",
+        "description": "Cast spec C.yudhi"
+      },
+      {
+        "name": "bhima",
+        "status": "implemented",
+        "description": "Cast spec C.bhima"
+      },
+      {
+        "name": "arjuna",
+        "status": "implemented",
+        "description": "Cast spec C.arjuna"
+      },
+      {
+        "name": "nakula",
+        "status": "implemented",
+        "description": "Cast spec C.nakula"
+      },
+      {
+        "name": "sahadeva",
+        "status": "implemented",
+        "description": "Cast spec C.sahadeva"
+      },
+      {
+        "name": "duryodhana",
+        "status": "implemented",
+        "description": "Cast spec C.duryodhana"
+      },
+      {
+        "name": "draupadi",
+        "status": "implemented",
+        "description": "Cast spec C.draupadi"
+      },
+      {
+        "name": "king1",
+        "status": "implemented",
+        "description": "Cast spec C.king1"
+      },
+      {
+        "name": "king2",
+        "status": "implemented",
+        "description": "Cast spec C.king2"
+      },
+      {
+        "name": "sage",
+        "status": "implemented",
+        "description": "Cast spec C.sage"
+      },
+      {
+        "name": "priest",
+        "status": "implemented",
+        "description": "Cast spec C.priest"
+      }
     ],
     "KIDS": [
-      "yudhi",
-      "bhima",
-      "arjuna",
-      "nakula",
-      "sahadeva",
-      "duryodhana",
-      "duhshala"
+      {
+        "name": "yudhi",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.yudhi"
+      },
+      {
+        "name": "bhima",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.bhima"
+      },
+      {
+        "name": "arjuna",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.arjuna"
+      },
+      {
+        "name": "nakula",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.nakula"
+      },
+      {
+        "name": "sahadeva",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.sahadeva"
+      },
+      {
+        "name": "duryodhana",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.duryodhana"
+      },
+      {
+        "name": "duhshala",
+        "status": "implemented",
+        "description": "Kid cast spec KIDS.duhshala"
+      }
     ],
     "KAURAVA": {
+      "name": "KAURAVA",
+      "status": "implemented",
+      "description": "Kaurava kid spec generator by index.",
       "generator": true
     }
   },
   "poses": [
-    "stand",
-    "walk",
-    "run",
-    "sit",
-    "point",
-    "vow",
-    "pray",
-    "shout",
-    "armsUp",
-    "shrug",
-    "fold",
-    "bless",
-    "present",
-    "hold",
-    "belly",
-    "drink",
-    "flex",
-    "aim",
-    "shake",
-    "wave",
-    "talk",
-    "sneak",
-    "stir",
-    "offer",
-    "dust",
-    "chop",
-    "carry",
-    "throw",
-    "hips",
-    "think",
-    "grab"
+    {
+      "name": "stand",
+      "status": "implemented",
+      "description": "Standing, arms by the sides."
+    },
+    {
+      "name": "walk",
+      "status": "implemented",
+      "description": "Walking cycle."
+    },
+    {
+      "name": "run",
+      "status": "implemented",
+      "description": "Running cycle."
+    },
+    {
+      "name": "sit",
+      "status": "implemented",
+      "description": "Seated cross-legged."
+    },
+    {
+      "name": "point",
+      "status": "implemented",
+      "description": "One arm pointing."
+    },
+    {
+      "name": "vow",
+      "status": "implemented",
+      "description": "Hand raised in a vow."
+    },
+    {
+      "name": "pray",
+      "status": "implemented",
+      "description": "Palms together."
+    },
+    {
+      "name": "shout",
+      "status": "implemented",
+      "description": "Hands cupped at the mouth."
+    },
+    {
+      "name": "armsUp",
+      "status": "implemented",
+      "description": "Both arms raised."
+    },
+    {
+      "name": "shrug",
+      "status": "implemented",
+      "description": "Shoulders and palms up."
+    },
+    {
+      "name": "fold",
+      "status": "implemented",
+      "description": "Arms folded."
+    },
+    {
+      "name": "bless",
+      "status": "implemented",
+      "description": "One hand raised in blessing."
+    },
+    {
+      "name": "present",
+      "status": "implemented",
+      "description": "Arm presenting something."
+    },
+    {
+      "name": "hold",
+      "status": "implemented",
+      "description": "Both hands holding an object."
+    },
+    {
+      "name": "belly",
+      "status": "implemented",
+      "description": "Hands on the belly."
+    },
+    {
+      "name": "drink",
+      "status": "implemented",
+      "description": "Hand raised to the mouth."
+    },
+    {
+      "name": "flex",
+      "status": "implemented",
+      "description": "Arm flexed."
+    },
+    {
+      "name": "aim",
+      "status": "implemented",
+      "description": "Drawing a bow."
+    },
+    {
+      "name": "shake",
+      "status": "implemented",
+      "description": "Shaking something."
+    },
+    {
+      "name": "wave",
+      "status": "implemented",
+      "description": "One hand waving."
+    },
+    {
+      "name": "talk",
+      "status": "implemented",
+      "description": "Talking gesture."
+    },
+    {
+      "name": "sneak",
+      "status": "implemented",
+      "description": "Sneaking cycle."
+    },
+    {
+      "name": "stir",
+      "status": "implemented",
+      "description": "Stirring a pot."
+    },
+    {
+      "name": "offer",
+      "status": "implemented",
+      "description": "Offering with an open hand."
+    },
+    {
+      "name": "dust",
+      "status": "implemented",
+      "description": "Dusting off the hands."
+    },
+    {
+      "name": "chop",
+      "status": "implemented",
+      "description": "Chopping with an axe."
+    },
+    {
+      "name": "carry",
+      "status": "implemented",
+      "description": "Carrying an object."
+    },
+    {
+      "name": "throw",
+      "status": "implemented",
+      "description": "Throwing."
+    },
+    {
+      "name": "hips",
+      "status": "implemented",
+      "description": "Hands on the hips."
+    },
+    {
+      "name": "think",
+      "status": "implemented",
+      "description": "Thinking hand at the chin."
+    },
+    {
+      "name": "grab",
+      "status": "implemented",
+      "description": "Reaching to grab."
+    }
   ],
   "expressions": [
-    "neutral",
-    "stern",
-    "grin",
-    "laugh",
-    "whistle",
-    "nervous",
-    "shock",
-    "relief",
-    "relief_open",
-    "dazed",
-    "pained",
-    "smile",
-    "smile_closed",
-    "lick"
+    {
+      "name": "neutral",
+      "status": "implemented",
+      "description": "Deadpan."
+    },
+    {
+      "name": "stern",
+      "status": "implemented",
+      "description": "Angry brows."
+    },
+    {
+      "name": "grin",
+      "status": "implemented",
+      "description": "Open grin."
+    },
+    {
+      "name": "laugh",
+      "status": "implemented",
+      "description": "Laugh with tongue."
+    },
+    {
+      "name": "whistle",
+      "status": "implemented",
+      "description": "Whistling."
+    },
+    {
+      "name": "nervous",
+      "status": "implemented",
+      "description": "Nervous, sweat drop."
+    },
+    {
+      "name": "shock",
+      "status": "implemented",
+      "description": "Shock, wide eyes."
+    },
+    {
+      "name": "relief",
+      "status": "implemented",
+      "description": "Relief, eyes closed smiling."
+    },
+    {
+      "name": "relief_open",
+      "status": "implemented",
+      "description": "Relief with open grin."
+    },
+    {
+      "name": "dazed",
+      "status": "implemented",
+      "description": "Dazed spiral eyes."
+    },
+    {
+      "name": "pained",
+      "status": "implemented",
+      "description": "Pained teeth."
+    },
+    {
+      "name": "smile",
+      "status": "implemented",
+      "description": "Small smile."
+    },
+    {
+      "name": "smile_closed",
+      "status": "implemented",
+      "description": "Eyes closed smile."
+    },
+    {
+      "name": "lick",
+      "status": "implemented",
+      "description": "Licking lips."
+    }
   ],
   "props": [
-    "bow",
-    "bowDrawn",
-    "mace",
-    "spear",
-    "net",
-    "oar",
-    "laddu",
-    "garland",
-    "crown",
-    "jar",
-    "axe",
-    "torch",
-    "mango",
-    "ladle",
-    "scroll",
-    "bigbow"
+    {
+      "name": "bow",
+      "status": "implemented",
+      "description": "Bow held in one hand."
+    },
+    {
+      "name": "bowDrawn",
+      "status": "implemented",
+      "description": "Bow drawn with an arrow."
+    },
+    {
+      "name": "mace",
+      "status": "implemented",
+      "description": "Mace."
+    },
+    {
+      "name": "spear",
+      "status": "implemented",
+      "description": "Spear."
+    },
+    {
+      "name": "net",
+      "status": "implemented",
+      "description": "Fishing net."
+    },
+    {
+      "name": "oar",
+      "status": "implemented",
+      "description": "Boat oar."
+    },
+    {
+      "name": "laddu",
+      "status": "implemented",
+      "description": "Sweet laddu."
+    },
+    {
+      "name": "garland",
+      "status": "implemented",
+      "description": "Flower garland."
+    },
+    {
+      "name": "crown",
+      "status": "implemented",
+      "description": "Hand-held crown."
+    },
+    {
+      "name": "jar",
+      "status": "implemented",
+      "description": "Grey pot."
+    },
+    {
+      "name": "axe",
+      "status": "implemented",
+      "description": "Axe."
+    },
+    {
+      "name": "torch",
+      "status": "implemented",
+      "description": "Burning torch."
+    },
+    {
+      "name": "mango",
+      "status": "implemented",
+      "description": "Mango."
+    },
+    {
+      "name": "ladle",
+      "status": "implemented",
+      "description": "Cooking ladle."
+    },
+    {
+      "name": "scroll",
+      "status": "implemented",
+      "description": "Rolled message."
+    },
+    {
+      "name": "bigbow",
+      "status": "implemented",
+      "description": "The giant contest bow."
+    }
   ],
   "specials": [
-    "ganesha",
-    "agni",
-    "deer",
-    "naga",
-    "baby",
-    "pot",
-    "flat"
+    {
+      "name": "ganesha",
+      "status": "implemented",
+      "description": "Ganesha writing at the desk; elephant head, trunk, pen and palm leaves."
+    },
+    {
+      "name": "agni",
+      "status": "planned",
+      "description": "The fire god: red skin, flame hair, round belly he holds when full."
+    },
+    {
+      "name": "deer",
+      "status": "planned",
+      "description": "Stag in side view (wide card); graze, shock and walk phase."
+    },
+    {
+      "name": "naga",
+      "status": "planned",
+      "description": "Coiled cobra with a hood; optional king crown and sway."
+    },
+    {
+      "name": "baby",
+      "status": "planned",
+      "description": "Swaddled baby bundle (baby card)."
+    },
+    {
+      "name": "pot",
+      "status": "planned",
+      "description": "Cooking pot drawn with jarShape (body card)."
+    },
+    {
+      "name": "flat",
+      "status": "planned",
+      "description": "A person drawn lying flat on a wide card (knocked-down kings)."
+    }
   ],
   "effects": [
-    "sparkle",
-    "halo",
-    "knot"
+    {
+      "name": "sparkle",
+      "status": "implemented",
+      "description": "Four-point star card; per-index pop and optional twinkle."
+    },
+    {
+      "name": "halo",
+      "status": "implemented",
+      "description": "Soft radial glow; card kind soft, glow or fire."
+    },
+    {
+      "name": "knot",
+      "status": "implemented",
+      "description": "A tangled knot drawn as a line; bob on y."
+    },
+    {
+      "name": "heart",
+      "status": "planned",
+      "description": "Heart card for falling in love or affection."
+    },
+    {
+      "name": "emblem",
+      "status": "planned",
+      "description": "God emblem card: wheel, wind, bolt or horse."
+    },
+    {
+      "name": "puff",
+      "status": "planned",
+      "description": "Dust puff; also the sage transformation."
+    },
+    {
+      "name": "stars",
+      "status": "planned",
+      "description": "Four stars circling a point."
+    },
+    {
+      "name": "arrow",
+      "status": "planned",
+      "description": "Arrow card travelling from one Point to another."
+    },
+    {
+      "name": "splash",
+      "status": "planned",
+      "description": "Water splash crown on an 800x800 card."
+    },
+    {
+      "name": "bubbles",
+      "status": "planned",
+      "description": "Rising bubble column."
+    },
+    {
+      "name": "burst",
+      "status": "planned",
+      "description": "Impact burst of rays on a 500x500 card."
+    },
+    {
+      "name": "petals",
+      "status": "planned",
+      "description": "Falling flower petals around a box."
+    },
+    {
+      "name": "fire",
+      "status": "planned",
+      "description": "Flickering fire on a 512x512 card, fog-free."
+    },
+    {
+      "name": "smoke",
+      "status": "planned",
+      "description": "Rising smoke puffs."
+    },
+    {
+      "name": "pigeon",
+      "status": "planned",
+      "description": "Flying pigeon carrying a scroll."
+    },
+    {
+      "name": "mango",
+      "status": "planned",
+      "description": "Mango card."
+    },
+    {
+      "name": "sweat",
+      "status": "planned",
+      "description": "Sweat drop."
+    },
+    {
+      "name": "lump",
+      "status": "planned",
+      "description": "The lump of flesh card."
+    }
   ],
   "setPieces": [
-    "pages"
+    {
+      "name": "pages",
+      "status": "implemented",
+      "description": "Palm-leaf stack growing at the writing desk."
+    },
+    {
+      "name": "boat",
+      "status": "planned",
+      "description": "Satyavati's boat on the river; motion and roll."
+    },
+    {
+      "name": "jars",
+      "status": "planned",
+      "description": "101 ghee jars and lids; lids pop, kids climb out."
+    },
+    {
+      "name": "wheel",
+      "status": "planned",
+      "description": "The contest wheel; spins and can stop at an anchor."
+    },
+    {
+      "name": "city",
+      "status": "planned",
+      "description": "Indraprastha rising from the ground."
+    },
+    {
+      "name": "ladduPlate",
+      "status": "planned",
+      "description": "The plate of sweets in the palace."
+    },
+    {
+      "name": "nectar",
+      "status": "planned",
+      "description": "Eight nectar pots that disappear while Bhima drinks."
+    },
+    {
+      "name": "bigBow",
+      "status": "planned",
+      "description": "The giant contest bow; wobbles on impact."
+    }
   ],
   "lights": [
-    "day",
-    "golden",
-    "night",
-    "deep"
-  ]
+    {
+      "name": "day",
+      "status": "implemented",
+      "description": "Daylight."
+    },
+    {
+      "name": "golden",
+      "status": "implemented",
+      "description": "Golden-hour side/back light."
+    },
+    {
+      "name": "night",
+      "status": "implemented",
+      "description": "Firelight key with moonlit shade."
+    },
+    {
+      "name": "deep",
+      "status": "implemented",
+      "description": "Snake-kingdom deep light."
+    }
+  ],
+  "defaults": {
+    "sunBySet": {
+      "hermitage": {
+        "az": 115,
+        "el": 18
+      }
+    },
+    "setPieces": {
+      "pages": {
+        "height": 0.3
+      }
+    }
+  }
 }

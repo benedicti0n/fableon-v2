@@ -15,6 +15,7 @@ import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
 import { fxSparkle, fxKnot, fxHalo } from "../people";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
+import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Point, Shot, Storyboard } from "./types";
 
 export type Runtime = {
@@ -31,7 +32,9 @@ const num = (v: unknown, d = 0) => (typeof v === "number" ? v : d);
 export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = new Map()): Runtime {
   const fps = sb.fps ?? 30;
   const { A, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
-  const anchor = (a: Anchor): number => {
+  const defaults = (CATALOG as { defaults?: { sunBySet?: Record<string, { az: number; el: number }>; setPieces?: Record<string, { height?: number }> } }).defaults ?? {};
+  const anchor = (a: Anchor, shotStart = 0): number => {
+    if ("shot" in a) return shotStart + (a.offset ?? 0);
     if ("frame" in a) return a.frame + (a.offset ?? 0);
     if ("end" in a) return END + (a.offset ?? 0);
     return A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
@@ -46,9 +49,9 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     if (!base) throw new Error(`unknown point "${p.at}"`);
     return add(base, p.d);
   };
-  const animated = (a: Animated, f: number): number => {
+  const animated = (a: Animated, f: number, shotStart: number): number => {
     if (typeof a === "number") return a;
-    const keys = a.keys.map(([at, v]) => [anchor(at), v] as [number, number]).sort((x, y) => x[0] - y[0]);
+    const keys = a.keys.map(([at, v]) => [anchor(at, shotStart), v] as [number, number]).sort((x, y) => x[0] - y[0]);
     if (f <= keys[0][0]) return keys[0][1];
     if (f >= keys[keys.length - 1][0]) return keys[keys.length - 1][1];
     let i = 0; while (i + 1 < keys.length && f >= keys[i + 1][0]) i++;
@@ -56,10 +59,10 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const k = a.ease === "step" ? (u < 1 ? 0 : 1) : a.ease === "smooth" ? smooth(u) : a.ease === "glide" ? glide(u) : u;
     return v0 + (v1 - v0) * k;
   };
-  const camera = (keys: CamKey[]): ((f: number) => Cam) => {
+  const camera = (keys: CamKey[], shotStart: number): ((f: number) => Cam) => {
     if (!keys.length) throw new Error("storyboard shot has no camera keys");
     const built: Key[] = keys.map((k) => {
-      const f = anchor(k.at);
+      const f = anchor(k.at, shotStart);
       const rest = { fov: k.fov, roll: k.roll ?? 0 };
       if (k.type === "tilt") {
         const look0 = point(k.look, f);
@@ -70,8 +73,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         } };
       }
       if (k.type === "fixed") return { f, dur: k.dur, cut: k.cut, s: (ff: number) => ({ pos: point(k.pos, ff), look: point(k.look, ff), ...rest }) };
-      const from = k.push ? anchor(k.push.from) : f;
-      const rate = k.push?.rate ?? 0.0025, punch = k.push?.punch ?? 0, pf = k.push?.punchAt ? anchor(k.push.punchAt) : -1;
+      const from = k.push ? anchor(k.push.from, shotStart) : f;
+      const rate = k.push?.rate ?? 0.0025, punch = k.push?.punch ?? 0, pf = k.push?.punchAt ? anchor(k.push.punchAt, shotStart) : -1;
       return { f, dur: k.dur, cut: k.cut, s: (ff: number) => dolly(point(k.pos, ff), point(k.look, ff), from, rate, rest, punch, pf)(ff) };
     });
     return run(built);
@@ -89,29 +92,29 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     return s;
   };
 
-  const actor = (out: Stage, cam: CamInfo, a: Actor, f: number) => {
+  const actor = (out: Stage, cam: CamInfo, a: Actor, f: number, shotStart: number) => {
     let st: Partial<Actor> = { ...a };
     let params = { ...(a.params ?? {}) };
-    const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at), b })).sort((x, y) => x.f - y.f);
+    const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at, shotStart), b })).sort((x, y) => x.f - y.f);
     for (const { f: bf, b } of beats) if (f >= bf) {
       const { at: _at, params: bp, ...rest } = b;
       st = { ...st, ...rest };
       if (bp) params = { ...params, ...bp };
     }
     const vis = st.visible;
-    if (vis && (f < anchor(vis.from) || f >= anchor(vis.to))) return;
+    if (vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return;
     const p = st.pos;
     if (!p) throw new Error(`actor "${a.who}" has no pos`);
     const pos = point(p, f);
     const ap = st.appear;
-    const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
+    const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at, shotStart)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
     if (scale === 0) return;
     const talkSpec = st.talk;
     const expr = talkSpec ? talk(T(f) * (talkSpec.rate ?? 1), talkSpec.base) : (st.expr ?? "neutral");
     const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined };
     if (a.special === "ganesha") {
       const o = {
-        write: typeof params.write === "number" ? params.write : writeT(T(f), num(params.writeRate, 1.6)),
+        write: typeof params.write === "number" ? params.write : writeT(T(f), num(params.writeSpeed, 1.6)),
         expr, puzzled: num(params.puzzled), down: num(params.down), look: num(params.look), ear: num(params.ear),
         pen: params.pen !== false,
       };
@@ -126,8 +129,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     who(out, cam, e.seed, spec(a.who), opts, pos[0], pos[1], pos[2], common);
   };
 
-  const effect = (out: Stage, e: Effect, f: number) => {
-    const a = anchor(e.at), pos = point(e.pos, f);
+  const effect = (out: Stage, e: Effect, f: number, shotStart: number) => {
+    const a = anchor(e.at, shotStart), pos = point(e.pos, f);
     if (e.kind === "sparkle") {
       const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
       const offs = e.offsets ?? [[0, 0, 0]];
@@ -160,23 +163,23 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       return;
     }
     const def: Def = {
-      from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? []),
+      from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {
-        for (const a of s.actors ?? []) actor(out, cam, a, f);
-        for (const e of s.fx ?? []) effect(out, e, f);
+        for (const a of s.actors ?? []) actor(out, cam, a, f, start);
+        for (const e of s.fx ?? []) effect(out, e, f, start);
       },
       pose: (t, f, sets: Sets) => {
-        for (const x of s.set ?? []) if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? 0.3 : animated(x.height, f), 1);
+        for (const x of s.set ?? []) if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? (defaults.setPieces?.pages?.height ?? 0.3) : animated(x.height, f, start), 1);
       },
-      ...(s.sun ? { sunAz: s.sun.az, sunEl: s.sun.el } : s.sets.includes("hermitage") ? { sunAz: 115, sunEl: 18 } : {}),
+      ...(s.sun ? { sunAz: s.sun.az, sunEl: s.sun.el } : (() => { const d = defaults.sunBySet && s.sets.map((x) => defaults.sunBySet![x]).find(Boolean); return d ? { sunAz: d.az, sunEl: d.el } : {}; })()),
     };
     defs.push(def);
     for (const d of s.dof ?? [{ at: s.start, cInf: 0 }]) {
-      dofs.push({ f: anchor(d.at), cInf: d.cInf, dur: d.dur, focus: d.focus ? (ff: number) => point(d.focus!, ff) : undefined });
+      dofs.push({ f: anchor(d.at, start), cInf: d.cInf, dur: d.dur, focus: d.focus ? (ff: number) => point(d.focus!, ff) : undefined });
     }
   });
 
-  const SHOTS = assembleShots(defs, TOTAL);
+  const SHOTS = assembleShots(defs, TOTAL, defaults.setPieces?.pages?.height ?? 0.3);
   const XFADE = crossfades(SHOTS, sb.crossfade ?? 10);
   const KICKS: Kick[] = (sb.kicks ?? []).map((k) => [anchor(k.at), k.amp] as Kick).sort((a, b) => a[0] - b[0]);
   const sortedDofs = dofs.sort((a, b) => a.f - b.f);

@@ -47,8 +47,31 @@
             "end": { "const": true },
             "offset": { "type": "integer" }
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["shot"],
+          "properties": {
+            "shot": { "const": true },
+            "offset": { "type": "integer" }
+          }
         }
       ]
+    },
+    "GaneshaParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "write": { "type": ["number", "null"] },
+        "writeSpeed": { "type": "number" },
+        "puzzled": { "type": "number" },
+        "down": { "type": "number" },
+        "look": { "type": "number" },
+        "pen": { "type": "boolean" },
+        "ear": { "type": "number" },
+        "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] }
+      }
     },
     "Point": {
       "oneOf": [
@@ -221,7 +244,7 @@
       "properties": {
         "who": { "type": "string", "minLength": 1 },
         "special": { "enum": [null, "ganesha", "agni", "deer", "naga", "baby", "pot", "flat"] },
-        "params": { "type": "object", "additionalProperties": true },
+        "params": { "type": "object" },
         "pos": { "$ref": "#/$defs/Point" },
         "scale": { "type": "number" },
         "mirror": { "type": "boolean" },
@@ -277,7 +300,17 @@
           ]
         },
         "beats": { "type": "array", "items": { "$ref": "#/$defs/Beat" } }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "special": { "const": "ganesha" } }, "required": ["special"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/GaneshaParams" } } }
+        },
+        {
+          "if": { "properties": { "special": { "const": null } }, "required": ["special"] },
+          "then": { "properties": { "params": { "type": "object", "additionalProperties": false, "maxProperties": 0 } } }
+        }
+      ]
     },
     "Beat": {
       "type": "object",

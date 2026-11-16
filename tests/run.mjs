@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { NPM, RENDER_CJS, ROOT, capture, findPython, run } from '../cli/src/env.js';
 import { runParity } from './parity.mjs';
+import { runStartAnchors } from './start-anchors.mjs';
 import { runValidator } from './validator.mjs';
 
 const MAD_LIMIT = 6.0;
@@ -67,6 +68,8 @@ try {
   await audio();
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
+  const starts = runStartAnchors();
+  check('shot starts', starts.ok, `${starts.rows.length} anchors resolve to the old frames`);
   const parity = await runParity();
   check('storyboard parity', parity.ok, `${parity.frames} frames, max ${parity.worst.toFixed(3)} <= 0.5`);
 } catch (e) {

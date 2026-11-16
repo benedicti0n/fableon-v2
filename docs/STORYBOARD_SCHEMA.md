@@ -12,8 +12,9 @@ The JSON Schema (`schema/storyboard.schema.json`) is the single source of truth:
 { "line": 1, "word": "Vyasa", "nth": 1, "offset": -2 }  // nth occurrence in the line (default 0); offset in frames (default 0)
 { "frame": 90 }                                         // absolute frame (use sparingly)
 { "end": true, "offset": 4 }                            // END = round(last word end * fps), plus offset
+{ "shot": true, "offset": 24 }                          // current shot's start frame + 24 (in-shot only)
 ```
-Word matching: lower-case, keep only letters and apostrophes (same `norm()` as story.ts). `K(line, word)` in story.ts is `{ "line": ..., "word": ..., "offset": -2 }`.
+Word matching: lower-case, keep only letters and apostrophes (same `norm()` as story.ts). `K(line, word)` in story.ts is `{ "line": ..., "word": ..., "offset": -2 }`. A strict `f > A(...)` comparison becomes an inclusive anchor with `"offset": +1`. Prefer word anchors; use `"shot"` for time-based ramps that must move when the narration is re-voiced, and `"frame"` rarely.
 
 ### Point (a world position, metres)
 ```jsonc
@@ -64,7 +65,7 @@ ease: linear | smooth (smoothstep) | glide (smootherstep) | step.
   "set": [ /* SetAction */ ]
 }
 ```
-A shot runs from its `start` to the next shot's `start` (the last one to TOTAL).
+A shot runs from its `start` to the next shot's `start` (the last one to TOTAL). Shot starts are word anchors (`K(line, word)`), except the first shot which is `{ "frame": 0 }`.
 
 ## CamKey (the bridge short's camera grammar)
 ```jsonc
@@ -85,7 +86,7 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 {
   "who": "vyasa",                     // cast id
   "special": null,                    // null = person(); or "ganesha" | "agni" | "deer" | "naga" | "baby" | "pot" | "flat"
-  "params": {},                       // special-specific (ganesha: write, writeSpeed, puzzled, down, look, pen, ear; naga: col, king ...)
+  "params": {},                       // typed per special (see Catalog); ganesha: write, writeSpeed, puzzled, down, look, pen, ear, expr
   "pos": Point,                       // feet position; or use "path" instead:
   "path": null,                       // { "keys": [[Anchor, Point], ...], "ease": "linear", "walk": true }  (walk phase from speed)
   "scale": 1, "mirror": false, "noBlob": false, "blobScale": 1, "yaw": null,
@@ -115,5 +116,11 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 
 ## Rules the validator enforces (CLI `fableon validate`)
 - Schema-valid; every who, spec, set, place, pose, expression, prop, effect kind and set piece exists in the catalog.
+- Catalog entries are `{ name, status, description }`; entries with `"status": "planned"` are rejected with “not
+  implemented yet”.
+- Special `params` are typed by `special` (`additionalProperties: false`), so models cannot invent parameters.
+- Set defaults (`defaults.sunBySet.hermitage`, `defaults.setPieces.pages.height`) live in `schema/catalog.json`; the
+  interpreter reads them instead of hard-coding them.
 - Every word anchor exists in words.json; shot starts strictly increase; camera keys and beats are in time order.
+- `"shot": true` anchors are only valid inside a shot.
 - Phase 2C adds: every actor named in a camera key's subjects is inside the frame at that key.
