@@ -51,7 +51,8 @@ names in `script.names` without a `pronunciations.json` entry (Kokoro mispronoun
 ## Research sources
 
 Put `.md`, `.txt` or `.html` files in `research/sources/`; HTML tags are stripped. The registry records title, kind,
-path, retrievedAt, sha256 and chars. Facts carry claims, kinds, source quotes and confidence. The stage checks every
+path, retrievedAt, sha256 and chars, plus a `url` when the file header contains one (the Savitri fixture records its
+source page this way). Facts carry claims, kinds, source quotes and confidence. The stage checks every
 quote as a normalised verbatim substring of the named source; quotes shorter than 30 characters or quotes that do not
 occur mark the fact `verified: false`, and the script may not cite it.
 
@@ -71,7 +72,9 @@ docs say are pulled from the source) because the quote check must run against te
 ## Models, cache and budgets
 
 `project.json.models.default` selects the provider; per-stage overrides are `brief`, `research`, `script`, `factcheck`,
-`voice`. Providers are `deepseek`, `openai-compatible` (`baseUrl`, `keyEnv`) and `mock`. DeepSeek defaults to
+`voice`. An override can set `provider`, `model`, `baseUrl`, `keyEnv`, `temperature`, `maxTokens`, `thinking`
+(`enabled`/`disabled`) and `reasoningEffort` (`none`/`low`/`high`/`max`). Thinking tokens count against `max_tokens`,
+so a thinking fact-check needs a large budget (the repo default is 24000). Providers are `deepseek`, `openai-compatible` (`baseUrl`, `keyEnv`) and `mock`. DeepSeek defaults to
 `https://api.deepseek.com`; `DEEPSEEK_MODEL` or the project model selects the model. Repo defaults live in
 `models.json` with no ids or secrets. Keys are read from the environment and then repo-root `.env`; they are never
 printed, cached or logged.
@@ -92,4 +95,5 @@ tokens per run.
 project's voice/speed; when `script.json` exists the Python script uses actual beat changes for longer line pauses. If
 the natural duration is within ±10 % of `project.seconds`, the stage applies pitch-preserving `ffmpeg atempo` to the
 exact target and scales `words.json`; outside the band it stops with the measured length and a suggested word count.
-`--fit off` keeps the natural length.
+`--fit off` keeps the natural length. Kokoro can report a small negative start for the first word; the stage clamps
+timings at zero before validating `words.json`.

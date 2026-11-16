@@ -9,6 +9,7 @@ import { SCRIPT, REVISE } from './prompts.js';
 
 export const WPS = 3.75; // measured on the fixture: 451 words / 120.1 s
 const BEAT_ORDER = ['hook', 'setting', 'action', 'snap', 'deadpan', 'explain', 'consequence', 'twist'];
+const NOT_NAMES = new Set(['He', 'She', 'It', 'They', 'We', 'You', 'His', 'Her', 'Their', 'The', 'A', 'An', 'And', 'But', 'Then', 'So', 'When', 'While', 'After', 'Before', 'If', 'Because', 'That', 'This', 'These', 'Those', 'Luckily', 'Unluckily']);
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 const normal = (s) => String(s).toLowerCase().replace(/\s+/g, ' ').trim();
 const factMap = (facts) => new Map((facts.facts ?? []).map((f) => [f.id, f]));
@@ -19,7 +20,7 @@ function capitalizedNames(text) {
     const toks = sentence.split(/\s+/).filter(Boolean);
     for (let i = 1; i < toks.length; i++) {
       const w = toks[i].replace(/^[^A-Za-z]+|[^A-Za-z']+$/g, '');
-      if (/^[A-Z][a-z]+(?:'s)?$/.test(w) && w !== 'I') names.add(w.replace(/'s$/, ''));
+      if (/^[A-Z][a-z]+(?:'s)?$/.test(w) && w !== 'I' && !NOT_NAMES.has(w)) names.add(w.replace(/'s$/, ''));
     }
   }
   return names;
@@ -29,14 +30,15 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
   const target = project.seconds * WPS, total = data.lines.reduce((n, l) => n + words(l.text).length, 0);
-  if (Math.abs(total - target) > target * 0.07) errs.push(`/lines total ${total} words is outside 7 % of ${target.toFixed(1)}`);
+  const lo = Math.ceil(target * 0.93), hi = Math.floor(target * 1.07);
+  if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (target ${target.toFixed(1)} ±7 %); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
   if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
   if (data.lines[data.lines.length - 1].beat !== 'twist') errs.push('/lines last beat must be twist');
-  if (words(data.lines[0].text).length > 16) errs.push('/lines/0 hook is longer than 16 words');
+  if (words(data.lines[0].text).length > 16) errs.push(`/lines/0 hook is longer than 16 words (${words(data.lines[0].text).length}); cut at least ${words(data.lines[0].text).length - 16} word(s)`);
   let last = -1;
   for (const l of data.lines) {
     if (l.n !== data.lines.indexOf(l)) errs.push(`/lines/${l.n} n must be 0-based and ordered`);
-    if (words(l.text).length > 22) errs.push(`/lines/${l.n}/text is longer than 22 words`);
+    if (words(l.text).length > 22) errs.push(`/lines/${l.n}/text is longer than 22 words (${words(l.text).length}); cut at least ${words(l.text).length - 22} word(s)`);
     const bi = BEAT_ORDER.indexOf(l.beat);
     if (bi < 0) errs.push(`/lines/${l.n}/beat is invalid`);
     else { if (bi < last) errs.push(`/lines/${l.n}/beat ${l.beat} is out of formula order`); last = Math.max(last, bi); }
@@ -91,10 +93,11 @@ export async function runScript({ projectDir, project, router }) {
     return readdirSync(dir).filter((f) => /\.(md|txt|html?)$/i.test(f)).map((f) => readFileSync(join(dir, f), 'utf8'));
   })();
   const verified = (facts.facts ?? []).filter((f) => f.verified);
+  const target = project.seconds * WPS;
   const { data, usage } = await router.callJson('script', [
     { role: 'system', content: SCRIPT },
-    { role: 'user', content: `STABLE CATALOG (sets and names are the only stageable ones):\n${card}\n\nDATA:\n<brief>\n${brief}\n</brief>\n<verified_facts>\n${verified.map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nTarget: ${project.seconds} seconds at ${WPS} words/second. Return json only.` },
-  ], { validate: (d) => validateScript(d, { project, facts, catalog, sourceTexts }) });
+    { role: 'user', content: `STABLE CATALOG (sets and names are the only stageable ones):\n${card}\n\nDATA:\n<brief>\n${brief}\n</brief>\n<verified_facts>\n${verified.map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nTarget: ${project.seconds} seconds at ${WPS} words/second = about ${Math.round(target)} words. Hard minimum ${Math.ceil(target * 0.93)} words. Use exactly 17 lines: hook 12-15 words, lines 1-15 19-21 words each, twist 18-21 words. Return json only.` },
+  ], { validate: (d) => validateScript(d, { project, facts, catalog, sourceTexts }), repairHint: 'Return exactly 17 lines with beats 0 hook, 1 setting, 2 setting, 3 action, 4 action, 5 action, 6 action, 7 snap, 8 deadpan, 9 deadpan, 10 explain, 11 explain, 12 explain, 13 consequence, 14 consequence, 15 consequence, 16 twist. Lines 1-15 must each be 19-21 words, the hook 12-15, the twist 18-21. Count words by splitting on spaces. If the total is too low, add words to lines 1-15 until each is 19-21 words; if a line is too long, shorten only that line.' });
   writeJsonArtifact(projectDir, 'script', 'script.json', data, 'script');
   writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, data, facts));
   return { usage };

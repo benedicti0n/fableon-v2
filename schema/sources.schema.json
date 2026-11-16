@@ -24,7 +24,7 @@
           "chars": { "type": "integer", "minimum": 0 }
         },
         "oneOf": [
-          { "required": ["path"], "not": { "required": ["url"] } },
+          { "required": ["path"], "not": { "required": ["content"] } },
           { "required": ["url", "content"], "not": { "required": ["path"] } }
         ]
       }

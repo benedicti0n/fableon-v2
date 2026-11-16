@@ -21,7 +21,7 @@ export function modelForStage(project, stage, repo = repoModels()) {
     baseUrl: s.baseUrl ?? p.baseUrl ?? repo.providers?.[provider]?.baseUrl ?? null,
     keyEnv: s.keyEnv ?? p.keyEnv ?? repo.providers?.[provider]?.keyEnv ?? null,
     temperature: s.temperature ?? p.temperature ?? sd.temperature ?? d.temperature ?? 0.7,
-    maxTokens: s.maxTokens ?? p.maxTokens ?? d.maxTokens ?? 4096,
+    maxTokens: s.maxTokens ?? p.maxTokens ?? sd.maxTokens ?? d.maxTokens ?? 4096,
     thinking: s.thinking ?? sd.thinking ?? null,
     reasoningEffort: s.reasoningEffort ?? sd.reasoningEffort ?? null,
     timeoutMs: repo.timeoutMs ?? 120000,
@@ -30,4 +30,4 @@ export function modelForStage(project, stage, repo = repoModels()) {
   };
 }
 
-export const modelId = (m) => `${m.provider}:${m.model ?? ''}`;
+export const modelId = (m) => `${m.provider}:${m.model ?? ''}:${m.thinking ?? ''}:${m.reasoningEffort ?? ''}:${m.temperature ?? ''}:${m.maxTokens ?? ''}`;

@@ -4,12 +4,12 @@ import { BRIEF, RESEARCH, SCRIPT, FACTCHECK } from '../stages/prompts.js';
 export const STAGES = [
   {
     name: 'brief', version: 1, deps: [], prompt: BRIEF,
-    inputs: ['project.json'], projectKeys: ['title', 'topic', 'seconds', 'language', 'voice'],
+    inputs: [], projectKeys: ['title', 'topic', 'seconds', 'language', 'voice'],
     outputs: ['brief.md'],
   },
   {
     name: 'research', version: 1, deps: ['brief'], prompt: RESEARCH,
-    inputs: ['project.json', 'brief.md', 'research/sources/*'], projectKeys: ['topic', 'research'],
+    inputs: ['brief.md', 'research/sources/*'], projectKeys: ['topic', 'research'],
     outputs: ['research/sources.json', 'research/facts.json'],
   },
   {

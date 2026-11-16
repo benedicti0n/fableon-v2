@@ -173,7 +173,7 @@ export class ModelRouter {
     return { content: r.content, usage: r.usage ?? {}, cached: false, finishReason: r.finishReason };
   }
 
-  async callJson(stage, messages, { validate = null, mockKey = null } = {}) {
+  async callJson(stage, messages, { validate = null, mockKey = null, repairHint = null } = {}) {
     const c = this.config(stage);
     const msgs = messages.map((m) => ({ ...m }));
     if (!msgs.some((m) => m.role === 'system' && /json/i.test(m.content))) msgs.unshift({ role: 'system', content: 'Return one valid json object only.' });
@@ -191,7 +191,7 @@ export class ModelRouter {
       const errors = validate ? await validate(data) : [];
       if (!errors.length) return { data, usage: r.usage ?? {}, cached: r.cached };
       lastErrors = errors.slice(0, 20);
-      msgs.push({ role: 'assistant', content: r.content.slice(0, 6000) }, { role: 'user', content: `Fix these validation errors and return the complete corrected json object only:\n- ${lastErrors.join('\n- ')}` });
+      msgs.push({ role: 'assistant', content: r.content.slice(0, 6000) }, { role: 'user', content: `Fix every validation error and return the complete corrected json object only. Keep the lines that are already valid. Count words before returning.\n- ${lastErrors.join('\n- ')}${repairHint ? `\n${repairHint}` : ''}` });
     }
     throw new Error(`${stage}: model output failed validation after repairs:\n${lastErrors.join('\n')}`);
   }

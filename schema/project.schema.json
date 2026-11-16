@@ -64,7 +64,9 @@
         "baseUrl": { "type": "string" },
         "keyEnv": { "type": "string" },
         "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
-        "maxTokens": { "type": "integer", "minimum": 64, "maximum": 32768 }
+        "maxTokens": { "type": "integer", "minimum": 64, "maximum": 32768 },
+        "thinking": { "enum": ["enabled", "disabled"] },
+        "reasoningEffort": { "enum": ["none", "low", "high", "max"] }
       }
     }
   }

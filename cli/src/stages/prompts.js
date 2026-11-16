@@ -17,8 +17,9 @@ Return one json object with this exact shape:
 {"version":1,"title":"...","characters":[{"id":"mira","name":"Mira","role":"...","look":"..."}],"names":[{"word":"Mira","phonemes":null,"suggested":true}],"lines":[{"n":0,"text":"...","beat":"hook|setting|action|snap|deadpan|explain|consequence|twist","facts":["F1"],"look":{"set":"village","who":["mira"],"note":"..."}}]}
 Rules:
 - one steady narrator; our own wording; never describe what the viewer already sees; no on-screen text.
-- Beats: hook (the absurd fact in one line; <=16 words) -> setting -> action (3-4 escalating beats) -> snap -> deadpan ("Luckily ... / Unluckily ...") -> explanation through one everyday analogy -> consequence -> callback twist.
-- line 0 is the hook and the last line is the twist. Lines are <=22 words. Words per second is 3.75; total words must be within 7 % of seconds * 3.75.
+- Return exactly 17 lines with these beats, in this order: 0 hook, 1 setting, 2 setting, 3 action, 4 action, 5 action, 6 action, 7 snap, 8 deadpan, 9 deadpan, 10 explain, 11 explain, 12 explain, 13 consequence, 14 consequence, 15 consequence, 16 twist. Do not add, remove or reorder beats.
+- hook: the absurd fact in one line. deadpan: line 8 starts "Luckily" and line 9 starts "Unluckily". explain: one everyday analogy across lines 10-12. twist: a callback to the hook.
+- line 0 is the hook and the last line is the twist. Lines 1-15 must each be 19-21 words; the hook 12-15 words; the twist 18-21 words. Words per second is 3.75; total words must be within 7 % of seconds * 3.75.
 - every setting/action/snap/consequence line cites at least one verified fact id.
 - look.set must be a catalog set; look.who must be declared character ids.
 - every capitalised name that is not a sentence start must appear in names.

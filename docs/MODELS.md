@@ -51,6 +51,9 @@ Both models support both non-thinking and thinking modes; thinking is the defaul
 - Thinking responses include `choices[0].message.reasoning_content`, separate from `content`. The router only uses
   `content`; it records whether reasoning content was present.
 - `finish_reason: "length"` fails the call with the completion-token count (as before).
+- `max_tokens` covers reasoning plus visible content when thinking is enabled. A 17-line fact-check review with
+  `deepseek-v4-pro` at effort `high` used about 9.3k completion tokens, and the reasoning pass can consume the whole
+  budget before any JSON is written; the repo fact-check default is 24000.
 
 ### Tool calls
 

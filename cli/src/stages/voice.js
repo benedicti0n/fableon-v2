@@ -1,14 +1,15 @@
 // Voice stage: run Kokoro, optionally fit to the project length with pitch-preserving ffmpeg atempo.
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { capture, findPython, run, ROOT } from '../env.js';
 import { historyPath, readJson, writeJsonArtifact } from '../core/artifacts.js';
 import { WPS } from './script.js';
 
 const probe = (file) => Number(capture('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', file]));
-const scaleWords = (words, k) => words.map((w) => ({ ...w, a: +(w.a * k).toFixed(3), b: +(w.b * k).toFixed(3) }));
+const scaleWords = (words, k) => words.map((w) => ({ ...w, a: +Math.max(0, w.a * k).toFixed(3), b: +Math.max(0, w.b * k).toFixed(3) }));
 
-export async function runVoice({ projectDir, project, fit = true }) {
+export async function runVoice({ projectDir: projectDirArg, project, fit = true }) {
+  const projectDir = resolve(projectDirArg);
   const py = findPython();
   if (!py) throw new Error('voice needs Python 3.12 (set FABLEON_PYTHON or create .venv)');
   if (!existsSync(join(projectDir, 'SCRIPT.md'))) throw new Error('voice needs SCRIPT.md');
@@ -28,8 +29,9 @@ export async function runVoice({ projectDir, project, fit = true }) {
       const dest = historyPath(projectDir, 'voice', 'voice.wav'); mkdirSync(dirname(dest), { recursive: true }); copyFileSync(old, dest);
       copyFileSync(tmp, old);
     }
-    const words = readJson(wordsPath, 'words');
-    if (Math.abs(atempo - 1) > 0.001) writeJsonArtifact(projectDir, 'voice', 'words.json', scaleWords(words, target / natural), 'words');
   }
+  // Kokoro can report a negative start for the first word; clamp it and validate the timings.
+  const words = readJson(wordsPath);
+  writeJsonArtifact(projectDir, 'voice', 'words.json', scaleWords(words, fit ? target / natural : 1), 'words');
   return { natural, target, fitted: fit && Math.abs(natural - target) / target > 0.001 };
 }

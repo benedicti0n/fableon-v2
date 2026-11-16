@@ -20,10 +20,11 @@ export function collectSources(projectDir) {
     const raw = readFileSync(s.path, 'utf8');
     const text = /\.html?$/i.test(s.file) ? stripHtml(raw) : raw;
     const first = text.split('\n').find((l) => l.trim())?.replace(/^#+\s*/, '').trim();
+    const url = text.match(/https?:\/\/[^\s)>\]]+/)?.[0] ?? null;
     const id = `S${i + 1}`;
     const rel = `research/sources/${s.file}`;
     const retrievedAt = new Date(statSync(s.path).mtimeMs).toISOString();
-    sources.push({ id, title: first || s.file.replace(/\.[^.]+$/, ''), kind: 'file', path: rel, retrievedAt, sha256: sha256(raw), chars: text.length });
+    sources.push({ id, title: first || s.file.replace(/\.[^.]+$/, ''), kind: 'file', path: rel, ...(url ? { url } : {}), retrievedAt, sha256: sha256(raw), chars: text.length });
     texts.set(id, text);
   }
   return { sources, texts };
