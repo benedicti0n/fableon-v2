@@ -125,9 +125,14 @@ export async function reviseScript({ projectDir, project, router, failures }) {
       return validateScript(next, { project, facts, catalog, sourceTexts });
     },
   });
+  const before = script.lines.filter((l) => failN.has(l.n));
   const revised = { ...script, lines: script.lines.map((l) => failN.has(l.n) ? { ...l, ...data.lines.find((x) => x.n === l.n) } : l) };
-  writeJsonArtifact(projectDir, 'script', 'script.json', revised, 'script');
-  writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, revised, facts));
-  markScriptRevised(projectDir);
-  return { usage };
+  const after = revised.lines.filter((l) => failN.has(l.n));
+  const changed = before.some((l, i) => JSON.stringify(l) !== JSON.stringify(after[i]));
+  if (changed) {
+    writeJsonArtifact(projectDir, 'script', 'script.json', revised, 'script');
+    writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, revised, facts));
+    markScriptRevised(projectDir);
+  }
+  return { usage, changed };
 }

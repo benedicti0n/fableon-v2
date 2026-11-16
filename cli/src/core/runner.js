@@ -15,7 +15,7 @@ export class PipelineRunner extends EventEmitter {
     this.abort = opts.signal ?? null;
     this.logFile = join(projectDir, 'logs', `run-${new Date().toISOString().replace(/[:.]/g, '-')}.log`);
     mkdirSync(join(projectDir, 'logs'), { recursive: true });
-    this.router = null;
+    this.router = opts.router ?? null;
   }
 
   log(message) {
@@ -25,8 +25,10 @@ export class PipelineRunner extends EventEmitter {
   }
 
   async run() {
-    const { ModelRouter } = await import('../models/router.js');
-    this.router = new ModelRouter(this.projectDir, this.project, { noCache: this.opts.noCache, signal: this.abort });
+    if (!this.router) {
+      const { ModelRouter } = await import('../models/router.js');
+      this.router = new ModelRouter(this.projectDir, this.project, { noCache: this.opts.noCache, signal: this.abort });
+    }
     const to = this.opts.to ?? 'voice';
     const toIndex = stageOrder(to);
     if (toIndex < 0) throw new Error(`unknown --to stage "${to}" (choose ${STAGES.map((s) => s.name).join(', ')})`);
@@ -69,15 +71,20 @@ export class PipelineRunner extends EventEmitter {
           throw new Error(`fact-check failed:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note} (${f.fix})`).join('\n')}\nReview ${join(this.projectDir, 'script.review.json')} and revise the script.`);
         }
         let failures = result.failures;
+        let previousReview = result.review;
         for (let round = 1; round <= 2 && failures.length; round++) {
           this.log(`factcheck revise round ${round}: ${failures.map((f) => f.n).join(',')}`);
           const scriptMod = await import('../stages/script.js');
-          await scriptMod.reviseScript({ projectDir: this.projectDir, project: this.project, router: this.router, failures });
+          const rev = await scriptMod.reviseScript({ projectDir: this.projectDir, project: this.project, router: this.router, failures });
           const scriptState = loadState(this.projectDir);
           if (scriptState.stages.script) scriptState.stages.script.usage = this.router.stageUsage('script');
           saveState(this.projectDir, scriptState);
+          if (!rev.changed) throw new Error(`fact-check revision made no change:\n${failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
           const fcMod = await import('../stages/factcheck.js');
           result = await fcMod.runFactcheck({ projectDir: this.projectDir, project: this.project, router: this.router });
+          const verdicts = (review) => JSON.stringify((review?.lines ?? []).map((l) => [l.n, l.verdict, l.facts ?? [], l.note]));
+          if (verdicts(previousReview) === verdicts(result.review)) throw new Error(`fact-check verdicts did not change after revision:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
+          previousReview = result.review;
           failures = result.failures;
         }
         if (failures.length) {
