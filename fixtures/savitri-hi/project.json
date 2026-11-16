@@ -63,7 +63,8 @@
     "rate": {
       "wordsPerSecond": 2.56,
       "charactersPerSecond": 11.51
-    }
+    },
+    "fit": "natural"
   },
   "research": {
     "web": false,

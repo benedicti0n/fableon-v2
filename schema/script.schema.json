@@ -23,6 +23,19 @@
         }
       }
     },
+    "mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "role"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "role": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
     "names": {
       "type": "array",
       "items": {

@@ -9,6 +9,14 @@ import { SCRIPT, SCRIPT_HI, REVISE } from './prompts.js';
 import { countWords, normalizedText, normalizedTokens, normalizeWord } from '../../../shared/words.mjs';
 
 export const WPS = 3.75; // measured on the fixture: 451 words / 120.1 s
+export const normalizerLog = new WeakMap();
+
+const logNormalizer = (data, kind, line, detail = '') => {
+  let log = normalizerLog.get(data);
+  if (!log) { log = { count: 0, lines: [] }; normalizerLog.set(data, log); }
+  log.count++;
+  log.lines.push(`${kind}${line !== undefined ? ` line ${line}` : ''}${detail ? `: ${detail}` : ''}`);
+};
 const BEAT_ORDER = ['hook', 'setting', 'action', 'snap', 'deadpan', 'explain', 'consequence', 'twist'];
 const NOT_NAMES = new Set(['He', 'She', 'It', 'They', 'We', 'You', 'His', 'Her', 'Their', 'The', 'A', 'An', 'And', 'But', 'Then', 'So', 'When', 'While', 'After', 'Before', 'If', 'Because', 'That', 'This', 'These', 'Those', 'Luckily', 'Unluckily']);
 const words = (s) => normalizedTokens(s);
@@ -146,13 +154,18 @@ function splitHindiLongLines(data) {
         const m = /(\S+[:;])$/.exec(parts[i]);
         if (m) { parts[i] = parts[i].slice(0, -m[1].length).trim(); parts[i + 1] = `${m[1]} ${parts[i + 1]}`; }
       }
-    } else {
-      for (let i = 0; i < words.length; i += 12) parts.push(words.slice(i, i + 12).join(' '));
     }
+    const glossParts = parts.length > 1 ? String(l.gloss ?? '').split(/(?<=[.!?])\s+/).filter(Boolean) : [];
+    if (parts.length <= 1 || glossParts.length !== parts.length) {
+      logNormalizer(data, 'split skipped (gloss mismatch)', l.n, `${words.length} words`);
+      out.push(l);
+      continue;
+    }
+    logNormalizer(data, 'split', l.n, `${parts.length} parts`);
     parts.forEach((text, i) => out.push({
       ...l,
       text,
-      gloss: l.gloss,
+      gloss: glossParts[i],
       delivery: { ...(l.delivery ?? {}), ...(i ? { pauseBefore: 0.2, pauses: [], emphasis: [] } : {}) },
     }));
   }
@@ -168,14 +181,14 @@ function cleanHindiDelivery(data) {
   }
 }
 
-function normalizeHindiScript(data, catalog) {
+export function normalizeHindiScript(data, catalog) {
   for (const l of data.lines) normalizeLook(l, catalog);
   // A setting line that only reacts can inherit the fact of the previous/next factual line.
   for (let i = 0; i < data.lines.length; i++) {
     const l = data.lines[i];
     if (['setting', 'action', 'snap', 'consequence'].includes(l.beat) && !(l.facts ?? []).length) {
       const donor = [...data.lines.slice(0, i)].reverse().find((x) => (x.facts ?? []).length) ?? data.lines.slice(i + 1).find((x) => (x.facts ?? []).length);
-      if (donor) l.facts = [...donor.facts];
+      if (donor) { l.facts = [...donor.facts]; logNormalizer(data, 'fact fill', l.n); }
     }
   }
   // Merge consecutive action/snap/consequence lines that cite exactly the same facts (repeated content).
@@ -184,8 +197,9 @@ function normalizeHindiScript(data, catalog) {
     const prev = merged[merged.length - 1];
     const factKey = (x) => JSON.stringify([...(x.facts ?? [])].sort());
     if (prev && ['action', 'snap', 'consequence'].includes(l.beat) && prev.beat === l.beat && factKey(prev) === factKey(l) && (l.facts ?? []).length) {
-      prev.text = `${prev.text.replace(/[।.!?]+$/, '')} ${l.text}`;
-      prev.gloss = `${prev.gloss} ${l.gloss}`;
+      prev.text = `${prev.text.trim().replace(/[।.!?]+$/, '')}। ${l.text.trim()}`;
+      prev.gloss = `${prev.gloss.trim()} ${l.gloss.trim()}`;
+      logNormalizer(data, 'merge', l.n, `joined into line ${prev.n}`);
       prev.delivery = {
         ...prev.delivery,
         pauseBefore: Math.max(prev.delivery?.pauseBefore ?? 0, l.delivery?.pauseBefore ?? 0),
@@ -199,14 +213,17 @@ function normalizeHindiScript(data, catalog) {
   splitHindiLongLines(data);
   cleanHindiDelivery(data);
   data.lines.forEach((l, i) => { l.n = i; });
-  // A name in the pronunciation list must map to a declared character; add a neutral mention entry if missing.
-  const names = new Set((data.characters ?? []).map((c) => normalizeWord(c.name)));
-  for (const [i, n] of (data.names ?? []).entries()) {
-    if (!names.has(normalizeWord(n.word))) {
-      data.characters.push({ id: `name${i + 1}`, name: n.word, role: 'mentioned', look: 'catalog' });
-      names.add(normalizeWord(n.word));
-    }
+}
+
+export function plannedPauseSeconds(data) {
+  let total = 0, beat = null;
+  for (const l of data.lines ?? []) {
+    total += Number(l.delivery?.pauseBefore ?? 0);
+    for (const p of l.delivery?.pauses ?? []) total += Number(p.s ?? 0);
+    if (beat !== null && l.beat !== beat) total += 0.26;
+    beat = l.beat;
   }
+  return total;
 }
 
 export function validateScript(data, { project, facts, catalog, sourceTexts = [] }) {
@@ -215,9 +232,11 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
   const rate = project.voice?.rate?.wordsPerSecond ?? WPS;
-  const target = project.seconds * rate, total = data.lines.reduce((n, l) => n + countWords(l.text), 0);
-  const lo = Math.ceil(target * 0.93), hi = Math.floor(target * 1.07);
-  if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (target ${target.toFixed(1)} ±7 %); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
+  const pauses = plannedPauseSeconds(data);
+  const target = Math.max(1, project.seconds - pauses) * rate, total = data.lines.reduce((n, l) => n + countWords(l.text), 0);
+  const tol = project.language === 'hi' ? 0.12 : 0.07;
+  const lo = Math.ceil(target * (1 - tol)), hi = Math.floor(target * (1 + tol));
+  if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (pause-aware target ${target.toFixed(1)} = (${project.seconds} - ${pauses.toFixed(2)} s pauses) × ${rate}); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
   if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
   if (data.lines[data.lines.length - 1].beat !== 'twist') errs.push('/lines last beat must be twist');
   const maxHook = 16;
@@ -237,11 +256,10 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
     errs.push(...lookErrors(l, catalog, chars));
   }
   if (project.language === 'hi') errs.push(...hindiCraftErrors(data, project, facts));
-  const listed = new Set(data.names.map((n) => normalizeWord(n.word)));
-  if (project.language === 'hi') {
-    const chars = new Set(data.characters.map((c) => normalizeWord(c.name)));
-    for (const n of data.names) if (!chars.has(normalizeWord(n.word))) errs.push(`/names "${n.word}" is not a declared character name`);
-  } else {
+  const listed = new Set((data.names ?? []).map((n) => normalizeWord(n.word)));
+  const declared = new Set([...(data.characters ?? []), ...(data.mentions ?? [])].map((c) => normalizeWord(c.name)));
+  for (const n of data.names ?? []) if (!declared.has(normalizeWord(n.word))) errs.push(`/names "${n.word}" must be in characters or mentions`);
+  if (project.language !== 'hi') {
     for (const l of data.lines) for (const n of capitalizedNames(l.text)) if (!listed.has(normalizeWord(n))) errs.push(`/lines/${l.n} name "${n}" is not listed in names`);
   }
   const source = normal(sourceTexts.join(' '));
@@ -289,7 +307,9 @@ export async function runScript({ projectDir, project, router }) {
   const verified = (facts.facts ?? []).filter((f) => f.verified);
   const isHi = project.language === 'hi';
   const rate = project.voice?.rate?.wordsPerSecond ?? WPS;
-  const target = project.seconds * rate;
+  const beatChanges = isHi && beatPlan ? beatPlan.filter((b, i) => i && b !== beatPlan[i - 1]).length : 0;
+  const pauseEstimate = isHi ? lineTarget * 0.3 + beatChanges * 0.26 : 0;
+  const target = Math.max(1, project.seconds - pauseEstimate) * rate;
   const wordsTarget = Math.round(target);
   const wordsLo = Math.ceil(target * 0.93), wordsHi = Math.floor(target * 1.07);
   const lineTarget = isHi ? hindiLineTarget(project.seconds) : 17;
@@ -313,7 +333,7 @@ export async function runScript({ projectDir, project, router }) {
   ], { validate: (d) => validateScript(d, { project, facts, catalog, sourceTexts }), repairHint });
   writeJsonArtifact(projectDir, 'script', 'script.json', data, 'script');
   writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, data, facts));
-  return { usage };
+  return { usage, normalizer: normalizerLog.get(data) ?? null };
 }
 
 /** Rewrite only the failing lines; every other line stays byte-identical. */
@@ -351,5 +371,5 @@ export async function reviseScript({ projectDir, project, router, failures }) {
     writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, revised, facts));
     markScriptRevised(projectDir);
   }
-  return { usage, changed };
+  return { usage, changed, normalizer: normalizerLog.get(revised) ?? null };
 }

@@ -39,13 +39,13 @@ export async function synthesizeKokoro({ projectDir, project }) {
   return { words, warnings: [], characters: 0, costUsd: 0, calls: [], cached: false, model: 'kokoro', voiceId: voice, usage: { calls: 0, cached: 0, promptTokens: 0, completionTokens: 0, costUsd: 0 } };
 }
 
-export async function synthesize({ provider, projectDir, project }) {
+export async function synthesize({ provider, projectDir, project, pauseScale = 1 }) {
   if (provider === 'kokoro') return synthesizeKokoro({ projectDir, project });
   if (provider === 'elevenlabs') {
     if (!project.voice?.voiceId) throw new Error('elevenlabs needs project.voice.voiceId (run: fableon voice audition --project ...)');
     const blocks = scriptBlocks(projectDir);
     if (!blocks.length) throw new Error('voice has no script lines');
-    const result = await synthesizeElevenLabs({ projectDir, project, blocks });
+    const result = await synthesizeElevenLabs({ projectDir, project, blocks, pauseScale });
     return { ...result, usage: { calls: result.calls.length, cached: result.calls.filter((c) => c.cached).length, promptTokens: 0, completionTokens: 0, costUsd: result.costUsd } };
   }
   throw new Error(`unknown voice provider "${provider}" (choose kokoro or elevenlabs)`);

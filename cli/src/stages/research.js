@@ -5,6 +5,13 @@ import { sha256, validationErrors, writeJsonArtifact } from '../core/artifacts.j
 import { QUERIES, RESEARCH } from './prompts.js';
 
 const norm = (s) => String(s).replace(/\s+/g, ' ').trim().toLowerCase();
+
+export function quoteVerified(quote, text) {
+  const q = norm(quote), hay = norm(text);
+  const first = hay.indexOf(q);
+  const once = first >= 0 && hay.indexOf(q, first + 1) < 0;
+  return !!hay && q.length >= 12 && (q.length >= 30 ? first >= 0 : once);
+}
 const stripHtml = (s) => s.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const TAVILY_URL = 'https://api.tavily.com/search';
 
@@ -128,8 +135,7 @@ export async function runResearch({ projectDir, project, router }) {
         let verified = f.sources?.length > 0 && (f.supports ?? 'yes') === 'yes';
         for (const src of f.sources ?? []) {
           const text = texts.get(src.source);
-          const q = norm(src.quote);
-          if (!text || q.length < 30 || !norm(text).includes(q)) verified = false;
+          if (!text || !quoteVerified(src.quote, text)) verified = false;
         }
         f.verified = verified;
       }

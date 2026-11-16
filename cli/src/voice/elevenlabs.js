@@ -193,17 +193,17 @@ async function decodePcm(audioBase64, projectDir, index) {
 
 
 /** Cuts requested by delivery marks: insert before word index `index` (0..words.length). */
-export function pauseCuts(words, lines) {
+export function pauseCuts(words, lines, scale = 1) {
   const cuts = [];
   for (const line of lines) {
     const d = line.delivery;
     if (!d) continue;
     const indexes = words.map((w, i) => (w.line === line.n ? i : -1)).filter((i) => i >= 0);
     if (!indexes.length) continue;
-    if (d.pauseBefore > 0) cuts.push({ index: indexes[0], seconds: Number(d.pauseBefore), reason: `line ${line.n} pauseBefore` });
+    if (d.pauseBefore > 0) cuts.push({ index: indexes[0], seconds: Number(d.pauseBefore) * scale, reason: `line ${line.n} pauseBefore` });
     for (const p of d.pauses ?? []) {
       const idx = indexes.find((i) => normalizeWord(words[i].w) === normalizeWord(p.after));
-      if (idx !== undefined) cuts.push({ index: idx + 1, seconds: Number(p.s), reason: `line ${line.n} pause after "${p.after}"` });
+      if (idx !== undefined) cuts.push({ index: idx + 1, seconds: Number(p.s) * scale, reason: `line ${line.n} pause after "${p.after}"` });
       else cuts.push({ warning: `line ${line.n} pause word "${p.after}" not found`, seconds: 0 });
     }
   }
@@ -236,7 +236,7 @@ export function applyPauseCuts(pcm, words, cuts) {
  * Synthesize all beat blocks, concatenate with beat pauses and write project/voice.wav. Returns words, billing,
  * warnings and the cache/API call details.
  */
-export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
+export async function synthesizeElevenLabs({ projectDir, project, blocks, pauseScale = 1 }) {
   const voice = project.voice ?? {};
   const model = voice.model ?? DEFAULT_MODEL;
   const voiceId = voice.voiceId || DEFAULT_VOICE_ID;
@@ -255,7 +255,7 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
     const { alignment } = chooseAlignment(single.spokenText, res);
     const mapped = wordsFromAlignment({ blockText: single.spokenText, lines: single.lines, alignment, blockStart: 0, blockDuration: blockPcm.length / (2 * VOICE_SR) });
     if (!mapped.words.length) throw new Error('ElevenLabs returned no character alignment');
-    const inserted = applyPauseCuts(blockPcm, mapped.words, pauseCuts(mapped.words, allLines));
+    const inserted = applyPauseCuts(blockPcm, mapped.words, pauseCuts(mapped.words, allLines, pauseScale));
     pcm = [inserted.pcm];
     words.push(...inserted.words);
     warnings.push(...mapped.warnings, ...inserted.warnings);
@@ -282,7 +282,7 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
     words.push(...mapped.words);
     warnings.push(...mapped.warnings.map((w) => `block ${i + 1}: ${w}`));
     pcm.push(pcmBlock);
-    if (i + 1 < blocks.length) pcm.push(silencePcm(BEAT_GAP));
+    if (i + 1 < blocks.length) pcm.push(silencePcm(BEAT_GAP * pauseScale));
   }
   const wav = wavFromPcm(Buffer.concat(pcm));
   backupBeforeWrite(projectDir, 'voice', 'voice.wav', wav);

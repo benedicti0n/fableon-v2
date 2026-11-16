@@ -27,7 +27,7 @@ export async function runPipelineTests() {
   try {
     const created = newProject(tmp, { topic: 'The Moon Cheese', seconds: 20, voice: 'am_michael' });
     copyFileSync(join(ROOT, 'tests', 'fixtures', 'pipeline', 'mini', 'sources', 'moon.md'), join(tmp, 'research', 'sources', 'moon.md'));
-    const project = { ...created.project, models: { default: { provider: 'mock', model: 'mock-v1' } }, autopilot: true };
+    const project = { ...created.project, voice: { ...created.project.voice, rate: { wordsPerSecond: 4.4 } }, models: { default: { provider: 'mock', model: 'mock-v1' } }, autopilot: true };
     writeProject(tmp, project);
     const runner = new PipelineRunner(tmp, project, { to: 'factcheck', autopilot: true });
     await runner.run();
@@ -43,7 +43,7 @@ export async function runPipelineTests() {
     const review = readJson(join(tmp, 'script.review.json'), 'review');
     ok('factcheck review schema', review.lines.every((l) => l.verdict === 'ok'), JSON.stringify(review.lines.map((l) => l.verdict)));
     const words = JSON.parse(readFileSync(join(tmp, 'script.json'), 'utf8')).lines.reduce((n, l) => n + l.text.split(/\s+/).length, 0);
-    ok('word target', Math.abs(words - 75) / 75 <= 0.07, String(words));
+    ok('word target', Math.abs(words - 80) / 80 <= 0.07, String(words));
 
     const before = readFileSync(join(tmp, 'logs', 'calls.jsonl'), 'utf8').split('\n').filter((l) => l.includes('"cached":false')).length;
     const force = new PipelineRunner(tmp, project, { to: 'factcheck', autopilot: true, force: true });

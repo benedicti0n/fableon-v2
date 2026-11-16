@@ -58,7 +58,8 @@
             }
           }
         },
-        "maxCharsPerRun": { "type": "integer", "minimum": 1 }
+        "maxCharsPerRun": { "type": "integer", "minimum": 1 },
+        "fit": { "enum": ["natural", "exact"] }
       }
     },
     "research": {
