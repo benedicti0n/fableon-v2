@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/sources.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "sources"],
+  "properties": {
+    "version": { "const": 1 },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "kind", "retrievedAt", "sha256", "chars"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S[0-9]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["file", "web"] },
+          "path": { "type": "string" },
+          "url": { "type": "string" },
+          "retrievedAt": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "chars": { "type": "integer", "minimum": 0 }
+        },
+        "oneOf": [
+          { "required": ["path"], "not": { "required": ["url"] } },
+          { "required": ["url"], "not": { "required": ["path"] } }
+        ]
+      }
+    }
+  }
+}
