@@ -1,5 +1,14 @@
 {
   "version": 1,
+  "reviewedAt": "2026-11-16T23:41:17.253Z",
+  "model": "deepseek-v4-pro",
+  "settings": {
+    "temperature": 0,
+    "thinking": "enabled",
+    "reasoningEffort": "high",
+    "jsonMode": true
+  },
+  "overrides": [],
   "lines": [
     {
       "n": 0,
@@ -8,18 +17,21 @@
       "facts": [
         "F1"
       ],
-      "note": "Hook summarizing Savitri's marriage to a man fated to die within a year.",
-      "fix": ""
+      "note": "Line matches F1: princess marries man doomed to die within a year.",
+      "fix": "",
+      "hash": "e33c0cabccfb37c6d98ef363faa50d54653eb0194ab00f3552008a699f554d55",
+      "confirmed": false
     },
     {
       "n": 1,
       "verdict": "ok",
-      "craft": "ok",
+      "craft": "weak",
       "facts": [
         "F1"
       ],
-      "note": "States Savitri chose Satyavan herself.",
-      "fix": ""
+      "note": "Recap of the hook: she was told beforehand.",
+      "fix": "",
+      "hash": "cc6d4e5cb809eab004a4fa71d99f0c0511d9f3c9d97db48a958e5c2fbb995ab5"
     },
     {
       "n": 2,
@@ -29,28 +41,30 @@
         "F1"
       ],
       "note": "Narada warns of Satyavan's defect.",
-      "fix": ""
+      "fix": "",
+      "hash": "10b37e51aee967a005a8fa4d7046a71304c130ab4860a426393404f3feb39233"
     },
     {
       "n": 3,
       "verdict": "ok",
-      "craft": "ok",
+      "craft": "weak",
       "facts": [
         "F1"
       ],
-      "note": "The defect is that he will die within a year.",
-      "fix": ""
+      "note": "Recaps the one-year deadline already in line 0.",
+      "fix": "",
+      "hash": "0c83022cc0d6f8bc744d71b9166895124112586ecac072e375245cbe943664c9"
     },
     {
       "n": 4,
       "verdict": "ok",
       "craft": "ok",
       "facts": [
-        "F1",
-        "F3"
+        "F1"
       ],
       "note": "Savitri married despite the warning (implied by later husband reference).",
-      "fix": ""
+      "fix": "",
+      "hash": "76d78de57e355ab1506de5d930e1dacbb44a846812510ea88bc95630428d5a6e"
     },
     {
       "n": 5,
@@ -60,17 +74,19 @@
         "F3"
       ],
       "note": "Savitri counts the days to his death.",
-      "fix": ""
+      "fix": "",
+      "hash": "cf3e506b7b38ea6dd6d8153bea4018745a56ccf1ad4e9f9010595bcb5a698137"
     },
     {
       "n": 6,
       "verdict": "ok",
-      "craft": "ok",
+      "craft": "weak",
       "facts": [
         "F3"
       ],
-      "note": "She keeps the prophecy constantly in mind.",
-      "fix": ""
+      "note": "Repeats line 5's countdown.",
+      "fix": "",
+      "hash": "cc7236c65dc7619bb28b742cf05d3cfff69bb6d81020e8523d3441b2eab186a3"
     },
     {
       "n": 7,
@@ -79,8 +95,10 @@
       "facts": [
         "F4"
       ],
-      "note": "Satyavan goes to forest, works, and gets head pain.",
-      "fix": ""
+      "note": "Line matches F4: forest, cutting wood, pain in head.",
+      "fix": "",
+      "hash": "d941d85c7d5342bab88458ef211f83186c27096de2a727288a65865c3f9acdc4",
+      "confirmed": false
     },
     {
       "n": 8,
@@ -89,8 +107,10 @@
       "facts": [
         "F5"
       ],
-      "note": "Yama appears with described attributes.",
-      "fix": ""
+      "note": "Line matches F5: Yama's appearance and attributes.",
+      "fix": "",
+      "hash": "b3f146c49451c7c44699ff79649d8fcb390b8b4c8111d38724c140268fe4c639",
+      "confirmed": false
     },
     {
       "n": 9,
@@ -100,7 +120,8 @@
         "F6"
       ],
       "note": "Yama explains his direct arrival due to virtue.",
-      "fix": ""
+      "fix": "",
+      "hash": "8829388d9393e87853c4fb8e4441825db0caf942b096db24cbf678a75c12316d"
     },
     {
       "n": 10,
@@ -109,8 +130,10 @@
       "facts": [
         "F7"
       ],
-      "note": "Yama takes life and heads south; Savitri follows.",
-      "fix": ""
+      "note": "Line matches F7: Yama draws life, binds, heads south; Savitri follows.",
+      "fix": "",
+      "hash": "3260e3091942b7f3d54921346bbe87a8698aded159968e76ea65b8b9e985eaa6",
+      "confirmed": false
     },
     {
       "n": 11,
@@ -120,7 +143,8 @@
         "F8"
       ],
       "note": "She does not fight, only talks/argues.",
-      "fix": ""
+      "fix": "",
+      "hash": "a269a573c3173665500f19e521089b2fb29b9f3e10782267bc2020a7575cb6c9"
     },
     {
       "n": 12,
@@ -130,7 +154,8 @@
         "F8"
       ],
       "note": "Yama is pleased and offers boon.",
-      "fix": ""
+      "fix": "",
+      "hash": "43523b171f90d860189721f7433e0bf7b573b3e63e9a7c0a721fdf4adfca4853"
     },
     {
       "n": 13,
@@ -140,7 +165,8 @@
         "F9"
       ],
       "note": "Each boon excludes Satyavan's life.",
-      "fix": ""
+      "fix": "",
+      "hash": "d5be067e2821bd9444bac9173aaf4ceb4c2f7c0ded13efd1f975a7c996c8fb17"
     },
     {
       "n": 14,
@@ -148,7 +174,8 @@
       "craft": "ok",
       "facts": [],
       "note": "Analogy comparing exclusions to a shopkeeper's offer.",
-      "fix": ""
+      "fix": "",
+      "hash": "8702cd61208ceee3a3a9d69ff6c029ce3983b145dc87053b2b8a8cd4a5850fe0"
     },
     {
       "n": 15,
@@ -157,8 +184,10 @@
       "facts": [
         "F9"
       ],
-      "note": "First two boons: father-in-law's sight and kingdom.",
-      "fix": ""
+      "note": "Line matches F9: first two boons.",
+      "fix": "",
+      "hash": "598d31f9ad7b01abeb4586e7fc3896ecdea66b0c90e9e6ae66d3e1b9d0530e66",
+      "confirmed": false
     },
     {
       "n": 16,
@@ -167,8 +196,10 @@
       "facts": [
         "F9"
       ],
-      "note": "Third boon: sons for her father.",
-      "fix": ""
+      "note": "Line matches F9: third boon.",
+      "fix": "",
+      "hash": "fc224ce3c46e8b6c417367429df5c5445f6f04b28d0c8b3d3e502125f539e9ae",
+      "confirmed": false
     },
     {
       "n": 17,
@@ -177,8 +208,10 @@
       "facts": [
         "F10"
       ],
-      "note": "Fourth boon: hundred sons for Savitri and Satyavan; Yama grants immediately.",
-      "fix": ""
+      "note": "Line matches F10: fourth boon and Yama's grant.",
+      "fix": "",
+      "hash": "eb27a8d635c1f35d442bb6487333b43ea7f1ad3c6ae97bf50a15359bd59b00fd",
+      "confirmed": false
     },
     {
       "n": 18,
@@ -188,27 +221,30 @@
         "F11"
       ],
       "note": "Savitri points out impossibility without husband.",
-      "fix": ""
+      "fix": "",
+      "hash": "869e0727f086426d55d9db06f0e34a767d7e37811f1014614d54741c4ae43264"
     },
     {
       "n": 19,
       "verdict": "ok",
-      "craft": "ok",
+      "craft": "weak",
       "facts": [
         "F12"
       ],
-      "note": "Yama concedes and grants four hundred years.",
-      "fix": ""
+      "note": "Twist does not call back to the hook.",
+      "fix": "",
+      "hash": "6758b23175ea62c55bec12493a31af76582108aabc208d5fafb425b7d652b62d"
     },
     {
       "n": 20,
       "verdict": "ok",
-      "craft": "ok",
+      "craft": "weak",
       "facts": [
         "F13"
       ],
-      "note": "Satyavan wakes and asks about the dark man.",
-      "fix": ""
+      "note": "Twist does not call back to the hook.",
+      "fix": "",
+      "hash": "c1ed072a7e6b47eacb2eed5de60a8c4a0c752a8e1771e9a15e17a1ef63e05bed"
     }
   ]
 }

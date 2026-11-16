@@ -36,12 +36,17 @@
       "word": "यम",
       "phonemes": null,
       "suggested": true
+    },
+    {
+      "word": "नारद",
+      "phonemes": null,
+      "suggested": true
     }
   ],
   "lines": [
     {
       "n": 0,
-      "text": "एक राजकुमारी ने ऐसे आदमी से शादी की जिसकी उम्र सिर्फ़ एक साल थी।",
+      "text": "एक राजकुमारी ने ऐसे आदमी से शादी की, जिसके पास जीने के लिए सिर्फ़ एक साल बचा था।",
       "gloss": "A princess married a man who had only one year to live.",
       "beat": "hook",
       "facts": [
@@ -250,7 +255,7 @@
     },
     {
       "n": 7,
-      "text": "एक दिन सत्यवान जंगल में लकड़ी काटने गया काम करते-करते उसके सिर में तेज़ दर्द हुआ।",
+      "text": "एक दिन सत्यवान जंगल में लकड़ी काटने गया। काम करते-करते उसके सिर में तेज़ दर्द हुआ।",
       "gloss": "One day Satyavan went to the forest to cut wood. While working, he got a sharp pain in his head.",
       "beat": "action",
       "facts": [
@@ -268,8 +273,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "satyavan"
         ],
@@ -281,7 +286,7 @@
     },
     {
       "n": 8,
-      "text": "वहीं यम प्रकट हुए काले शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश।",
+      "text": "वहीं यम प्रकट हुए। काला शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश।",
       "gloss": "Right there Yama appeared. Dark body, red eyes, red robe, noose in hand.",
       "beat": "action",
       "facts": [
@@ -292,15 +297,13 @@
         "pauseBefore": 0,
         "pauses": [],
         "emphasis": [
-          "यम",
           "काले",
-          "लाल",
-          "पाश"
+          "काला"
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama"
         ],
@@ -328,8 +331,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama",
           "satyavan"
@@ -342,7 +345,7 @@
     },
     {
       "n": 10,
-      "text": "यम ने सत्यवान के प्राण निकालकर बाँध लिए और दक्षिण की ओर चल दिए सावित्री पीछे-पीछे चल दी।",
+      "text": "यम ने सत्यवान के प्राण निकालकर बाँध लिए और दक्षिण की ओर चल दिए। सावित्री पीछे-पीछे चल दी।",
       "gloss": "Yama drew out Satyavan's life, bound it, and headed south. Savitri followed behind.",
       "beat": "action",
       "facts": [
@@ -359,8 +362,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama"
         ],
@@ -393,8 +396,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri",
           "yama"
@@ -427,8 +430,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama",
           "savitri"
@@ -461,8 +464,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama",
           "savitri"
@@ -494,8 +497,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri"
         ],
@@ -507,8 +510,8 @@
     },
     {
       "n": 15,
-      "text": "सावित्री ने पहला वर माँगा: ससुर की आँखें वापस मिलें दूसरा: ससुर का राज्य वापस मिले",
-      "gloss": "Savitri asked the first boon: father-in-law's eyesight restored. Second: father-in-law's kingdom restored. Third: a hundred sons for her father.",
+      "text": "सावित्री ने पहला वर माँगा: ससुर की आँखें वापस मिलें। दूसरा: ससुर का राज्य वापस मिले।",
+      "gloss": "Savitri asked the first boon: her father-in-law's eyesight restored. Second: his kingdom restored.",
       "beat": "consequence",
       "facts": [
         "F9"
@@ -525,8 +528,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri",
           "yama"
@@ -540,7 +543,7 @@
     {
       "n": 16,
       "text": "तीसरा: अपने पिता के लिए सौ पुत्र हों।",
-      "gloss": "Savitri asked the first boon: father-in-law's eyesight restored. Second: father-in-law's kingdom restored. Third: a hundred sons for her father.",
+      "gloss": "Third: a hundred sons for her father.",
       "beat": "consequence",
       "facts": [
         "F9"
@@ -552,8 +555,8 @@
         "emphasis": []
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri",
           "yama"
@@ -566,7 +569,7 @@
     },
     {
       "n": 17,
-      "text": "चौथा वर: सावित्री और सत्यवान के सौ पुत्र हों यम ने तुरंत कहा, तथास्तु।",
+      "text": "चौथा वर: सावित्री और सत्यवान के सौ पुत्र हों। यम ने तुरंत कहा, तथास्तु।",
       "gloss": "Fourth boon: a hundred sons for Savitri and Satyavan. Yama immediately said, so be it.",
       "beat": "consequence",
       "facts": [
@@ -583,8 +586,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri",
           "yama"
@@ -618,8 +621,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "savitri",
           "yama"
@@ -648,8 +651,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "yama",
           "savitri"
@@ -683,8 +686,8 @@
         ]
       },
       "look": {
-        "set": "village",
-        "mark": "front",
+        "set": "deer",
+        "mark": "clearing",
         "who": [
           "satyavan",
           "savitri"
@@ -697,5 +700,12 @@
     }
   ],
   "seconds": 90,
-  "wps": 2.56
+  "wps": 2.56,
+  "mentions": [
+    {
+      "id": "narada",
+      "name": "नारद",
+      "role": "the sage who warns"
+    }
+  ]
 }

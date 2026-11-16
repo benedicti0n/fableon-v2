@@ -114,12 +114,16 @@
     },
     {
       "id": "F9",
-      "claim": "Each boon Yama grants excludes Satyavan's life, and Savitri's first three requests are for her father-in-law's sight, his kingdom, and sons for her father.",
+      "claim": "Each boon Yama grants excludes Satyavan's life; Savitri's first three requests are for her father-in-law's sight, his kingdom, and a hundred sons for her father.",
       "kind": "event",
       "sources": [
         {
           "source": "S1",
           "quote": "Except the life of thy husband, O thou of faultless features, I will bestow on thee any boon that thou mayst solicit!"
+        },
+        {
+          "source": "S1",
+          "quote": "hundred sons begotten of his loins, so that his line may be perpetuated, is the third boon I would ask of thee!"
         }
       ],
       "confidence": "high",
