@@ -1,0 +1,2262 @@
+{
+  "version": 1,
+  "fps": 30,
+  "tailFrames": 36,
+  "flash": {
+    "line": 1,
+    "word": "Vyasa",
+    "offset": -2
+  },
+  "crossfade": 10,
+  "points": {
+    "CY": {
+      "at": "PAL",
+      "d": [
+        0,
+        0.12,
+        0
+      ]
+    },
+    "VY": {
+      "at": "HERM",
+      "d": [
+        -1.15,
+        0.33,
+        -0.25
+      ]
+    },
+    "GN": {
+      "at": "HERM",
+      "d": [
+        0.75,
+        0.33,
+        0.15
+      ]
+    },
+    "VFRONT": {
+      "at": "VIL",
+      "d": [
+        0,
+        0,
+        9.5
+      ]
+    },
+    "FA": {
+      "at": "VFRONT",
+      "d": [
+        0.4,
+        0,
+        0
+      ]
+    },
+    "SA": {
+      "at": "VFRONT",
+      "d": [
+        1.5,
+        0,
+        -0.5
+      ]
+    },
+    "DV": {
+      "at": "VFRONT",
+      "d": [
+        -1.3,
+        0,
+        0.3
+      ]
+    },
+    "DVP": {
+      "at": "CY",
+      "d": [
+        0,
+        0,
+        -2
+      ]
+    },
+    "SH": {
+      "at": "CY",
+      "d": [
+        -0.75,
+        0,
+        2
+      ]
+    },
+    "DV2": {
+      "at": "CY",
+      "d": [
+        0.75,
+        0,
+        1.7
+      ]
+    },
+    "DH": {
+      "at": "CY",
+      "d": [
+        -1.15,
+        0,
+        5
+      ]
+    },
+    "PD": {
+      "at": "CY",
+      "d": [
+        1.15,
+        0,
+        5
+      ]
+    },
+    "KC": {
+      "at": "DEER",
+      "d": [
+        0,
+        0,
+        0
+      ]
+    },
+    "PC": {
+      "at": "DEER",
+      "d": [
+        1.3,
+        0,
+        0.6
+      ]
+    }
+  },
+  "cast": {
+    "ganesha": {
+      "spec": {
+        "skin": "#f2b49c"
+      },
+      "seed": 77
+    },
+    "vyasa": {
+      "spec": "C.vyasa",
+      "seed": 1
+    },
+    "shantanu": {
+      "spec": "C.shantanu",
+      "seed": 2
+    },
+    "satyavati": {
+      "spec": "C.satyavati",
+      "seed": 3
+    },
+    "fisher": {
+      "spec": "C.fisher",
+      "seed": 4
+    },
+    "devavrata": {
+      "spec": "C.devavrata",
+      "seed": 5
+    },
+    "bhishmaOld": {
+      "spec": "C.bhishmaOld",
+      "seed": 6
+    },
+    "dhritarashtra": {
+      "spec": "C.dhritarashtra",
+      "seed": 7
+    },
+    "pandu": {
+      "spec": "C.pandu",
+      "seed": 8
+    },
+    "sage": {
+      "spec": "C.sage",
+      "seed": 9
+    },
+    "kunti": {
+      "spec": "C.kunti",
+      "seed": 10
+    },
+    "madri": {
+      "spec": "C.madri",
+      "seed": 11
+    },
+    "gandhari": {
+      "spec": "C.gandhari",
+      "seed": 12
+    },
+    "kidYudhi": {
+      "spec": "KIDS.yudhi",
+      "seed": 20
+    },
+    "kidBhima": {
+      "spec": "KIDS.bhima",
+      "seed": 21
+    },
+    "kidArjuna": {
+      "spec": "KIDS.arjuna",
+      "seed": 22
+    },
+    "kidNakula": {
+      "spec": "KIDS.nakula",
+      "seed": 23
+    },
+    "kidSahadeva": {
+      "spec": "KIDS.sahadeva",
+      "seed": 24
+    },
+    "duryodhana": {
+      "spec": "C.duryodhana",
+      "seed": 30
+    },
+    "bro0": {
+      "spec": "KIDS.yudhi",
+      "seed": 20
+    },
+    "bro1": {
+      "spec": "KIDS.bhima",
+      "seed": 21
+    },
+    "bro2": {
+      "spec": "KIDS.arjuna",
+      "seed": 22
+    },
+    "bro3": {
+      "spec": "KIDS.nakula",
+      "seed": 23
+    },
+    "bro4": {
+      "spec": "KIDS.sahadeva",
+      "seed": 24
+    },
+    "priest": {
+      "spec": "C.priest",
+      "seed": 40
+    },
+    "king1": {
+      "spec": "C.king1",
+      "seed": 50
+    },
+    "king2": {
+      "spec": "C.king2",
+      "seed": 51
+    },
+    "draupadi": {
+      "spec": "C.draupadi",
+      "seed": 60
+    }
+  },
+  "kicks": [
+    {
+      "at": {
+        "line": 8,
+        "word": "vows"
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 13,
+        "word": "deer"
+      },
+      "amp": 0.8
+    },
+    {
+      "at": {
+        "line": 13,
+        "word": "die"
+      },
+      "amp": 0.7
+    },
+    {
+      "at": {
+        "line": 15,
+        "word": "calls"
+      },
+      "amp": 0.4
+    },
+    {
+      "at": {
+        "line": 15,
+        "word": "three"
+      },
+      "amp": 0.4
+    },
+    {
+      "at": {
+        "line": 15,
+        "word": "gods"
+      },
+      "amp": 0.4
+    },
+    {
+      "at": {
+        "line": 15,
+        "word": "twins"
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 17,
+        "word": "lump"
+      },
+      "amp": 0.8
+    },
+    {
+      "at": {
+        "line": 19,
+        "word": "Out"
+      },
+      "amp": 0.5
+    },
+    {
+      "at": {
+        "line": 19,
+        "word": "sister"
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 21,
+        "word": "shaking"
+      },
+      "amp": 0.5
+    },
+    {
+      "at": {
+        "line": 21,
+        "word": "shaking",
+        "offset": 9
+      },
+      "amp": 0.5
+    },
+    {
+      "at": {
+        "line": 21,
+        "word": "shaking",
+        "offset": 18
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 22,
+        "word": "river",
+        "offset": -3
+      },
+      "amp": 1.0
+    },
+    {
+      "at": {
+        "line": 23,
+        "word": "stronger"
+      },
+      "amp": 0.8
+    },
+    {
+      "at": {
+        "line": 25,
+        "word": "it"
+      },
+      "amp": 0.8
+    },
+    {
+      "at": {
+        "line": 27,
+        "word": "thrown"
+      },
+      "amp": 1.2
+    },
+    {
+      "at": {
+        "line": 28,
+        "word": "mark",
+        "offset": 2
+      },
+      "amp": 1.0
+    },
+    {
+      "at": {
+        "line": 31,
+        "word": "married"
+      },
+      "amp": 0.4
+    },
+    {
+      "at": {
+        "line": 35,
+        "word": "ghee"
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 36,
+        "word": "grandfather"
+      },
+      "amp": 0.7
+    }
+  ],
+  "shots": [
+    {
+      "id": "S1",
+      "start": {
+        "frame": 0
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 18
+      }
+    },
+    {
+      "id": "L1",
+      "start": {
+        "frame": 88
+      },
+      "legacy": false,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 88
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "HERM",
+            "d": [
+              -0.2,
+              1.45,
+              -7.4
+            ]
+          },
+          "look": {
+            "at": "HERM",
+            "d": [
+              -0.2,
+              1.05,
+              0
+            ]
+          },
+          "fov": 44,
+          "push": {
+            "from": {
+              "frame": 88
+            },
+            "rate": 0.002
+          }
+        },
+        {
+          "at": {
+            "line": 1,
+            "word": "condition",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.15,
+              0.9,
+              -2.2
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.85,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 1,
+              "word": "condition",
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "cut": true,
+          "roll": -0.03
+        },
+        {
+          "at": {
+            "line": 1,
+            "word": "Vyasa",
+            "nth": 1,
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0.2,
+              0.75,
+              -2.3
+            ]
+          },
+          "look": {
+            "at": "VY",
+            "d": [
+              0,
+              0.72,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 1,
+              "word": "Vyasa",
+              "nth": 1,
+              "offset": -2
+            },
+            "rate": 0.002,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 1,
+              "word": "never",
+              "offset": -2
+            }
+          },
+          "cut": true
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 88
+          },
+          "cInf": 0
+        },
+        {
+          "at": {
+            "line": 1,
+            "word": "condition",
+            "offset": -2
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "neutral",
+          "params": {
+            "writeRate": 2.0,
+            "look": -0.6,
+            "down": 1
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 1,
+                "word": "condition",
+                "offset": -2
+              },
+              "expr": "stern",
+              "params": {
+                "write": 0.2,
+                "look": 0,
+                "down": 0
+              }
+            },
+            {
+              "at": {
+                "line": 1,
+                "word": "Vyasa",
+                "nth": 1,
+                "offset": -2
+              },
+              "expr": "neutral",
+              "params": {
+                "write": null,
+                "look": -0.6,
+                "down": 1
+              }
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "talk",
+          "seated": true,
+          "facing": 1,
+          "talk": {
+            "base": "neutral",
+            "rate": 1
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 1,
+                "word": "never",
+                "offset": -2
+              },
+              "talk": {
+                "base": "nervous",
+                "rate": 1.6
+              }
+            }
+          ]
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": {
+            "keys": [
+              [
+                {
+                  "frame": 90
+                },
+                0.3
+              ],
+              [
+                {
+                  "frame": 180
+                },
+                0.4
+              ]
+            ],
+            "ease": "linear"
+          }
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "start": {
+        "frame": 205
+      },
+      "legacy": false,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 205
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0.4,
+              0.8,
+              -2.5
+            ]
+          },
+          "look": {
+            "at": "VY",
+            "d": [
+              0.1,
+              0.75,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "frame": 205
+            },
+            "rate": 0.0025
+          },
+          "roll": 0.03
+        },
+        {
+          "at": {
+            "line": 2,
+            "word": "understand",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              -0.2,
+              0.9,
+              -2.3
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.85,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 2,
+              "word": "understand",
+              "offset": -2
+            },
+            "rate": 0.003
+          },
+          "cut": true
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 205
+          },
+          "cInf": 13
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "neutral",
+          "params": {
+            "write": 0.1,
+            "look": -0.5
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "word": "understand",
+                "offset": -2
+              },
+              "expr": "stern"
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "vow",
+          "seated": true,
+          "facing": 1,
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "word": "Ganesha",
+                "offset": -2
+              },
+              "talk": {
+                "base": "smile",
+                "rate": 1
+              }
+            },
+            {
+              "at": {
+                "line": 2,
+                "word": "understand",
+                "offset": -2
+              },
+              "pose": "sit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "start": {
+        "frame": 293
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 18
+      }
+    },
+    {
+      "id": "S5",
+      "start": {
+        "frame": 422
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace",
+        "village"
+      ]
+    },
+    {
+      "id": "L5",
+      "start": {
+        "frame": 508
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 508
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "FA",
+            "d": [
+              -0.2,
+              1.75,
+              5.2
+            ]
+          },
+          "look": {
+            "at": "FA",
+            "d": [
+              0.5,
+              1.35,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "frame": 508
+            },
+            "rate": 0.0022
+          }
+        },
+        {
+          "at": {
+            "line": 5,
+            "word": "her",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "FA",
+            "d": [
+              -0.25,
+              1.75,
+              2.6
+            ]
+          },
+          "look": {
+            "at": "FA",
+            "d": [
+              0,
+              1.7,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 5,
+              "word": "her",
+              "offset": -2
+            },
+            "rate": 0.003
+          },
+          "cut": true,
+          "roll": -0.035
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 508
+          },
+          "cInf": 8
+        },
+        {
+          "at": {
+            "line": 5,
+            "word": "her",
+            "offset": -2
+          },
+          "cInf": 13
+        }
+      ],
+      "actors": [
+        {
+          "who": "fisher",
+          "pos": {
+            "at": "FA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "fold",
+          "expr": "stern",
+          "facing": -1,
+          "beats": [
+            {
+              "at": {
+                "line": 5,
+                "word": "her",
+                "offset": -2
+              },
+              "pose": "vow",
+              "talk": {
+                "base": "stern",
+                "rate": 1
+              }
+            }
+          ]
+        },
+        {
+          "who": "satyavati",
+          "pos": {
+            "at": "SA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "smile",
+          "facing": -1
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "start": {
+        "frame": 573
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 573
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "DVP",
+            "d": [
+              0.4,
+              0.85,
+              -4.6
+            ]
+          },
+          "look": {
+            "at": "DVP",
+            "d": [
+              0,
+              1.65,
+              0
+            ]
+          },
+          "fov": 42,
+          "push": {
+            "from": {
+              "frame": 573
+            },
+            "rate": 0.0025,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 6,
+              "word": "Prince",
+              "offset": -2
+            }
+          },
+          "roll": 0.03
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 573
+          },
+          "cInf": 16
+        }
+      ],
+      "actors": [
+        {
+          "who": "devavrata",
+          "pos": {
+            "at": "DVP",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "hips",
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 6,
+                "word": "perfect"
+              },
+              "expr": "grin"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": {
+            "line": 6,
+            "word": "perfect"
+          },
+          "pos": {
+            "at": "DVP",
+            "d": [
+              0,
+              0,
+              -0.3
+            ]
+          },
+          "size": 0.35,
+          "count": 4,
+          "offsets": [
+            [
+              -0.7,
+              2.0,
+              0
+            ],
+            [
+              0.75,
+              2.3,
+              0
+            ],
+            [
+              -0.55,
+              1.2,
+              0
+            ],
+            [
+              0.6,
+              1.4,
+              0
+            ]
+          ],
+          "pop": {
+            "stagger": 0.12
+          },
+          "twinkle": {
+            "freq": 9,
+            "depth": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "start": {
+        "frame": 668
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 668
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "VFRONT",
+            "d": [
+              -0.4,
+              1.6,
+              6.0
+            ]
+          },
+          "look": {
+            "at": "VFRONT",
+            "d": [
+              -0.4,
+              1.3,
+              0
+            ]
+          },
+          "fov": 42,
+          "push": {
+            "from": {
+              "frame": 668
+            },
+            "rate": 0.0022
+          }
+        },
+        {
+          "at": {
+            "line": 7,
+            "word": "Her",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "FA",
+            "d": [
+              -0.6,
+              1.72,
+              2.4
+            ]
+          },
+          "look": {
+            "at": "FA",
+            "d": [
+              -0.05,
+              1.7,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 7,
+              "word": "Her",
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 7,
+              "word": "kids",
+              "offset": -2
+            }
+          },
+          "cut": true,
+          "roll": 0.035
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 668
+          },
+          "cInf": 0
+        },
+        {
+          "at": {
+            "line": 7,
+            "word": "Her",
+            "offset": -2
+          },
+          "cInf": 13
+        }
+      ],
+      "actors": [
+        {
+          "who": "devavrata",
+          "pos": {
+            "at": "DV",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "offer",
+          "prop": "crown",
+          "expr": "neutral",
+          "facing": 1
+        },
+        {
+          "who": "fisher",
+          "pos": {
+            "at": "FA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "fold",
+          "expr": "stern",
+          "facing": -1,
+          "look": 0,
+          "beats": [
+            {
+              "at": {
+                "line": 7,
+                "word": "Her",
+                "offset": -2
+              },
+              "pose": "talk",
+              "talk": {
+                "base": "smile",
+                "rate": 1
+              },
+              "look": -0.6
+            }
+          ]
+        },
+        {
+          "who": "satyavati",
+          "pos": {
+            "at": "SA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "shock",
+          "facing": -1,
+          "visible": {
+            "from": {
+              "frame": 668
+            },
+            "to": {
+              "line": 7,
+              "word": "Her",
+              "offset": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "start": {
+        "frame": 778
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 778
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "DV",
+            "d": [
+              0.3,
+              0.8,
+              3.6
+            ]
+          },
+          "look": {
+            "at": "DV",
+            "d": [
+              0,
+              1.8,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "frame": 778
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 8,
+              "word": "vows",
+              "offset": -2
+            }
+          },
+          "roll": -0.04
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 778
+          },
+          "cInf": 13
+        }
+      ],
+      "actors": [
+        {
+          "who": "devavrata",
+          "pos": {
+            "at": "DV",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 8,
+                "word": "vows",
+                "offset": -3
+              },
+              "pose": "vow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "start": {
+        "frame": 821
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "village"
+      ]
+    },
+    {
+      "id": "L10",
+      "start": {
+        "frame": 932
+      },
+      "legacy": false,
+      "light": "golden",
+      "sets": [
+        "palace"
+      ],
+      "sun": {
+        "az": -30,
+        "el": 9
+      },
+      "camera": [
+        {
+          "at": {
+            "frame": 932
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "CY",
+            "d": [
+              0.1,
+              1.55,
+              -3.3
+            ]
+          },
+          "look": {
+            "at": "CY",
+            "d": [
+              0,
+              1.45,
+              1.9
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "frame": 932
+            },
+            "rate": 0.0022
+          }
+        },
+        {
+          "at": {
+            "line": 10,
+            "word": "he",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "DV2",
+            "d": [
+              0.2,
+              1.5,
+              -2.7
+            ]
+          },
+          "look": {
+            "at": "DV2",
+            "d": [
+              0,
+              1.6,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 10,
+              "word": "he",
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "roll": 0.03,
+          "dur": 26
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 932
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "shantanu",
+          "pos": {
+            "at": "SH",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "bless",
+          "expr": "smile",
+          "facing": 1
+        },
+        {
+          "who": "devavrata",
+          "pos": {
+            "at": "DV2",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "pray",
+          "expr": "smile",
+          "facing": -1,
+          "beats": [
+            {
+              "at": {
+                "line": 10,
+                "word": "choose"
+              },
+              "expr": "smile_closed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "start": {
+        "frame": 1027
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "palace"
+      ],
+      "sun": {
+        "az": 160,
+        "el": 8
+      }
+    },
+    {
+      "id": "L12",
+      "start": {
+        "frame": 1105
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 1105
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "DH",
+            "d": [
+              0.05,
+              1.6,
+              -3.4
+            ]
+          },
+          "look": {
+            "at": "DH",
+            "d": [
+              0,
+              1.6,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "frame": 1105
+            },
+            "rate": 0.0022
+          }
+        },
+        {
+          "at": {
+            "line": 12,
+            "word": "brother",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "PD",
+            "d": [
+              -0.05,
+              1.6,
+              -3.4
+            ]
+          },
+          "look": {
+            "at": "PD",
+            "d": [
+              0,
+              1.6,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "line": 12,
+              "word": "brother",
+              "offset": -2
+            },
+            "rate": 0.0022
+          },
+          "roll": -0.03,
+          "dur": 24
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 1105
+          },
+          "cInf": 14
+        }
+      ],
+      "actors": [
+        {
+          "who": "dhritarashtra",
+          "pos": {
+            "at": "DH",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "neutral",
+          "facing": 1
+        },
+        {
+          "who": "pandu",
+          "pos": {
+            "at": "PD",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "hold",
+          "prop": "bow",
+          "expr": "smile",
+          "facing": -1,
+          "beats": [
+            {
+              "at": {
+                "line": 12,
+                "word": "king"
+              },
+              "expr": "grin"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "start": {
+        "frame": 1220
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "deer"
+      ]
+    },
+    {
+      "id": "L14",
+      "start": {
+        "frame": 1337
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 1337
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "KC",
+            "d": [
+              0.5,
+              1.55,
+              -4.2
+            ]
+          },
+          "look": {
+            "at": "KC",
+            "d": [
+              0.5,
+              1.5,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "frame": 1337
+            },
+            "rate": 0.0025
+          }
+        },
+        {
+          "at": {
+            "line": 14,
+            "word": "chant",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "KC",
+            "d": [
+              0.15,
+              1.7,
+              -2.6
+            ]
+          },
+          "look": {
+            "at": "KC",
+            "d": [
+              0,
+              1.8,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 14,
+              "word": "chant",
+              "offset": -2
+            },
+            "rate": 0.003
+          },
+          "roll": 0.035,
+          "dur": 24
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 1337
+          },
+          "cInf": 10
+        }
+      ],
+      "actors": [
+        {
+          "who": "kunti",
+          "pos": {
+            "at": "KC",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "beats": [
+            {
+              "at": {
+                "line": 14,
+                "word": "chant"
+              },
+              "pose": "pray",
+              "expr": "smile_closed"
+            }
+          ]
+        },
+        {
+          "who": "pandu",
+          "pos": {
+            "at": "PC",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "nervous",
+          "facing": -1,
+          "beats": [
+            {
+              "at": {
+                "line": 14,
+                "word": "sons"
+              },
+              "expr": "grin"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "halo",
+          "at": {
+            "line": 14,
+            "word": "chant"
+          },
+          "pos": {
+            "at": "KC",
+            "d": [
+              0,
+              1.25,
+              0.15
+            ]
+          },
+          "size": 2.8,
+          "pop": 0.4,
+          "color": "#fff0a0",
+          "card": "soft"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "start": {
+        "frame": 1435
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "deer"
+      ]
+    },
+    {
+      "id": "L16",
+      "start": {
+        "frame": 1547
+      },
+      "legacy": false,
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "camera": [
+        {
+          "at": {
+            "frame": 1547
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "CY",
+            "d": [
+              0,
+              1.2,
+              -9.2
+            ]
+          },
+          "look": {
+            "at": "CY",
+            "d": [
+              0,
+              0.95,
+              0
+            ]
+          },
+          "fov": 44,
+          "push": {
+            "from": {
+              "frame": 1547
+            },
+            "rate": 0.0035,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 16,
+              "word": "Pandavas",
+              "offset": -2
+            }
+          }
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 1547
+          },
+          "cInf": 10
+        }
+      ],
+      "actors": [
+        {
+          "who": "bro0",
+          "pos": {
+            "at": "CY",
+            "d": [
+              -1.6,
+              0,
+              0.3
+            ]
+          },
+          "pose": "stand",
+          "expr": "grin",
+          "facing": 0,
+          "scale": 1.08,
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five"
+            },
+            "pop": 0.18,
+            "stagger": 0.0
+          }
+        },
+        {
+          "who": "bro1",
+          "pos": {
+            "at": "CY",
+            "d": [
+              -0.8,
+              0,
+              0.15
+            ]
+          },
+          "pose": "flex",
+          "expr": "grin",
+          "facing": 0,
+          "scale": 1.12,
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five"
+            },
+            "pop": 0.18,
+            "stagger": 0.08
+          }
+        },
+        {
+          "who": "bro2",
+          "pos": {
+            "at": "CY",
+            "d": [
+              0.0,
+              0,
+              0.0
+            ]
+          },
+          "pose": "hips",
+          "expr": "grin",
+          "facing": 0,
+          "scale": 1.0,
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five"
+            },
+            "pop": 0.18,
+            "stagger": 0.16
+          }
+        },
+        {
+          "who": "bro3",
+          "pos": {
+            "at": "CY",
+            "d": [
+              0.8,
+              0,
+              0.15
+            ]
+          },
+          "pose": "stand",
+          "expr": "grin",
+          "facing": 0,
+          "scale": 0.92,
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five"
+            },
+            "pop": 0.18,
+            "stagger": 0.24
+          }
+        },
+        {
+          "who": "bro4",
+          "pos": {
+            "at": "CY",
+            "d": [
+              1.6,
+              0,
+              0.3
+            ]
+          },
+          "pose": "stand",
+          "expr": "grin",
+          "facing": 0,
+          "scale": 0.92,
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five"
+            },
+            "pop": 0.18,
+            "stagger": 0.32
+          }
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "start": {
+        "frame": 1593
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S19",
+      "start": {
+        "frame": 1725
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S20",
+      "start": {
+        "frame": 1836
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S21",
+      "start": {
+        "frame": 1917
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S22",
+      "start": {
+        "frame": 1978
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S23",
+      "start": {
+        "frame": 2080
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "palace"
+      ]
+    },
+    {
+      "id": "S24",
+      "start": {
+        "frame": 2181
+      },
+      "legacy": true,
+      "light": "deep",
+      "sets": [
+        "naga"
+      ]
+    },
+    {
+      "id": "S25",
+      "start": {
+        "frame": 2298
+      },
+      "legacy": true,
+      "light": "night",
+      "sets": [
+        "lac"
+      ],
+      "sun": {
+        "az": 40,
+        "el": 20
+      }
+    },
+    {
+      "id": "S26",
+      "start": {
+        "frame": 2395
+      },
+      "legacy": true,
+      "light": "night",
+      "sets": [
+        "lac"
+      ],
+      "sun": {
+        "az": 70,
+        "el": 18
+      }
+    },
+    {
+      "id": "S27",
+      "start": {
+        "frame": 2511
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "arena"
+      ]
+    },
+    {
+      "id": "S28",
+      "start": {
+        "frame": 2673
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "arena"
+      ]
+    },
+    {
+      "id": "S29",
+      "start": {
+        "frame": 2735
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "arena"
+      ]
+    },
+    {
+      "id": "S30",
+      "start": {
+        "frame": 2798
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "village"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
+    },
+    {
+      "id": "S31",
+      "start": {
+        "frame": 2861
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "village"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
+    },
+    {
+      "id": "S32",
+      "start": {
+        "frame": 2917
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "village"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
+    },
+    {
+      "id": "S33",
+      "start": {
+        "frame": 2999
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "village"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
+    },
+    {
+      "id": "S34",
+      "start": {
+        "frame": 3103
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "palace"
+      ],
+      "sun": {
+        "az": 160,
+        "el": 8
+      }
+    },
+    {
+      "id": "S35",
+      "start": {
+        "frame": 3125
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "village"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 10
+      }
+    },
+    {
+      "id": "S36",
+      "start": {
+        "frame": 3145
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 18
+      }
+    },
+    {
+      "id": "S37",
+      "start": {
+        "frame": 3237
+      },
+      "legacy": true,
+      "light": "day",
+      "sets": [
+        "city"
+      ]
+    },
+    {
+      "id": "S38",
+      "start": {
+        "frame": 3340
+      },
+      "legacy": true,
+      "light": "night",
+      "sets": [
+        "city"
+      ],
+      "sun": {
+        "az": 10,
+        "el": 12
+      }
+    },
+    {
+      "id": "S39",
+      "start": {
+        "frame": 3479
+      },
+      "legacy": true,
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "sun": {
+        "az": 115,
+        "el": 18
+      }
+    }
+  ]
+}
