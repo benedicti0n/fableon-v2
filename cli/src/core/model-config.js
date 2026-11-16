@@ -10,18 +10,23 @@ export function repoModels() {
 
 export function modelForStage(project, stage, repo = repoModels()) {
   const d = repo.default ?? { provider: 'deepseek', model: null };
+  const sd = repo.stageDefaults?.[stage] ?? {};
   const p = project.models?.default ?? d;
   const s = project.models?.[stage] ?? {};
+  const provider = s.provider ?? p.provider ?? sd.provider ?? d.provider;
+  const model = s.model ?? p.model ?? sd.model ?? d.model ?? null;
   return {
-    provider: s.provider ?? p.provider ?? d.provider,
-    model: s.model ?? p.model ?? d.model ?? null,
-    baseUrl: s.baseUrl ?? p.baseUrl ?? repo.providers?.[s.provider ?? p.provider]?.baseUrl ?? null,
-    keyEnv: s.keyEnv ?? p.keyEnv ?? repo.providers?.[s.provider ?? p.provider]?.keyEnv ?? null,
-    temperature: s.temperature ?? p.temperature ?? d.temperature ?? 0.7,
+    provider,
+    model,
+    baseUrl: s.baseUrl ?? p.baseUrl ?? repo.providers?.[provider]?.baseUrl ?? null,
+    keyEnv: s.keyEnv ?? p.keyEnv ?? repo.providers?.[provider]?.keyEnv ?? null,
+    temperature: s.temperature ?? p.temperature ?? sd.temperature ?? d.temperature ?? 0.7,
     maxTokens: s.maxTokens ?? p.maxTokens ?? d.maxTokens ?? 4096,
+    thinking: s.thinking ?? sd.thinking ?? null,
+    reasoningEffort: s.reasoningEffort ?? sd.reasoningEffort ?? null,
     timeoutMs: repo.timeoutMs ?? 120000,
     maxRepairs: repo.maxRepairs ?? 2,
-    prices: repo.prices?.[s.model ?? p.model ?? d.model] ?? null,
+    prices: repo.prices?.[model] ?? null,
   };
 }
 

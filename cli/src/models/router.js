@@ -10,7 +10,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const jitter = () => Math.floor(Math.random() * 120);
 
 export class ModelRouter {
-  constructor(projectDir, project, { noCache = false, signal = null, onEvent = null } = {}) {
+  constructor(projectDir, project, { noCache = false, signal = null, onEvent = null, logCalls = true } = {}) {
     loadDotEnv();
     this.projectDir = projectDir;
     this.project = project;
@@ -18,6 +18,7 @@ export class ModelRouter {
     this.noCache = noCache;
     this.signal = signal;
     this.onEvent = onEvent;
+    this.logCalls = logCalls;
     this.usage = {};
     this.callsByStage = {};
     this.tokensRun = 0;
@@ -99,14 +100,14 @@ export class ModelRouter {
         const res = await fetch(`${base}/chat/completions`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', Authorization: `Bearer ${key}` },
-          body: JSON.stringify({ model, messages, temperature: params.temperature, max_tokens: params.maxTokens, ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
+          body: JSON.stringify({ model, messages, temperature: params.temperature, max_tokens: params.maxTokens, ...(params.thinking ? { thinking: { type: params.thinking } } : {}), ...(params.reasoningEffort ? { reasoning_effort: params.reasoningEffort } : {}), ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
           signal: ctrl.signal,
         });
         if (res.status === 429 || res.status >= 500) throw new Error(`HTTP ${res.status}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
         const j = await res.json();
         const choice = j.choices?.[0];
-        return { content: choice?.message?.content ?? '', finishReason: choice?.finish_reason ?? 'stop', usage: j.usage ?? {}, attempts: attempt + 1 };
+        return { content: choice?.message?.content ?? '', finishReason: choice?.finish_reason ?? 'stop', usage: j.usage ?? {}, hasReasoning: !!choice?.message?.reasoning_content, attempts: attempt + 1 };
       } catch (e) {
         lastErr = e;
         const retriable = /HTTP (429|5\d\d)|timeout|network|fetch failed/i.test(e.message) && !this.signal?.aborted;
@@ -122,16 +123,19 @@ export class ModelRouter {
     return createHash('sha256').update(JSON.stringify({ provider, base, model, messages, params })).digest('hex');
   }
   logCall(entry) {
+    if (!this.logCalls) return;
     const p = join(this.projectDir, 'logs', 'calls.jsonl');
     mkdirSync(join(this.projectDir, 'logs'), { recursive: true });
-    const { stage, provider, model, requestHash, cached, ms, promptTokens, completionTokens, cacheHitTokens, costUsd, finishReason, attempt, ok } = entry;
-    atomicAppend(p, JSON.stringify({ ts: new Date().toISOString(), stage, provider, model, requestHash, cached, ms, promptTokens, completionTokens, ...(cacheHitTokens != null ? { cacheHitTokens } : {}), costUsd: costUsd ?? null, finishReason, attempt, ok }) + '\n');
+    const { stage, provider, model, requestHash, cached, ms, promptTokens, completionTokens, cacheHitTokens, cacheMissTokens, reasoningTokens, reasoningContent, costUsd, finishReason, attempt, ok } = entry;
+    atomicAppend(p, JSON.stringify({ ts: new Date().toISOString(), stage, provider, model, requestHash, cached, ms, promptTokens, completionTokens, ...(cacheHitTokens != null ? { cacheHitTokens } : {}), ...(cacheMissTokens != null ? { cacheMissTokens } : {}), ...(reasoningTokens != null ? { reasoningTokens } : {}), ...(reasoningContent != null ? { reasoningContent } : {}), costUsd: costUsd ?? null, finishReason, attempt, ok }) + '\n');
   }
 
   cost(model, usage) {
     const price = this.repo.prices?.[model];
     if (!price || !usage) return null;
-    return ((usage.prompt_tokens ?? 0) * (price.input ?? 0) + (usage.completion_tokens ?? 0) * (price.output ?? 0)) / 1_000_000;
+    const hit = usage.prompt_cache_hit_tokens ?? usage.prompt_tokens_details?.cached_tokens ?? 0;
+    const miss = usage.prompt_cache_miss_tokens ?? Math.max(0, (usage.prompt_tokens ?? 0) - hit);
+    return (hit * (price.cacheInput ?? price.input ?? 0) + miss * (price.input ?? 0) + (usage.completion_tokens ?? 0) * (price.output ?? 0)) / 1_000_000;
   }
 
   budgetCheck(stage) {
@@ -145,7 +149,7 @@ export class ModelRouter {
     const c = this.config(stage);
     const model = await this.resolveModel(stage);
     const base = this.baseUrl(stage);
-    const p = { temperature: c.temperature, maxTokens: c.maxTokens, jsonMode: params.jsonMode ?? true };
+    const p = { temperature: c.temperature, maxTokens: c.maxTokens, jsonMode: params.jsonMode ?? true, thinking: c.thinking, reasoningEffort: c.reasoningEffort };
     const hash = this.requestHash(c.provider, base, model, messages, p);
     const cacheFile = this.cachePath(hash);
     const t0 = Date.now();
@@ -165,7 +169,7 @@ export class ModelRouter {
     if (cost !== null) u.costUsd = (u.costUsd ?? 0) + cost;
     if (r.finishReason === 'length') throw new Error(`model output truncated (finish_reason=length, completion tokens=${cu}); raise maxTokens`);
     if (r.content) writeJsonArtifactAtomic(cacheFile, JSON.stringify({ content: r.content, usage: r.usage ?? {} }, null, 2) + '\n');
-    this.logCall({ stage, provider: c.provider, model, requestHash: hash, cached: false, ms: Date.now() - t0, promptTokens: pu, completionTokens: cu, cacheHitTokens: r.usage?.prompt_cache_hit_tokens, costUsd: cost, finishReason: r.finishReason, attempt: r.attempts ?? 1, ok: true });
+    this.logCall({ stage, provider: c.provider, model, requestHash: hash, cached: false, ms: Date.now() - t0, promptTokens: pu, completionTokens: cu, cacheHitTokens: r.usage?.prompt_cache_hit_tokens ?? r.usage?.prompt_tokens_details?.cached_tokens, cacheMissTokens: r.usage?.prompt_cache_miss_tokens, reasoningTokens: r.usage?.completion_tokens_details?.reasoning_tokens, reasoningContent: r.hasReasoning, costUsd: cost, finishReason: r.finishReason, attempt: r.attempts ?? 1, ok: true });
     return { content: r.content, usage: r.usage ?? {}, cached: false, finishReason: r.finishReason };
   }
 
