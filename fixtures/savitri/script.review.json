@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "lines": [
+    {
+      "n": 0,
+      "verdict": "ok",
+      "facts": [
+        "F2",
+        "F4"
+      ],
+      "note": "First sentence supported by F2 and F4; fine print is anachronistic joke.",
+      "fix": ""
+    },
+    {
+      "n": 1,
+      "verdict": "ok",
+      "facts": [
+        "F1"
+      ],
+      "note": "Supported by F1.",
+      "fix": ""
+    },
+    {
+      "n": 2,
+      "verdict": "ok",
+      "facts": [
+        "F2",
+        "F3"
+      ],
+      "note": "Supported by F2 and F3.",
+      "fix": ""
+    },
+    {
+      "n": 3,
+      "verdict": "ok",
+      "facts": [
+        "F4"
+      ],
+      "note": "Supported by F4.",
+      "fix": ""
+    },
+    {
+      "n": 4,
+      "verdict": "ok",
+      "facts": [
+        "F5"
+      ],
+      "note": "Supported by F5.",
+      "fix": ""
+    },
+    {
+      "n": 5,
+      "verdict": "ok",
+      "facts": [
+        "F6"
+      ],
+      "note": "Supported by F6.",
+      "fix": ""
+    },
+    {
+      "n": 6,
+      "verdict": "ok",
+      "facts": [
+        "F7",
+        "F9"
+      ],
+      "note": "Supported by F7 and F9 (turn back from F9).",
+      "fix": ""
+    },
+    {
+      "n": 7,
+      "verdict": "ok",
+      "facts": [
+        "F9",
+        "F10"
+      ],
+      "note": "Supported by F9 and F10.",
+      "fix": ""
+    },
+    {
+      "n": 8,
+      "verdict": "ok",
+      "facts": [
+        "F10"
+      ],
+      "note": "Factual part supported by F10; terms and conditions is joke.",
+      "fix": ""
+    },
+    {
+      "n": 9,
+      "verdict": "ok",
+      "facts": [
+        "F11",
+        "F12"
+      ],
+      "note": "Supported by F11 and F12.",
+      "fix": ""
+    },
+    {
+      "n": 10,
+      "verdict": "opinion",
+      "facts": [],
+      "note": "Analogy comparing boons to a loyalty programme; not a factual claim.",
+      "fix": ""
+    },
+    {
+      "n": 11,
+      "verdict": "opinion",
+      "facts": [],
+      "note": "Framing/interpretation of her strategy; not a factual claim.",
+      "fix": ""
+    },
+    {
+      "n": 12,
+      "verdict": "ok",
+      "facts": [
+        "F13"
+      ],
+      "note": "Factual part supported by F13; trap line is joke.",
+      "fix": ""
+    },
+    {
+      "n": 13,
+      "verdict": "ok",
+      "facts": [
+        "F14"
+      ],
+      "note": "Supported by F14.",
+      "fix": ""
+    },
+    {
+      "n": 14,
+      "verdict": "ok",
+      "facts": [
+        "F15"
+      ],
+      "note": "Supported by F15.",
+      "fix": ""
+    },
+    {
+      "n": 15,
+      "verdict": "ok",
+      "facts": [
+        "F16"
+      ],
+      "note": "Supported by F16.",
+      "fix": ""
+    },
+    {
+      "n": 16,
+      "verdict": "opinion",
+      "facts": [],
+      "note": "Extended metaphor about fine print/contract; not a factual claim.",
+      "fix": ""
+    }
+  ]
+}

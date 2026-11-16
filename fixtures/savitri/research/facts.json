@@ -1,0 +1,254 @@
+{
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "Savitri was a princess who chose her own husband rather than having one arranged for her.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Surely it was on this very business that she had been sent, and she returneth now (from her search)."
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F2",
+      "claim": "The sage Narada warned that Satyavan had exactly one defect: he would die within a year.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "He hath one only defect that hath overwhelmed all his virtues."
+        },
+        {
+          "source": "S1",
+          "quote": "Within a year from this day, Satyavan, endued with a short life will cast off his body!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F3",
+      "claim": "Told to pick another husband, Savitri refused, saying she would only choose once.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Indeed, with a life short or long, possessed of virtues or bereft of them, I have, for once, selected my husband. Twice I shall not select."
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F4",
+      "claim": "Savitri married Satyavan in the forest hermitage and lived there as an ascetic, but she counted the days to his foretold death.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "But the words spoken by Narada were present night and day in the mind of the sorrowful Savitri."
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F5",
+      "claim": "On the predicted day, Satyavan went into the forest to cut wood, and Savitri insisted on going with him.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "It behoveth thee not to go alone! I will accompany thee. I cannot bear to be separated from thee!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F6",
+      "claim": "Satyavan grew weak and laid his head in Savitri's lap, and then Yama himself appeared, dressed in red, carrying a noose.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "The next moment she saw a person clad in red attire with his head decked with a diadem."
+        },
+        {
+          "source": "S1",
+          "quote": "And he was of a darkish hue, had red eyes, carried a noose in his hand, and was dreadful to behold."
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F7",
+      "claim": "Savitri asked Yama why he had come in person instead of sending his usual messengers.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "I had heard that thy emissaries come to take away mortals, O worshipful one! Why then, O lord, hast thou come in person?"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F8",
+      "claim": "Yama pulled Satyavan's soul from his body and headed south; Savitri followed him on foot.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "And binding Satyavan's vital essence, Yama proceeded in a southerly direction."
+        },
+        {
+          "source": "S1",
+          "quote": "began to follow Yama"
+        }
+      ],
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "F9",
+      "claim": "Yama told her to turn back, and she refused, arguing that walking seven steps with someone creates a friendship.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Desist, O Savitri! Go back, and perform the funeral obsequies of thy lord!"
+        },
+        {
+          "source": "S1",
+          "quote": "by walking only seven paces with another, one contracteth a friendship with one's companion"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F10",
+      "claim": "Pleased with her reasoning, Yama offered her any boon except her husband's life — and she asked for her blind father-in-law's sight.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Except the life of thy husband, O thou of faultless features, I will bestow on thee any boon that thou mayst solicit!"
+        },
+        {
+          "source": "S1",
+          "quote": "Let that king through thy favour attain his eye-sight, and become strong 'like either fire or the Sun!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F11",
+      "claim": "Her second boon was that her father-in-law regain his lost kingdom.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "May that monarch regain his kingdom. And may that superior of mine never renounce his duties!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F12",
+      "claim": "Her third boon was a hundred sons for her own father, to continue his line.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "That he may have a hundred sons begotten of his loins, so that his line may be perpetuated, is the third boon I would ask of thee!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F13",
+      "claim": "Her fourth boon was a hundred sons born to herself and Satyavan — granted while Satyavan was still dead.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Both of me and Satyavan's loins, begotten by both of us, let there be a century of sons possessed of strength and prowess and capable of perpetuating our race!"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F14",
+      "claim": "The loophole: she pointed out that the promised sons could not exist without their father, so Yama's own boon required Satyavan to live.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "the boon thou hast already given me is incapable of accomplishment without union with my husband"
+        },
+        {
+          "source": "S1",
+          "quote": "I ask for this boon, 'May Satyavan be restored to life, for by that thy words will be made true.'"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F15",
+      "claim": "Yama conceded, untied his noose, and granted Satyavan a life of four hundred years.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Vivaswat's son, Yama, the dispenser of justice, untied his noose"
+        },
+        {
+          "source": "S1",
+          "quote": "And along with thee, he will attain a life of four hundred years."
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F16",
+      "claim": "Satyavan woke on her lap, thinking he had merely slept long, and asked where the dark figure had gone.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Alas, I have slept long! Wherefore didst thou not awake me? And where is that same sable person that was dragging me away?"
+        }
+      ],
+      "confidence": "high",
+      "verified": true
+    },
+    {
+      "id": "F17",
+      "claim": "Savitri later told the assembled sages that she won five boons from Yama by praising him with truthful words.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Thereupon I began to praise that august god, with truthful words. And he granted me five boons, of do ye hear from me!"
+        }
+      ],
+      "confidence": "high",
+      "verified": false
+    }
+  ],
+  "version": 1
+}

@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "seconds": 90,
+  "wps": 3.75,
+  "title": "Savitri and Satyavan",
+  "characters": [
+    {
+      "id": "savitri",
+      "name": "Savitri",
+      "role": "princess who follows Death",
+      "look": "Royal young woman in simple forest sari, steady eyes"
+    },
+    {
+      "id": "satyavan",
+      "name": "Satyavan",
+      "role": "doomed husband and woodcutter",
+      "look": "Strong young man in ascetic clothes, short beard"
+    },
+    {
+      "id": "yama",
+      "name": "Yama",
+      "role": "god of death",
+      "look": "Tall red-robed figure with a coiled noose, calm but exact"
+    }
+  ],
+  "names": [
+    {
+      "word": "Savitri",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "Satyavan",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "Yama",
+      "phonemes": null,
+      "suggested": true
+    }
+  ],
+  "lines": [
+    {
+      "n": 0,
+      "text": "A princess married a man doomed to die in one year. She read fine print.",
+      "beat": "hook",
+      "facts": [
+        "F2"
+      ],
+      "look": {
+        "set": "palace",
+        "who": [
+          "savitri"
+        ],
+        "note": "Savitri stands in the courtyard, holding a palm leaf"
+      }
+    },
+    {
+      "n": 1,
+      "text": "Princess Savitri chose her own husband rather than having one arranged for her.",
+      "beat": "setting",
+      "facts": [
+        "F1"
+      ],
+      "look": {
+        "set": "palace",
+        "who": [
+          "savitri"
+        ],
+        "note": "Savitri faces the courtyard gate, determined"
+      }
+    },
+    {
+      "n": 2,
+      "text": "The sage warned that Satyavan had one defect: he would die within a year, but Savitri refused to choose twice.",
+      "beat": "setting",
+      "facts": [
+        "F2",
+        "F3"
+      ],
+      "look": {
+        "set": "hermitage",
+        "who": [
+          "savitri"
+        ],
+        "note": "Savitri listens by the banyan tree, arms folded"
+      }
+    },
+    {
+      "n": 3,
+      "text": "Savitri married Satyavan in the forest hermitage and lived there as an ascetic, counting every day until the promised death date.",
+      "beat": "action",
+      "facts": [
+        "F4"
+      ],
+      "look": {
+        "set": "hermitage",
+        "who": [
+          "savitri",
+          "satyavan"
+        ],
+        "note": "They walk together near the hut, Savitri glancing at the sky"
+      }
+    },
+    {
+      "n": 4,
+      "text": "On the predicted day, Satyavan went into the forest to cut wood, and Savitri insisted on going with him.",
+      "beat": "action",
+      "facts": [
+        "F5"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "satyavan"
+        ],
+        "note": "Satyavan carries an axe, Savitri matches his pace"
+      }
+    },
+    {
+      "n": 5,
+      "text": "Satyavan grew weak and laid his head in Savitri's lap; then Yama himself appeared in red, carrying a noose.",
+      "beat": "action",
+      "facts": [
+        "F6"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "satyavan",
+          "yama"
+        ],
+        "note": "Satyavan lies pale, Yama steps out from the trees"
+      }
+    },
+    {
+      "n": 6,
+      "text": "Savitri asked Yama why he came in person instead of sending his usual messengers; he told her to turn back.",
+      "beat": "action",
+      "facts": [
+        "F7"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Yama points back, Savitri stands firm"
+      }
+    },
+    {
+      "n": 7,
+      "text": "She refused, arguing that seven steps with someone creates friendship, so Yama offered her any boon except her husband's life.",
+      "beat": "snap",
+      "facts": [
+        "F9",
+        "F10"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri holds up seven fingers, Yama tilts his head"
+      }
+    },
+    {
+      "n": 8,
+      "text": "Luckily, Savitri had already read the terms and conditions; she asked for her blind father-in-law's sight as her first wish.",
+      "beat": "deadpan",
+      "facts": [
+        "F10"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri counts one on her fingers, Yama listens"
+      }
+    },
+    {
+      "n": 9,
+      "text": "Unluckily, Yama kept granting wishes, so she asked for her father-in-law's lost kingdom and then a hundred sons for her father.",
+      "beat": "deadpan",
+      "facts": [
+        "F11",
+        "F12"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri adds wishes on her fingers, Yama nods slowly"
+      }
+    },
+    {
+      "n": 10,
+      "text": "It was like a loyalty programme: every clever answer earned a wish, but the catalogue excluded her husband's life.",
+      "beat": "explain",
+      "facts": [],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri gestures like reading fine print"
+      }
+    },
+    {
+      "n": 11,
+      "text": "She kept adding family benefits: sight, a kingdom, a hundred sons for her father, stacking small asks before the big one.",
+      "beat": "explain",
+      "facts": [],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri ticks items off on her fingers"
+      }
+    },
+    {
+      "n": 12,
+      "text": "Then she asked for a hundred sons for herself and Satyavan though he was dead—trap no fine print could dodge.",
+      "beat": "explain",
+      "facts": [
+        "F13"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri smiles, Yama pauses mid-grant"
+      }
+    },
+    {
+      "n": 13,
+      "text": "She pointed out the promised sons could not exist without their father, so Yama's own boon required Satyavan to live.",
+      "beat": "consequence",
+      "facts": [
+        "F14"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "note": "Savitri points at Satyavan's body, Yama frowns"
+      }
+    },
+    {
+      "n": 14,
+      "text": "Yama conceded, untied his noose, and granted Satyavan a life of four hundred years.",
+      "beat": "consequence",
+      "facts": [
+        "F15"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "yama",
+          "satyavan",
+          "savitri"
+        ],
+        "note": "Yama releases the noose, light returns to Satyavan"
+      }
+    },
+    {
+      "n": 15,
+      "text": "Satyavan woke on her lap, thinking he had merely slept long, and asked where the dark figure had gone.",
+      "beat": "consequence",
+      "facts": [
+        "F16"
+      ],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "satyavan"
+        ],
+        "note": "Satyavan sits up, rubbing his eyes; Savitri helps him"
+      }
+    },
+    {
+      "n": 16,
+      "text": "The fine print didn't save him; she read it, argued every clause, and Yama signed the revised terms in red ink.",
+      "beat": "twist",
+      "facts": [],
+      "look": {
+        "set": "deer",
+        "who": [
+          "savitri",
+          "satyavan",
+          "yama"
+        ],
+        "note": "Savitri stands over Satyavan; Yama fades at the edge"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "id": "savitri",
+  "title": "Savitri and Satyavan",
+  "topic": "Savitri and Satyavan: the princess who out-argued Death",
+  "seconds": 90,
+  "language": "en",
+  "voice": {
+    "engine": "kokoro",
+    "voice": "am_michael",
+    "speed": 1.35
+  },
+  "research": {
+    "web": false,
+    "maxSources": 8
+  },
+  "models": {
+    "default": {
+      "provider": "deepseek",
+      "model": null
+    },
+    "script": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinking": "enabled",
+      "reasoningEffort": "high",
+      "maxTokens": 12000
+    },
+    "factcheck": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinking": "enabled",
+      "reasoningEffort": "high",
+      "maxTokens": 24000
+    }
+  },
+  "autopilot": false
+}
