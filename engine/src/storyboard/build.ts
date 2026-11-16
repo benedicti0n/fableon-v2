@@ -174,6 +174,11 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         const d = offs[i] ?? [0, 0, 0];
         fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k);
       }
+    } else if (e.kind === "sweat") {
+      if (f >= a) for (let i = 0, n = e.count ?? 1; i < n; i++) {
+        const ph = (((T(f) * (e.rate ?? 1) + i / n) % 1) + 1) % 1, size = e.size ?? 0.12;
+        fx(out, "sweat", 128, 128, (p) => p.ell(64, 64, 18, 26, "#9fd4ff", 5), pos[0] + (e.spread ?? 0) * i, pos[1] - (e.drop ?? 0) * ph, pos[2], size, size);
+      }
     } else if (e.kind === "halo") {
       const k = pop(T(f), T(a), e.pop ?? 0.4), size = (e.size ?? 2.8) * k;
       fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0"), pos[0], pos[1], pos[2], size, size, { kind: e.card ?? "soft" });

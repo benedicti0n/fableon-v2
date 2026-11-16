@@ -397,15 +397,158 @@
       "start": {
         "frame": 0
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
       ],
-      "sun": {
-        "az": 115,
-        "el": 18
-      }
+      "camera": [
+        {
+          "at": {
+            "frame": 0
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.2,
+              0.85,
+              -2.6
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.75,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "frame": 0
+            },
+            "rate": 0.003
+          }
+        },
+        {
+          "at": {
+            "line": 0,
+            "word": "god",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              -0.1,
+              0.8,
+              -1.9
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.82,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 0,
+              "word": "god",
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "dur": 20,
+          "roll": 0.035
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 0
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "neutral",
+          "params": {
+            "writeSpeed": 2.4,
+            "look": -0.6,
+            "down": 1
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 0,
+                "word": "typist",
+                "offset": 1
+              },
+              "expr": "smile_closed"
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "talk",
+          "seated": true,
+          "talk": {
+            "base": "neutral",
+            "rate": 1
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": {
+            "keys": [
+              [
+                {
+                  "shot": true,
+                  "offset": 0
+                },
+                0.05
+              ],
+              [
+                {
+                  "shot": true,
+                  "offset": 120
+                },
+                0.3
+              ]
+            ],
+            "ease": "linear"
+          }
+        }
+      ]
     },
     {
       "id": "L1",
@@ -811,15 +954,186 @@
         "word": "So",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
       ],
-      "sun": {
-        "az": 115,
-        "el": 18
-      }
+      "camera": [
+        {
+          "at": {
+            "line": 3,
+            "word": "So",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "HERM",
+            "d": [
+              -0.15,
+              1.45,
+              -7.2
+            ]
+          },
+          "look": {
+            "at": "HERM",
+            "d": [
+              -0.2,
+              1.05,
+              0
+            ]
+          },
+          "fov": 44,
+          "push": {
+            "from": {
+              "line": 3,
+              "word": "So",
+              "offset": -2
+            },
+            "rate": 0.002
+          }
+        },
+        {
+          "at": {
+            "line": 3,
+            "word": "stop",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.1,
+              1.0,
+              -1.9
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.95,
+              0
+            ]
+          },
+          "fov": 36,
+          "push": {
+            "from": {
+              "line": 3,
+              "word": "stop",
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 3,
+              "word": "stop",
+              "offset": -2
+            }
+          },
+          "cut": true,
+          "roll": 0.04
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 3,
+            "word": "So",
+            "offset": -2
+          },
+          "cInf": 0
+        },
+        {
+          "at": {
+            "line": 3,
+            "word": "stop",
+            "offset": -2
+          },
+          "cInf": 13
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "neutral",
+          "params": {
+            "writeSpeed": 2.0,
+            "ear": 0
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 3,
+                "word": "knotty"
+              },
+              "expr": "stern",
+              "params": {
+                "write": 0.1,
+                "puzzled": 1
+              }
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "talk",
+          "seated": true,
+          "facing": 1,
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 3,
+                "word": "drop",
+                "offset": -2
+              },
+              "pose": "drink",
+              "prop": "jar",
+              "expr": "smile_closed"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "knot",
+          "at": {
+            "line": 3,
+            "word": "knotty"
+          },
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.1,
+              1.75,
+              -0.05
+            ]
+          },
+          "size": 0.55,
+          "pop": 0.18,
+          "bob": 0.05
+        }
+      ]
     },
     {
       "id": "S5",
@@ -2279,15 +2593,113 @@
         "word": "even",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
       ],
-      "sun": {
-        "az": 115,
-        "el": 18
-      }
+      "camera": [
+        {
+          "at": {
+            "line": 33,
+            "word": "even",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.05,
+              0.95,
+              -2.5
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.85,
+              0
+            ]
+          },
+          "fov": 40,
+          "push": {
+            "from": {
+              "line": 33,
+              "word": "even",
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 33,
+              "word": "costs",
+              "offset": -2
+            }
+          }
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 33,
+            "word": "even",
+            "offset": -2
+          },
+          "cInf": 10
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "pained",
+          "params": {
+            "writeSpeed": 2.6,
+            "look": -0.6,
+            "down": 1
+          }
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sweat",
+          "at": {
+            "line": 33,
+            "word": "even",
+            "offset": -2
+          },
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.55,
+              1.45,
+              -0.3
+            ]
+          },
+          "count": 3,
+          "rate": 0.8,
+          "spread": 0.1,
+          "drop": 0.5,
+          "size": 0.12
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": 1.3
+        }
+      ]
     },
     {
       "id": "S37",
@@ -2326,15 +2738,217 @@
         "word": "Oh",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
       ],
-      "sun": {
-        "az": 115,
-        "el": 18
-      }
+      "camera": [
+        {
+          "at": {
+            "line": 36,
+            "word": "Oh",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0.15,
+              0.75,
+              -2.3
+            ]
+          },
+          "look": {
+            "at": "VY",
+            "d": [
+              0,
+              0.72,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 36,
+              "word": "Oh",
+              "offset": -2
+            },
+            "rate": 0.0025,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 36,
+              "word": "dictating",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "at": {
+            "line": 36,
+            "word": "grandfather",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0.1,
+              0.95,
+              -2.1
+            ]
+          },
+          "look": {
+            "at": "GN",
+            "d": [
+              0,
+              0.92,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 36,
+              "word": "grandfather",
+              "offset": -2
+            },
+            "rate": 0.003
+          },
+          "cut": true,
+          "roll": -0.04
+        },
+        {
+          "at": {
+            "end": true,
+            "offset": 4
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "HERM",
+            "d": [
+              -0.2,
+              1.45,
+              -7.4
+            ]
+          },
+          "look": {
+            "at": "HERM",
+            "d": [
+              -0.2,
+              1.05,
+              0
+            ]
+          },
+          "fov": 44,
+          "push": {
+            "from": {
+              "end": true,
+              "offset": 4
+            },
+            "rate": 0.003
+          },
+          "cut": true
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 36,
+            "word": "Oh",
+            "offset": -2
+          },
+          "cInf": 12
+        },
+        {
+          "at": {
+            "end": true,
+            "offset": 4
+          },
+          "cInf": 0
+        }
+      ],
+      "actors": [
+        {
+          "who": "ganesha",
+          "pos": {
+            "at": "GN",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "special": "ganesha",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "expr": "neutral",
+          "params": {
+            "writeSpeed": 2.0,
+            "look": -0.6,
+            "down": 1,
+            "pen": true
+          },
+          "beats": [
+            {
+              "at": {
+                "line": 36,
+                "word": "grandfather",
+                "offset": -2
+              },
+              "expr": "shock",
+              "params": {
+                "write": 0.2,
+                "pen": false,
+                "look": 0.6,
+                "down": 0
+              }
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": {
+            "at": "VY",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "sit",
+          "seated": true,
+          "facing": 1,
+          "expr": "smile",
+          "look": 0,
+          "beats": [
+            {
+              "at": {
+                "line": 36,
+                "word": "dictating"
+              },
+              "pose": "talk",
+              "talk": {
+                "base": "smile",
+                "rate": 1
+              }
+            },
+            {
+              "at": {
+                "end": true
+              },
+              "expr": "smile_closed",
+              "talk": null
+            }
+          ]
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": 1.4
+        }
+      ]
     }
   ]
 }

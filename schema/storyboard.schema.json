@@ -489,6 +489,23 @@
             "pop": { "type": "number", "exclusiveMinimum": 0 },
             "bob": { "type": "number" }
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "sweat" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "count": { "type": "integer", "minimum": 1 },
+            "rate": { "type": "number" },
+            "spread": { "type": "number" },
+            "drop": { "type": "number" },
+            "size": { "type": "number", "exclusiveMinimum": 0 }
+          }
         }
       ]
     },

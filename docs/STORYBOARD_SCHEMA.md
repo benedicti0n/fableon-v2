@@ -110,12 +110,13 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 }
 ```
 
-## Effect (unlit cards; Phase 2A implements the first three)
+## Effect (unlit cards; implemented kinds are sparkle, halo, knot and sweat)
 ```jsonc
 { "kind": "sparkle", "id": null, "motion": null, "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
 { "kind": "halo", "at": Anchor, "pos": Point, "size": 2.8, "pop": 0.4, "color": "#fff0a0", "card": "soft" }
 { "kind": "knot", "at": Anchor, "pos": Point, "size": 0.55, "pop": 0.18, "bob": 0.05 }
-// 2B adds: heart, emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, petals, fire(spots|treetops), smoke, pigeon(path), mango, sweat, lump ...
+{ "kind": "sweat", "at": Anchor, "pos": Point, "count": 3, "rate": 0.8, "spread": 0.1, "drop": 0.5, "size": 0.12 }
+// 2B adds: heart, emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, petals, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
 ```
 
 ## SetAction (dynamic set pieces)

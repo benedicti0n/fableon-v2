@@ -48,7 +48,8 @@ export type Sparkle = {
 };
 export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire" };
 export type Knot = { kind: "knot"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
-export type Effect = Sparkle | Halo | Knot;
+export type Sweat = { kind: "sweat"; id?: string; motion?: Motion; at: Anchor; pos: Point; count?: number; rate?: number; spread?: number; drop?: number; size?: number };
+export type Effect = Sparkle | Halo | Knot | Sweat;
 export type SetAction = { piece: "pages"; height?: Animated };
 export type Shot = {
   id: string; start: Anchor; legacy?: boolean; light: "day" | "golden" | "night" | "deep"; sets: string[];
