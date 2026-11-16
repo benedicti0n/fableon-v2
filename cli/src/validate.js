@@ -54,7 +54,7 @@ export function validateStoryboard(dirArg) {
   const walk = (v, path, inShot) => {
     if (Array.isArray(v)) { v.forEach((x, i) => walk(x, `${path}/${i}`, inShot)); return; }
     if (!v || typeof v !== 'object') return;
-    if (v.line !== undefined || v.end !== undefined || v.shot !== undefined || (v.frame !== undefined && Object.keys(v).every((k) => ['frame', 'offset'].includes(k)))) {
+    if (v.line !== undefined || v.end === true || v.shot === true || (v.frame !== undefined && Object.keys(v).every((k) => ['frame', 'offset'].includes(k)))) {
       if (v.line !== undefined) {
         if (typeof v.word !== 'string' || typeof v.line !== 'number') return;
         const hits = words.filter((w) => w.line === v.line && norm(w.w) === norm(v.word));

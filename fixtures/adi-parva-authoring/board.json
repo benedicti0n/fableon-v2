@@ -1,16 +1,39 @@
 {
   "version": 1,
+  "partial": true,
   "fps": 30,
   "tailFrames": 36,
   "crossfade": 10,
   "cast": {
-    "fisher": {
-      "spec": "C.fisher",
-      "seed": 4
+    "ganesha": {
+      "spec": {
+        "skin": "#f2b49c"
+      },
+      "seed": 77
+    },
+    "vyasa": {
+      "spec": "C.vyasa",
+      "seed": 1
+    },
+    "shantanu": {
+      "spec": "C.shantanu",
+      "seed": 2
     },
     "satyavati": {
       "spec": "C.satyavati",
       "seed": 3
+    },
+    "fisher": {
+      "spec": "C.fisher",
+      "seed": 4
+    },
+    "devavrata": {
+      "spec": "C.devavrata",
+      "seed": 5
+    },
+    "bhishmaOld": {
+      "spec": "C.bhishmaOld",
+      "seed": 6
     },
     "dhritarashtra": {
       "spec": "C.dhritarashtra",
@@ -19,6 +42,46 @@
     "pandu": {
       "spec": "C.pandu",
       "seed": 8
+    },
+    "sage": {
+      "spec": "C.sage",
+      "seed": 9
+    },
+    "kunti": {
+      "spec": "C.kunti",
+      "seed": 10
+    },
+    "madri": {
+      "spec": "C.madri",
+      "seed": 11
+    },
+    "gandhari": {
+      "spec": "C.gandhari",
+      "seed": 12
+    },
+    "kidYudhi": {
+      "spec": "KIDS.yudhi",
+      "seed": 20
+    },
+    "kidBhima": {
+      "spec": "KIDS.bhima",
+      "seed": 21
+    },
+    "kidArjuna": {
+      "spec": "KIDS.arjuna",
+      "seed": 22
+    },
+    "kidNakula": {
+      "spec": "KIDS.nakula",
+      "seed": 23
+    },
+    "kidSahadeva": {
+      "spec": "KIDS.sahadeva",
+      "seed": 24
+    },
+    "duryodhana": {
+      "spec": "C.duryodhana",
+      "seed": 30
     },
     "bro0": {
       "spec": "KIDS.yudhi",
@@ -40,23 +103,165 @@
       "spec": "KIDS.sahadeva",
       "seed": 24
     },
+    "priest": {
+      "spec": "C.priest",
+      "seed": 40
+    },
+    "king1": {
+      "spec": "C.king1",
+      "seed": 50
+    },
+    "king2": {
+      "spec": "C.king2",
+      "seed": 51
+    },
+    "draupadi": {
+      "spec": "C.draupadi",
+      "seed": 60
+    },
+    "babyK0": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyK1": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyK2": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyM0": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyM1": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
     "deer": {
       "spec": {
         "skin": "#b9773f"
       },
       "seed": 0
     },
-    "sage": {
-      "spec": "C.sage",
-      "seed": 9
+    "kidDuryodhana": {
+      "spec": "KIDS.duryodhana",
+      "seed": 100
     },
-    "kunti": {
-      "spec": "C.kunti",
-      "seed": 10
+    "kidDuhshala": {
+      "spec": "KIDS.duhshala",
+      "seed": 106
     },
-    "draupadi": {
-      "spec": "C.draupadi",
-      "seed": 60
+    "kaurava1": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#5a3f8a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 101
+    },
+    "kaurava2": {
+      "spec": {
+        "skin": "#ffdcbc",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#8a3f6a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 102
+    },
+    "kaurava3": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#6a4f9a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 103
+    },
+    "kaurava4": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#4a3f7a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 104
+    },
+    "kaurava5": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#7a3f9a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 105
+    },
+    "kaurava6": {
+      "spec": {
+        "skin": "#ffdcbc",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#5a3f8a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 106
+    },
+    "kidDuryodhana103": {
+      "spec": "KIDS.duryodhana",
+      "seed": 103
+    },
+    "naga1": {
+      "spec": {
+        "skin": "#3f9a6a"
+      },
+      "seed": 0
+    },
+    "naga2": {
+      "spec": {
+        "skin": "#6a4fb5"
+      },
+      "seed": 0
+    },
+    "naga3": {
+      "spec": {
+        "skin": "#2f7a9a"
+      },
+      "seed": 0
+    },
+    "naga4": {
+      "spec": {
+        "skin": "#b5344a"
+      },
+      "seed": 0
     },
     "priestBro0": {
       "spec": {
@@ -119,6 +324,73 @@
       },
       "seed": 35
     },
+    "adult0": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#e8b53a",
+        "head": "hair",
+        "hairCol": "#2a1a1e",
+        "necklace": "#e8b53a"
+      },
+      "seed": 31
+    },
+    "adult1": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "big",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#c8342e",
+        "head": "hair",
+        "hairCol": "#2a1a1e",
+        "moustache": "#2a1a1e"
+      },
+      "seed": 32
+    },
+    "adult2": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#3f6fb5",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 33
+    },
+    "adult3": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "slim",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#2f8a5a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 34
+    },
+    "adult4": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "slim",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#e07a2e",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 35
+    },
     "kingA0": {
       "spec": "C.king1",
       "seed": 50
@@ -159,25 +431,286 @@
       "spec": "C.king2",
       "seed": 59
     },
+    "priestArjuna": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "drape": "#f2deb0",
+        "head": "topknot",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 33
+    },
+    "kingShake": {
+      "spec": "C.king2",
+      "seed": 52
+    },
     "agni": {
       "spec": {
         "skin": "#e0533a"
       },
       "seed": 0
     },
-    "kidDuryodhana": {
-      "spec": "KIDS.duryodhana",
-      "seed": 100
-    },
-    "kidDuhshala": {
-      "spec": "KIDS.duhshala",
-      "seed": 106
+    "pot": {
+      "spec": {
+        "skin": "#c8774a"
+      },
+      "seed": 0
     }
+  },
+  "groups": {
+    "brothers": [
+      "bro0",
+      "bro1",
+      "bro2",
+      "bro3",
+      "bro4"
+    ],
+    "priests": [
+      "priestBro0",
+      "priestBro1",
+      "priestBro2",
+      "priestBro3",
+      "priestBro4"
+    ],
+    "kingsLeft": [
+      "kingA0",
+      "kingA1",
+      "kingA2",
+      "kingA3",
+      "kingA4"
+    ],
+    "kingsRight": [
+      "kingA5",
+      "kingA6",
+      "kingA7",
+      "kingA8",
+      "kingA9"
+    ]
   },
   "shots": [
     {
+      "id": "S1",
+      "start": "f0",
+      "end": "1.Vyasa",
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "ganesha",
+          "special": "ganesha",
+          "at": "hermitage.desk",
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "params": {
+            "writeSpeed": 2.4,
+            "look": -0.6,
+            "down": 1
+          },
+          "do": [
+            [
+              "0.typist+1f",
+              {
+                "expr": "smile_closed"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "vyasa",
+          "at": "hermitage.mat",
+          "pose": "talk",
+          "seated": true,
+          "talk": {
+            "base": "neutral",
+            "rate": 1
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": {
+            "keys": [
+              [
+                "shot",
+                0.05
+              ],
+              [
+                "shot+4s",
+                0.3
+              ]
+            ],
+            "ease": "linear"
+          }
+        }
+      ],
+      "camera": [
+        {
+          "at": "f0",
+          "size": "full",
+          "on": [
+            "ganesha"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "start": "4.Our",
+      "end": "5.Her",
+      "light": "day",
+      "sets": [
+        "palace",
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "shantanu",
+          "at": "palace.ghat",
+          "nudge": [
+            -1.6,
+            0,
+            -0.2
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "facing": "right",
+          "do": [
+            [
+              "4.falling",
+              {
+                "pose": "pray",
+                "expr": "smile_closed"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "satyavati",
+          "id": "satyavati",
+          "at": "palace.boat",
+          "pos": "palace.boat",
+          "motion": {
+            "type": "path",
+            "ease": "linear",
+            "keys": [
+              [
+                "shot",
+                "palace.boat"
+              ],
+              [
+                "shot+2.87s",
+                {
+                  "mark": "palace.boat",
+                  "nudge": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ]
+            ]
+          },
+          "pose": "carry",
+          "prop": "oar",
+          "expr": "smile",
+          "facing": "left",
+          "noBlob": true
+        }
+      ],
+      "fx": [
+        {
+          "kind": "heart",
+          "at": "4.falling",
+          "pos": {
+            "mark": "palace.ghat",
+            "nudge": [
+              -1.6,
+              2.7,
+              -0.5
+            ]
+          },
+          "size": 0.8,
+          "pop": 0.18,
+          "bob": {
+            "amp": 0.1,
+            "freq": 0.954929658
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "boat",
+          "id": "boat",
+          "motion": {
+            "type": "path",
+            "ease": "linear",
+            "keys": [
+              [
+                "shot",
+                "palace.boat"
+              ],
+              [
+                "shot+2.87s",
+                {
+                  "mark": "palace.boat",
+                  "nudge": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ]
+            ],
+            "bob": {
+              "amp": 0.05,
+              "freq": 0.318309886
+            }
+          },
+          "yaw": 8.594,
+          "rollBob": {
+            "amp": 0.02,
+            "freq": 0.318309886
+          }
+        }
+      ],
+      "camera": [
+        {
+          "at": "4.Our",
+          "size": "wide",
+          "on": [
+            "shantanu",
+            "satyavati"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "4.fisherman's",
+          "size": "medium",
+          "on": [
+            "satyavati"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "follow",
+          "cut": true
+        }
+      ]
+    },
+    {
       "id": "L5",
       "start": "5.Her",
+      "end": "6.Problem",
       "light": "day",
       "sets": [
         "village"
@@ -185,20 +718,18 @@
       "actors": [
         {
           "cast": "fisher",
+          "at": "village.front",
+          "nudge": [
+            0.4,
+            0,
+            0
+          ],
           "pose": "fold",
           "expr": "stern",
-          "pos": {
-            "at": "FA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
           "facing": "left",
           "do": [
             [
-              "5.her",
+              "5.father's",
               {
                 "pose": "vow",
                 "talk": {
@@ -211,32 +742,20 @@
         },
         {
           "cast": "satyavati",
+          "at": "village.front",
+          "nudge": [
+            1.5,
+            0,
+            -0.5
+          ],
           "pose": "stand",
           "expr": "smile",
-          "pos": {
-            "at": "SA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
           "facing": "left"
-        }
-      ],
-      "dof": [
-        {
-          "at": "f508",
-          "cInf": 8
-        },
-        {
-          "at": "5.her",
-          "cInf": 13
         }
       ],
       "camera": [
         {
-          "at": "f508",
+          "at": "5.Her",
           "size": "medium",
           "on": [
             "fisher"
@@ -244,64 +763,57 @@
           "angle": "eye",
           "side": "front",
           "move": "push"
+        },
+        {
+          "at": "5.father's",
+          "size": "medium",
+          "on": [
+            "satyavati"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "cut": true
         }
       ]
     },
     {
       "id": "L12",
       "start": "12.A",
-      "light": "day",
+      "end": "13.Pandu",
+      "light": "golden",
       "sets": [
         "palace"
       ],
       "actors": [
         {
           "cast": "dhritarashtra",
+          "at": "palace.courtyard",
+          "nudge": [
+            -1.15,
+            0,
+            5
+          ],
           "pose": "stand",
           "expr": "neutral",
-          "pos": {
-            "at": "DH",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "right"
+          "facing": "left"
         },
         {
           "cast": "pandu",
-          "pose": "hold",
+          "at": "palace.courtyard",
+          "nudge": [
+            1.15,
+            0,
+            5
+          ],
+          "pose": "stand",
           "expr": "smile",
-          "prop": "bow",
-          "pos": {
-            "at": "PD",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "left",
-          "do": [
-            [
-              "12.king",
-              {
-                "expr": "grin"
-              }
-            ]
-          ]
-        }
-      ],
-      "dof": [
-        {
-          "at": "f1105",
-          "cInf": 14
+          "facing": "right"
         }
       ],
       "camera": [
         {
-          "at": "f1105",
+          "at": "12.A",
           "size": "medium",
           "on": [
             "dhritarashtra"
@@ -319,14 +831,15 @@
           "angle": "eye",
           "side": "front",
           "move": "glide",
-          "cut": true,
-          "glide": 0.8
+          "glide": 0.8,
+          "cut": true
         }
       ]
     },
     {
       "id": "S14",
       "start": "13.Pandu",
+      "end": "14.Conveniently",
       "light": "day",
       "sets": [
         "deer"
@@ -335,21 +848,13 @@
         {
           "cast": "deer",
           "special": "deer",
-          "params": {
-            "graze": 1,
-            "phase": 0
-          },
+          "at": "deer.deer",
           "scale": 1.1,
           "mirror": true,
           "blobScale": 1.6,
-          "expr": "neutral",
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              0,
-              0
-            ]
+          "params": {
+            "graze": 1,
+            "phase": 0
           },
           "enter": "13.Pandu",
           "exit": "13.secretly",
@@ -367,20 +872,12 @@
         },
         {
           "cast": "sage",
-          "mirror": true,
+          "at": "deer.sage",
           "pose": "hips",
           "expr": "stern",
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
           "facing": "right",
+          "mirror": true,
           "enter": "13.secretly",
-          "exit": "end",
           "do": [
             [
               "13.The",
@@ -392,26 +889,19 @@
         },
         {
           "cast": "pandu",
-          "mirror": true,
+          "at": "deer.pandu",
           "pose": "aim",
-          "expr": "stern",
           "prop": "bowDrawn",
-          "pos": {
-            "at": "PU",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "right",
+          "expr": "stern",
+          "facing": "left",
+          "mirror": true,
           "do": [
             [
               "13.deer+4f",
               {
                 "pose": "stand",
                 "prop": "bow",
-                "facing": 0,
+                "facing": "camera",
                 "mirror": false
               }
             ],
@@ -426,19 +916,10 @@
         },
         {
           "cast": "kunti",
-          "pose": "stand",
+          "at": "deer.kunti",
+          "pose": "pray",
           "expr": "nervous",
-          "pos": {
-            "at": "KU",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "right",
-          "enter": "13.and",
-          "exit": "end"
+          "enter": "13.and"
         }
       ],
       "fx": [
@@ -446,8 +927,8 @@
           "kind": "puff",
           "at": "13.secretly",
           "pos": {
-            "at": "DR",
-            "d": [
+            "mark": "deer.deer",
+            "nudge": [
               0,
               1,
               -0.3
@@ -461,16 +942,16 @@
           "at": "13.shoots",
           "toAt": "13.deer",
           "fromPoint": {
-            "at": "PU",
-            "d": [
+            "mark": "deer.pandu",
+            "nudge": [
               0.6,
               1.5,
               -0.3
             ]
           },
           "to": {
-            "at": "DR",
-            "d": [
+            "mark": "deer.deer",
+            "nudge": [
               0,
               0.9,
               0
@@ -486,8 +967,8 @@
           "kind": "stars",
           "at": "13.deer",
           "pos": {
-            "at": "DR",
-            "d": [
+            "mark": "deer.deer",
+            "nudge": [
               0,
               1.4,
               -0.2
@@ -498,21 +979,8 @@
             0.79
           ],
           "period": 0.4,
-          "dur": 0.4
-        }
-      ],
-      "dof": [
-        {
-          "at": "13.Pandu",
-          "cInf": 0
-        },
-        {
-          "at": "13.secretly",
-          "cInf": 10
-        },
-        {
-          "at": "13.The",
-          "cInf": 13
+          "dur": 0.4,
+          "from": "13.deer-2f"
         }
       ],
       "camera": [
@@ -520,18 +988,29 @@
           "at": "13.Pandu",
           "size": "wide",
           "on": [
-            "deer",
-            "pandu"
+            "deer"
           ],
+          "over": "pandu",
           "angle": "eye",
-          "side": "front",
+          "side": "left",
           "move": "push"
         },
         {
-          "at": "13.The",
+          "at": "13.secretly",
           "size": "close",
           "on": [
             "sage"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "cut": true
+        },
+        {
+          "at": "13.and",
+          "size": "medium",
+          "on": [
+            "kunti"
           ],
           "angle": "eye",
           "side": "front",
@@ -543,121 +1022,96 @@
     {
       "id": "L16",
       "start": "16.Five",
-      "light": "day",
+      "end": "17.Meanwhile",
+      "light": "golden",
       "sets": [
         "palace"
       ],
       "actors": [
         {
           "cast": "bro0",
-          "scale": 1.08,
+          "at": "palace.courtyard",
+          "nudge": [
+            -1.6,
+            0,
+            0.3
+          ],
           "pose": "stand",
           "expr": "grin",
-          "pos": {
-            "at": "CY",
-            "d": [
-              -1.6,
-              0,
-              0.3
-            ]
-          },
-          "facing": "camera",
+          "scale": 1.08,
           "appear": {
             "at": "16.Five",
-            "pop": 0.18,
-            "stagger": 0
+            "stagger": 0.0
           }
         },
         {
           "cast": "bro1",
-          "scale": 1.12,
+          "at": "palace.courtyard",
+          "nudge": [
+            -0.8,
+            0,
+            0.15
+          ],
           "pose": "flex",
           "expr": "grin",
-          "pos": {
-            "at": "CY",
-            "d": [
-              -0.8,
-              0,
-              0.15
-            ]
-          },
-          "facing": "camera",
+          "scale": 1.08,
           "appear": {
             "at": "16.Five",
-            "pop": 0.18,
             "stagger": 0.08
           }
         },
         {
           "cast": "bro2",
-          "scale": 1,
+          "at": "palace.courtyard",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
           "pose": "hips",
           "expr": "grin",
-          "pos": {
-            "at": "CY",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "camera",
+          "scale": 1.08,
           "appear": {
             "at": "16.Five",
-            "pop": 0.18,
             "stagger": 0.16
           }
         },
         {
           "cast": "bro3",
-          "scale": 0.92,
+          "at": "palace.courtyard",
+          "nudge": [
+            0.8,
+            0,
+            0.15
+          ],
           "pose": "stand",
           "expr": "grin",
-          "pos": {
-            "at": "CY",
-            "d": [
-              0.8,
-              0,
-              0.15
-            ]
-          },
-          "facing": "camera",
+          "scale": 1.08,
           "appear": {
             "at": "16.Five",
-            "pop": 0.18,
             "stagger": 0.24
           }
         },
         {
           "cast": "bro4",
-          "scale": 0.92,
+          "at": "palace.courtyard",
+          "nudge": [
+            1.6,
+            0,
+            0.3
+          ],
           "pose": "stand",
           "expr": "grin",
-          "pos": {
-            "at": "CY",
-            "d": [
-              1.6,
-              0,
-              0.3
-            ]
-          },
-          "facing": "camera",
+          "scale": 1.08,
           "appear": {
             "at": "16.Five",
-            "pop": 0.18,
             "stagger": 0.32
           }
         }
       ],
-      "dof": [
-        {
-          "at": "f1547",
-          "cInf": 10
-        }
-      ],
       "camera": [
         {
-          "at": "f1547",
+          "at": "16.Five",
           "size": "wide",
           "on": [
             "bro0",
@@ -675,6 +1129,7 @@
     {
       "id": "S20",
       "start": "19.Out",
+      "end": "20.Five",
       "light": "day",
       "sets": [
         "palace"
@@ -683,14 +1138,7 @@
         {
           "piece": "jars",
           "grid": {
-            "origin": {
-              "at": "JAR0",
-              "d": [
-                0,
-                0,
-                0
-              ]
-            },
+            "origin": "palace.jars",
             "cols": 13,
             "dx": 1.2,
             "dz": 1.25,
@@ -750,16 +1198,6 @@
           }
         }
       ],
-      "dof": [
-        {
-          "at": "19.Out",
-          "cInf": 9
-        },
-        {
-          "at": "19.one",
-          "cInf": 13
-        }
-      ],
       "camera": [
         {
           "at": "19.Out",
@@ -775,8 +1213,531 @@
       ]
     },
     {
+      "id": "S22",
+      "start": "21.Bhima",
+      "end": "22.So",
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "actors": [
+        {
+          "cast": "kidBhima",
+          "at": "palace.tree",
+          "nudge": [
+            0.15,
+            0.38,
+            -1.15
+          ],
+          "pose": "hips",
+          "expr": "grin",
+          "scale": 1.12,
+          "do": [
+            [
+              "21.shaking",
+              {
+                "pose": "shake"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "kaurava1",
+          "at": "palace.tree",
+          "nudge": [
+            -1.5,
+            3.75,
+            -2.6
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "scale": 0.85,
+          "noBlob": true,
+          "enter": "21.shaking+1s",
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": 0.0
+          }
+        },
+        {
+          "cast": "kaurava2",
+          "at": "palace.tree",
+          "nudge": [
+            1.4,
+            4.05,
+            -2.5
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "scale": 0.85,
+          "noBlob": true,
+          "enter": "21.shaking+1s",
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.03
+          }
+        },
+        {
+          "cast": "kaurava3",
+          "at": "palace.tree",
+          "nudge": [
+            -2.7,
+            3.9,
+            -2.5
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "scale": 0.85,
+          "noBlob": true,
+          "enter": "21.shaking+1s",
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.06
+          }
+        },
+        {
+          "cast": "kaurava4",
+          "at": "palace.tree",
+          "nudge": [
+            2.6,
+            3.9,
+            -2.5
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "scale": 0.85,
+          "noBlob": true,
+          "enter": "21.shaking+1s",
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.09
+          }
+        }
+      ],
+      "fx": [
+        {
+          "kind": "mango",
+          "at": "21.shaking+1s",
+          "pos": {
+            "mark": "palace.tree",
+            "nudge": [
+              -1.1,
+              4.6,
+              -2.7
+            ]
+          },
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": 0.0
+          },
+          "size": 0.34,
+          "until": "21.shaking+2.5s",
+          "rotOffset": -0.48
+        },
+        {
+          "kind": "mango",
+          "at": "21.shaking+1s",
+          "pos": {
+            "mark": "palace.tree",
+            "nudge": [
+              1.8,
+              4.9,
+              -2.6
+            ]
+          },
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.04
+          },
+          "size": 0.34,
+          "until": "21.shaking+2.5s",
+          "rotOffset": -0.48
+        },
+        {
+          "kind": "mango",
+          "at": "21.shaking+1s",
+          "pos": {
+            "mark": "palace.tree",
+            "nudge": [
+              0.5,
+              5.6,
+              -2.5
+            ]
+          },
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.08
+          },
+          "size": 0.34,
+          "until": "21.shaking+2.5s",
+          "rotOffset": -0.48
+        },
+        {
+          "kind": "mango",
+          "at": "21.shaking+1s",
+          "pos": {
+            "mark": "palace.tree",
+            "nudge": [
+              -0.2,
+              4.1,
+              -3.1
+            ]
+          },
+          "motion": {
+            "type": "ballistic",
+            "at": "21.shaking+1s",
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.12
+          },
+          "size": 0.34,
+          "until": "21.shaking+2.5s",
+          "rotOffset": -0.48
+        }
+      ],
+      "camera": [
+        {
+          "at": "21.Bhima",
+          "size": "wide",
+          "on": [
+            "kidBhima"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "21.shaking+1s",
+          "size": "wide",
+          "on": [
+            "kidBhima",
+            "kaurava1",
+            "kaurava2",
+            "kaurava3",
+            "kaurava4"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "start": "25.They",
+      "end": "26.In",
+      "light": "night",
+      "sets": [
+        "lac"
+      ],
+      "actors": [
+        {
+          "cast": "priest",
+          "at": "lac.tunnel",
+          "pose": "chop",
+          "prop": "axe",
+          "expr": "stern",
+          "noBlob": true,
+          "enter": "25.They",
+          "exit": "25.torch"
+        },
+        {
+          "cast": "adult0",
+          "at": "lac.house",
+          "nudge": [
+            -2,
+            0,
+            1
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": "right",
+          "enter": "25.They",
+          "exit": "25.torch"
+        },
+        {
+          "cast": "adult1",
+          "at": "lac.house",
+          "nudge": [
+            -1,
+            0,
+            1
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": "right",
+          "enter": "25.They",
+          "exit": "25.torch"
+        },
+        {
+          "cast": "adult2",
+          "at": "lac.house",
+          "nudge": [
+            0,
+            0,
+            1
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": "right",
+          "enter": "25.They",
+          "exit": "25.torch"
+        },
+        {
+          "cast": "adult3",
+          "at": "lac.house",
+          "nudge": [
+            1,
+            0,
+            1
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": "right",
+          "enter": "25.They",
+          "exit": "25.torch"
+        },
+        {
+          "cast": "adult4",
+          "at": "lac.house",
+          "nudge": [
+            2,
+            0,
+            1
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": "right",
+          "enter": "25.They",
+          "exit": "25.torch"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "fire",
+          "at": "25.it",
+          "pos": "lac.house",
+          "spots": [
+            [
+              -4.4,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              -2.2,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              0,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              2.2,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              4.4,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              -3,
+              7.3,
+              -0.6,
+              3.4
+            ],
+            [
+              0,
+              7.8,
+              -0.6,
+              3.4
+            ],
+            [
+              3,
+              7.3,
+              -0.6,
+              3.4
+            ]
+          ],
+          "spread": 24,
+          "pop": 0.4,
+          "hashSalt": 8
+        },
+        {
+          "kind": "halo",
+          "at": "25.it",
+          "pos": {
+            "mark": "lac.house",
+            "nudge": [
+              0,
+              5,
+              0
+            ]
+          },
+          "size": 40,
+          "height": 28,
+          "color": "#ff7a2a",
+          "card": "fire",
+          "peak": 0.35
+        },
+        {
+          "kind": "smoke",
+          "at": "25.it",
+          "pos": "lac.house",
+          "count": 8,
+          "area": [
+            6,
+            3
+          ],
+          "offset": [
+            -3,
+            10,
+            -1
+          ],
+          "rise": 12,
+          "rate": 0.25,
+          "size": [
+            5,
+            11
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "25.They",
+          "size": "wide",
+          "on": [
+            "priest",
+            "adult0"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "25.it",
+          "size": "establishing",
+          "on": [
+            "lac.house"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "cut": true,
+          "scenery": true
+        }
+      ]
+    },
+    {
       "id": "S27",
       "start": "26.In",
+      "end": "27.Kings",
       "light": "day",
       "sets": [
         "arena"
@@ -784,390 +1745,64 @@
       "actors": [
         {
           "cast": "draupadi",
+          "at": "arena.dais",
           "pose": "hold",
-          "expr": "smile",
-          "prop": "garland",
-          "pos": {
-            "at": "DRA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "priestBro0",
-          "pose": "walk",
-          "expr": "smile",
-          "pos": [
-            172.4,
-            1.65,
-            78.4
-          ],
-          "motion": {
-            "type": "path",
-            "ease": "linear",
-            "keys": [
-              [
-                "shot",
-                [
-                  172.4,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                "shot+92f",
-                [
-                  169.48666666666668,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "walk": {
-              "rate": 1.6,
-              "offset": 0
-            }
-          },
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "shot+92f"
-        },
-        {
-          "cast": "priestBro1",
-          "pose": "walk",
-          "expr": "smile",
-          "pos": [
-            173.25,
-            1.65,
-            78.05000000000001
-          ],
-          "motion": {
-            "type": "path",
-            "ease": "linear",
-            "keys": [
-              [
-                "shot",
-                [
-                  173.25,
-                  1.65,
-                  78.05000000000001
-                ]
-              ],
-              [
-                "shot+92f",
-                [
-                  170.33666666666667,
-                  1.65,
-                  78.05000000000001
-                ]
-              ]
-            ],
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.3
-            }
-          },
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "shot+92f"
-        },
-        {
-          "cast": "priestBro2",
-          "pose": "walk",
-          "expr": "smile",
-          "pos": [
-            174.1,
-            1.65,
-            78.4
-          ],
-          "motion": {
-            "type": "path",
-            "ease": "linear",
-            "keys": [
-              [
-                "shot",
-                [
-                  174.1,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                "shot+92f",
-                [
-                  171.18666666666667,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.6
-            }
-          },
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "shot+92f"
-        },
-        {
-          "cast": "priestBro3",
-          "pose": "walk",
-          "expr": "smile",
-          "pos": [
-            174.95000000000002,
-            1.65,
-            78.05000000000001
-          ],
-          "motion": {
-            "type": "path",
-            "ease": "linear",
-            "keys": [
-              [
-                "shot",
-                [
-                  174.95000000000002,
-                  1.65,
-                  78.05000000000001
-                ]
-              ],
-              [
-                "shot+92f",
-                [
-                  172.0366666666667,
-                  1.65,
-                  78.05000000000001
-                ]
-              ]
-            ],
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.8999999999999999
-            }
-          },
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "shot+92f"
-        },
-        {
-          "cast": "priestBro4",
-          "pose": "walk",
-          "expr": "smile",
-          "pos": [
-            175.8,
-            1.65,
-            78.4
-          ],
-          "motion": {
-            "type": "path",
-            "ease": "linear",
-            "keys": [
-              [
-                "shot",
-                [
-                  175.8,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                "shot+92f",
-                [
-                  172.88666666666668,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "walk": {
-              "rate": 1.6,
-              "offset": 1.2
-            }
-          },
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "shot+92f"
+          "expr": "smile"
         },
         {
           "cast": "kingA0",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "stern",
-          "pos": [
-            149.4,
-            2.1,
-            62
+          "at": "arena.bowstand",
+          "nudge": [
+            -1.3,
+            0.15,
+            -0.6
           ],
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA1",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            149.4,
-            2.1,
-            65.6
-          ],
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA2",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            149.4,
-            2.1,
-            69.2
-          ],
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA3",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            149.4,
-            2.1,
-            72.8
-          ],
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA4",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            149.4,
-            2.1,
-            76.4
-          ],
-          "facing": "right",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA5",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            190.6,
-            2.1,
-            62
-          ],
-          "facing": "left",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA6",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            190.6,
-            2.1,
-            65.6
-          ],
-          "facing": "left",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA7",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            190.6,
-            2.1,
-            69.2
-          ],
-          "facing": "left",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA8",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            190.6,
-            2.1,
-            72.8
-          ],
-          "facing": "left",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA9",
-          "noBlob": true,
-          "pose": "sit",
-          "expr": "smile",
-          "pos": [
-            190.6,
-            2.1,
-            76.4
-          ],
-          "facing": "left",
-          "enter": "shot-10f",
-          "exit": "end"
-        },
-        {
-          "cast": "kingA0",
           "pose": "hips",
           "expr": "stern",
-          "pos": {
-            "at": "BOW",
-            "d": [
-              -1.3,
-              0.15,
-              -0.6
-            ]
-          },
+          "facing": "right"
+        }
+      ],
+      "rows": [
+        {
+          "row": [
+            "priests"
+          ],
+          "at": "arena.floor",
+          "spacing": 0.85,
+          "curve": 0,
           "facing": "right",
-          "enter": "26.string",
-          "exit": "26.hit"
+          "pose": "walk",
+          "expr": "smile"
+        },
+        {
+          "row": [
+            "kingsLeft"
+          ],
+          "at": "arena.kingsLeft",
+          "spacing": 3.6,
+          "curve": 0,
+          "facing": "right",
+          "pose": "sit",
+          "expr": "smile",
+          "seated": true
+        },
+        {
+          "row": [
+            "kingsRight"
+          ],
+          "at": "arena.kingsRight",
+          "spacing": 3.6,
+          "curve": 0,
+          "facing": "left",
+          "pose": "sit",
+          "expr": "smile",
+          "seated": true
         }
       ],
       "set": [
         {
           "piece": "wheel",
           "spin": 2.2
-        }
-      ],
-      "dof": [
-        {
-          "at": "26.In",
-          "cInf": 10
-        },
-        {
-          "at": "26.string",
-          "cInf": 11
-        },
-        {
-          "at": "26.hit",
-          "cInf": 0
         }
       ],
       "camera": [
@@ -1178,7 +1813,10 @@
             "draupadi",
             "priestBro0",
             "priestBro1",
-            "priestBro2"
+            "priestBro2",
+            "priestBro3",
+            "priestBro4",
+            "kingA0"
           ],
           "angle": "eye",
           "side": "front",
@@ -1196,74 +1834,60 @@
           "cut": true
         },
         {
-          "at": "26.hit",
+          "at": "26.monster",
+          "size": "insert",
+          "on": [
+            "arena.bowstand"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "cut": true,
+          "scenery": true
+        },
+        {
+          "at": "26.target",
           "size": "wide",
           "on": [
-            "draupadi"
+            "arena.floor"
           ],
+          "to": "arena.target",
           "angle": "eye",
           "side": "front",
           "move": "tiltUp",
           "cut": true,
-          "glide": 1.0
+          "glide": 1.0,
+          "scenery": true
         }
       ]
     },
     {
       "id": "S33",
       "start": "32.You",
+      "end": "33.Bhishma's",
       "light": "golden",
       "sets": [
         "village"
       ],
-      "sun": {
-        "az": 115,
-        "el": 10
-      },
       "actors": [
         {
           "cast": "kunti",
-          "pose": "hold",
-          "expr": "smile",
-          "prop": "scroll",
-          "pos": {
-            "at": "KS",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "facing": "right",
-          "do": [
-            [
-              "32.sent",
-              {
-                "pose": "grab",
-                "prop": null,
-                "expr": "shock"
-              }
-            ],
-            [
-              "32.unsend",
-              {
-                "pose": "shrug",
-                "expr": "nervous"
-              }
-            ]
-          ]
+          "at": "village.hutDoor",
+          "pose": "stand",
+          "expr": "smile"
         }
       ],
       "fx": [
         {
           "kind": "pigeon",
+          "id": "pigeon",
           "at": "32.sent",
           "pos": {
-            "at": "KS",
-            "d": [
-              -0.2,
+            "mark": "village.front",
+            "nudge": [
+              0,
               1.9,
-              -0.5
+              0
             ]
           },
           "motion": {
@@ -1280,18 +1904,7 @@
               0
             ]
           },
-          "id": "pigeon",
           "size": 0.9
-        }
-      ],
-      "dof": [
-        {
-          "at": "32.You",
-          "cInf": 8
-        },
-        {
-          "at": "32.There's",
-          "cInf": 0
         }
       ],
       "camera": [
@@ -1321,51 +1934,37 @@
     {
       "id": "S38",
       "start": "35.The",
-      "light": "night",
+      "end": "36.Oh",
+      "light": "golden",
       "sets": [
         "city"
       ],
-      "sun": {
-        "az": 10,
-        "el": 12
-      },
       "actors": [
         {
           "cast": "agni",
           "special": "agni",
+          "at": "city.agni",
+          "expr": "pained",
           "params": {
             "burp": {
               "keys": [
                 [
-                  {
-                    "shot": true,
-                    "offset": 123
-                  },
+                  "shot+4.1s",
                   0
                 ],
                 [
-                  {
-                    "shot": true,
-                    "offset": 131
-                  },
+                  "shot+4.37s",
                   1
+                ],
+                [
+                  "shot+6s",
+                  0
                 ]
               ],
               "ease": "linear"
             }
           },
-          "blobScale": 1.2,
-          "expr": "pained",
-          "pos": {
-            "at": "AG",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
           "enter": "35.fire",
-          "exit": "end",
           "do": [
             [
               "35.ghee",
@@ -1380,14 +1979,7 @@
         {
           "kind": "fire",
           "at": "35.The",
-          "pos": {
-            "at": "AG",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": "city.forest",
           "source": "cityTreetops",
           "filter": {
             "zAfter": -178,
@@ -1403,8 +1995,8 @@
           "kind": "halo",
           "at": "35.The",
           "pos": {
-            "at": "AG",
-            "d": [
+            "mark": "city.agni",
+            "nudge": [
               0,
               9,
               45
@@ -1415,16 +2007,6 @@
           "color": "#ff7a2a",
           "card": "soft",
           "peak": 0.45
-        }
-      ],
-      "dof": [
-        {
-          "at": "35.The",
-          "cInf": 0
-        },
-        {
-          "at": "35.fire",
-          "cInf": 12
         }
       ],
       "camera": [
@@ -1454,353 +2036,5 @@
         }
       ]
     }
-  ],
-  "points": {
-    "CY": {
-      "at": "PAL",
-      "d": [
-        0,
-        0.12,
-        0
-      ]
-    },
-    "VY": {
-      "at": "HERM",
-      "d": [
-        -1.15,
-        0.33,
-        -0.25
-      ]
-    },
-    "GN": {
-      "at": "HERM",
-      "d": [
-        0.75,
-        0.33,
-        0.15
-      ]
-    },
-    "VFRONT": {
-      "at": "VIL",
-      "d": [
-        0,
-        0,
-        9.5
-      ]
-    },
-    "FA": {
-      "at": "VFRONT",
-      "d": [
-        0.4,
-        0,
-        0
-      ]
-    },
-    "SA": {
-      "at": "VFRONT",
-      "d": [
-        1.5,
-        0,
-        -0.5
-      ]
-    },
-    "DV": {
-      "at": "VFRONT",
-      "d": [
-        -1.3,
-        0,
-        0.3
-      ]
-    },
-    "DVP": {
-      "at": "CY",
-      "d": [
-        0,
-        0,
-        -2
-      ]
-    },
-    "SH": {
-      "at": "CY",
-      "d": [
-        -0.75,
-        0,
-        2
-      ]
-    },
-    "DV2": {
-      "at": "CY",
-      "d": [
-        0.75,
-        0,
-        1.7
-      ]
-    },
-    "DH": {
-      "at": "CY",
-      "d": [
-        -1.15,
-        0,
-        5
-      ]
-    },
-    "PD": {
-      "at": "CY",
-      "d": [
-        1.15,
-        0,
-        5
-      ]
-    },
-    "KC": {
-      "at": "DEER",
-      "d": [
-        0,
-        0,
-        0
-      ]
-    },
-    "PC": {
-      "at": "DEER",
-      "d": [
-        1.3,
-        0,
-        0.6
-      ]
-    },
-    "GHAT": [
-      0,
-      1.62,
-      24.6
-    ],
-    "BG": [
-      0,
-      1.62,
-      25.2
-    ],
-    "KHUT": {
-      "at": "VIL",
-      "d": [
-        1,
-        0,
-        -6.4
-      ]
-    },
-    "KS": {
-      "at": "VIL",
-      "d": [
-        1.3,
-        0,
-        -6.1
-      ]
-    },
-    "PU": {
-      "at": "DEER",
-      "d": [
-        -2.4,
-        0,
-        3.5
-      ]
-    },
-    "DR": {
-      "at": "DEER",
-      "d": [
-        2.2,
-        0,
-        -4.5
-      ]
-    },
-    "KU": {
-      "at": "DEER",
-      "d": [
-        -3.4,
-        0,
-        4.4
-      ]
-    },
-    "MD": {
-      "at": "DEER",
-      "d": [
-        1.6,
-        0,
-        0.3
-      ]
-    },
-    "JAR0": {
-      "at": "PAL",
-      "d": [
-        -7.2,
-        0.12,
-        9
-      ]
-    },
-    "PLATE": {
-      "at": "CY",
-      "d": [
-        0,
-        0.12,
-        4.2
-      ]
-    },
-    "GD": {
-      "at": "CY",
-      "d": [
-        -0.6,
-        0,
-        6
-      ]
-    },
-    "DH2": {
-      "at": "CY",
-      "d": [
-        0.8,
-        0,
-        6.4
-      ]
-    },
-    "VJ": {
-      "at": "JAR0",
-      "d": [
-        -1.6,
-        0,
-        3.4
-      ]
-    },
-    "PB": {
-      "at": "CY",
-      "d": [
-        -5.5,
-        0,
-        -6
-      ]
-    },
-    "KB": {
-      "at": "CY",
-      "d": [
-        3,
-        0,
-        1
-      ]
-    },
-    "TREE": {
-      "at": "PAL",
-      "d": [
-        -14,
-        0.12,
-        4
-      ]
-    },
-    "DY": {
-      "at": "GHAT",
-      "d": [
-        -0.7,
-        0,
-        -0.1
-      ]
-    },
-    "BH": {
-      "at": "GHAT",
-      "d": [
-        0.6,
-        0,
-        -0.3
-      ]
-    },
-    "NG": {
-      "at": "NAGA",
-      "d": [
-        0,
-        0.4,
-        4
-      ]
-    },
-    "DO": {
-      "at": "LAC",
-      "d": [
-        -3.2,
-        0,
-        -7.5
-      ]
-    },
-    "DOOR": {
-      "at": "LAC",
-      "d": [
-        0,
-        0,
-        -4.6
-      ]
-    },
-    "HOLE": {
-      "at": "LAC",
-      "d": [
-        3,
-        0,
-        -13
-      ]
-    },
-    "DRA": {
-      "at": "ARENA",
-      "d": [
-        0,
-        1,
-        11
-      ]
-    },
-    "BOW": {
-      "at": "ARENA",
-      "d": [
-        -6,
-        0.15,
-        -4
-      ]
-    },
-    "POLE": {
-      "at": "ARENA",
-      "d": [
-        0,
-        0,
-        0
-      ]
-    },
-    "KF": {
-      "at": "ARENA",
-      "d": [
-        -6.2,
-        0.15,
-        -5
-      ]
-    },
-    "AR": {
-      "at": "ARENA",
-      "d": [
-        -5.2,
-        0.15,
-        -5.6
-      ]
-    },
-    "DRV": {
-      "at": "KHUT",
-      "d": [
-        0,
-        0,
-        3.2
-      ]
-    },
-    "CL": {
-      "at": "CITY",
-      "d": [
-        0,
-        0,
-        -8
-      ]
-    },
-    "AG": {
-      "at": "CITY",
-      "d": [
-        0,
-        0,
-        8
-      ]
-    }
-  }
+  ]
 }

@@ -266,7 +266,7 @@ export function checkFrames(dirArg, opts = {}) {
             const er = projectState(ctx, keyForProjection(k, f, start), es, f);
             if (!er.box) continue;
             const cam = Math.hypot(es.pos[0] - camPos[0], es.pos[1] - camPos[1], es.pos[2] - camPos[2]);
-            if (((er.area > 0.3 && cam < primaryDist - 0.2 && !['halo', 'fire', 'smoke', 'burst', 'splash', 'petals', 'puff'].includes(e.kind))) || (cam < 1.2 && er.area > 0)) errors.push({ shot: shot.id, key: kf, frame: f, subject: eid, error: `foreground blocker ${eid}` });
+            if (((er.area > 0.3 && cam < primaryDist - 0.2 && !['halo', 'fire', 'smoke', 'burst', 'splash', 'petals', 'puff', 'stars'].includes(e.kind))) || (cam < 1.2 && er.area > 0)) errors.push({ shot: shot.id, key: kf, frame: f, subject: eid, error: `foreground blocker ${eid}` });
           }
         }
         const camPos0 = pointAt(ctx, k.pos, f);

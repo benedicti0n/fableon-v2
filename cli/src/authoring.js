@@ -18,11 +18,11 @@ export function parseAnchor(value, fps = FPS) {
   if (/^f\d+$/.test(s)) return { frame: Number(s.slice(1)) };
   if (/^shot(?:[+-]\d+(?:\.\d+)?[fs])?$/.test(s)) {
     const m = /^shot(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
-    return { shot: true, offset: m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
+    return { shot: true, offset: Math.round(m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0) };
   }
   if (/^end(?:[+-]\d+(?:\.\d+)?[fs])?$/.test(s)) {
     const m = /^end(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
-    return { end: true, offset: m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
+    return { end: true, offset: Math.round(m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0) };
   }
   const m = /^(\d+)\.([^#+\-]+)(?:#(\d+))?(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
   if (!m) throw new Error(`bad anchor "${s}" (use 13.word, 13.word#1+0.4s, shot+1.2s, end+4f or f90)`);
@@ -151,6 +151,8 @@ const compileMotion = (m, sets, catalog, fps) => {
   throw new Error(`bad motion type "${m.type}"`);
 };
 
+const compileParams = (params, fps) => Object.fromEntries(Object.entries(params ?? {}).map(([k, v]) => [k, v && typeof v === 'object' && Array.isArray(v.keys) ? compileAnimated(v, fps) : v]));
+
 const compileActor = (entry, shot, ctx) => {
   const a = typeof entry === 'string' ? { cast: entry } : { ...entry };
   const sets = shot.sets ?? [];
@@ -178,7 +180,7 @@ const compileActor = (entry, shot, ctx) => {
   out.who = useId;
   if (a.id) out.id = a.id;
   if (a.special) out.special = a.special;
-  if (a.params) out.params = a.params;
+  if (a.params) out.params = compileParams(a.params, ctx.fps);
   out.pos = a.pos ? resolvePoint(a.pos, sets, ctx.catalog) : a.at ? resolvePlaced(a.at, sets, ctx.catalog) : undefined;
   if (a.nudge && out.pos) {
     if (Array.isArray(out.pos)) out.pos = [out.pos[0] + a.nudge[0], out.pos[1] + a.nudge[1], out.pos[2] + a.nudge[2]];
@@ -199,7 +201,12 @@ const compileActor = (entry, shot, ctx) => {
     beats.push({ at: parseAnchor(from, ctx.fps), talk: { base: a.expr ?? 'neutral', rate: 1 } });
     beats.push({ at: parseAnchor(to, ctx.fps), talk: null, expr: a.expr ?? 'neutral' });
   }
-  for (const [at, changes] of a.do ?? []) beats.push({ at: parseAnchor(at, ctx.fps), ...changes });
+  for (const [at, changes] of a.do ?? []) {
+    const ch = { ...changes };
+    if (ch.params) ch.params = compileParams(ch.params, ctx.fps);
+    if (ch.facing !== undefined) Object.assign(ch, compileFacing(ch.facing));
+    beats.push({ at: parseAnchor(at, ctx.fps), ...ch });
+  }
   if (beats.length) out.beats = beats.sort((x, y) => ctx.anchorFrame(x.at) - ctx.anchorFrame(y.at));
   if (a.raw) { ctx.raw++; Object.assign(out, a.raw); }
   for (const k of Object.keys(out)) if (out[k] === undefined) delete out[k];
@@ -326,14 +333,14 @@ const actorStateAt = (a, f, shot, ctx) => {
   const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
   const key = a.special ? a.special : (spec.build ?? 'adult');
   const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
-  return { id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, entering: w.from, exiting: w.to };
+  return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, entering: w.from, exiting: w.to };
 };
 
 const effectStateAt = (fx, f, ctx, shot) => {
   const start = ctx.anchorFrame(shot.start);
   const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ? pointAt(fx.pos, f, ctx) : [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
   const measure = ctx.catalog.measure[fx.kind] ?? { standing: 0.9, seated: 0.9, eye: 0.6, eyeSeated: 0.6, head: 0.25, halfWidth: 0.35 };
-  return { id: fx.id ?? fx.kind, moveId: fx.id, pos, measure, scale: 1, seated: false, entering: fx.at ? ctx.anchorFrame(fx.at, start) : -Infinity, exiting: fx.until ? ctx.anchorFrame(fx.until, start) : Infinity };
+  return { kind: 'effect', id: fx.id ?? fx.kind, moveId: fx.id, pos, measure, scale: 1, seated: false, entering: fx.at ? ctx.anchorFrame(fx.at, start) : -Infinity, exiting: fx.until ? ctx.anchorFrame(fx.until, start) : Infinity };
 };
 
 const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchorLabel) => {
@@ -366,7 +373,7 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
     return { ...samples[0], samples: samples.map((s) => s.pos) };
   }
   const p = markPos(id, shot.sets ?? [], ctx.catalog);
-  return { id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false };
+  return { kind: 'mark', id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false };
 };
 
 const lookPointFor = (id, out, keyStart, keyEnd, ctx, shot) => {
@@ -411,20 +418,31 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       if (k.move === 'follow') subjects = subjects.map((s) => ({ ...s, samples: [s.pos] }));
       const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };
       const keepout = catalog.keepout?.[sets[0]] ?? [];
-      const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, setInfo: info, keepout });
+      const over = k.over ? subjectSamples(k.over, out, out, f, keyEnd, [], ctx, k.at) : null;
+      const toLook = k.to ? lookPointFor(k.to, out, f, keyEnd, ctx, out) : null;
+      const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, over, toLook, setInfo: info, keepout });
       const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)) };
       if (k.later) key.later = [...k.later];
+      if (k.scenery) key.scenery = true;
+      if (k.over) key.over = k.over;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {
         if (!primary.moveId) throw new Error(`shot ${shot.id}: follow camera needs a moving id on "${primary.id}"`);
         const a0 = (baseAngleFor(k, info) * Math.PI) / 180;
-        const eye = (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale;
-        key.pos = { at: primary.moveId, d: [Math.sin(a0) * solved.debug.distance, eye + 0.2, Math.cos(a0) * solved.debug.distance] };
-        key.look = { at: primary.moveId, d: [0, eye * 0.9, 0] };
+        const isFx = !(out.actors ?? []).some((a) => a.id === primary.moveId || a.who === primary.moveId);
+        const eye = isFx ? 0 : (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale;
+        key.pos = { at: primary.moveId, d: [Math.sin(a0) * solved.debug.distance, eye + (isFx ? 0.2 : 0.2), Math.cos(a0) * solved.debug.distance] };
+        key.look = { at: primary.moveId, d: [0, isFx ? 0 : eye * 0.9, 0] };
       }
       cameras.push(key);
-      if (!shot.dof && solved.debug.dof > 0) dofs.push({ at: parseAnchor(k.at, fps), cInf: solved.debug.dof, dur: 0, ...(primary?.moveId ? { focus: { actor: primary.moveId, attach: 'eyes', d: [0, 0, 0] } } : primary ? { focus: [primary.pos[0], primary.pos[1] + (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, primary.pos[2]] } : {}) });
+      if (k.to && k.move === 'reveal') {
+        const endAnchor = { frame: f + Math.round((k.glide ?? 0.8) * fps) };
+        const target = subjectSamples(k.to, out, out, Math.max(f, endAnchor.frame - 1), endAnchor.frame + 1, [], ctx, 'to');
+        const targetSolved = solveCamera({ key: { ...k, at: endAnchor.frame, on: [k.to], size: k.toSize ?? k.size, cut: false }, subjects: [target], setInfo: info, keepout });
+        cameras.push({ ...targetSolved.key, at: endAnchor, pos: targetSolved.key.pos, look: targetSolved.key.look, subjects: targetSolved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)), dur: Math.round((k.glide ?? 0.8) * fps) });
+      }
+      if (!shot.dof && solved.debug.dof > 0) dofs.push({ at: parseAnchor(k.at, fps), cInf: solved.debug.dof, dur: 0, ...(primary ? { focus: [primary.pos[0], primary.pos[1] + (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, primary.pos[2]] } : {}) });
     } else {
       if (k.raw) ctx.raw++;
       const raw = k.raw ?? k;

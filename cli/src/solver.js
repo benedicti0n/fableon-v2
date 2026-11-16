@@ -70,7 +70,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     ? [(setInfo.bounds.min[0] + setInfo.bounds.max[0]) / 2, (setInfo.bounds.min[1] + setInfo.bounds.max[1]) / 2, (setInfo.bounds.min[2] + setInfo.bounds.max[2]) / 2]
     : size === "wide"
       ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, (box.z0 + box.z1) / 2]
-      : [(pb.x0 + pb.x1) / 2, pb.eye, (pb.z0 + pb.z1) / 2];
+      : [primary.kind === 'mark' ? primary.pos[0] : (pb.x0 + pb.x1) / 2, primary.kind === 'mark' ? primary.pos[1] : pb.eye, primary.kind === 'mark' ? primary.pos[2] : (pb.z0 + pb.z1) / 2];
   let spanV, spanH;
   if (size === "establishing") { spanV = setInfo.bounds.max[1] - setInfo.bounds.min[1]; spanH = setInfo.bounds.max[0] - setInfo.bounds.min[0]; }
   else if (size === "wide") { spanV = (box.y1 - box.y0) * 1.3; spanH = Math.max(box.x1 - box.x0, box.z1 - box.z0) * 1.3; }
@@ -80,7 +80,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   else { spanV = 1.12 * primary.measure.standing * (primary.scale ?? 1); spanH = spanV * aspect; }
   const baseAngle = (setInfo.front ?? 0) + (sideOffset[key.side ?? "front"] ?? 0);
   const angleY = key.angle ?? "eye";
-  const eyeY = primary ? pb.eye : target[1];
+  const eyeY = primary ? (primary.kind === 'mark' ? primary.pos[1] : pb.eye) : target[1];
   const waistY = primary ? primary.pos[1] + 0.45 * pb.h : target[1];
   const highY = primary ? primary.pos[1] + Math.max(2.5, Math.min(4, 0.8 * pb.h)) : target[1] + 3;
   const overheadY = primary ? primary.pos[1] + 8 : target[1] + 8;
@@ -90,7 +90,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   let vfov = vfov0, distance = fitDistance(fitV, fitH, vfov, aspect);
   let yawOffset = 0, raised = 0, closer = false;
   const lookBase = () => {
-    const ly = size === "close" || size === "medium" ? (primary ? pb.eye - (0.5 - cfg.eyeLine) * spanV : target[1]) : size === "full" ? (primary ? primary.pos[1] + 0.5 * pb.h : target[1]) : target[1];
+    const ly = size === 'insert' && primary?.kind === 'mark' ? primary.pos[1] : size === "close" || size === "medium" ? (primary ? pb.eye - (0.5 - cfg.eyeLine) * spanV : target[1]) : size === "full" ? (primary ? primary.pos[1] + 0.5 * pb.h : target[1]) : target[1];
     return [target[0], ly, target[2]];
   };
   const cameraAt = (yaw, dist, y) => {
@@ -116,8 +116,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     dx /= dl; dz /= dl;
     const side = key.side === 'left' ? -1 : 1, perp = [-dz * side, 0, dx * side];
     const camDist = Math.max(distance, dl + 0.9);
-    camera = [ (pb.x0 + pb.x1) / 2 + dx * camDist + perp[0] * camDist * 0.32, (over.pos[1] + ob.eye) / 2 + 0.25 * ob.h, (pb.z0 + pb.z1) / 2 + dz * camDist + perp[2] * camDist * 0.32 ];
-    vfov = (2 * Math.atan(Math.tan((vfov * DEG) / 2) * distance / camDist)) / DEG;
+    camera = [ (pb.x0 + pb.x1) / 2 + dx * camDist + perp[0] * 0.25, over.pos[1] + ob.h + 0.2, (pb.z0 + pb.z1) / 2 + dz * camDist + perp[2] * 0.25 ];
   }
   let attempts = 0;
   const trySpot = (yaw, dist, y, fov) => {

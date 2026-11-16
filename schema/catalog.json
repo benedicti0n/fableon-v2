@@ -129,6 +129,16 @@
           ],
           "facing": 180,
           "description": "The plate of sweets by the river."
+        },
+        {
+          "name": "boat",
+          "pos": [
+            3.2,
+            0.25,
+            9.5
+          ],
+          "facing": 180,
+          "description": "The boat mooring on the palace river bank."
         }
       ]
     },
@@ -339,6 +349,16 @@
           ],
           "facing": 0,
           "description": "Kunti waiting behind Pandu."
+        },
+        {
+          "name": "sage",
+          "pos": [
+            152.2,
+            1.5,
+            -84.5
+          ],
+          "facing": 0,
+          "description": "The sage at the deer mark after the transformation."
         }
       ]
     },
@@ -454,7 +474,7 @@
           "name": "bowstand",
           "pos": [
             164,
-            1.65,
+            2.4,
             66
           ],
           "facing": 180,
@@ -489,6 +509,26 @@
           ],
           "facing": 180,
           "description": "The kings' stepped seats under the side canopy."
+        },
+        {
+          "name": "kingsLeft",
+          "pos": [
+            149,
+            2.1,
+            70
+          ],
+          "facing": 180,
+          "description": "Left bank of seated kings."
+        },
+        {
+          "name": "kingsRight",
+          "pos": [
+            191,
+            2.1,
+            70
+          ],
+          "facing": 180,
+          "description": "Right bank of seated kings."
         },
         {
           "name": "floor",

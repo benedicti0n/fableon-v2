@@ -496,7 +496,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   }
   shots.forEach(({ s, start }, i) => {
     const def: Def = {
-      from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
+      from: start, ...(s.end ? { end: anchor(s.end, start) } : {}), light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {
         for (const a of s.actors ?? []) actor(out, cam, a, f, start);
         for (const c of s.crowds ?? []) crowd(out, cam, c, f, start);

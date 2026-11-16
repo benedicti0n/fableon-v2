@@ -3,355 +3,367 @@
   "fps": 30,
   "tailFrames": 36,
   "crossfade": 10,
-  "points": {
-    "CY": {
-      "at": "PAL",
-      "d": [
-        0,
-        0.12,
-        0
-      ]
-    },
-    "VY": {
-      "at": "HERM",
-      "d": [
-        -1.15,
-        0.33,
-        -0.25
-      ]
-    },
-    "GN": {
-      "at": "HERM",
-      "d": [
-        0.75,
-        0.33,
-        0.15
-      ]
-    },
-    "VFRONT": {
-      "at": "VIL",
-      "d": [
-        0,
-        0,
-        9.5
-      ]
-    },
-    "FA": {
-      "at": "VFRONT",
-      "d": [
-        0.4,
-        0,
-        0
-      ]
-    },
-    "SA": {
-      "at": "VFRONT",
-      "d": [
-        1.5,
-        0,
-        -0.5
-      ]
-    },
-    "DV": {
-      "at": "VFRONT",
-      "d": [
-        -1.3,
-        0,
-        0.3
-      ]
-    },
-    "DVP": {
-      "at": "CY",
-      "d": [
-        0,
-        0,
-        -2
-      ]
-    },
-    "SH": {
-      "at": "CY",
-      "d": [
-        -0.75,
-        0,
-        2
-      ]
-    },
-    "DV2": {
-      "at": "CY",
-      "d": [
-        0.75,
-        0,
-        1.7
-      ]
-    },
-    "DH": {
-      "at": "CY",
-      "d": [
-        -1.15,
-        0,
-        5
-      ]
-    },
-    "PD": {
-      "at": "CY",
-      "d": [
-        1.15,
-        0,
-        5
-      ]
-    },
-    "KC": {
-      "at": "DEER",
-      "d": [
-        0,
-        0,
-        0
-      ]
-    },
-    "PC": {
-      "at": "DEER",
-      "d": [
-        1.3,
-        0,
-        0.6
-      ]
-    },
-    "GHAT": [
-      0,
-      1.62,
-      24.6
-    ],
-    "BG": [
-      0,
-      1.62,
-      25.2
-    ],
-    "KHUT": {
-      "at": "VIL",
-      "d": [
-        1,
-        0,
-        -6.4
-      ]
-    },
-    "KS": {
-      "at": "VIL",
-      "d": [
-        1.3,
-        0,
-        -6.1
-      ]
-    },
-    "PU": {
-      "at": "DEER",
-      "d": [
-        -2.4,
-        0,
-        3.5
-      ]
-    },
-    "DR": {
-      "at": "DEER",
-      "d": [
-        2.2,
-        0,
-        -4.5
-      ]
-    },
-    "KU": {
-      "at": "DEER",
-      "d": [
-        -3.4,
-        0,
-        4.4
-      ]
-    },
-    "MD": {
-      "at": "DEER",
-      "d": [
-        1.6,
-        0,
-        0.3
-      ]
-    },
-    "JAR0": {
-      "at": "PAL",
-      "d": [
-        -7.2,
-        0.12,
-        9
-      ]
-    },
-    "PLATE": {
-      "at": "CY",
-      "d": [
-        0,
-        0.12,
-        4.2
-      ]
-    },
-    "GD": {
-      "at": "CY",
-      "d": [
-        -0.6,
-        0,
-        6
-      ]
-    },
-    "DH2": {
-      "at": "CY",
-      "d": [
-        0.8,
-        0,
-        6.4
-      ]
-    },
-    "VJ": {
-      "at": "JAR0",
-      "d": [
-        -1.6,
-        0,
-        3.4
-      ]
-    },
-    "PB": {
-      "at": "CY",
-      "d": [
-        -5.5,
-        0,
-        -6
-      ]
-    },
-    "KB": {
-      "at": "CY",
-      "d": [
-        3,
-        0,
-        1
-      ]
-    },
-    "TREE": {
-      "at": "PAL",
-      "d": [
-        -14,
-        0.12,
-        4
-      ]
-    },
-    "DY": {
-      "at": "GHAT",
-      "d": [
-        -0.7,
-        0,
-        -0.1
-      ]
-    },
-    "BH": {
-      "at": "GHAT",
-      "d": [
-        0.6,
-        0,
-        -0.3
-      ]
-    },
-    "NG": {
-      "at": "NAGA",
-      "d": [
-        0,
-        0.4,
-        4
-      ]
-    },
-    "DO": {
-      "at": "LAC",
-      "d": [
-        -3.2,
-        0,
-        -7.5
-      ]
-    },
-    "DOOR": {
-      "at": "LAC",
-      "d": [
-        0,
-        0,
-        -4.6
-      ]
-    },
-    "HOLE": {
-      "at": "LAC",
-      "d": [
-        3,
-        0,
-        -13
-      ]
-    },
-    "DRA": {
-      "at": "ARENA",
-      "d": [
-        0,
-        1,
-        11
-      ]
-    },
-    "BOW": {
-      "at": "ARENA",
-      "d": [
-        -6,
-        0.15,
-        -4
-      ]
-    },
-    "POLE": {
-      "at": "ARENA",
-      "d": [
-        0,
-        0,
-        0
-      ]
-    },
-    "KF": {
-      "at": "ARENA",
-      "d": [
-        -6.2,
-        0.15,
-        -5
-      ]
-    },
-    "AR": {
-      "at": "ARENA",
-      "d": [
-        -5.2,
-        0.15,
-        -5.6
-      ]
-    },
-    "DRV": {
-      "at": "KHUT",
-      "d": [
-        0,
-        0,
-        3.2
-      ]
-    },
-    "CL": {
-      "at": "CITY",
-      "d": [
-        0,
-        0,
-        -8
-      ]
-    },
-    "AG": {
-      "at": "CITY",
-      "d": [
-        0,
-        0,
-        8
-      ]
-    }
-  },
   "shots": [
+    {
+      "id": "S1",
+      "start": {
+        "frame": 0
+      },
+      "light": "golden",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 1,
+        "word": "Vyasa",
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "ganesha",
+          "special": "ganesha",
+          "params": {
+            "writeSpeed": 2.4,
+            "look": -0.6,
+            "down": 1
+          },
+          "pos": [
+            -149.25,
+            1.83,
+            -69.85
+          ],
+          "scale": 0.85,
+          "blobScale": 1.6,
+          "beats": [
+            {
+              "at": {
+                "line": 0,
+                "word": "typist",
+                "offset": 1
+              },
+              "expr": "smile_closed"
+            }
+          ]
+        },
+        {
+          "who": "vyasa",
+          "pos": [
+            -151.15,
+            1.83,
+            -70.25
+          ],
+          "pose": "talk",
+          "seated": true,
+          "talk": {
+            "base": "neutral",
+            "rate": 1
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "pages",
+          "height": {
+            "keys": [
+              [
+                {
+                  "shot": true,
+                  "offset": 0
+                },
+                0.05
+              ],
+              [
+                {
+                  "shot": true,
+                  "offset": 120
+                },
+                0.3
+              ]
+            ],
+            "ease": "linear"
+          }
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -149.25,
+            2.760852,
+            -72.3513443644941
+          ],
+          "look": [
+            -149.25,
+            2.525844,
+            -69.85
+          ],
+          "fov": 41,
+          "roll": 0,
+          "push": {
+            "from": {
+              "frame": 0
+            },
+            "rate": 0.0022
+          },
+          "subjects": [
+            "ganesha"
+          ],
+          "at": {
+            "frame": 0
+          }
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "frame": 0
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            -149.25,
+            2.760852,
+            -69.85
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "start": {
+        "line": 4,
+        "word": "Our",
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "palace",
+        "village"
+      ],
+      "end": {
+        "line": 5,
+        "word": "Her",
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "shantanu",
+          "pos": [
+            -1.6,
+            1.62,
+            24.400000000000002
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "facing": 1,
+          "beats": [
+            {
+              "at": {
+                "line": 4,
+                "word": "falling",
+                "offset": -2
+              },
+              "pose": "pray",
+              "expr": "smile_closed"
+            }
+          ]
+        },
+        {
+          "who": "satyavati",
+          "id": "satyavati",
+          "pos": [
+            3.2,
+            0.25,
+            9.5
+          ],
+          "motion": {
+            "type": "path",
+            "keys": [
+              [
+                {
+                  "shot": true,
+                  "offset": 0
+                },
+                [
+                  3.2,
+                  0.25,
+                  9.5
+                ]
+              ],
+              [
+                {
+                  "shot": true,
+                  "offset": 86
+                },
+                [
+                  2.2,
+                  0.25,
+                  9.5
+                ]
+              ]
+            ],
+            "ease": "linear"
+          },
+          "noBlob": true,
+          "pose": "carry",
+          "expr": "smile",
+          "prop": "oar",
+          "facing": -1
+        }
+      ],
+      "fx": [
+        {
+          "kind": "heart",
+          "at": {
+            "line": 4,
+            "word": "falling",
+            "offset": -2
+          },
+          "pos": [
+            -1.6,
+            4.32,
+            24.1
+          ],
+          "size": 0.8,
+          "pop": 0.18,
+          "bob": {
+            "amp": 0.1,
+            "freq": 0.954929658
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "boat",
+          "id": "boat",
+          "motion": {
+            "type": "path",
+            "keys": [
+              [
+                {
+                  "shot": true,
+                  "offset": 0
+                },
+                [
+                  3.2,
+                  0.25,
+                  9.5
+                ]
+              ],
+              [
+                {
+                  "shot": true,
+                  "offset": 86
+                },
+                [
+                  2.2,
+                  0.25,
+                  9.5
+                ]
+              ]
+            ],
+            "ease": "linear",
+            "bob": {
+              "amp": 0.05,
+              "freq": 0.318309886
+            }
+          },
+          "yaw": 0.14999359591639266,
+          "rollBob": {
+            "amp": 0.02,
+            "freq": 0.318309886
+          }
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            0.3082427516569968,
+            2.995267508182963,
+            -26.273113714892894
+          ],
+          "look": [
+            0.30824275165699155,
+            1.7953525354222037,
+            16.94175724834301
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "word": "Our",
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "shantanu",
+            "satyavati"
+          ],
+          "at": {
+            "line": 4,
+            "word": "Our",
+            "offset": -2
+          }
+        },
+        {
+          "type": "dolly",
+          "pos": {
+            "at": "satyavati",
+            "d": [
+              2.0430716966701139e-16,
+              1.5554896498218314,
+              -1.6682946447029299
+            ]
+          },
+          "look": {
+            "at": "satyavati",
+            "d": [
+              0,
+              1.2199406848396483,
+              0
+            ]
+          },
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "word": "fisherman's",
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "satyavati"
+          ],
+          "cut": true,
+          "at": {
+            "line": 4,
+            "word": "fisherman's",
+            "offset": -2
+          }
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 4,
+            "word": "fisherman's",
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            2.2,
+            1.6054896498218314,
+            9.5
+          ]
+        }
+      ]
+    },
     {
       "id": "L5",
       "start": {
@@ -363,17 +375,19 @@
       "sets": [
         "village"
       ],
+      "end": {
+        "line": 6,
+        "word": "Problem",
+        "offset": -2
+      },
       "actors": [
         {
           "who": "fisher",
-          "pos": {
-            "at": "FA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            0.4,
+            1.5,
+            -24.5
+          ],
           "pose": "fold",
           "expr": "stern",
           "facing": -1,
@@ -381,7 +395,7 @@
             {
               "at": {
                 "line": 5,
-                "word": "her",
+                "word": "father's",
                 "offset": -2
               },
               "pose": "vow",
@@ -394,14 +408,11 @@
         },
         {
           "who": "satyavati",
-          "pos": {
-            "at": "SA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            1.5,
+            1.5,
+            -25
+          ],
           "pose": "stand",
           "expr": "smile",
           "facing": -1
@@ -424,7 +435,9 @@
           "roll": 0,
           "push": {
             "from": {
-              "frame": 508
+              "line": 5,
+              "word": "Her",
+              "offset": -2
             },
             "rate": 0.0025
           },
@@ -432,24 +445,72 @@
             "fisher"
           ],
           "at": {
-            "frame": 508
+            "line": 5,
+            "word": "Her",
+            "offset": -2
+          }
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            1.5000000000000002,
+            2.8554896498218314,
+            -26.66829464470293
+          ],
+          "look": [
+            1.5,
+            2.7570272967980296,
+            -25
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 5,
+              "word": "father's",
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "satyavati"
+          ],
+          "cut": true,
+          "at": {
+            "line": 5,
+            "word": "father's",
+            "offset": -2
           }
         }
       ],
       "dof": [
         {
           "at": {
-            "frame": 508
+            "line": 5,
+            "word": "Her",
+            "offset": -2
           },
-          "cInf": 8
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            0.4,
+            2.875267508182963,
+            -24.5
+          ]
         },
         {
           "at": {
             "line": 5,
-            "word": "her",
+            "word": "father's",
             "offset": -2
           },
-          "cInf": 13
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            1.5,
+            2.8554896498218314,
+            -25
+          ]
         }
       ]
     },
@@ -460,49 +521,37 @@
         "word": "A",
         "offset": -2
       },
-      "light": "day",
+      "light": "golden",
       "sets": [
         "palace"
       ],
+      "end": {
+        "line": 13,
+        "word": "Pandu",
+        "offset": -2
+      },
       "actors": [
         {
           "who": "dhritarashtra",
-          "pos": {
-            "at": "DH",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            -1.15,
+            1.62,
+            47
+          ],
           "pose": "stand",
           "expr": "neutral",
-          "facing": 1
+          "facing": -1
         },
         {
           "who": "pandu",
-          "pos": {
-            "at": "PD",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "pose": "hold",
+          "pos": [
+            1.15,
+            1.62,
+            47
+          ],
+          "pose": "stand",
           "expr": "smile",
-          "prop": "bow",
-          "facing": -1,
-          "beats": [
-            {
-              "at": {
-                "line": 12,
-                "word": "king",
-                "offset": -2
-              },
-              "expr": "grin"
-            }
-          ]
+          "facing": 1
         }
       ],
       "camera": [
@@ -522,7 +571,9 @@
           "roll": 0,
           "push": {
             "from": {
-              "frame": 1105
+              "line": 12,
+              "word": "A",
+              "offset": -2
             },
             "rate": 0.0025
           },
@@ -530,7 +581,9 @@
             "dhritarashtra"
           ],
           "at": {
-            "frame": 1105
+            "line": 12,
+            "word": "A",
+            "offset": -2
           }
         },
         {
@@ -570,9 +623,31 @@
       "dof": [
         {
           "at": {
-            "frame": 1105
+            "line": 12,
+            "word": "A",
+            "offset": -2
           },
-          "cInf": 14
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -1.15,
+            2.995267508182963,
+            47
+          ]
+        },
+        {
+          "at": {
+            "line": 12,
+            "word": "brother",
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            1.15,
+            3.00915909917471,
+            47
+          ]
         }
       ]
     },
@@ -587,6 +662,11 @@
       "sets": [
         "deer"
       ],
+      "end": {
+        "line": 14,
+        "word": "Conveniently",
+        "offset": -2
+      },
       "actors": [
         {
           "who": "deer",
@@ -595,18 +675,14 @@
             "graze": 1,
             "phase": 0
           },
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            152.2,
+            1.5,
+            -84.5
+          ],
           "scale": 1.1,
           "mirror": true,
           "blobScale": 1.6,
-          "expr": "neutral",
           "visible": {
             "from": {
               "line": 13,
@@ -635,14 +711,11 @@
         },
         {
           "who": "sage",
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            152.2,
+            1.5,
+            -84.5
+          ],
           "mirror": true,
           "pose": "hips",
           "expr": "stern",
@@ -654,8 +727,7 @@
               "offset": -2
             },
             "to": {
-              "end": true,
-              "offset": 0
+              "end": true
             }
           },
           "beats": [
@@ -671,19 +743,16 @@
         },
         {
           "who": "pandu",
-          "pos": {
-            "at": "PU",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            147.6,
+            1.5,
+            -76.5
+          ],
           "mirror": true,
           "pose": "aim",
           "expr": "stern",
           "prop": "bowDrawn",
-          "facing": 1,
+          "facing": -1,
           "beats": [
             {
               "at": {
@@ -709,17 +778,13 @@
         },
         {
           "who": "kunti",
-          "pos": {
-            "at": "KU",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "pose": "stand",
+          "pos": [
+            146.6,
+            1.5,
+            -75.6
+          ],
+          "pose": "pray",
           "expr": "nervous",
-          "facing": 1,
           "visible": {
             "from": {
               "line": 13,
@@ -727,8 +792,7 @@
               "offset": -2
             },
             "to": {
-              "end": true,
-              "offset": 0
+              "end": true
             }
           }
         }
@@ -741,14 +805,11 @@
             "word": "secretly",
             "offset": -2
           },
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              1,
-              -0.3
-            ]
-          },
+          "pos": [
+            152.2,
+            2.5,
+            -84.8
+          ],
           "size": 2.6,
           "dur": 12
         },
@@ -764,27 +825,21 @@
             "word": "deer",
             "offset": -2
           },
-          "to": {
-            "at": "DR",
-            "d": [
-              0,
-              0.9,
-              0
-            ]
-          },
+          "to": [
+            152.2,
+            2.4,
+            -84.5
+          ],
           "size": [
             0.9,
             0.45
           ],
           "rot": -0.2,
-          "from": {
-            "at": "PU",
-            "d": [
-              0.6,
-              1.5,
-              -0.3
-            ]
-          }
+          "from": [
+            148.2,
+            3,
+            -76.8
+          ]
         },
         {
           "kind": "stars",
@@ -793,34 +848,36 @@
             "word": "deer",
             "offset": -2
           },
-          "pos": {
-            "at": "DR",
-            "d": [
-              0,
-              1.4,
-              -0.2
-            ]
-          },
+          "pos": [
+            152.2,
+            2.9,
+            -84.7
+          ],
           "size": [
             1.5,
             0.79
           ],
           "period": 12,
-          "dur": 12
+          "dur": 12,
+          "from": {
+            "line": 13,
+            "word": "deer",
+            "offset": -2
+          }
         }
       ],
       "camera": [
         {
           "type": "dolly",
           "pos": [
-            150.18350184659838,
-            2.552568,
-            -55.32655912567925
+            147.36810256393213,
+            3.352173221951789,
+            -75.5951665461837
           ],
           "look": [
-            150.18350184659838,
-            2.3260866109758944,
-            -80.78350184659837
+            152.2,
+            2.204484,
+            -84.5
           ],
           "fov": 45,
           "roll": 0,
@@ -833,9 +890,9 @@
             "rate": 0.002
           },
           "subjects": [
-            "deer",
-            "pandu"
+            "deer"
           ],
+          "over": "pandu",
           "at": {
             "line": 13,
             "word": "Pandu",
@@ -859,7 +916,7 @@
           "push": {
             "from": {
               "line": 13,
-              "word": "The",
+              "word": "secretly",
               "offset": -2
             },
             "rate": 0.003
@@ -870,7 +927,39 @@
           "cut": true,
           "at": {
             "line": 13,
-            "word": "The",
+            "word": "secretly",
+            "offset": -2
+          }
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            146.6,
+            2.8554896498218314,
+            -73.93170535529707
+          ],
+          "look": [
+            146.6,
+            2.7570272967980296,
+            -75.6
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 13,
+              "word": "and",
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "kunti"
+          ],
+          "cut": true,
+          "at": {
+            "line": 13,
+            "word": "and",
             "offset": -2
           }
         }
@@ -879,26 +968,30 @@
         {
           "at": {
             "line": 13,
-            "word": "Pandu",
-            "offset": -2
-          },
-          "cInf": 0
-        },
-        {
-          "at": {
-            "line": 13,
             "word": "secretly",
             "offset": -2
           },
-          "cInf": 10
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            152.2,
+            2.856509936165858,
+            -84.5
+          ]
         },
         {
           "at": {
             "line": 13,
-            "word": "The",
+            "word": "and",
             "offset": -2
           },
-          "cInf": 13
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            146.6,
+            2.8554896498218314,
+            -75.6
+          ]
         }
       ]
     },
@@ -909,25 +1002,26 @@
         "word": "Five",
         "offset": -2
       },
-      "light": "day",
+      "light": "golden",
       "sets": [
         "palace"
       ],
+      "end": {
+        "line": 17,
+        "word": "Meanwhile",
+        "offset": -2
+      },
       "actors": [
         {
           "who": "bro0",
-          "pos": {
-            "at": "CY",
-            "d": [
-              -1.6,
-              0,
-              0.3
-            ]
-          },
+          "pos": [
+            -1.6,
+            1.62,
+            42.3
+          ],
           "scale": 1.08,
           "pose": "stand",
           "expr": "grin",
-          "facing": 0,
           "appear": {
             "at": {
               "line": 16,
@@ -940,18 +1034,14 @@
         },
         {
           "who": "bro1",
-          "pos": {
-            "at": "CY",
-            "d": [
-              -0.8,
-              0,
-              0.15
-            ]
-          },
-          "scale": 1.12,
+          "pos": [
+            -0.8,
+            1.62,
+            42.15
+          ],
+          "scale": 1.08,
           "pose": "flex",
           "expr": "grin",
-          "facing": 0,
           "appear": {
             "at": {
               "line": 16,
@@ -964,18 +1054,14 @@
         },
         {
           "who": "bro2",
-          "pos": {
-            "at": "CY",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "scale": 1,
+          "pos": [
+            0,
+            1.62,
+            42
+          ],
+          "scale": 1.08,
           "pose": "hips",
           "expr": "grin",
-          "facing": 0,
           "appear": {
             "at": {
               "line": 16,
@@ -988,18 +1074,14 @@
         },
         {
           "who": "bro3",
-          "pos": {
-            "at": "CY",
-            "d": [
-              0.8,
-              0,
-              0.15
-            ]
-          },
-          "scale": 0.92,
+          "pos": [
+            0.8,
+            1.62,
+            42.15
+          ],
+          "scale": 1.08,
           "pose": "stand",
           "expr": "grin",
-          "facing": 0,
           "appear": {
             "at": {
               "line": 16,
@@ -1012,18 +1094,14 @@
         },
         {
           "who": "bro4",
-          "pos": {
-            "at": "CY",
-            "d": [
-              1.6,
-              0,
-              0.3
-            ]
-          },
-          "scale": 0.92,
+          "pos": [
+            1.6,
+            1.62,
+            42.3
+          ],
+          "scale": 1.08,
           "pose": "stand",
           "expr": "grin",
-          "facing": 0,
           "appear": {
             "at": {
               "line": 16,
@@ -1039,20 +1117,22 @@
         {
           "type": "dolly",
           "pos": [
-            -0.02119041451031906,
+            1.2887399958548029e-15,
             2.7354712115678144,
-            31.755466791411976
+            31.6266393318296
           ],
           "look": [
-            -0.021190414510320332,
-            2.3263703394057695,
-            42.160595207255156
+            0,
+            2.301142827284135,
+            42.15
           ],
           "fov": 45,
           "roll": 0,
           "push": {
             "from": {
-              "frame": 1547
+              "line": 16,
+              "word": "Five",
+              "offset": -2
             },
             "rate": 0.002
           },
@@ -1064,16 +1144,10 @@
             "bro4"
           ],
           "at": {
-            "frame": 1547
+            "line": 16,
+            "word": "Five",
+            "offset": -2
           }
-        }
-      ],
-      "dof": [
-        {
-          "at": {
-            "frame": 1547
-          },
-          "cInf": 10
         }
       ]
     },
@@ -1088,18 +1162,20 @@
       "sets": [
         "palace"
       ],
+      "end": {
+        "line": 20,
+        "word": "Five",
+        "offset": -2
+      },
       "set": [
         {
           "piece": "jars",
           "grid": {
-            "origin": {
-              "at": "JAR0",
-              "d": [
-                0,
-                0,
-                0
-              ]
-            },
+            "origin": [
+              -7.2,
+              1.62,
+              51
+            ],
             "cols": 13,
             "dx": 1.2,
             "dz": 1.25,
@@ -1196,7 +1272,7 @@
           "type": "dolly",
           "pos": [
             -7.2,
-            3.00915909917471,
+            1.62,
             48.40734565011332
           ],
           "look": [
@@ -1219,25 +1295,789 @@
             "line": 19,
             "word": "Out",
             "offset": -2
+          },
+          "scenery": true
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "start": {
+        "line": 21,
+        "word": "Bhima",
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "end": {
+        "line": 22,
+        "word": "So",
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "kidBhima",
+          "pos": [
+            -13.85,
+            2,
+            44.85
+          ],
+          "scale": 1.12,
+          "pose": "hips",
+          "expr": "grin",
+          "beats": [
+            {
+              "at": {
+                "line": 21,
+                "word": "shaking",
+                "offset": -2
+              },
+              "pose": "shake"
+            }
+          ]
+        },
+        {
+          "who": "kaurava1",
+          "pos": [
+            -15.5,
+            5.37,
+            43.4
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": 0
+          },
+          "scale": 0.85,
+          "noBlob": true,
+          "pose": "armsUp",
+          "expr": "shock",
+          "visible": {
+            "from": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "to": {
+              "end": true
+            }
+          }
+        },
+        {
+          "who": "kaurava2",
+          "pos": [
+            -12.6,
+            5.67,
+            43.5
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.03
+          },
+          "scale": 0.85,
+          "noBlob": true,
+          "pose": "armsUp",
+          "expr": "shock",
+          "visible": {
+            "from": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "to": {
+              "end": true
+            }
+          }
+        },
+        {
+          "who": "kaurava3",
+          "pos": [
+            -16.7,
+            5.52,
+            43.5
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.06
+          },
+          "scale": 0.85,
+          "noBlob": true,
+          "pose": "armsUp",
+          "expr": "shock",
+          "visible": {
+            "from": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "to": {
+              "end": true
+            }
+          }
+        },
+        {
+          "who": "kaurava4",
+          "pos": [
+            -11.4,
+            5.52,
+            43.5
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.7,
+            "delay": -0.09
+          },
+          "scale": 0.85,
+          "noBlob": true,
+          "pose": "armsUp",
+          "expr": "shock",
+          "visible": {
+            "from": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "to": {
+              "end": true
+            }
           }
         }
       ],
-      "dof": [
+      "fx": [
         {
+          "kind": "mango",
           "at": {
-            "line": 19,
-            "word": "Out",
-            "offset": -2
+            "line": 21,
+            "word": "shaking",
+            "offset": 30
           },
-          "cInf": 9
+          "pos": [
+            -15.1,
+            6.22,
+            43.3
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": 0
+          },
+          "size": 0.34,
+          "until": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 75
+          },
+          "rotOffset": -0.48
         },
         {
+          "kind": "mango",
           "at": {
-            "line": 19,
-            "word": "one",
+            "line": 21,
+            "word": "shaking",
+            "offset": 30
+          },
+          "pos": [
+            -12.2,
+            6.5200000000000005,
+            43.4
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.04
+          },
+          "size": 0.34,
+          "until": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 75
+          },
+          "rotOffset": -0.48
+        },
+        {
+          "kind": "mango",
+          "at": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 30
+          },
+          "pos": [
+            -13.5,
+            7.22,
+            43.5
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.08
+          },
+          "size": 0.34,
+          "until": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 75
+          },
+          "rotOffset": -0.48
+        },
+        {
+          "kind": "mango",
+          "at": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 30
+          },
+          "pos": [
+            -14.2,
+            5.72,
+            42.9
+          ],
+          "motion": {
+            "type": "ballistic",
+            "at": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "v": [
+              0,
+              0,
+              0
+            ],
+            "a": [
+              0,
+              -4.9,
+              0
+            ],
+            "floorY": 1.92,
+            "spin": 6,
+            "delay": -0.12
+          },
+          "size": 0.34,
+          "until": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 75
+          },
+          "rotOffset": -0.48
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -13.85,
+            3.1567849601444005,
+            42.63307249051306
+          ],
+          "look": [
+            -13.85,
+            2.7063703394057694,
+            44.85
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 21,
+              "word": "Bhima",
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "kidBhima"
+          ],
+          "at": {
+            "line": 21,
+            "word": "Bhima",
+            "offset": -2
+          }
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -14.049999999999999,
+            3.1567849601444005,
+            28.11882430373115
+          ],
+          "look": [
+            -14.05,
+            4.368879632584735,
+            44.160758824486166
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 21,
+              "word": "shaking",
+              "offset": 30
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "kidBhima",
+            "kaurava1",
+            "kaurava2",
+            "kaurava3",
+            "kaurava4"
+          ],
+          "cut": true,
+          "at": {
+            "line": 21,
+            "word": "shaking",
+            "offset": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "start": {
+        "line": 25,
+        "word": "They",
+        "offset": -2
+      },
+      "light": "night",
+      "sets": [
+        "lac"
+      ],
+      "end": {
+        "line": 26,
+        "word": "In",
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "priest",
+          "pos": [
+            -157,
+            1.5,
+            57
+          ],
+          "noBlob": true,
+          "pose": "chop",
+          "expr": "stern",
+          "prop": "axe",
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "who": "adult0",
+          "pos": [
+            -162,
+            1.5,
+            71
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "who": "adult1",
+          "pos": [
+            -161,
+            1.5,
+            71
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "who": "adult2",
+          "pos": [
+            -160,
+            1.5,
+            71
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "who": "adult3",
+          "pos": [
+            -159,
+            1.5,
+            71
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        },
+        {
+          "who": "adult4",
+          "pos": [
+            -158,
+            1.5,
+            71
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "facing": 1,
+          "visible": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "to": {
+              "line": 25,
+              "word": "torch",
+              "offset": -2
+            }
+          }
+        }
+      ],
+      "fx": [
+        {
+          "kind": "fire",
+          "at": {
+            "line": 25,
+            "word": "it",
             "offset": -2
           },
-          "cInf": 13
+          "pos": [
+            -160,
+            1.5,
+            70
+          ],
+          "spots": [
+            [
+              -4.4,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              -2.2,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              0,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              2.2,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              4.4,
+              3.45,
+              -3.7,
+              2.2
+            ],
+            [
+              -3,
+              7.3,
+              -0.6,
+              3.4
+            ],
+            [
+              0,
+              7.8,
+              -0.6,
+              3.4
+            ],
+            [
+              3,
+              7.3,
+              -0.6,
+              3.4
+            ]
+          ],
+          "spread": 24,
+          "pop": 0.4,
+          "hashSalt": 8
+        },
+        {
+          "kind": "halo",
+          "at": {
+            "line": 25,
+            "word": "it",
+            "offset": -2
+          },
+          "pos": [
+            -160,
+            6.5,
+            70
+          ],
+          "size": 40,
+          "height": 28,
+          "color": "#ff7a2a",
+          "card": "fire",
+          "peak": 0.35
+        },
+        {
+          "kind": "smoke",
+          "at": {
+            "line": 25,
+            "word": "it",
+            "offset": -2
+          },
+          "pos": [
+            -160,
+            1.5,
+            70
+          ],
+          "count": 8,
+          "area": [
+            6,
+            3
+          ],
+          "offset": [
+            -3,
+            10,
+            -1
+          ],
+          "rise": 12,
+          "rate": 0.25,
+          "size": [
+            5,
+            11
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -159.5,
+            2.88915909917471,
+            23.38631294248576
+          ],
+          "look": [
+            -159.5,
+            2.3260866109758944,
+            64
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 25,
+              "word": "They",
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "priest",
+            "adult0"
+          ],
+          "at": {
+            "line": 25,
+            "word": "They",
+            "offset": -2
+          }
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -160,
+            1.5,
+            9.116254632143011
+          ],
+          "look": [
+            -160,
+            6,
+            75
+          ],
+          "fov": 48,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 25,
+              "word": "it",
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [],
+          "cut": true,
+          "at": {
+            "line": 25,
+            "word": "it",
+            "offset": -2
+          },
+          "scenery": true
         }
       ]
     },
@@ -1252,541 +2092,207 @@
       "sets": [
         "arena"
       ],
+      "end": {
+        "line": 27,
+        "word": "Kings",
+        "offset": -2
+      },
       "actors": [
         {
           "who": "draupadi",
-          "pos": {
-            "at": "DRA",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            170,
+            2.5,
+            81
+          ],
           "pose": "hold",
-          "expr": "smile",
-          "prop": "garland",
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "expr": "smile"
+        },
+        {
+          "who": "kingA0",
+          "pos": [
+            162.7,
+            2.55,
+            65.4
+          ],
+          "pose": "hips",
+          "expr": "stern",
+          "facing": 1
         },
         {
           "who": "priestBro0",
           "pos": [
-            172.4,
+            171.7,
             1.65,
-            78.4
+            66
           ],
-          "motion": {
-            "type": "path",
-            "keys": [
-              [
-                {
-                  "shot": true,
-                  "offset": 0
-                },
-                [
-                  172.4,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                {
-                  "shot": true,
-                  "offset": 92
-                },
-                [
-                  169.48666666666668,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "ease": "linear",
-            "walk": {
-              "rate": 1.6,
-              "offset": 0
-            }
-          },
           "pose": "walk",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "shot": true,
-              "offset": 92
-            }
-          }
+          "facing": 1
         },
         {
           "who": "priestBro1",
           "pos": [
-            173.25,
+            170.85,
             1.65,
-            78.05000000000001
+            66
           ],
-          "motion": {
-            "type": "path",
-            "keys": [
-              [
-                {
-                  "shot": true,
-                  "offset": 0
-                },
-                [
-                  173.25,
-                  1.65,
-                  78.05000000000001
-                ]
-              ],
-              [
-                {
-                  "shot": true,
-                  "offset": 92
-                },
-                [
-                  170.33666666666667,
-                  1.65,
-                  78.05000000000001
-                ]
-              ]
-            ],
-            "ease": "linear",
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.3
-            }
-          },
           "pose": "walk",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "shot": true,
-              "offset": 92
-            }
-          }
+          "facing": 1
         },
         {
           "who": "priestBro2",
           "pos": [
-            174.1,
+            170,
             1.65,
-            78.4
+            66
           ],
-          "motion": {
-            "type": "path",
-            "keys": [
-              [
-                {
-                  "shot": true,
-                  "offset": 0
-                },
-                [
-                  174.1,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                {
-                  "shot": true,
-                  "offset": 92
-                },
-                [
-                  171.18666666666667,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "ease": "linear",
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.6
-            }
-          },
           "pose": "walk",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "shot": true,
-              "offset": 92
-            }
-          }
+          "facing": 1
         },
         {
           "who": "priestBro3",
           "pos": [
-            174.95000000000002,
+            169.15,
             1.65,
-            78.05000000000001
+            66
           ],
-          "motion": {
-            "type": "path",
-            "keys": [
-              [
-                {
-                  "shot": true,
-                  "offset": 0
-                },
-                [
-                  174.95000000000002,
-                  1.65,
-                  78.05000000000001
-                ]
-              ],
-              [
-                {
-                  "shot": true,
-                  "offset": 92
-                },
-                [
-                  172.0366666666667,
-                  1.65,
-                  78.05000000000001
-                ]
-              ]
-            ],
-            "ease": "linear",
-            "walk": {
-              "rate": 1.6,
-              "offset": 0.8999999999999999
-            }
-          },
           "pose": "walk",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "shot": true,
-              "offset": 92
-            }
-          }
+          "facing": 1
         },
         {
           "who": "priestBro4",
           "pos": [
-            175.8,
+            168.3,
             1.65,
-            78.4
+            66
           ],
-          "motion": {
-            "type": "path",
-            "keys": [
-              [
-                {
-                  "shot": true,
-                  "offset": 0
-                },
-                [
-                  175.8,
-                  1.65,
-                  78.4
-                ]
-              ],
-              [
-                {
-                  "shot": true,
-                  "offset": 92
-                },
-                [
-                  172.88666666666668,
-                  1.65,
-                  78.4
-                ]
-              ]
-            ],
-            "ease": "linear",
-            "walk": {
-              "rate": 1.6,
-              "offset": 1.2
-            }
-          },
           "pose": "walk",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "shot": true,
-              "offset": 92
-            }
-          }
+          "facing": 1
         },
         {
           "who": "kingA0",
           "pos": [
-            149.4,
+            156.2,
             2.1,
-            62
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
-          "expr": "stern",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "expr": "smile",
+          "seated": true,
+          "facing": 1
         },
         {
           "who": "kingA1",
           "pos": [
-            149.4,
+            152.6,
             2.1,
-            65.6
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": 1
         },
         {
           "who": "kingA2",
           "pos": [
-            149.4,
+            149,
             2.1,
-            69.2
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": 1
         },
         {
           "who": "kingA3",
           "pos": [
-            149.4,
+            145.4,
             2.1,
-            72.8
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": 1
         },
         {
           "who": "kingA4",
           "pos": [
-            149.4,
+            141.8,
             2.1,
-            76.4
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": 1
         },
         {
           "who": "kingA5",
           "pos": [
-            190.6,
+            198.2,
             2.1,
-            62
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": -1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": -1
         },
         {
           "who": "kingA6",
           "pos": [
-            190.6,
+            194.6,
             2.1,
-            65.6
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": -1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": -1
         },
         {
           "who": "kingA7",
           "pos": [
-            190.6,
+            191,
             2.1,
-            69.2
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": -1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": -1
         },
         {
           "who": "kingA8",
           "pos": [
-            190.6,
+            187.4,
             2.1,
-            72.8
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": -1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
+          "seated": true,
+          "facing": -1
         },
         {
           "who": "kingA9",
           "pos": [
-            190.6,
+            183.8,
             2.1,
-            76.4
+            70
           ],
-          "noBlob": true,
           "pose": "sit",
           "expr": "smile",
-          "facing": -1,
-          "visible": {
-            "from": {
-              "shot": true,
-              "offset": -10
-            },
-            "to": {
-              "end": true,
-              "offset": 0
-            }
-          }
-        },
-        {
-          "who": "kingA0",
-          "pos": {
-            "at": "BOW",
-            "d": [
-              -1.3,
-              0.15,
-              -0.6
-            ]
-          },
-          "pose": "hips",
-          "expr": "stern",
-          "facing": 1,
-          "visible": {
-            "from": {
-              "line": 26,
-              "word": "string",
-              "offset": -2
-            },
-            "to": {
-              "line": 26,
-              "word": "hit",
-              "offset": -2
-            }
-          }
+          "seated": true,
+          "facing": -1
         }
       ],
       "set": [
@@ -1799,14 +2305,14 @@
         {
           "type": "dolly",
           "pos": [
-            167.74954438633802,
+            167.19602015304508,
             3.8554896498218314,
-            69.85671305781733
+            28.04054126241266
           ],
           "look": [
-            170.33666666666667,
-            2.8690512340629164,
-            79.51198485339734
+            167.19602015304508,
+            2.960352535422204,
+            73.208242751657
           ],
           "fov": 45,
           "roll": 0,
@@ -1822,7 +2328,10 @@
             "draupadi",
             "priestBro0",
             "priestBro1",
-            "priestBro2"
+            "priestBro2",
+            "priestBro3",
+            "priestBro4",
+            "kingA0"
           ],
           "at": {
             "line": 26,
@@ -1863,68 +2372,102 @@
           }
         },
         {
+          "type": "dolly",
+          "pos": [
+            164,
+            2.4,
+            63.293572435316726
+          ],
+          "look": [
+            164,
+            2.4,
+            66
+          ],
+          "fov": 35,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 26,
+              "word": "monster",
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [],
+          "cut": true,
+          "at": {
+            "line": 26,
+            "word": "monster",
+            "offset": -2
+          },
+          "scenery": true
+        },
+        {
           "type": "tilt",
           "pos": [
             170,
-            3.8554896498218314,
-            78.50788796395808
+            1.65,
+            63.40734565011332
           ],
           "look": [
             170,
-            3.2940512340629162,
-            81
+            2.4760866109758943,
+            66
           ],
           "fov": 45,
           "roll": 0,
           "push": {
             "from": {
               "line": 26,
-              "word": "hit",
+              "word": "target",
               "offset": -2
             },
             "rate": 0.002
           },
-          "subjects": [
-            "draupadi"
-          ],
+          "subjects": [],
           "cut": true,
           "lookTo": [
             170,
-            5.358584442626499,
-            81
+            18.9,
+            70
           ],
           "tiltDur": 30,
           "at": {
             "line": 26,
-            "word": "hit",
+            "word": "target",
             "offset": -2
-          }
+          },
+          "scenery": true
         }
       ],
       "dof": [
         {
           "at": {
             "line": 26,
-            "word": "In",
-            "offset": -2
-          },
-          "cInf": 10
-        },
-        {
-          "at": {
-            "line": 26,
             "word": "string",
             "offset": -2
           },
-          "cInf": 11
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            170,
+            3.8554896498218314,
+            81
+          ]
         },
         {
           "at": {
             "line": 26,
-            "word": "hit",
+            "word": "monster",
             "offset": -2
           },
-          "cInf": 0
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            164,
+            3.78915909917471,
+            66
+          ]
         }
       ]
     },
@@ -1939,64 +2482,37 @@
       "sets": [
         "village"
       ],
-      "sun": {
-        "az": 115,
-        "el": 10
+      "end": {
+        "line": 33,
+        "word": "Bhishma's",
+        "offset": -2
       },
       "actors": [
         {
           "who": "kunti",
-          "pos": {
-            "at": "KS",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "pose": "hold",
-          "expr": "smile",
-          "prop": "scroll",
-          "facing": 1,
-          "beats": [
-            {
-              "at": {
-                "line": 32,
-                "word": "sent",
-                "offset": -2
-              },
-              "pose": "grab",
-              "prop": null,
-              "expr": "shock"
-            },
-            {
-              "at": {
-                "line": 32,
-                "word": "unsend",
-                "offset": -2
-              },
-              "pose": "shrug",
-              "expr": "nervous"
-            }
-          ]
+          "pos": [
+            1,
+            1.5,
+            -40.4
+          ],
+          "pose": "stand",
+          "expr": "smile"
         }
       ],
       "fx": [
         {
           "kind": "pigeon",
+          "id": "pigeon",
           "at": {
             "line": 32,
             "word": "sent",
             "offset": -2
           },
-          "pos": {
-            "at": "KS",
-            "d": [
-              -0.2,
-              1.9,
-              -0.5
-            ]
-          },
+          "pos": [
+            0,
+            3.4,
+            -24.5
+          ],
           "motion": {
             "type": "ballistic",
             "at": {
@@ -2015,7 +2531,6 @@
               0
             ]
           },
-          "id": "pigeon",
           "size": 0.9
         }
       ],
@@ -2023,14 +2538,14 @@
         {
           "type": "dolly",
           "pos": [
-            1.3000000000000003,
+            1.0000000000000002,
             2.8554896498218314,
-            -41.768294644702934
+            -42.06829464470293
           ],
           "look": [
-            1.3,
+            1,
             2.7570272967980296,
-            -40.1
+            -40.4
           ],
           "fov": 39,
           "roll": 0,
@@ -2056,16 +2571,16 @@
           "pos": {
             "at": "pigeon",
             "d": [
-              3.0748212680830933e-16,
-              0.8,
-              -2.510782104868035
+              3.0748212680830736e-16,
+              0.2,
+              -2.510782104868019
             ]
           },
           "look": {
             "at": "pigeon",
             "d": [
               0,
-              0.54,
+              0,
               0
             ]
           },
@@ -2097,15 +2612,13 @@
             "word": "You",
             "offset": -2
           },
-          "cInf": 8
-        },
-        {
-          "at": {
-            "line": 32,
-            "word": "There's",
-            "offset": -2
-          },
-          "cInf": 0
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            1,
+            2.8554896498218314,
+            -40.4
+          ]
         }
       ]
     },
@@ -2116,13 +2629,14 @@
         "word": "The",
         "offset": -2
       },
-      "light": "night",
+      "light": "golden",
       "sets": [
         "city"
       ],
-      "sun": {
-        "az": 10,
-        "el": 12
+      "end": {
+        "line": 36,
+        "word": "Oh",
+        "offset": -2
       },
       "actors": [
         {
@@ -2144,20 +2658,23 @@
                     "offset": 131
                   },
                   1
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 180
+                  },
+                  0
                 ]
               ],
               "ease": "linear"
             }
           },
-          "pos": {
-            "at": "AG",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
-          "blobScale": 1.2,
+          "pos": [
+            40,
+            1.5,
+            -182
+          ],
           "expr": "pained",
           "visible": {
             "from": {
@@ -2166,8 +2683,7 @@
               "offset": -2
             },
             "to": {
-              "end": true,
-              "offset": 0
+              "end": true
             }
           },
           "beats": [
@@ -2190,14 +2706,11 @@
             "word": "The",
             "offset": -2
           },
-          "pos": {
-            "at": "AG",
-            "d": [
-              0,
-              0,
-              0
-            ]
-          },
+          "pos": [
+            40,
+            1.5,
+            -220
+          ],
           "source": "cityTreetops",
           "filter": {
             "zAfter": -178,
@@ -2216,14 +2729,11 @@
             "word": "The",
             "offset": -2
           },
-          "pos": {
-            "at": "AG",
-            "d": [
-              0,
-              9,
-              45
-            ]
-          },
+          "pos": [
+            40,
+            10.5,
+            -137
+          ],
           "size": 80,
           "height": 36,
           "color": "#ff7a2a",
@@ -2306,27 +2816,61 @@
             "word": "The",
             "offset": -2
           },
-          "cInf": 0
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            40,
+            2.9412590656674524,
+            -182
+          ]
         },
         {
           "at": {
             "line": 35,
-            "word": "fire",
+            "word": "Too",
             "offset": -2
           },
-          "cInf": 12
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            40,
+            2.9412590656674524,
+            -182
+          ]
         }
       ]
     }
   ],
   "cast": {
-    "fisher": {
-      "spec": "C.fisher",
-      "seed": 4
+    "ganesha": {
+      "spec": {
+        "skin": "#f2b49c"
+      },
+      "seed": 77
+    },
+    "vyasa": {
+      "spec": "C.vyasa",
+      "seed": 1
+    },
+    "shantanu": {
+      "spec": "C.shantanu",
+      "seed": 2
     },
     "satyavati": {
       "spec": "C.satyavati",
       "seed": 3
+    },
+    "fisher": {
+      "spec": "C.fisher",
+      "seed": 4
+    },
+    "devavrata": {
+      "spec": "C.devavrata",
+      "seed": 5
+    },
+    "bhishmaOld": {
+      "spec": "C.bhishmaOld",
+      "seed": 6
     },
     "dhritarashtra": {
       "spec": "C.dhritarashtra",
@@ -2335,6 +2879,46 @@
     "pandu": {
       "spec": "C.pandu",
       "seed": 8
+    },
+    "sage": {
+      "spec": "C.sage",
+      "seed": 9
+    },
+    "kunti": {
+      "spec": "C.kunti",
+      "seed": 10
+    },
+    "madri": {
+      "spec": "C.madri",
+      "seed": 11
+    },
+    "gandhari": {
+      "spec": "C.gandhari",
+      "seed": 12
+    },
+    "kidYudhi": {
+      "spec": "KIDS.yudhi",
+      "seed": 20
+    },
+    "kidBhima": {
+      "spec": "KIDS.bhima",
+      "seed": 21
+    },
+    "kidArjuna": {
+      "spec": "KIDS.arjuna",
+      "seed": 22
+    },
+    "kidNakula": {
+      "spec": "KIDS.nakula",
+      "seed": 23
+    },
+    "kidSahadeva": {
+      "spec": "KIDS.sahadeva",
+      "seed": 24
+    },
+    "duryodhana": {
+      "spec": "C.duryodhana",
+      "seed": 30
     },
     "bro0": {
       "spec": "KIDS.yudhi",
@@ -2356,23 +2940,165 @@
       "spec": "KIDS.sahadeva",
       "seed": 24
     },
+    "priest": {
+      "spec": "C.priest",
+      "seed": 40
+    },
+    "king1": {
+      "spec": "C.king1",
+      "seed": 50
+    },
+    "king2": {
+      "spec": "C.king2",
+      "seed": 51
+    },
+    "draupadi": {
+      "spec": "C.draupadi",
+      "seed": 60
+    },
+    "babyK0": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyK1": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyK2": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyM0": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
+    "babyM1": {
+      "spec": {
+        "skin": "#f7c9b6"
+      },
+      "seed": 0
+    },
     "deer": {
       "spec": {
         "skin": "#b9773f"
       },
       "seed": 0
     },
-    "sage": {
-      "spec": "C.sage",
-      "seed": 9
+    "kidDuryodhana": {
+      "spec": "KIDS.duryodhana",
+      "seed": 100
     },
-    "kunti": {
-      "spec": "C.kunti",
-      "seed": 10
+    "kidDuhshala": {
+      "spec": "KIDS.duhshala",
+      "seed": 106
     },
-    "draupadi": {
-      "spec": "C.draupadi",
-      "seed": 60
+    "kaurava1": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#5a3f8a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 101
+    },
+    "kaurava2": {
+      "spec": {
+        "skin": "#ffdcbc",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#8a3f6a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 102
+    },
+    "kaurava3": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#6a4f9a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 103
+    },
+    "kaurava4": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#4a3f7a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 104
+    },
+    "kaurava5": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#7a3f9a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 105
+    },
+    "kaurava6": {
+      "spec": {
+        "skin": "#ffdcbc",
+        "build": "kid",
+        "top": null,
+        "lower": "#f2e6c4",
+        "drape": "#5a3f8a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 106
+    },
+    "kidDuryodhana103": {
+      "spec": "KIDS.duryodhana",
+      "seed": 103
+    },
+    "naga1": {
+      "spec": {
+        "skin": "#3f9a6a"
+      },
+      "seed": 0
+    },
+    "naga2": {
+      "spec": {
+        "skin": "#6a4fb5"
+      },
+      "seed": 0
+    },
+    "naga3": {
+      "spec": {
+        "skin": "#2f7a9a"
+      },
+      "seed": 0
+    },
+    "naga4": {
+      "spec": {
+        "skin": "#b5344a"
+      },
+      "seed": 0
     },
     "priestBro0": {
       "spec": {
@@ -2435,6 +3161,73 @@
       },
       "seed": 35
     },
+    "adult0": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#e8b53a",
+        "head": "hair",
+        "hairCol": "#2a1a1e",
+        "necklace": "#e8b53a"
+      },
+      "seed": 31
+    },
+    "adult1": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "big",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#c8342e",
+        "head": "hair",
+        "hairCol": "#2a1a1e",
+        "moustache": "#2a1a1e"
+      },
+      "seed": 32
+    },
+    "adult2": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#3f6fb5",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 33
+    },
+    "adult3": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "slim",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#2f8a5a",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 34
+    },
+    "adult4": {
+      "spec": {
+        "skin": "#f4c9a0",
+        "build": "slim",
+        "top": null,
+        "lower": "#f6efdc",
+        "border": "#e8b53a",
+        "drape": "#e07a2e",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 35
+    },
     "kingA0": {
       "spec": "C.king1",
       "seed": 50
@@ -2475,19 +3268,33 @@
       "spec": "C.king2",
       "seed": 59
     },
+    "priestArjuna": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": null,
+        "lower": "#f6efdc",
+        "drape": "#f2deb0",
+        "head": "topknot",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 33
+    },
+    "kingShake": {
+      "spec": "C.king2",
+      "seed": 52
+    },
     "agni": {
       "spec": {
         "skin": "#e0533a"
       },
       "seed": 0
     },
-    "kidDuryodhana": {
-      "spec": "KIDS.duryodhana",
-      "seed": 100
-    },
-    "kidDuhshala": {
-      "spec": "KIDS.duhshala",
-      "seed": 106
+    "pot": {
+      "spec": {
+        "skin": "#c8774a"
+      },
+      "seed": 0
     }
   },
   "kicks": []

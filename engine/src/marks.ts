@@ -20,6 +20,7 @@ export const SET_INFO: Record<string, SetInfo> = {
       m("mango", at(PAL, [-14, 0.12, 4]), 180, "The mango tree in the courtyard."),
       m("tree", at(PAL, [-14, 0.12, 4]), 180, "The mango tree in the courtyard."),
       m("plate", at(PAL, [0, 0.12, 4.2]), 180, "The plate of sweets by the river."),
+      m("boat", [3.2, 0.25, 9.5], 180, "The boat mooring on the palace river bank."),
     ],
   },
   village: {
@@ -53,6 +54,7 @@ export const SET_INFO: Record<string, SetInfo> = {
       m("pandu", at(DEER, [-2.4, 0, 3.5]), 0, "Pandu's aiming spot at the clearing edge."),
       m("deer", at(DEER, [2.2, 0, -4.5]), 0, "The stag's grazing mark."),
       m("kunti", at(DEER, [-3.4, 0, 4.4]), 0, "Kunti waiting behind Pandu."),
+      m("sage", at(DEER, [2.2, 0, -4.5]), 0, "The sage at the deer mark after the transformation."),
     ],
   },
   lac: {
@@ -72,10 +74,12 @@ export const SET_INFO: Record<string, SetInfo> = {
     marks: [
       m("dais", at(ARENA, [0, 1, 11]), 180, "Draupadi's dais at the back of the arena."),
       m("bow", at(ARENA, [-6, 0.15, -4]), 180, "The giant bow on its stand."),
-      m("bowstand", at(ARENA, [-6, 0.15, -4]), 180, "The giant bow and its stand."),
+      m("bowstand", at(ARENA, [-6, 0.9, -4]), 180, "The giant bow and its stand."),
       m("pole", at(ARENA, [0, 0, 0]), 180, "The target pole at the arena centre."),
       m("target", at(ARENA, [0, 17.4, 0]), 180, "The target at the top of the contest pole."),
       m("seats", at(ARENA, [-21, 0.6, 0]), 180, "The kings' stepped seats under the side canopy."),
+      m("kingsLeft", at(ARENA, [-21, 0.6, 0]), 180, "Left bank of seated kings."),
+      m("kingsRight", at(ARENA, [21, 0.6, 0]), 180, "Right bank of seated kings."),
       m("floor", at(ARENA, [0, 0.15, -4]), 180, "Open arena floor between the bow and the pole."),
     ],
   },

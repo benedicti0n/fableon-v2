@@ -3190,6 +3190,9 @@
         },
         "raw": {
           "$ref": "#/$defs/Raw"
+        },
+        "end": {
+          "$ref": "#/$defs/Anchor"
         }
       }
     },
