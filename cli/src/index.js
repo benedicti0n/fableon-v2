@@ -2,6 +2,7 @@
 // assemble, qa, all).
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
+import { validateCommand } from './validate.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -17,6 +18,12 @@ export function main(argv = process.argv) {
     .command('doctor')
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
+
+  program
+    .command('validate')
+    .description('validate a project storyboard (schema, catalog, word anchors, time order)')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => validateCommand(opts.project));
 
   program
     .command('init <name>')
