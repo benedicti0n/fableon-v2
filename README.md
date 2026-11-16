@@ -15,10 +15,19 @@ one finished 121 s film (the Adi Parva short, kept as the regression fixture). S
 - Python packages: `pip install -r requirements.txt` (see the comments there for the spaCy model).
 - First voice run downloads the Kokoro model from Hugging Face.
 
+## Python environment
+Use Python 3.12 in a project-local venv (uv or venv):
+```bash
+python3.12 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+On Windows use `.venv\Scripts\python.exe -m pip install -r requirements.txt`. The `fableon` CLI finds Python via
+`FABLEON_PYTHON` if set, else `.venv/bin/python` (`.venv\Scripts\python.exe` on Windows), else `python3`/`python`.
+
 ## Quick check (seed)
 ```bash
-cd engine && npm install && npm run typecheck && npm run build
-node scripts/render.cjs stills ../work/test/f_ 640 540 960 0     # compare with fixtures/adi-parva/reference-stills/frame_640.jpg
+npm install && npm run typecheck && npm run build
+node engine/scripts/render.cjs stills ../work/test/f_ 640 540 960 0     # compare with fixtures/adi-parva/reference-stills/frame_640.jpg
 ```
 On a machine without a usable GPU set `RENDER_GL=swiftshader`.
 

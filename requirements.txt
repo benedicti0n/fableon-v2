@@ -4,5 +4,6 @@ misaki[en]==0.9.4
 numpy==1.26.4
 scipy==1.14.1        # newer scipy needs numpy>=2
 soundfile
+pillow
 # spaCy English model for misaki (its default download host is GitHub): install the wheel from the
 # Hugging Face mirror `spacy/en_core_web_sm` (rename en_core_web_sm-any-py3-none-any.whl to en_core_web_sm-3.7.1-py3-none-any.whl first)
