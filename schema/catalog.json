@@ -1,0 +1,182 @@
+{
+  "places": {
+    "PAL": [
+      0,
+      1.5,
+      42
+    ],
+    "VIL": [
+      0,
+      1.5,
+      -34
+    ],
+    "HERM": [
+      -150,
+      1.5,
+      -70
+    ],
+    "DEER": [
+      150,
+      1.5,
+      -80
+    ],
+    "LAC": [
+      -160,
+      1.5,
+      70
+    ],
+    "ARENA": [
+      170,
+      1.5,
+      70
+    ],
+    "CITY": [
+      40,
+      1.5,
+      -190
+    ],
+    "NAGA": [
+      0,
+      1.5,
+      600
+    ]
+  },
+  "sets": [
+    "palace",
+    "village",
+    "hermitage",
+    "deer",
+    "lac",
+    "arena",
+    "city",
+    "naga"
+  ],
+  "cast": {
+    "C": [
+      "vyasa",
+      "shantanu",
+      "satyavati",
+      "fisher",
+      "devavrata",
+      "bhishmaOld",
+      "dhritarashtra",
+      "pandu",
+      "kunti",
+      "madri",
+      "gandhari",
+      "yudhi",
+      "bhima",
+      "arjuna",
+      "nakula",
+      "sahadeva",
+      "duryodhana",
+      "draupadi",
+      "king1",
+      "king2",
+      "sage",
+      "priest"
+    ],
+    "KIDS": [
+      "yudhi",
+      "bhima",
+      "arjuna",
+      "nakula",
+      "sahadeva",
+      "duryodhana",
+      "duhshala"
+    ],
+    "KAURAVA": {
+      "generator": true
+    }
+  },
+  "poses": [
+    "stand",
+    "walk",
+    "run",
+    "sit",
+    "point",
+    "vow",
+    "pray",
+    "shout",
+    "armsUp",
+    "shrug",
+    "fold",
+    "bless",
+    "present",
+    "hold",
+    "belly",
+    "drink",
+    "flex",
+    "aim",
+    "shake",
+    "wave",
+    "talk",
+    "sneak",
+    "stir",
+    "offer",
+    "dust",
+    "chop",
+    "carry",
+    "throw",
+    "hips",
+    "think",
+    "grab"
+  ],
+  "expressions": [
+    "neutral",
+    "stern",
+    "grin",
+    "laugh",
+    "whistle",
+    "nervous",
+    "shock",
+    "relief",
+    "relief_open",
+    "dazed",
+    "pained",
+    "smile",
+    "smile_closed",
+    "lick"
+  ],
+  "props": [
+    "bow",
+    "bowDrawn",
+    "mace",
+    "spear",
+    "net",
+    "oar",
+    "laddu",
+    "garland",
+    "crown",
+    "jar",
+    "axe",
+    "torch",
+    "mango",
+    "ladle",
+    "scroll",
+    "bigbow"
+  ],
+  "specials": [
+    "ganesha",
+    "agni",
+    "deer",
+    "naga",
+    "baby",
+    "pot",
+    "flat"
+  ],
+  "effects": [
+    "sparkle",
+    "halo",
+    "knot"
+  ],
+  "setPieces": [
+    "pages"
+  ],
+  "lights": [
+    "day",
+    "golden",
+    "night",
+    "deep"
+  ]
+}

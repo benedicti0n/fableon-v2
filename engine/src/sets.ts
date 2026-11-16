@@ -175,6 +175,8 @@ const boatGeo = (len: number) => {
 };
 
 export type Sets = Record<string, THREE.Group> & { dyn: Dyn };
+/** selectable set groups (terrain is always on and is not a storyboard set) */
+export const SET_NAMES = ["palace", "village", "hermitage", "deer", "lac", "arena", "city", "naga"] as const;
 /** treetops around the new city (x, crown y, z): where the Khandava fire burns */
 export const CITY_TREES: [number, number, number][] = [];
 /** pieces that move per shot (world.ts poses them) */

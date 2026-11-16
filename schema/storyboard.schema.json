@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/storyboard.schema.json",
+  "title": "Fableon storyboard v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "fps", "tailFrames", "crossfade", "shots"],
+  "properties": {
+    "version": { "const": 1 },
+    "fps": { "const": 30 },
+    "tailFrames": { "type": "integer", "minimum": 0 },
+    "flash": { "$ref": "#/$defs/Anchor" },
+    "crossfade": { "type": "integer", "minimum": 0 },
+    "points": { "type": "object", "additionalProperties": { "$ref": "#/$defs/Point" } },
+    "cast": { "type": "object", "additionalProperties": { "$ref": "#/$defs/CastEntry" } },
+    "kicks": { "type": "array", "items": { "$ref": "#/$defs/Kick" } },
+    "shots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Shot" } }
+  },
+  "$defs": {
+    "Anchor": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["line", "word"],
+          "properties": {
+            "line": { "type": "integer", "minimum": 0 },
+            "word": { "type": "string", "minLength": 1 },
+            "nth": { "type": "integer", "minimum": 0 },
+            "offset": { "type": "integer" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frame"],
+          "properties": {
+            "frame": { "type": "integer", "minimum": 0 },
+            "offset": { "type": "integer" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["end"],
+          "properties": {
+            "end": { "const": true },
+            "offset": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "Point": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "number" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["at", "d"],
+          "properties": {
+            "at": { "type": "string", "minLength": 1 },
+            "d": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": { "type": "number" }
+            }
+          }
+        }
+      ]
+    },
+    "Animated": {
+      "oneOf": [
+        { "type": "number" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["keys"],
+          "properties": {
+            "keys": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  { "$ref": "#/$defs/Anchor" },
+                  { "type": "number" }
+                ],
+                "items": false
+              }
+            },
+            "ease": { "enum": ["linear", "smooth", "glide", "step"] }
+          }
+        }
+      ]
+    },
+    "CastEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spec", "seed"],
+      "properties": {
+        "spec": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "$ref": "#/$defs/Spec" }
+          ]
+        },
+        "seed": { "type": "integer" }
+      }
+    },
+    "Spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skin"],
+      "properties": {
+        "skin": { "type": "string" },
+        "build": { "enum": ["adult", "stout", "kid", "big", "elder", "slim", "baby"] },
+        "top": { "type": ["string", "null"] },
+        "lower": { "type": "string" },
+        "sari": { "type": ["string", "null"] },
+        "border": { "type": "string" },
+        "drape": { "type": ["string", "null"] },
+        "head": { "enum": ["crown", "crownSmall", "turban", "bun", "hair", "long", "bald", "topknot", null] },
+        "hairCol": { "type": "string" },
+        "crownCol": { "type": "string" },
+        "turbanCol": { "type": "string" },
+        "beard": { "type": ["string", "null"] },
+        "beardLong": { "type": "boolean" },
+        "moustache": { "type": ["string", "null"] },
+        "necklace": { "type": ["string", "null"] },
+        "tilak": { "type": ["string", "null"] },
+        "blindfold": { "type": ["string", "null"] },
+        "blind": { "type": "boolean" },
+        "flower": { "type": ["string", "null"] },
+        "belly": { "type": "number" },
+        "earrings": { "type": ["string", "null"] }
+      }
+    },
+    "Kick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "amp"],
+      "properties": {
+        "at": { "$ref": "#/$defs/Anchor" },
+        "amp": { "type": "number" }
+      }
+    },
+    "Shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "start", "light", "sets"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "start": { "$ref": "#/$defs/Anchor" },
+        "legacy": { "type": "boolean" },
+        "light": { "enum": ["day", "golden", "night", "deep"] },
+        "sets": { "type": "array", "minItems": 1, "items": { "enum": ["palace", "village", "hermitage", "deer", "lac", "arena", "city", "naga"] } },
+        "sun": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["az", "el"],
+          "properties": { "az": { "type": "number" }, "el": { "type": "number" } }
+        },
+        "camera": { "type": "array", "items": { "$ref": "#/$defs/CamKey" } },
+        "dof": { "type": "array", "items": { "$ref": "#/$defs/Dof" } },
+        "actors": { "type": "array", "items": { "$ref": "#/$defs/Actor" } },
+        "fx": { "type": "array", "items": { "$ref": "#/$defs/Effect" } },
+        "set": { "type": "array", "items": { "$ref": "#/$defs/SetAction" } }
+      }
+    },
+    "CamKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "type", "pos", "look", "fov"],
+      "properties": {
+        "at": { "$ref": "#/$defs/Anchor" },
+        "cut": { "type": "boolean" },
+        "dur": { "type": "number", "minimum": 0 },
+        "type": { "enum": ["dolly", "fixed", "tilt"] },
+        "pos": { "$ref": "#/$defs/Point" },
+        "look": { "$ref": "#/$defs/Point" },
+        "fov": { "type": "number", "exclusiveMinimum": 0, "maximum": 180 },
+        "roll": { "type": "number" },
+        "push": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from"],
+          "properties": {
+            "from": { "$ref": "#/$defs/Anchor" },
+            "rate": { "type": "number" },
+            "punch": { "type": "number" },
+            "punchAt": { "$ref": "#/$defs/Anchor" }
+          }
+        },
+        "lookTo": { "$ref": "#/$defs/Point" },
+        "tiltDur": { "type": "number", "minimum": 0 }
+      }
+    },
+    "Dof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "cInf"],
+      "properties": {
+        "at": { "$ref": "#/$defs/Anchor" },
+        "cInf": { "type": "number", "minimum": 0 },
+        "dur": { "type": "number", "minimum": 0 },
+        "focus": { "oneOf": [{ "$ref": "#/$defs/Point" }, { "type": "null" }] }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["who"],
+      "properties": {
+        "who": { "type": "string", "minLength": 1 },
+        "special": { "enum": [null, "ganesha", "agni", "deer", "naga", "baby", "pot", "flat"] },
+        "params": { "type": "object", "additionalProperties": true },
+        "pos": { "$ref": "#/$defs/Point" },
+        "scale": { "type": "number" },
+        "mirror": { "type": "boolean" },
+        "noBlob": { "type": "boolean" },
+        "blobScale": { "type": "number" },
+        "yaw": { "type": ["number", "null"] },
+        "pose": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] },
+        "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+        "prop": { "enum": [null, "bow", "bowDrawn", "mace", "spear", "net", "oar", "laddu", "garland", "crown", "jar", "axe", "torch", "mango", "ladle", "scroll", "bigbow"] },
+        "facing": { "enum": [-1, 0, 1] },
+        "look": { "type": "number" },
+        "seated": { "type": "boolean" },
+        "headTilt": { "type": "number" },
+        "tilt": { "type": "number" },
+        "talk": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["base"],
+              "properties": {
+                "base": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+                "rate": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "appear": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["at"],
+              "properties": {
+                "at": { "$ref": "#/$defs/Anchor" },
+                "pop": { "type": "number", "exclusiveMinimum": 0 },
+                "stagger": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["from", "to"],
+              "properties": { "from": { "$ref": "#/$defs/Anchor" }, "to": { "$ref": "#/$defs/Anchor" } }
+            }
+          ]
+        },
+        "beats": { "type": "array", "items": { "$ref": "#/$defs/Beat" } }
+      }
+    },
+    "Beat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at"],
+      "properties": {
+        "at": { "$ref": "#/$defs/Anchor" },
+        "params": { "type": "object", "additionalProperties": true },
+        "scale": { "type": "number" },
+        "mirror": { "type": "boolean" },
+        "noBlob": { "type": "boolean" },
+        "blobScale": { "type": "number" },
+        "yaw": { "type": ["number", "null"] },
+        "pose": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] },
+        "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+        "prop": { "enum": [null, "bow", "bowDrawn", "mace", "spear", "net", "oar", "laddu", "garland", "crown", "jar", "axe", "torch", "mango", "ladle", "scroll", "bigbow"] },
+        "facing": { "enum": [-1, 0, 1] },
+        "look": { "type": "number" },
+        "seated": { "type": "boolean" },
+        "headTilt": { "type": "number" },
+        "tilt": { "type": "number" },
+        "talk": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["base"],
+              "properties": {
+                "base": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+                "rate": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "appear": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["at"],
+              "properties": {
+                "at": { "$ref": "#/$defs/Anchor" },
+                "pop": { "type": "number", "exclusiveMinimum": 0 },
+                "stagger": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["from", "to"],
+              "properties": { "from": { "$ref": "#/$defs/Anchor" }, "to": { "$ref": "#/$defs/Anchor" } }
+            }
+          ]
+        }
+      }
+    },
+    "Effect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "sparkle" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "count": { "type": "integer", "minimum": 1 },
+            "offsets": { "type": "array", "items": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } } },
+            "pop": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": { "stagger": { "type": "number", "minimum": 0 } }
+            },
+            "twinkle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["freq", "depth"],
+              "properties": { "freq": { "type": "number" }, "depth": { "type": "number", "minimum": 0, "maximum": 1 } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "halo" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "pop": { "type": "number", "exclusiveMinimum": 0 },
+            "color": { "type": "string" },
+            "card": { "enum": ["soft", "glow", "cut"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "knot" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "pop": { "type": "number", "exclusiveMinimum": 0 },
+            "bob": { "type": "number" }
+          }
+        }
+      ]
+    },
+    "SetAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["piece"],
+      "properties": {
+        "piece": { "const": "pages" },
+        "height": { "$ref": "#/$defs/Animated" }
+      }
+    }
+  }
+}
