@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { synthesizeElevenLabs, wordsFromAlignment } from '../cli/src/voice/elevenlabs.js';
 import { wavFromPcm, VOICE_SR } from '../cli/src/voice/wav.js';
 import { normalizeWord } from '../shared/words.mjs';
+import { AUDITION_TEXT, pickCandidates } from '../cli/src/voice/auditions.js';
 
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const alignmentFor = (text, secondsPerChar = 0.05) => {
@@ -37,6 +38,15 @@ export async function runVoiceTests() {
   const h = wordsFromAlignment({ blockText: hi, lines: [{ n: 7, start: 0, end: hi.length }], alignment: alignmentFor(hi), blockStart: 0, blockDuration: 1 });
   ok('hindi alignment words', h.words.length === 3 && h.words.every((w) => w.line === 7), JSON.stringify(h.words));
   ok('hindi normalised', h.words.some((w) => normalizeWord(w.w) === 'यम'), JSON.stringify(h.words.map((w) => w.w)));
+
+  const sample = [
+    { voice_id: 'a', name: 'Alpha', category: 'premade', labels: { use_case: 'conversational', gender: 'male' }, verified_languages: [{ language: 'en' }] },
+    { voice_id: 'b', name: 'Bravo', category: 'premade', labels: { use_case: 'narrative_story', gender: 'female' }, verified_languages: [{ language: 'hi' }] },
+    { voice_id: 'c', name: 'Charlie', category: 'premade', labels: { use_case: 'informative_educational', gender: 'male' }, verified_languages: [{ language: 'hi' }] },
+  ];
+  const picked = pickCandidates(sample, 2);
+  ok('audition voice ranking', picked[0].name === 'Bravo' && picked[1].name === 'Charlie', JSON.stringify(picked));
+  ok('audition sample budget', AUDITION_TEXT.length > 30 && AUDITION_TEXT.length * 6 * 3 < 3000, `${AUDITION_TEXT.length} chars`);
 
   const oldFetch = globalThis.fetch;
   const oldKey = process.env.ELEVENLABS_API_KEY;

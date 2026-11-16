@@ -12,6 +12,7 @@ import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
+import { runAuditions } from './voice/auditions.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -168,17 +169,29 @@ export function main(argv = process.argv) {
 
   program
     .command('voice [mode]')
-    .description('regenerate fixture narration with Kokoro, or check a voice provider (mode: check)')
+    .description('fixture Kokoro narration, or a voice provider mode: check | audition')
     .option('--project <dir>', 'project folder')
     .option('--speed <speed>', 'Kokoro speaking speed', '1.35')
     .option('--voice <voice>', 'Kokoro voice id', 'am_michael')
     .option('--provider <name>', 'voice provider', 'elevenlabs')
     .option('--model <id>', 'provider model id')
+    
     .option('--voice-id <id>', 'provider voice id')
+    .option('--voices <n>', 'number of audition voices', '4')
+    .option('--models <list>', 'comma-separated audition models')
     .action(async (mode, opts) => {
       if (mode === 'check') {
         try { const r = await voiceCheckCommand(opts); if (!r.ok) process.exitCode = 1; }
         catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+        return;
+      }
+      if (mode === 'audition') {
+        if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
+        try {
+          const models = opts.models ? opts.models.split(',').map((x) => x.trim()).filter(Boolean) : null;
+          const r = await runAuditions(opts.project, { voices: Number(opts.voices ?? 4), models });
+          if (!r.ok) process.exitCode = 1;
+        } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
         return;
       }
       if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }

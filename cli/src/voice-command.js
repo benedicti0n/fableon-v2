@@ -11,7 +11,7 @@ export async function voiceCheckCommand(opts = {}) {
     console.log('key: MISSING (ELEVENLABS_API_KEY)');
     return { ok: false, key: false };
   }
-  const r = await checkElevenLabs({ voiceId: opts.voiceId ?? process.env.ELEVENLABS_VOICE_ID, model: opts.model });
+  const r = await checkElevenLabs({ voiceId: opts.voiceId || process.env.ELEVENLABS_VOICE_ID || undefined, model: opts.model });
   console.log('provider: elevenlabs');
   console.log('key: SET (ELEVENLABS_API_KEY)');
   console.log(`model: ${r.model}`);

@@ -116,9 +116,42 @@ On 2026-11-17 `fableon voice check --provider elevenlabs` printed:
 
 ```text
 provider: elevenlabs
-key: MISSING (ELEVENLABS_API_KEY)
+key: SET (ELEVENLABS_API_KEY)
+model: eleven_multilingual_v2
+voice: EXAVITQu4vr4xnSDxMaL
+characters billed: 28
+cost: $0.002240
+  नमस्ते  0.00s-0.67s (line 0)
+  यह  0.70s-0.80s (line 0)
+  आवाज़  0.85s-1.08s (line 0)
+  की  1.10s-1.17s (line 0)
+  जाँच  1.22s-1.42s (line 0)
 ```
 
-No live synthesis, auditions or rate measurement were run; no characters were billed. The request shape above and the
-offline alignment/cache tests are the evidence for this phase. Once the key is present, the command synthesizes
-`नमस्ते, यह आवाज़ की जाँच है।` and prints the characters, cost and first five word timings.
+The check synthesizes `नमस्ते, यह आवाज़ की जाँच है।` with Sarah (`EXAVITQu4vr4xnSDxMaL`), a premade voice whose
+`verified_languages` include Hindi in this account. The first attempt used the public Rachel id
+`21m00Tcm4TlvDq8ikWAM`, which returned HTTP 404 because it is not available to this account; the default check voice
+is now Sarah. No key is printed, logged or cached.
+
+The account lists 21 premade voices; `/v2/voices?language=hi` filters on the `language` label and returned 0 even
+though some voices have `verified_languages` containing `hi`. Auditions therefore filter account voices locally on
+`verified_languages`, and use `/v1/shared-voices?language=hi&use_cases=narrative_story`, which does return the shared
+Hindi narration library.
+
+### Auditions (2026-11-17)
+
+`fableon voice audition --project work/savitri-hi --voices 5` used the same 102-character Hindi sample on five account
+voices and three Hindi TTS models:
+
+| voice | id | model set |
+|---|---|---|
+| George - Warm, Captivating Storyteller | `JBFqnCBsd6RMkjVDRZzb` | multilingual v2 / flash v2.5 / v3 |
+| Alice - Clear, Engaging Educator | `Xb7hH8MSUJpSbSDYk0k2` | multilingual v2 / flash v2.5 / v3 |
+| Brian - Deep, Resonant and Comforting | `nPczCjzI2devNBz1zQrb` | multilingual v2 / flash v2.5 / v3 |
+| Callum - Husky Trickster | `N2lVS1w4EtoT3dr4eOWO` | multilingual v2 / flash v2.5 / v3 |
+| Chris - Charming, Down-to-Earth | `iP95p4xoKVk53GoZ742B` | multilingual v2 / flash v2.5 / v3 |
+
+15 takes, 1,530 characters, **$0.1020**, written to `work/savitri-hi/voice/auditions/` with
+`auditions.md`. The shared library query returned 3,525 Hindi narrative voices; one library voice not owned by the
+account returned HTTP 402 (`Free users cannot use library voices via the API`), so library voices were excluded from
+the audition set. The mp3s stay in `work/` and are not committed.

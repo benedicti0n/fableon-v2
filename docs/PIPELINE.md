@@ -9,6 +9,7 @@ The CLI is a thin adapter; the Phase 4 server can drive the same `PipelineRunner
 fableon new work/savitri --topic "Savitri and Satyavan" --seconds 90 --voice am_michael
 fableon new work/savitri-hi --topic "…" --seconds 90 --language hi
 fableon voice check --provider elevenlabs
+fableon voice audition --project work/savitri-hi --voices 5
 fableon status --project work/savitri
 fableon approve --project work/savitri --stage brief
 fableon run --project work/savitri --to research [--autopilot] [--force] [--no-cache]

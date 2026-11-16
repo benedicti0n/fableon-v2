@@ -11,10 +11,11 @@ import { silencePcm, VOICE_SR, wavFromPcm } from './wav.js';
 
 export const ELEVENLABS_BASE = 'https://api.elevenlabs.io';
 export const DEFAULT_MODEL = 'eleven_multilingual_v2';
-export const DEFAULT_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // Rachel, a public default voice
+export const DEFAULT_VOICE_ID = 'EXAVITQu4vr4xnSDxMaL'; // Sarah, a premade voice with verified Hindi in this account
 export const BEAT_GAP = 0.26;
 
-const pricePer1k = (model) => repoModels().voicePrices?.elevenlabs?.[model] ?? 0.08;
+export const voicePricePer1k = (model) => repoModels().voicePrices?.elevenlabs?.[model] ?? 0.08;
+const pricePer1k = voicePricePer1k;
 const charCount = (s) => Array.from(String(s)).length;
 const now = () => new Date().toISOString();
 
@@ -195,7 +196,7 @@ async function decodePcm(audioBase64, projectDir, index) {
 export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
   const voice = project.voice ?? {};
   const model = voice.model ?? DEFAULT_MODEL;
-  const voiceId = voice.voiceId ?? DEFAULT_VOICE_ID;
+  const voiceId = voice.voiceId || DEFAULT_VOICE_ID;
   const settings = { ...(voice.settings ?? {}), languageCode: voice.language ?? project.language ?? 'en' };
   const maxChars = Number(voice.maxCharsPerRun ?? 10000);
   let spent = 0;
@@ -239,6 +240,7 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
 
 /** Live check: one short Hindi sentence, no project, no cache reuse. */
 export async function checkElevenLabs({ voiceId = DEFAULT_VOICE_ID, model = DEFAULT_MODEL } = {}) {
+  voiceId = voiceId || DEFAULT_VOICE_ID;
   const key = voiceApiKey();
   if (!key) return { ok: false, key: false };
   const text = 'नमस्ते, यह आवाज़ की जाँच है।';
