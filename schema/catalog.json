@@ -45,42 +45,522 @@
     {
       "name": "palace",
       "status": "implemented",
-      "description": "Hastinapura palace courtyard, arcades, ghat and mango trees."
+      "description": "Hastinapura palace courtyard, arcades, ghat and mango trees.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          -32,
+          1.1,
+          20
+        ],
+        "max": [
+          32,
+          26,
+          84
+        ]
+      },
+      "marks": [
+        {
+          "name": "courtyard",
+          "pos": [
+            0,
+            1.62,
+            42
+          ],
+          "facing": 180,
+          "description": "Centre of the palace courtyard."
+        },
+        {
+          "name": "cy",
+          "pos": [
+            0,
+            1.62,
+            42
+          ],
+          "facing": 180,
+          "description": "Palace courtyard stage point used by the fixture."
+        },
+        {
+          "name": "ghat",
+          "pos": [
+            0,
+            1.62,
+            24.6
+          ],
+          "facing": 180,
+          "description": "Top of the ghat steps down to the river."
+        },
+        {
+          "name": "jars",
+          "pos": [
+            -7.2,
+            1.62,
+            51
+          ],
+          "facing": 180,
+          "description": "Origin of the 101-jar grid in the arcade."
+        },
+        {
+          "name": "mango",
+          "pos": [
+            -14,
+            1.62,
+            46
+          ],
+          "facing": 180,
+          "description": "The mango tree in the courtyard."
+        },
+        {
+          "name": "plate",
+          "pos": [
+            0,
+            1.62,
+            46.2
+          ],
+          "facing": 180,
+          "description": "The plate of sweets by the river."
+        }
+      ]
     },
     {
       "name": "village",
       "status": "implemented",
-      "description": "Fisher village on the south bank: huts, sand, palms, boats."
+      "description": "Fisher village on the south bank: huts, sand, palms, boats.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          -45,
+          0,
+          -65
+        ],
+        "max": [
+          45,
+          14,
+          0
+        ]
+      },
+      "marks": [
+        {
+          "name": "front",
+          "pos": [
+            0,
+            1.5,
+            -24.5
+          ],
+          "facing": 180,
+          "description": "Village front on the sand, facing the river."
+        },
+        {
+          "name": "hut",
+          "pos": [
+            1,
+            1.5,
+            -40.4
+          ],
+          "facing": 180,
+          "description": "Kunti's hut doorway."
+        },
+        {
+          "name": "door",
+          "pos": [
+            1,
+            1.5,
+            -37.2
+          ],
+          "facing": 180,
+          "description": "Standing spot outside Kunti's hut."
+        },
+        {
+          "name": "boats",
+          "pos": [
+            -7,
+            1.5,
+            -20
+          ],
+          "facing": 180,
+          "description": "The boats pulled up on the sand."
+        },
+        {
+          "name": "palms",
+          "pos": [
+            6,
+            1.5,
+            -35
+          ],
+          "facing": 180,
+          "description": "Palm cluster at the village centre."
+        }
+      ]
     },
     {
       "name": "hermitage",
       "status": "implemented",
-      "description": "Vyasa's forest hermitage: banyan, open hut, writing desk and palm leaves."
+      "description": "Vyasa's forest hermitage: banyan, open hut, writing desk and palm leaves.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          -175,
+          0,
+          -100
+        ],
+        "max": [
+          -125,
+          16,
+          -45
+        ]
+      },
+      "marks": [
+        {
+          "name": "mat",
+          "pos": [
+            -151.15,
+            1.83,
+            -70.25
+          ],
+          "facing": 180,
+          "description": "Vyasa's reed mat under the open hut."
+        },
+        {
+          "name": "desk",
+          "pos": [
+            -149.25,
+            1.83,
+            -69.85
+          ],
+          "facing": 180,
+          "description": "Ganesha's writing desk and palm leaves."
+        },
+        {
+          "name": "hut",
+          "pos": [
+            -150,
+            1.5,
+            -70
+          ],
+          "facing": 180,
+          "description": "Centre of the open hermitage hut."
+        },
+        {
+          "name": "banyan",
+          "pos": [
+            -155,
+            1.5,
+            -64
+          ],
+          "facing": 180,
+          "description": "The banyan tree beside the hut."
+        },
+        {
+          "name": "clearing",
+          "pos": [
+            -150,
+            1.5,
+            -60
+          ],
+          "facing": 180,
+          "description": "Open forest clearing in front of the hut."
+        }
+      ]
     },
     {
       "name": "deer",
       "status": "implemented",
-      "description": "Pandu's forest clearing."
+      "description": "Pandu's forest clearing.",
+      "front": 0,
+      "bounds": {
+        "min": [
+          120,
+          0,
+          -120
+        ],
+        "max": [
+          185,
+          18,
+          -45
+        ]
+      },
+      "marks": [
+        {
+          "name": "clearing",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "facing": 0,
+          "description": "Centre of Pandu's forest clearing."
+        },
+        {
+          "name": "pandu",
+          "pos": [
+            147.6,
+            1.5,
+            -76.5
+          ],
+          "facing": 0,
+          "description": "Pandu's aiming spot at the clearing edge."
+        },
+        {
+          "name": "deer",
+          "pos": [
+            152.2,
+            1.5,
+            -84.5
+          ],
+          "facing": 0,
+          "description": "The stag's grazing mark."
+        },
+        {
+          "name": "kunti",
+          "pos": [
+            146.6,
+            1.5,
+            -75.6
+          ],
+          "facing": 0,
+          "description": "Kunti waiting behind Pandu."
+        }
+      ]
     },
     {
       "name": "lac",
       "status": "implemented",
-      "description": "The lacquer house at Varanavata and its tunnel."
+      "description": "The lacquer house at Varanavata and its tunnel.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          -175,
+          0,
+          55
+        ],
+        "max": [
+          -145,
+          12,
+          95
+        ]
+      },
+      "marks": [
+        {
+          "name": "door",
+          "pos": [
+            -160,
+            1.5,
+            65.4
+          ],
+          "facing": 180,
+          "description": "The lacquer house door."
+        },
+        {
+          "name": "hall",
+          "pos": [
+            -163.2,
+            1.5,
+            62.5
+          ],
+          "facing": 180,
+          "description": "The dark hall inside the house."
+        },
+        {
+          "name": "tunnel",
+          "pos": [
+            -157,
+            1.5,
+            57
+          ],
+          "facing": 180,
+          "description": "The escape tunnel mouth behind the house."
+        },
+        {
+          "name": "stage",
+          "pos": [
+            -160,
+            1.5,
+            70
+          ],
+          "facing": 180,
+          "description": "The centre of the lacquer house."
+        }
+      ]
     },
     {
       "name": "arena",
       "status": "implemented",
-      "description": "The Panchala contest arena, bow stand, target pole and wheel."
+      "description": "The Panchala contest arena, bow stand, target pole and wheel.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          140,
+          0,
+          45
+        ],
+        "max": [
+          205,
+          20,
+          100
+        ]
+      },
+      "marks": [
+        {
+          "name": "dais",
+          "pos": [
+            170,
+            2.5,
+            81
+          ],
+          "facing": 180,
+          "description": "Draupadi's dais at the back of the arena."
+        },
+        {
+          "name": "bow",
+          "pos": [
+            164,
+            1.65,
+            66
+          ],
+          "facing": 180,
+          "description": "The giant bow on its stand."
+        },
+        {
+          "name": "pole",
+          "pos": [
+            170,
+            1.5,
+            70
+          ],
+          "facing": 180,
+          "description": "The target pole at the arena centre."
+        },
+        {
+          "name": "seats",
+          "pos": [
+            149,
+            2.1,
+            70
+          ],
+          "facing": 180,
+          "description": "The kings' stepped seats under the side canopy."
+        },
+        {
+          "name": "floor",
+          "pos": [
+            170,
+            1.65,
+            66
+          ],
+          "facing": 180,
+          "description": "Open arena floor between the bow and the pole."
+        }
+      ]
     },
     {
       "name": "city",
       "status": "implemented",
-      "description": "The clearing where Indraprastha rises, with the Khandava forest."
+      "description": "The clearing where Indraprastha rises, with the Khandava forest.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          0,
+          0,
+          -260
+        ],
+        "max": [
+          85,
+          25,
+          -125
+        ]
+      },
+      "marks": [
+        {
+          "name": "clearing",
+          "pos": [
+            40,
+            1.5,
+            -198
+          ],
+          "facing": 180,
+          "description": "The clearing where the city rises."
+        },
+        {
+          "name": "agni",
+          "pos": [
+            40,
+            1.5,
+            -182
+          ],
+          "facing": 180,
+          "description": "Agni's mark in front of the rising city."
+        },
+        {
+          "name": "stumps",
+          "pos": [
+            40,
+            1.5,
+            -196
+          ],
+          "facing": 180,
+          "description": "The felled stumps in the clearing."
+        },
+        {
+          "name": "forest",
+          "pos": [
+            40,
+            1.5,
+            -220
+          ],
+          "facing": 180,
+          "description": "The edge of the Khandava forest."
+        }
+      ]
     },
     {
       "name": "naga",
       "status": "implemented",
-      "description": "The snake kingdom under the river."
+      "description": "The snake kingdom under the river.",
+      "front": 180,
+      "bounds": {
+        "min": [
+          -50,
+          0,
+          550
+        ],
+        "max": [
+          50,
+          12,
+          650
+        ]
+      },
+      "marks": [
+        {
+          "name": "floor",
+          "pos": [
+            0,
+            1.9,
+            604
+          ],
+          "facing": 180,
+          "description": "The naga court floor."
+        },
+        {
+          "name": "court",
+          "pos": [
+            0,
+            1.9,
+            604
+          ],
+          "facing": 180,
+          "description": "The ring of pale pillars in the naga palace."
+        },
+        {
+          "name": "throne",
+          "pos": [
+            0,
+            1.9,
+            610
+          ],
+          "facing": 180,
+          "description": "The naga king's end of the court."
+        }
+      ]
     }
   ],
   "cast": {
@@ -760,6 +1240,6738 @@
       "pages": {
         "height": 0.3
       }
+    }
+  },
+  "keepout": {
+    "palace": [
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": -30,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": -24,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": -18,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": -12,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": -6,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 0,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 6,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 12,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 18,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 24,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "cylinder",
+        "name": "arcade pillar",
+        "x": 30,
+        "z": 61,
+        "r": 0.38,
+        "y0": 1.62,
+        "y1": 6.22
+      },
+      {
+        "kind": "box",
+        "name": "arcade back wall",
+        "min": [
+          -30.5,
+          1.62,
+          65
+        ],
+        "max": [
+          30.5,
+          6.92,
+          65.5
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -29.43,
+          6.9,
+          28.57
+        ],
+        "max": [
+          -26.57,
+          9.760000000000002,
+          31.43
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -29.43,
+          6.9,
+          60.57
+        ],
+        "max": [
+          -26.57,
+          9.760000000000002,
+          63.43
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          26.57,
+          6.9,
+          28.57
+        ],
+        "max": [
+          29.43,
+          9.760000000000002,
+          31.43
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          26.57,
+          6.9,
+          60.57
+        ],
+        "max": [
+          29.43,
+          9.760000000000002,
+          63.43
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "palace main block",
+        "min": [
+          -22,
+          1.5,
+          68
+        ],
+        "max": [
+          22,
+          13.5,
+          82
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -19.08,
+          14,
+          68.92
+        ],
+        "max": [
+          -14.92,
+          18.16,
+          73.08
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          14.92,
+          14,
+          68.92
+        ],
+        "max": [
+          19.08,
+          18.16,
+          73.08
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "gate tower",
+        "min": [
+          -16.4,
+          1.5,
+          22.5
+        ],
+        "max": [
+          -13.6,
+          8.5,
+          25.5
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -16.43,
+          8.5,
+          22.57
+        ],
+        "max": [
+          -13.57,
+          11.36,
+          25.43
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "gate tower",
+        "min": [
+          13.6,
+          1.5,
+          22.5
+        ],
+        "max": [
+          16.4,
+          8.5,
+          25.5
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          13.57,
+          8.5,
+          22.57
+        ],
+        "max": [
+          16.43,
+          11.36,
+          25.43
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "mango trunk",
+        "x": -14,
+        "z": 46,
+        "r": 0.504,
+        "y0": 1.62,
+        "y1": 6.12
+      },
+      {
+        "kind": "box",
+        "name": "mango canopy",
+        "min": [
+          -16.4,
+          4.62,
+          43.6
+        ],
+        "max": [
+          -11.6,
+          9.27,
+          48.4
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "mango trunk",
+        "x": 15,
+        "z": 50,
+        "r": 0.49279999999999996,
+        "y0": 1.62,
+        "y1": 5.82
+      },
+      {
+        "kind": "box",
+        "name": "mango canopy",
+        "min": [
+          12.76,
+          4.42,
+          47.76
+        ],
+        "max": [
+          17.240000000000002,
+          8.760000000000002,
+          52.24
+        ]
+      }
+    ],
+    "village": [
+      {
+        "kind": "box",
+        "name": "mud hut",
+        "min": [
+          -12.276,
+          1.5,
+          -43.276
+        ],
+        "max": [
+          -5.724,
+          5.7,
+          -36.724
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "mud hut",
+        "min": [
+          -2.6119999999999997,
+          1.5,
+          -46.612
+        ],
+        "max": [
+          4.612,
+          5.7,
+          -39.388
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "mud hut",
+        "min": [
+          7.8919999999999995,
+          1.5,
+          -42.108
+        ],
+        "max": [
+          14.108,
+          5.7,
+          -35.892
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "mud hut",
+        "min": [
+          -22.024,
+          1.5,
+          -49.024
+        ],
+        "max": [
+          -15.976,
+          5.7,
+          -42.976
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "mud hut",
+        "min": [
+          16.724,
+          1.5,
+          -50.276
+        ],
+        "max": [
+          23.276,
+          5.7,
+          -43.724
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": -14,
+        "z": -36,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10.5
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 6,
+        "z": -35,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.5
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 16,
+        "z": -33,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": -4,
+        "z": -50,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 12.5
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 24,
+        "z": -40,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10.5
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": -24,
+        "z": -38,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.5
+      },
+      {
+        "kind": "box",
+        "name": "beached boat",
+        "min": [
+          -9.8,
+          0.3,
+          -20.8
+        ],
+        "max": [
+          -4.2,
+          1.1,
+          -19.2
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "beached boat",
+        "min": [
+          6.2,
+          0.3,
+          -20.400000000000002
+        ],
+        "max": [
+          11.8,
+          1.1,
+          -18.8
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -2.25571811409268,
+        "z": -78.05474517685803,
+        "r": 0.5902485155059476,
+        "y0": 1.5,
+        "y1": 8.310228093909313
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -5.887839764177647,
+          6.040152062606208,
+          -81.686866826943
+        ],
+        "max": [
+          1.3764035359922864,
+          13.07738775964583,
+          -74.42262352677307
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 3.5677267271724773,
+        "z": -61.04377075661325,
+        "r": 0.5773799099324084,
+        "y0": 1.5,
+        "y1": 7.965533301760939
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          0.11944229956664287,
+          5.810355534507293,
+          -64.49205518421908
+        ],
+        "max": [
+          7.016011154778312,
+          12.491406612993597,
+          -57.595486329007414
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 9.391171568437642,
+        "z": -74.0327963503383,
+        "r": 0.5645113043588691,
+        "y0": 1.5,
+        "y1": 7.6208385096125655
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          6.12672436331094,
+          5.580559006408378,
+          -77.297243555465
+        ],
+        "max": [
+          12.655618773564344,
+          11.905425466341363,
+          -70.7683491452116
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 15.2146164097028,
+        "z": -87.02182194406336,
+        "r": 0.5516426987853298,
+        "y0": 1.5,
+        "y1": 7.276143717464193
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          12.13400642705523,
+          5.350762478309463,
+          -90.10243192671093
+        ],
+        "max": [
+          18.29522639235037,
+          11.319444319689127,
+          -83.94121196141579
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 21.038061250967964,
+        "z": -70.01084752381858,
+        "r": 0.5387740932117906,
+        "y0": 1.5,
+        "y1": 6.93144892531582
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          18.141288490799525,
+          5.120965950210547,
+          -72.90762028398701
+        ],
+        "max": [
+          23.934834011136402,
+          10.733463173036894,
+          -67.11407476365015
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -39.19732760563244,
+        "z": -78.94333198102501,
+        "r": 0.5696345820352757,
+        "y0": 1.5,
+        "y1": 7.75806916165917
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -42.534964491850666,
+          5.672046107772781,
+          -82.28096886724323
+        ],
+        "max": [
+          -35.85969071941421,
+          12.13871757482059,
+          -75.60569509480679
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -33.37388276436728,
+        "z": -61.93235756078023,
+        "r": 0.5567659764617364,
+        "y0": 1.5,
+        "y1": 7.413374369510799
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -36.527682428106374,
+          5.442249579673867,
+          -65.08615722451933
+        ],
+        "max": [
+          -30.220083100628187,
+          11.552736428168359,
+          -58.77855789704114
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -27.550437923102116,
+        "z": -74.92138315450529,
+        "r": 0.5438973708881971,
+        "y0": 1.5,
+        "y1": 7.068679577362425
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -30.520400364362075,
+          5.2124530515749505,
+          -77.89134559576526
+        ],
+        "max": [
+          -24.580475481842157,
+          10.966755281516122,
+          -71.95142071324533
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -21.726993081836955,
+        "z": -87.91040874823034,
+        "r": 0.5310287653146579,
+        "y0": 1.5,
+        "y1": 6.723984785214053
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -24.513118300617784,
+          4.982656523476035,
+          -90.69653396701116
+        ],
+        "max": [
+          -18.940867863056127,
+          10.38077413486389,
+          -85.12428352944951
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -15.903548240571794,
+        "z": -70.89943432798556,
+        "r": 0.5181601597411186,
+        "y0": 1.5,
+        "y1": 6.3792899930656795
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -18.505836236873492,
+          4.75285999537712,
+          -73.50172232428726
+        ],
+        "max": [
+          -13.301260244270098,
+          9.794792988211656,
+          -68.29714633168386
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -10.080103399306633,
+        "z": -83.88845992171062,
+        "r": 0.5052915541675794,
+        "y0": 1.5,
+        "y1": 6.034595200917306
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -12.498554173129197,
+          4.523063467278204,
+          -86.30691069553319
+        ],
+        "max": [
+          -7.66165262548407,
+          9.208811841559422,
+          -81.47000914788805
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -4.256658558041472,
+        "z": -66.87748550146584,
+        "r": 0.6044229486461942,
+        "y0": 1.5,
+        "y1": 8.689900410165915
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -8.09127211012996,
+          6.293266940110612,
+          -70.71209905355433
+        ],
+        "max": [
+          -0.42204500595298367,
+          13.722830697282058,
+          -63.04287194937735
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 1.566786283223685,
+        "z": -79.8665110951909,
+        "r": 0.591554343072655,
+        "y0": 1.5,
+        "y1": 8.345205618017545
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -2.083990046385672,
+          6.0634704120116965,
+          -83.51728742480026
+        ],
+        "max": [
+          5.217562612833042,
+          13.136849550629826,
+          -76.21573476558154
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 7.3902311244888494,
+        "z": -62.855536674946116,
+        "r": 0.5786857374991157,
+        "y0": 1.5,
+        "y1": 8.00051082586917
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          3.9232920173586243,
+          5.833673883912781,
+          -66.32247578207634
+        ],
+        "max": [
+          10.857170231619074,
+          12.550868403977592,
+          -59.38859756781589
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 13.213675965754007,
+        "z": -75.84456226867117,
+        "r": 0.5658171319255765,
+        "y0": 1.5,
+        "y1": 7.655816033720798
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          9.930574081102915,
+          5.603877355813866,
+          -79.12766415332226
+        ],
+        "max": [
+          16.4967778504051,
+          11.964887257325358,
+          -72.56146038402008
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 19.03712080701918,
+        "z": -88.83358786239623,
+        "r": 0.5529485263520372,
+        "y0": 1.5,
+        "y1": 7.311121241572427
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          15.937856144847217,
+          5.374080827714952,
+          -91.93285252456819
+        ],
+        "max": [
+          22.13638546919114,
+          11.378906110673126,
+          -85.73432320022427
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 24.860565648284336,
+        "z": -71.82261344215145,
+        "r": 0.5400799207784979,
+        "y0": 1.5,
+        "y1": 6.966426449424053
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          21.94513820859151,
+          5.144284299616036,
+          -74.73804088184428
+        ],
+        "max": [
+          27.775993087977163,
+          10.792924964020889,
+          -68.90718600245862
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 30.684010489549507,
+        "z": -84.81163903587651,
+        "r": 0.5272113152049586,
+        "y0": 1.5,
+        "y1": 6.62173165727568
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          27.95242027233581,
+          4.91448777151712,
+          -87.5432292530902
+        ],
+        "max": [
+          33.4156007067632,
+          10.206943817368655,
+          -82.08004881866282
+        ]
+      }
+    ],
+    "hermitage": [
+      {
+        "kind": "cylinder",
+        "name": "banyan trunk",
+        "x": -155,
+        "z": -64,
+        "r": 1.26,
+        "y0": 1.5,
+        "y1": 8.7
+      },
+      {
+        "kind": "box",
+        "name": "banyan canopy",
+        "min": [
+          -161.6,
+          6.300000000000001,
+          -70.6
+        ],
+        "max": [
+          -148.4,
+          13.74,
+          -57.4
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -169.949954188018,
+        "z": -23.06116314630431,
+        "r": 0.560883548479605,
+        "y0": 1.5,
+        "y1": 7.523666477132278
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -173.1625763091552,
+          5.515777651421518,
+          -26.273785267441525
+        ],
+        "max": [
+          -166.7373320668808,
+          11.740233011124873,
+          -19.848541025167094
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -166.70711152236598,
+        "z": -48.614027871070235,
+        "r": 0.54286750067665,
+        "y0": 1.5,
+        "y1": 7.041093768124556
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -169.6623615320324,
+          5.194062512083038,
+          -51.569277880736664
+        ],
+        "max": [
+          -163.75186151269955,
+          10.919859405811746,
+          -45.658777861403806
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -192.25975027756414,
+        "z": -51.43179062504936,
+        "r": 0.5248514528736951,
+        "y0": 1.5,
+        "y1": 6.558521059116834
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -194.9576281757598,
+          4.8723473727445565,
+          -54.129668523245
+        ],
+        "max": [
+          -189.56187237936848,
+          10.099485800498618,
+          -48.73391272685372
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -213.82225443071434,
+        "z": -70.83774041617436,
+        "r": 0.6636354051437559,
+        "y0": 1.5,
+        "y1": 10.275948352064889
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -218.50276021848228,
+          7.350632234709926,
+          -75.5182462039423
+        ],
+        "max": [
+          -209.1417486429464,
+          16.419112198510312,
+          -66.15723462840641
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -178.99648048000316,
+        "z": -78.24748195933245,
+        "r": 0.6456193573408008,
+        "y0": 1.5,
+        "y1": 9.793375643057166
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -183.41961415630033,
+          7.028917095371445,
+          -82.6706156356296
+        ],
+        "max": [
+          -174.573346803706,
+          15.598738593197185,
+          -73.82434828303529
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -175.29934557287288,
+        "z": -102.23353443340403,
+        "r": 0.6276033095378459,
+        "y0": 1.5,
+        "y1": 9.310802934049445
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -179.46510713769925,
+          6.707201956032964,
+          -106.3992959982304
+        ],
+        "max": [
+          -171.1335840080465,
+          14.778364987884057,
+          -98.06777286857766
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -149.68361422382407,
+        "z": -84.15013901905891,
+        "r": 0.609587261734891,
+        "y0": 1.5,
+        "y1": 8.828230225041724
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -153.59200367717966,
+          6.385486816694483,
+          -88.0585284724145
+        ],
+        "max": [
+          -145.77522477046847,
+          13.957991382570931,
+          -80.24174956570333
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -126.62271638056947,
+        "z": -97.01373192059359,
+        "r": 0.591571213931936,
+        "y0": 1.5,
+        "y1": 8.345657516034002
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -130.27373372245427,
+          6.063771677356001,
+          -100.66474926247838
+        ],
+        "max": [
+          -122.97169903868468,
+          13.137617777257802,
+          -93.36271457870879
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -131.24034864623036,
+        "z": -71.30441629976566,
+        "r": 0.573555166128981,
+        "y0": 1.5,
+        "y1": 7.863084807026278
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -134.63399387664438,
+          5.742056538017519,
+          -74.69806153017967
+        ],
+        "max": [
+          -127.84670341581635,
+          12.317244171944674,
+          -67.91077106935165
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -105.66249141421673,
+        "z": -66.75537256521383,
+        "r": 0.5555391183260261,
+        "y0": 1.5,
+        "y1": 7.380512098018557
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -108.79876453315997,
+          5.420341398679039,
+          -69.89164568415707
+        ],
+        "max": [
+          -102.5262182952735,
+          11.496870566631546,
+          -63.6190994462706
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -133.8214952495076,
+        "z": -56.429493719864226,
+        "r": 0.5375230705230711,
+        "y0": 1.5,
+        "y1": 6.897939389010834
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -136.70039625698004,
+          5.0986262593405565,
+          -59.30839472733667
+        ],
+        "max": [
+          -130.94259424203514,
+          10.676496961318419,
+          -53.55059271239178
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -121.27367822041742,
+        "z": -39.57638290512538,
+        "r": 0.5195070227201162,
+        "y0": 1.5,
+        "y1": 6.415366680003113
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -123.89520711641909,
+          4.776911120002076,
+          -42.197911801127034
+        ],
+        "max": [
+          -118.65214932441576,
+          9.856123356005291,
+          -36.95485400912372
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -127.33199365533316,
+        "z": -15.488656136291922,
+        "r": 0.6582909749901769,
+        "y0": 1.5,
+        "y1": 10.132793972951168
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -131.9361504409071,
+          7.255195981967446,
+          -20.092812921865878
+        ],
+        "max": [
+          -122.72783686975922,
+          16.175749754016984,
+          -10.884499350717967
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -152.23476659103807,
+        "z": -34.68066997332166,
+        "r": 0.6402749271872219,
+        "y0": 1.5,
+        "y1": 9.650221263943445
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -156.58155126514123,
+          6.933480842628964,
+          -39.02745464742483
+        ],
+        "max": [
+          -147.8879819169349,
+          15.355376148703858,
+          -30.333885299218494
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -176.8851748821036,
+        "z": -23.111228862745463,
+        "r": 0.6222588793842669,
+        "y0": 1.5,
+        "y1": 9.167648554935724
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -180.974587444736,
+          6.611765703290484,
+          -27.20064142537785
+        ],
+        "max": [
+          -172.7957623194712,
+          14.535002543390732,
+          -19.021816300113077
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -170.85569171750922,
+        "z": -48.93577993184435,
+        "r": 0.6042428315813121,
+        "y0": 1.5,
+        "y1": 8.685075845928
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -174.6877321686708,
+          6.2900505639520015,
+          -52.767820383005954
+        ],
+        "max": [
+          -167.02365126634763,
+          13.714628938077604,
+          -45.10373948068275
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -196.29015916696835,
+        "z": -55.226832755700954,
+        "r": 0.5862267837783571,
+        "y0": 1.5,
+        "y1": 8.202503136920278
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -199.86482750665917,
+          5.96833542461352,
+          -58.80150109539177
+        ],
+        "max": [
+          -192.71549082727753,
+          12.894255332764475,
+          -51.65216441601014
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -167.33770838031128,
+        "z": -64.73827228736167,
+        "r": 0.5682107359754021,
+        "y0": 1.5,
+        "y1": 7.719930427912558
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -170.65500460853133,
+          5.646620285275039,
+          -68.0555685155817
+        ],
+        "max": [
+          -164.02041215209124,
+          12.073881727451349,
+          -61.42097605914164
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -178.2301275554158,
+        "z": -82.63658325309093,
+        "r": 0.5501946881724472,
+        "y0": 1.5,
+        "y1": 7.237357718904836
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -181.29005167216505,
+          5.324905145936558,
+          -85.69650736984018
+        ],
+        "max": [
+          -175.17020343866656,
+          11.253508122138221,
+          -79.57665913634169
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -169.78412522089863,
+        "z": -106.68459861356138,
+        "r": 0.5321786403694921,
+        "y0": 1.5,
+        "y1": 6.754785009897113
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -172.5866772261771,
+          5.003190006598076,
+          -109.48715061883983
+        ],
+        "max": [
+          -166.98157321562016,
+          10.433134516825094,
+          -103.88204660828292
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -145.67079111793828,
+        "z": -86.38695823514153,
+        "r": 0.6709625926395529,
+        "y0": 1.5,
+        "y1": 10.472212302845168
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -150.45597101278904,
+          7.4814748685634465,
+          -91.17213812999229
+        ],
+        "max": [
+          -140.88561122308752,
+          16.752760914836788,
+          -81.60177834029078
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -102.14774259264772,
+        "z": -55.6936608386243,
+        "r": 0.5573672769194163,
+        "y0": 1.5,
+        "y1": 7.429480631770082
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -105.3101322629251,
+          5.452987087846722,
+          -58.856050508901674
+        ],
+        "max": [
+          -98.98535292237034,
+          11.58011707400914,
+          -52.53127116834692
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -133.32180634167796,
+        "z": -51.45928517564724,
+        "r": 0.5393512291164615,
+        "y0": 1.5,
+        "y1": 6.94690792276236
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -136.22682390048456,
+          5.131271948508241,
+          -54.36430273445383
+        ],
+        "max": [
+          -130.41678878287135,
+          10.759743468696014,
+          -48.55426761684065
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -128.545459523788,
+        "z": -31.626792444405105,
+        "r": 0.5213351813135064,
+        "y0": 1.5,
+        "y1": 6.464335213754638
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -131.1931049711238,
+          4.809556809169759,
+          -34.27443789174091
+        ],
+        "max": [
+          -125.89781407645219,
+          9.939369863382884,
+          -28.979146997069297
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -144.53867223768285,
+        "z": -9.710071833927316,
+        "r": 0.6601191335835672,
+        "y0": 1.5,
+        "y1": 10.181762506702693
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -149.16894557459094,
+          7.28784167113513,
+          -14.34034517083542
+        ],
+        "max": [
+          -139.90839890077476,
+          16.25899626139458,
+          -5.079798497019213
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -162.5883345388797,
+        "z": -34.09027745216338,
+        "r": 0.6421030857806121,
+        "y0": 1.5,
+        "y1": 9.699189797694972
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -166.96123576431702,
+          6.9661265317966485,
+          -38.463178677600695
+        ],
+        "max": [
+          -158.2154333134424,
+          15.438622656081453,
+          -29.71737622672606
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -191.54336668190382,
+        "z": -29.488081873207015,
+        "r": 0.6240870379776573,
+        "y0": 1.5,
+        "y1": 9.216617088687249
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -195.65889579587036,
+          6.644411392458167,
+          -33.603610987173546
+        ],
+        "max": [
+          -187.42783756793727,
+          14.618249050768325,
+          -25.37255275924048
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -176.91038633871742,
+        "z": -53.684797146203586,
+        "r": 0.6060709901747023,
+        "y0": 1.5,
+        "y1": 8.734044379679528
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -180.76854334121316,
+          6.322696253119685,
+          -57.54295414869934
+        ],
+        "max": [
+          -173.05222933622167,
+          13.797875445455196,
+          -49.826640143707834
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -198.95917712560012,
+        "z": -66.8053411102969,
+        "r": 0.5880549423717474,
+        "y0": 1.5,
+        "y1": 8.251471670671805
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -202.5599620166251,
+          6.0009811137812035,
+          -70.40612600132185
+        ],
+        "max": [
+          -195.35839223457515,
+          12.97750184014207,
+          -63.20455621927193
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -167.25165257274122,
+        "z": -70.05018016961881,
+        "r": 0.5700388945687924,
+        "y0": 1.5,
+        "y1": 7.768898961664084
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -170.5950653522954,
+          5.679265974442723,
+          -73.39359294917298
+        ],
+        "max": [
+          -163.90823979318705,
+          12.157128234828942,
+          -66.70676739006464
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -170.0047166588983,
+        "z": -90.44107128082562,
+        "r": 0.5520228467658375,
+        "y0": 1.5,
+        "y1": 7.2863262526563615
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -173.0907573269817,
+          5.357550835104242,
+          -93.52711194890902
+        ],
+        "max": [
+          -166.9186759908149,
+          11.336754629515815,
+          -87.35503061274223
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -151.7221696989795,
+        "z": -111.69190641930854,
+        "r": 0.5340067989628825,
+        "y0": 1.5,
+        "y1": 6.803753543648639
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -154.5508382555921,
+          5.03583569576576,
+          -114.52057497592115
+        ],
+        "max": [
+          -148.89350114236692,
+          10.516381024202687,
+          -108.86323786269593
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -134.84940667901427,
+        "z": -86.3775445673498,
+        "r": 0.5159907511599275,
+        "y0": 1.5,
+        "y1": 6.321180834640917
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -137.4207031241561,
+          4.714120556427279,
+          -88.94884101249163
+        ],
+        "max": [
+          -132.27811023387244,
+          9.69600741888956,
+          -83.80624812220798
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -105.05010909580972,
+        "z": -89.24022449223853,
+        "r": 0.6547747034299882,
+        "y0": 1.5,
+        "y1": 10.038608127588972
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -109.60403343052384,
+          7.192405418392649,
+          -93.79414882695265
+        ],
+        "max": [
+          -100.49618476109559,
+          16.015633816901254,
+          -84.6863001575244
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -121.16486072118524,
+        "z": -65.28763695029909,
+        "r": 0.6367586556270333,
+        "y0": 1.5,
+        "y1": 9.55603541858125
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -125.46141294442857,
+          6.870690279054167,
+          -69.58418917354243
+        ],
+        "max": [
+          -116.8683084979419,
+          15.195260211588126,
+          -60.99108472705576
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -100.14177683553166,
+        "z": -50.57468648940982,
+        "r": 0.6187426078240784,
+        "y0": 1.5,
+        "y1": 9.073462709573528
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -104.18095694730421,
+          6.548975139715687,
+          -54.613866601182366
+        ],
+        "max": [
+          -96.1025967237591,
+          14.374886606275,
+          -46.535506377637276
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -132.3456508811348,
+        "z": -48.357181117119,
+        "r": 0.6007265600211233,
+        "y0": 1.5,
+        "y1": 8.590890000565807
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -136.12745888143655,
+          6.227260000377204,
+          -52.13898911742076
+        ],
+        "max": [
+          -128.56384288083302,
+          13.55451300096187,
+          -44.57537311681723
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -131.68049984958873,
+        "z": -27.531960005260338,
+        "r": 0.5827105122181685,
+        "y0": 1.5,
+        "y1": 8.108317291558084
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -135.2049357384197,
+          5.905544861038723,
+          -31.056395894091317
+        ],
+        "max": [
+          -128.15606396075776,
+          12.734139395648745,
+          -24.00752411642936
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -150.53965718883424,
+        "z": -47.06603442226084,
+        "r": 0.5646944644152134,
+        "y0": 1.5,
+        "y1": 7.625744582550362
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -153.80672096619443,
+          5.5838297217002415,
+          -50.333098199621034
+        ],
+        "max": [
+          -147.27259341147405,
+          11.913765790335615,
+          -43.79897064490065
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -167.82601033545467,
+        "z": -33.31125589810509,
+        "r": 0.5466784166122586,
+        "y0": 1.5,
+        "y1": 7.143171873542641
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -170.8357020013441,
+          5.262114582361761,
+          -36.320947563994494
+        ],
+        "max": [
+          -164.81631866956525,
+          11.09339218502249,
+          -30.30156423221568
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -198.31101260578663,
+        "z": -32.25130905827899,
+        "r": 0.5286623688093035,
+        "y0": 1.5,
+        "y1": 6.660599164534918
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -201.06333216020525,
+          4.940399443023279,
+          -35.00362861269761
+        ],
+        "max": [
+          -195.558693051368,
+          10.27301857970936,
+          -29.49898950386037
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -180.69730714076798,
+        "z": -55.90288756156359,
+        "r": 0.6674463210793643,
+        "y0": 1.5,
+        "y1": 10.378026457482973
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -185.4322545847589,
+          7.418684304988649,
+          -60.63783500555451
+        ],
+        "max": [
+          -175.96235969677704,
+          16.592644977721058,
+          -51.16794011757267
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -200.53530892607415,
+        "z": -72.15504544185028,
+        "r": 0.6494302732764093,
+        "y0": 1.5,
+        "y1": 9.895453748475251
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -205.01288425859428,
+          7.096969165650169,
+          -76.63262077437041
+        ],
+        "max": [
+          -196.05773359355402,
+          15.772271372407928,
+          -67.67747010933014
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -167.8760803245591,
+        "z": -73.30746872763756,
+        "r": 0.6314142254734544,
+        "y0": 1.5,
+        "y1": 9.412881039467528
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -172.09628354560846,
+          6.7752540263116865,
+          -77.5276719486869
+        ],
+        "max": [
+          -163.65587710350974,
+          14.9518977670948,
+          -69.08726550658821
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -166.4001012669481,
+        "z": -94.43885336898288,
+        "r": 0.6133981776704994,
+        "y0": 1.5,
+        "y1": 8.930308330459805
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -170.36293237652666,
+          6.453538886973205,
+          -98.40168447856144
+        ],
+        "max": [
+          -162.43727015736954,
+          14.131524161781671,
+          -90.47602225940432
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -148.34816412439642,
+        "z": -74.11033001292105,
+        "r": 0.5953821298675445,
+        "y0": 1.5,
+        "y1": 8.447735621452086
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -152.0536231225042,
+          6.131823747634724,
+          -77.81578901102883
+        ],
+        "max": [
+          -144.64270512628863,
+          13.311150556468546,
+          -70.40487101481328
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "writing desk",
+        "min": [
+          -148.5,
+          1.8,
+          -70.75
+        ],
+        "max": [
+          -147.5,
+          2.15,
+          -70.05
+        ]
+      }
+    ],
+    "deer": [
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 147.5780797527178,
+        "z": -58.23599128866421,
+        "r": 0.5931883961092572,
+        "y0": 1.5,
+        "y1": 8.388974895783676
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          143.90395980829985,
+          6.092649930522451,
+          -61.91011123308217
+        ],
+        "max": [
+          151.25219969713575,
+          13.21125732283225,
+          -54.56187134424625
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 127.73184745150314,
+        "z": -45.12034769786035,
+        "r": 0.5725986271915944,
+        "y0": 1.5,
+        "y1": 7.83746322834628
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          124.3518670630518,
+          5.724975485564187,
+          -48.500328086311704
+        ],
+        "max": [
+          131.1118278399545,
+          12.273687488188676,
+          -41.740367309409
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 136.43490502835942,
+        "z": -71.77199940555276,
+        "r": 0.5520088582739316,
+        "y0": 1.5,
+        "y1": 7.285951560908884
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          133.3490641958747,
+          5.357301040605923,
+          -74.8578402380375
+        ],
+        "max": [
+          139.52074586084416,
+          11.336117653545102,
+          -68.68615857306803
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 114.78736500294349,
+        "z": -76.89842965475819,
+        "r": 0.5314190893562688,
+        "y0": 1.5,
+        "y1": 6.734439893471486
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          111.99566372642536,
+          4.989626595647658,
+          -79.69013093127631
+        ],
+        "max": [
+          117.57906627946161,
+          10.398547818901527,
+          -74.10672837824006
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 98.86860226598372,
+        "z": -99.8036287309626,
+        "r": 0.6900293205220525,
+        "y0": 1.5,
+        "y1": 10.982928228269264
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          93.81104054424011,
+          7.8219521521795095,
+          -104.86119045270621
+        ],
+        "max": [
+          103.92616398772734,
+          17.62097798805775,
+          -94.74606700921899
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 130.14813259839843,
+        "z": -101.57159539178588,
+        "r": 0.6694395516043896,
+        "y0": 1.5,
+        "y1": 10.431416560831867
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          125.38471043262143,
+          7.454277707221245,
+          -106.33501755756288
+        ],
+        "max": [
+          134.91155476417543,
+          16.683408153414177,
+          -96.80817322600888
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 136.20781575225473,
+        "z": -126.80998590856515,
+        "r": 0.6488497826867269,
+        "y0": 1.5,
+        "y1": 9.87990489339447
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          131.73853314244434,
+          7.08660326226298,
+          -131.27926851837555
+        ],
+        "max": [
+          140.67709836206512,
+          15.7458383187706,
+          -122.34070329875478
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 153.95833022089175,
+        "z": -102.94417746639621,
+        "r": 0.628260013769064,
+        "y0": 1.5,
+        "y1": 9.328393225957074
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          149.78318716704797,
+          6.718928817304716,
+          -107.11932052023998
+        ],
+        "max": [
+          158.13347327473554,
+          14.808268484127026,
+          -98.76903441255244
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 175.13387881732982,
+        "z": -114.6016642699393,
+        "r": 0.6076702448514012,
+        "y0": 1.5,
+        "y1": 8.776881558519676
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          171.25287531945264,
+          6.351254372346452,
+          -118.48266776781647
+        ],
+        "max": [
+          179.014882315207,
+          13.870698649483453,
+          -110.72066077206215
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 165.2591002757584,
+        "z": -88.04544174206889,
+        "r": 0.5870804759337385,
+        "y0": 1.5,
+        "y1": 8.22536989108228
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          161.67223633384788,
+          5.983579927388187,
+          -91.63230568397944
+        ],
+        "max": [
+          168.84596421766895,
+          12.933128814839879,
+          -84.45857780015834
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 186.71949902601907,
+        "z": -81.02257475821473,
+        "r": 0.5664907070160757,
+        "y0": 1.5,
+        "y1": 7.673858223644885
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          183.42677464007514,
+          5.615905482429923,
+          -84.31529914415867
+        ],
+        "max": [
+          190.012223411963,
+          11.995558980196305,
+          -77.72985037227079
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 201.11055657761102,
+        "z": -56.58861805815263,
+        "r": 0.5459009380984128,
+        "y0": 1.5,
+        "y1": 7.1223465562074875
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          198.1119717476337,
+          5.248231037471658,
+          -59.58720288812996
+        ],
+        "max": [
+          204.10914140758834,
+          11.057989145552728,
+          -53.59003322817531
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 169.3972397677428,
+        "z": -56.203216265870424,
+        "r": 0.52531116918075,
+        "y0": 1.5,
+        "y1": 6.570834888770091
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          166.6927944937321,
+          4.880556592513394,
+          -58.90766153988114
+        ],
+        "max": [
+          172.1016850417535,
+          10.120419310909154,
+          -53.49877099185971
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 161.27081895680337,
+        "z": -31.097672715073664,
+        "r": 0.6839214003465337,
+        "y0": 1.5,
+        "y1": 10.819323223567869
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          156.30051323756717,
+          7.712882149045246,
+          -36.06797843430986
+        ],
+        "max": [
+          166.24112467603956,
+          17.342849480065375,
+          -26.127366995837466
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 144.3558205586799,
+        "z": -55.98650484409139,
+        "r": 0.6633316314288709,
+        "y0": 1.5,
+        "y1": 10.267811556130471
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          139.67965439541032,
+          7.345207704086981,
+          -60.66267100736098
+        ],
+        "max": [
+          149.0319867219495,
+          16.4052796454218,
+          -51.31033868082181
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 121.95649418403349,
+        "z": -45.898529991187424,
+        "r": 0.6427418625112081,
+        "y0": 1.5,
+        "y1": 9.716299888693074
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          117.57446757673051,
+          6.977533259128717,
+          -50.2805565984904
+        ],
+        "max": [
+          126.33852079133646,
+          15.467709810778228,
+          -41.51650338388445
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 133.02436219356338,
+        "z": -72.31302124759533,
+        "r": 0.6221520935935453,
+        "y0": 1.5,
+        "y1": 9.164788221255678
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          128.936475142227,
+          6.609858814170453,
+          -76.4009082989317
+        ],
+        "max": [
+          137.11224924489974,
+          14.530139976134654,
+          -68.22513419625896
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 111.90122227471699,
+        "z": -81.22614764963971,
+        "r": 0.6015623246758824,
+        "y0": 1.5,
+        "y1": 8.613276553818281
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          108.10747477934723,
+          6.242184369212189,
+          -85.01989514500947
+        ],
+        "max": [
+          115.69496977008674,
+          13.59257014149108,
+          -77.43240015426996
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 99.16348478696212,
+        "z": -107.08586237491441,
+        "r": 0.5809725557582197,
+        "y0": 1.5,
+        "y1": 8.061764886380885
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          95.66387684755898,
+          5.874509924253924,
+          -110.58547031431755
+        ],
+        "max": [
+          102.66309272636525,
+          12.655000306847507,
+          -103.58625443551128
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 131.25598277759187,
+        "z": -106.0412417758178,
+        "r": 0.5603827868405569,
+        "y0": 1.5,
+        "y1": 7.51025321894349
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          128.05051439415533,
+          5.50683547929566,
+          -109.24671015925432
+        ],
+        "max": [
+          134.4614511610284,
+          11.717430472203933,
+          -102.83577339238127
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 141.4529933398953,
+        "z": -130.8559009977429,
+        "r": 0.5397930179228941,
+        "y0": 1.5,
+        "y1": 6.958741551506092
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          138.54166451242537,
+          5.139161034337395,
+          -133.76722982521284
+        ],
+        "max": [
+          144.36432216736523,
+          10.779860637560358,
+          -127.94457217027299
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 157.4714096569814,
+        "z": -104.95834471421401,
+        "r": 0.5192032490052313,
+        "y0": 1.5,
+        "y1": 6.407229884068696
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          154.8542203854781,
+          4.771486589379131,
+          -107.57553398571731
+        ],
+        "max": [
+          160.08859892848469,
+          9.842290802916784,
+          -102.3411554427107
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 187.99696743659578,
+        "z": -69.38670009563802,
+        "r": 0.5685800311228074,
+        "y0": 1.5,
+        "y1": 7.729822262218057
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          184.67439556341282,
+          5.653214841478705,
+          -72.70927196882099
+        ],
+        "max": [
+          191.31953930977875,
+          12.090697845770697,
+          -66.06412822245505
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 160.38627005098024,
+        "z": -70.70981995970203,
+        "r": 0.5479902622051446,
+        "y0": 1.5,
+        "y1": 7.17831059478066
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          157.3578377337639,
+          5.285540396520441,
+          -73.73825227691839
+        ],
+        "max": [
+          163.4147023681966,
+          11.153128011127123,
+          -67.68138764248567
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 162.50952925831805,
+        "z": -49.01120893500416,
+        "r": 0.5274004932874817,
+        "y0": 1.5,
+        "y1": 6.626798927343263
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          159.7752364970683,
+          4.917865951562176,
+          -51.7455016962539
+        ],
+        "max": [
+          165.2438220195678,
+          10.215558176483547,
+          -46.27691617375442
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 146.1047437593595,
+        "z": -27.241603015528668,
+        "r": 0.6860107244532655,
+        "y0": 1.5,
+        "y1": 10.87528726214104
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          141.10459055288428,
+          7.750191508094027,
+          -32.241756222003886
+        ],
+        "max": [
+          151.10489696583474,
+          17.43798834563977,
+          -22.241449809053446
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 136.13041075655377,
+        "z": -56.38639929015614,
+        "r": 0.6654209555356027,
+        "y0": 1.5,
+        "y1": 10.323775594703644
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          131.42439710604515,
+          7.382517063135763,
+          -61.09241294066475
+        ],
+        "max": [
+          140.8364244070624,
+          16.500418510996198,
+          -51.68038563964753
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 110.85632799823179,
+        "z": -54.22242868303806,
+        "r": 0.6448311866179398,
+        "y0": 1.5,
+        "y1": 9.772263927266247
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          106.44445390368979,
+          7.014842618177498,
+          -58.63430277758006
+        ],
+        "max": [
+          115.26820209277379,
+          15.56284867635262,
+          -49.81055458849606
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 128.81393629550857,
+        "z": -77.3382665534636,
+        "r": 0.6242414177002771,
+        "y0": 1.5,
+        "y1": 9.22075225982885
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          124.69620175693318,
+          6.647168173219234,
+          -81.45600109203899
+        ],
+        "max": [
+          132.93167083408395,
+          14.625278841709045,
+          -73.2205320148882
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 111.39902149172207,
+        "z": -93.32500626087771,
+        "r": 0.6036516487826142,
+        "y0": 1.5,
+        "y1": 8.669240592391454
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          107.57542650911329,
+          6.279493728260969,
+          -97.1486012434865
+        ],
+        "max": [
+          115.22261647433085,
+          13.687709007065472,
+          -89.50141127826893
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 139.21473261312883,
+        "z": -90.87984049627288,
+        "r": 0.5830618798649514,
+        "y0": 1.5,
+        "y1": 8.117728924954058
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          135.68527718648667,
+          5.911819283302705,
+          -94.40929592291504
+        ],
+        "max": [
+          142.744188039771,
+          12.750139172421898,
+          -87.35038506963072
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 138.93120579544527,
+        "z": -112.99615957965747,
+        "r": 0.5624721109472887,
+        "y0": 1.5,
+        "y1": 7.566217257516661
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          135.69588992476972,
+          5.544144838344441,
+          -116.23147545033302
+        ],
+        "max": [
+          142.16652166612081,
+          11.812569337778324,
+          -109.76084370898192
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 157.23716084551367,
+        "z": -133.80219904240468,
+        "r": 0.5418823420296258,
+        "y0": 1.5,
+        "y1": 7.014705590079264
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          154.29598453080473,
+          5.176470393386176,
+          -136.74337535711362
+        ],
+        "max": [
+          160.1783371602226,
+          10.874999503134749,
+          -130.86102272769574
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 166.03257954040805,
+        "z": -103.88905376032463,
+        "r": 0.521292573111963,
+        "y0": 1.5,
+        "y1": 6.463193922641867
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          163.38554278166572,
+          4.808795948427912,
+          -106.53609051906696
+        ],
+        "max": [
+          168.67961629915038,
+          9.937429668491175,
+          -101.2420170015823
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 191.81938885056303,
+        "z": -104.07430572420583,
+        "r": 0.6799028042777467,
+        "y0": 1.5,
+        "y1": 10.711682257439644
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          186.9064916465952,
+          7.641121504959764,
+          -108.98720292817364
+        ],
+        "max": [
+          196.73228605453085,
+          17.159859837647396,
+          -99.16140852023801
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 172.68941422743984,
+        "z": -81.4761599056915,
+        "r": 0.6593130353600839,
+        "y0": 1.5,
+        "y1": 10.160170590002247
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          168.07065657943863,
+          7.273447060001499,
+          -86.0949175536927
+        ],
+        "max": [
+          177.30817187544105,
+          16.22229000300382,
+          -76.85740225769031
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 189.01180369190314,
+        "z": -63.85424701940357,
+        "r": 0.6387232664424211,
+        "y0": 1.5,
+        "y1": 9.608658922564851
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          184.68718559986854,
+          6.905772615043235,
+          -68.17886511143816
+        ],
+        "max": [
+          193.33642178393774,
+          15.284720168360248,
+          -59.52962892736898
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 161.02746339682142,
+        "z": -67.45272888291002,
+        "r": 0.6181334975247583,
+        "y0": 1.5,
+        "y1": 9.057147255127454
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          156.99698486075343,
+          6.538098170084971,
+          -71.483207418978
+        ],
+        "max": [
+          165.0579419328894,
+          14.347150333716675,
+          -63.42225034684205
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 159.43072111688844,
+        "z": -45.06244601972614,
+        "r": 0.5975437286070955,
+        "y0": 1.5,
+        "y1": 8.505635587690058
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          155.69438213678708,
+          6.170423725126706,
+          -48.798784999827504
+        ],
+        "max": [
+          163.1670600969898,
+          13.409580499073101,
+          -41.32610703962477
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 139.28236547997716,
+        "z": -25.369859572811187,
+        "r": 0.5769539596894326,
+        "y0": 1.5,
+        "y1": 7.954123920252663
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          135.84016605584242,
+          5.802749280168442,
+          -28.81205899694594
+        ],
+        "max": [
+          142.7245649041119,
+          12.472010664429527,
+          -21.927660148676434
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 131.72422901490248,
+        "z": -56.014072631091864,
+        "r": 0.5563641907717699,
+        "y0": 1.5,
+        "y1": 7.402612252815265
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          128.57616914673434,
+          5.435074835210177,
+          -59.162132499260004
+        ],
+        "max": [
+          134.8722888830706,
+          11.53444082978595,
+          -52.866012762923724
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 105.57259241650227,
+        "z": -57.85959930248124,
+        "r": 0.5357744218541071,
+        "y0": 1.5,
+        "y1": 6.851100585377869
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          102.71867210430075,
+          5.067400390251913,
+          -60.713519614682774
+        ],
+        "max": [
+          108.4265127287038,
+          10.596870995142377,
+          -55.00567899027971
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 125.87814482261594,
+        "z": -79.8804875783986,
+        "r": 0.6943846530198907,
+        "y0": 1.5,
+        "y1": 11.099588920175647
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          120.75836406518893,
+          7.899725946783764,
+          -85.00026833582561
+        ],
+        "max": [
+          130.99792558004296,
+          17.8193011642986,
+          -74.76070682097159
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 110.78135619695976,
+        "z": -99.06185054917506,
+        "r": 0.673794884102228,
+        "y0": 1.5,
+        "y1": 10.54807725273825
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          105.95571499549936,
+          7.532051501825499,
+          -103.88749175063546
+        ],
+        "max": [
+          115.60699739842016,
+          16.881731329655025,
+          -94.23620934771466
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 138.89481559481,
+        "z": -94.27918236279011,
+        "r": 0.6532051151845651,
+        "y0": 1.5,
+        "y1": 9.996565585300852
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          134.36331394931622,
+          7.164377056867235,
+          -98.8106840082839
+        ],
+        "max": [
+          143.4263172403038,
+          15.94416149501145,
+          -89.74768071729632
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 142.40167733384664,
+        "z": -116.79644367158203,
+        "r": 0.6326153462669023,
+        "y0": 1.5,
+        "y1": 9.445053917863456
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          138.16431524431945,
+          6.796702611908971,
+          -121.0338057611092
+        ],
+        "max": [
+          146.63903942337382,
+          15.006591660367876,
+          -112.55908158205484
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 164.32252150737315,
+        "z": -135.2294060525054,
+        "r": 0.6120255773492396,
+        "y0": 1.5,
+        "y1": 8.893542250426059
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          160.37929897381258,
+          6.429028166950707,
+          -139.17262858606597
+        ],
+        "max": [
+          168.26574404093373,
+          14.069021825724302,
+          -131.28618351894482
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 174.75389502828372,
+        "z": -74.06676253391561,
+        "r": 0.6614023594668157,
+        "y0": 1.5,
+        "y1": 10.21613462857542
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          170.1052898930435,
+          7.31075641905028,
+          -78.71536766915582
+        ],
+        "max": [
+          179.40250016352394,
+          16.31742886857821,
+          -69.41815739867539
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 184.58353609063323,
+        "z": -51.30411021772629,
+        "r": 0.6408125905491527,
+        "y0": 1.5,
+        "y1": 9.664622961138024
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          180.22907051135962,
+          6.943081974092016,
+          -55.658575796999905
+        ],
+        "max": [
+          188.93800166990684,
+          15.37985903393464,
+          -46.949644638452675
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 157.9337667449636,
+        "z": -62.27223554990735,
+        "r": 0.62022282163149,
+        "y0": 1.5,
+        "y1": 9.113111293700626
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          153.8734407216566,
+          6.575407529133752,
+          -66.33256157321435
+        ],
+        "max": [
+          161.9940927682706,
+          14.442289199291066,
+          -58.21190952660035
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 148.57748011456152,
+        "z": -41.120368131039875,
+        "r": 0.5996330527138273,
+        "y0": 1.5,
+        "y1": 8.56159962626323
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          144.81129364722113,
+          6.207733084175487,
+          -44.886554598380265
+        ],
+        "max": [
+          152.3436665819019,
+          13.504719364647492,
+          -37.354181663699485
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 143.6521615047075,
+        "z": -68.21122480939985,
+        "r": 0.5790432837961644,
+        "y0": 1.5,
+        "y1": 8.010087958825835
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          140.1801145933337,
+          5.840058639217223,
+          -71.68327172077363
+        ],
+        "max": [
+          147.12420841608127,
+          12.567149530003919,
+          -64.73917789802607
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 123.23567533650996,
+        "z": -60.91369951526575,
+        "r": 0.5584535148785016,
+        "y0": 1.5,
+        "y1": 7.458576291388437
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          120.05776798110278,
+          5.472384194258958,
+          -64.09160687067292
+        ],
+        "max": [
+          126.41358269191713,
+          11.629579695360343,
+          -57.73579215985858
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 98.3301681046598,
+        "z": -71.54975644978228,
+        "r": 0.5378637459608389,
+        "y0": 1.5,
+        "y1": 6.90706462395104
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          95.44640030521926,
+          5.104709749300694,
+          -74.43352424922283
+        ],
+        "max": [
+          101.21393590410035,
+          10.69200986071677,
+          -68.66598865034173
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 124.3216851250846,
+        "z": -87.8101866495656,
+        "r": 0.517273977043176,
+        "y0": 1.5,
+        "y1": 6.355552956513644
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          121.73205688161066,
+          4.737035304342429,
+          -90.39981489303953
+        ],
+        "max": [
+          126.91131336855854,
+          9.754440026073196,
+          -85.22055840609166
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 116.18909906445501,
+        "z": -111.66503858213552,
+        "r": 0.6758842082089597,
+        "y0": 1.5,
+        "y1": 10.60404129131142
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          111.33361037575558,
+          7.569360860874281,
+          -116.52052727083495
+        ],
+        "max": [
+          121.04458775315443,
+          16.976870195229417,
+          -106.8095498934361
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 142.65494168900355,
+        "z": -99.46731218706495,
+        "r": 0.6552944392912968,
+        "y0": 1.5,
+        "y1": 10.052529623874024
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          138.09359255627075,
+          7.201686415916017,
+          -104.02866131979776
+        ],
+        "max": [
+          147.21629082173635,
+          16.03930036058584,
+          -94.90596305433213
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 153.88539596130525,
+        "z": -120.10263408642935,
+        "r": 0.6347046703736341,
+        "y0": 1.5,
+        "y1": 9.501017956436629
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          149.61818638453906,
+          6.834011970957753,
+          -124.36984366319555
+        ],
+        "max": [
+          158.15260553807144,
+          15.101730525942267,
+          -115.83542450966314
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 157.77193699426246,
+        "z": -92.56450163898975,
+        "r": 0.6141149014559713,
+        "y0": 1.5,
+        "y1": 8.949506288999231
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          153.79886697346288,
+          6.466337525999489,
+          -96.53757165978935
+        ],
+        "max": [
+          161.74500701506204,
+          14.164160691298694,
+          -88.59143161819016
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 179.03453183954107,
+        "z": -98.18163141480426,
+        "r": 0.5935251325383085,
+        "y0": 1.5,
+        "y1": 8.397994621561836
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          175.3556013747081,
+          6.098663081041224,
+          -101.86056187963723
+        ],
+        "max": [
+          182.71346230437405,
+          13.22659085665512,
+          -94.50270094997128
+        ]
+      }
+    ],
+    "lac": [
+      {
+        "kind": "box",
+        "name": "lacquer house",
+        "min": [
+          -165,
+          1.5,
+          66
+        ],
+        "max": [
+          -155,
+          10.4,
+          74
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "town house",
+        "min": [
+          -179,
+          1.5,
+          77
+        ],
+        "max": [
+          -173,
+          6.5,
+          83
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "town house",
+        "min": [
+          -149.5,
+          1.5,
+          79
+        ],
+        "max": [
+          -142.5,
+          7.5,
+          85
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "town house",
+        "min": [
+          -186.5,
+          1.5,
+          65
+        ],
+        "max": [
+          -181.5,
+          5.5,
+          71
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "town house",
+        "min": [
+          -141,
+          1.5,
+          63
+        ],
+        "max": [
+          -135,
+          6.5,
+          69
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -199.78110969977556,
+        "z": 102.66699355250876,
+        "r": 0.6413601914299281,
+        "y0": 1.5,
+        "y1": 9.679290841873074
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -204.14339814877454,
+          6.952860561248716,
+          98.30470510350979
+        ],
+        "max": [
+          -195.41882125077657,
+          15.404794431184227,
+          107.02928200150772
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -192.5018036481941,
+        "z": 115.65601914623382,
+        "r": 0.625917864741681,
+        "y0": 1.5,
+        "y1": 9.265657091295028
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -196.64348743021813,
+          6.677104727530018,
+          111.5143353642098
+        ],
+        "max": [
+          -188.3601198661701,
+          14.701617055201547,
+          119.79770292825783
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -185.22249759661267,
+        "z": 98.64504472598904,
+        "r": 0.6104755380534338,
+        "y0": 1.5,
+        "y1": 8.852023340716979
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -189.14357671166172,
+          6.4013488938113206,
+          94.72396561093998
+        ],
+        "max": [
+          -181.30141848156362,
+          13.998439679218865,
+          102.56612384103809
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -177.9431915450312,
+        "z": 111.63407031971408,
+        "r": 0.5950332113651868,
+        "y0": 1.5,
+        "y1": 8.438389590138932
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -181.6436659931053,
+          6.125593060092622,
+          107.93359587163998
+        ],
+        "max": [
+          -174.2427170969571,
+          13.295262303236186,
+          115.33454476778819
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -170.66388549344975,
+        "z": 94.6230958994693,
+        "r": 0.5795908846769396,
+        "y0": 1.5,
+        "y1": 8.024755839560886
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -174.14375527454888,
+          5.849837226373924,
+          91.14322611837017
+        ],
+        "max": [
+          -167.18401571235063,
+          12.592084927253506,
+          98.10296568056845
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -163.3845794418683,
+        "z": 107.61212149319437,
+        "r": 0.5641485579886926,
+        "y0": 1.5,
+        "y1": 7.611122088982837
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -166.6438445559925,
+          5.574081392655225,
+          104.35285637907019
+        ],
+        "max": [
+          -160.12531432774412,
+          11.888907551270824,
+          110.87138660731854
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -156.10527339028687,
+        "z": 90.60114707294959,
+        "r": 0.5487062313004455,
+        "y0": 1.5,
+        "y1": 7.197488338404789
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -159.1439338374361,
+          5.298325558936527,
+          87.56248662580036
+        ],
+        "max": [
+          -153.06661294313764,
+          11.185730175288143,
+          93.63980752009881
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -148.8259673387054,
+        "z": 103.59017266667465,
+        "r": 0.5332639046121983,
+        "y0": 1.5,
+        "y1": 6.783854587826743
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -151.64402311887966,
+          5.022569725217829,
+          100.77211688650038
+        ],
+        "max": [
+          -146.00791155853113,
+          10.482552799305463,
+          106.40822844684891
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -141.54666128712395,
+        "z": 116.57919826039969,
+        "r": 0.5178215779239512,
+        "y0": 1.5,
+        "y1": 6.370220837248695
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -144.14411240032325,
+          4.74681389149913,
+          113.9817471472004
+        ],
+        "max": [
+          -138.94921017392466,
+          9.779375423322781,
+          119.17664937359899
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -134.26735523554248,
+        "z": 99.56822384015491,
+        "r": 0.6367792512982889,
+        "y0": 1.5,
+        "y1": 9.556587088347028
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -138.5642016826609,
+          6.871058058898019,
+          95.2713773930365
+        ],
+        "max": [
+          -129.97050878842407,
+          15.196198050189947,
+          103.86507028727333
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -126.98804918396105,
+        "z": 112.55724943387997,
+        "r": 0.6213369246100419,
+        "y0": 1.5,
+        "y1": 9.14295333776898
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -131.06429096410452,
+          6.595302225179321,
+          108.48100765373651
+        ],
+        "max": [
+          -122.91180740381759,
+          14.493020674207266,
+          116.63349121402344
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -119.7087431323796,
+        "z": 95.5462750136352,
+        "r": 0.6058945979217948,
+        "y0": 1.5,
+        "y1": 8.729319587190933
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -123.5643802455481,
+          6.319546391460623,
+          91.6906379004667
+        ],
+        "max": [
+          -115.8531060192111,
+          13.789843298224588,
+          99.4019121268037
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -112.42943708079815,
+        "z": 108.53530060736026,
+        "r": 0.5904522712335477,
+        "y0": 1.5,
+        "y1": 8.315685836612886
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -116.06446952699169,
+          6.043790557741924,
+          104.90026816116672
+        ],
+        "max": [
+          -108.79440463460462,
+          13.086665922241906,
+          112.17033305355379
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -205.15013107578284,
+        "z": 91.52432618711546,
+        "r": 0.5750099445453006,
+        "y0": 1.5,
+        "y1": 7.902052086034837
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -208.56455885500142,
+          5.7680347240232255,
+          88.10989840789688
+        ],
+        "max": [
+          -201.73570329656425,
+          12.383488546259224,
+          94.93875396633405
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -197.87082502420137,
+        "z": 104.51335178084052,
+        "r": 0.5595676178570534,
+        "y0": 1.5,
+        "y1": 7.488418335456791
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -201.064648136445,
+          5.492278890304528,
+          101.3195286685969
+        ],
+        "max": [
+          -194.67700191195775,
+          11.680311170276545,
+          107.70717489308414
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -190.59151897261992,
+        "z": 117.50237737456558,
+        "r": 0.5441252911688064,
+        "y0": 1.5,
+        "y1": 7.074784584878743
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -193.56473741788858,
+          5.216523056585829,
+          114.52915892929693
+        ],
+        "max": [
+          -187.61830052735127,
+          10.977133794293863,
+          120.47559581983424
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -183.31221292103845,
+        "z": 100.4914029543208,
+        "r": 0.5286829644805593,
+        "y0": 1.5,
+        "y1": 6.661150834300695
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -186.06482669933214,
+          4.94076722286713,
+          97.7387891760271
+        ],
+        "max": [
+          -180.55959914274476,
+          10.273956418311181,
+          103.24401673261451
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -176.032906869457,
+        "z": 113.48042854804585,
+        "r": 0.647640637854897,
+        "y0": 1.5,
+        "y1": 9.847517085399028
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -180.48491598166981,
+          7.06501139026602,
+          109.02841943583303
+        ],
+        "max": [
+          -171.5808977572442,
+          15.690779045178349,
+          117.93243766025867
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -168.75360081787557,
+        "z": 96.46945412780107,
+        "r": 0.6321983111666499,
+        "y0": 1.5,
+        "y1": 9.433883334820981
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -172.9850052631134,
+          6.789255556547321,
+          92.23804968256322
+        ],
+        "max": [
+          -164.52219637263772,
+          14.98760166919567,
+          100.70085857303893
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -161.47429476629412,
+        "z": 109.45847972152613,
+        "r": 0.6167559844784029,
+        "y0": 1.5,
+        "y1": 9.020249584242933
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -165.48509454455703,
+          6.513499722828623,
+          105.44767994326324
+        ],
+        "max": [
+          -157.46349498803121,
+          14.284424293212988,
+          113.46927949978902
+        ]
+      }
+    ],
+    "arena": [
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 152.4,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 156.8,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 161.2,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 165.6,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 174.4,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 178.8,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 183.2,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 187.6,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 84,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 58,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 58,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 62.4,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 62.4,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 66.8,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 66.8,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 71.2,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 71.2,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 75.6,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 75.6,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 80,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 80,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 148,
+        "z": 84.4,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "cylinder",
+        "name": "pavilion pillar",
+        "x": 192,
+        "z": 84.4,
+        "r": 0.38,
+        "y0": 1.65,
+        "y1": 7.65
+      },
+      {
+        "kind": "box",
+        "name": "draupadi dais",
+        "min": [
+          165.8,
+          1.65,
+          78.8
+        ],
+        "max": [
+          174.2,
+          2.65,
+          83.2
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "target pole",
+        "x": 170,
+        "z": 70,
+        "r": 0.3,
+        "y0": 1.65,
+        "y1": 17.25
+      },
+      {
+        "kind": "box",
+        "name": "palace wall",
+        "min": [
+          130,
+          1.5,
+          96
+        ],
+        "max": [
+          210,
+          11.5,
+          104
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          138.18,
+          11.5,
+          98.18
+        ],
+        "max": [
+          141.82,
+          15.14,
+          101.82
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          153.18,
+          11.5,
+          98.18
+        ],
+        "max": [
+          156.82,
+          15.14,
+          101.82
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          168.18,
+          11.5,
+          98.18
+        ],
+        "max": [
+          171.82,
+          15.14,
+          101.82
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          183.18,
+          11.5,
+          98.18
+        ],
+        "max": [
+          186.82,
+          15.14,
+          101.82
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          198.18,
+          11.5,
+          98.18
+        ],
+        "max": [
+          201.82,
+          15.14,
+          101.82
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 127.81537977309468,
+        "z": 24.869215837558002,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10.11789125261632
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 134.36675521951798,
+        "z": 36.20986545105452,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 9.658298196418489
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 140.91813066594128,
+        "z": 27.550515055237817,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 13.198705142083304
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 147.4695061123646,
+        "z": 38.89116466873434,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 12.739112085885473
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 154.0208815587879,
+        "z": 30.231814272917635,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 12.279519029687641
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 160.5722570052112,
+        "z": 21.57246387710093,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.819925973489811
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 167.1236324516345,
+        "z": 32.91311349059745,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.36033291729198
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 173.67500789805783,
+        "z": 24.253763094780748,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10.90073986109415
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 180.22638334448112,
+        "z": 35.59441270827727,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 10.44114680489632
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 186.77775879090444,
+        "z": 26.935062312460563,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 9.98155374869849
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 193.32913423732774,
+        "z": 38.27571192595708,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 9.52196069250066
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 199.88050968375103,
+        "z": 29.616361530140377,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 13.062367638165473
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 206.43188513017435,
+        "z": 20.957011134323675,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 12.602774581967644
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 212.98326057659767,
+        "z": 32.297660747820196,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 12.143181525769812
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 129.53463598111145,
+        "z": 23.63831035200349,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.683588469571982
+      },
+      {
+        "kind": "cylinder",
+        "name": "palm trunk",
+        "x": 136.08601142753474,
+        "z": 34.97895996550001,
+        "r": 0.3,
+        "y0": 1.5,
+        "y1": 11.223995413374151
+      },
+      {
+        "kind": "box",
+        "name": "bow stand",
+        "min": [
+          162.2,
+          1.65,
+          65.4
+        ],
+        "max": [
+          165.8,
+          3.1,
+          66.6
+        ]
+      }
+    ],
+    "city": [
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 47.999984146302396,
+        "z": -224.65233227734498,
+        "r": 0.7131829167928387,
+        "y0": 1.5,
+        "y1": 11.603113842665325
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          42.61165676354756,
+          8.235409228443551,
+          -230.04065966009983
+        ],
+        "max": [
+          53.38831152905723,
+          18.67529353253105,
+          -219.26400489459013
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 92.27272314122465,
+        "z": -178.94578020072913,
+        "r": 0.5833596988269684,
+        "y0": 1.5,
+        "y1": 8.12570621857951
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          88.73901315798224,
+          5.9171374790530065,
+          -182.47949018397154
+        ],
+        "max": [
+          95.80643312446705,
+          12.763700571585167,
+          -175.41207021748673
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 102.44861908320357,
+        "z": -140.9529504301065,
+        "r": 0.5627699299093055,
+        "y0": 1.5,
+        "y1": 7.574194551142114
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          99.20904865592777,
+          5.549463034094742,
+          -144.1925208573823
+        ],
+        "max": [
+          105.68818951047936,
+          11.826130736941593,
+          -137.71338000283072
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 59.64476787934647,
+        "z": -149.08704795798482,
+        "r": 0.5421801609916427,
+        "y0": 1.5,
+        "y1": 7.022682883704717
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          56.69933700803728,
+          5.181788589136478,
+          -152.032478829294
+        ],
+        "max": [
+          62.59019875065565,
+          10.88856090229802,
+          -146.14161708667564
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 39.3062072966007,
+        "z": -118.6404500539925,
+        "r": 0.7007903921574266,
+        "y0": 1.5,
+        "y1": 11.271171218502495
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          34.094915980066034,
+          8.01411414566833,
+          -123.85174137052717
+        ],
+        "max": [
+          44.51749861313536,
+          18.11099107145424,
+          -113.42915873745783
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 23.185587195601318,
+        "z": -156.658976610938,
+        "r": 0.6802006232397636,
+        "y0": 1.5,
+        "y1": 10.719659551065098
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          18.268435435033265,
+          7.646439700710066,
+          -161.57612837150606
+        ],
+        "max": [
+          28.10273895616937,
+          17.17342123681067,
+          -151.74182485036994
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -10.547560438057083,
+        "z": -151.8654612014315,
+        "r": 0.6596108543221009,
+        "y0": 1.5,
+        "y1": 10.1681478836277
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -15.170572642658524,
+          7.278765255751801,
+          -156.48847340603294
+        ],
+        "max": [
+          -5.924548233455642,
+          16.235851402167093,
+          -147.24244899683003
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 11.224393455611711,
+        "z": -184.49698861935747,
+        "r": 0.639021085404438,
+        "y0": 1.5,
+        "y1": 9.616636216190305
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          6.895520806976882,
+          6.911090810793537,
+          -188.8258612679923
+        ],
+        "max": [
+          15.55326610424654,
+          15.298281567523519,
+          -180.16811597072262
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -13.295860458785654,
+        "z": -204.65915929676356,
+        "r": 0.6184313164867752,
+        "y0": 1.5,
+        "y1": 9.065124548752909
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -17.330593551453873,
+          6.543416365835273,
+          -208.69389238943177
+        ],
+        "max": [
+          -9.261127366117435,
+          14.360711732879945,
+          -200.62442620409536
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -20.7755170068629,
+        "z": -243.92972779415481,
+        "r": 0.5978415475691123,
+        "y0": 1.5,
+        "y1": 8.51361288131551
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -24.516110543564505,
+          6.175741920877008,
+          -247.6703213308564
+        ],
+        "max": [
+          -17.034923470161292,
+          13.423141898236368,
+          -240.18913425745322
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 22.146521882047995,
+        "z": -233.72690669414973,
+        "r": 0.5772517786514496,
+        "y0": 1.5,
+        "y1": 7.962101213878115
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          18.700067901313002,
+          5.808067475918743,
+          -237.17336067488472
+        ],
+        "max": [
+          25.59297586278299,
+          12.485572063592794,
+          -230.28045271341475
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 45.101152653261366,
+        "z": -263.0313428308252,
+        "r": 0.5566620097337868,
+        "y0": 1.5,
+        "y1": 7.410589546440718
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          41.94883822849298,
+          5.440393030960479,
+          -266.18365725559363
+        ],
+        "max": [
+          48.25346707802975,
+          11.54800222894922,
+          -259.8790284060568
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 59.71263297748847,
+        "z": -223.86826075492917,
+        "r": 0.7152722408995705,
+        "y0": 1.5,
+        "y1": 11.659077881238495
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          54.294458107494606,
+          8.272718587492331,
+          -229.28643562492303
+        ],
+        "max": [
+          65.13080784748233,
+          18.770432398105445,
+          -218.4500858849353
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 94.2817579675127,
+        "z": -226.05576114283556,
+        "r": 0.6946824719819077,
+        "y0": 1.5,
+        "y1": 11.1075662138011
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          89.15772265348545,
+          7.9050441425340665,
+          -231.17979645686282
+        ],
+        "max": [
+          99.40579328153996,
+          17.83286256346187,
+          -220.9317258288083
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 70.88488916561505,
+        "z": -194.0046374522341,
+        "r": 0.6740927030642447,
+        "y0": 1.5,
+        "y1": 10.556054546363702
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          66.0549934075544,
+          7.5373696975758016,
+          -198.83453321029475
+        ],
+        "max": [
+          75.7147849236757,
+          16.895292728818294,
+          -189.17474169417346
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 94.06836775089904,
+        "z": -171.57513330146006,
+        "r": 0.653502934146582,
+        "y0": 1.5,
+        "y1": 10.004542878926305
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          89.53261154880501,
+          7.1696952526175375,
+          -176.1108895035541
+        ],
+        "max": [
+          98.60412395299308,
+          15.95772289417472,
+          -167.03937709936602
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 98.73659018201363,
+        "z": -131.21610791126173,
+        "r": 0.6329131652289192,
+        "y0": 1.5,
+        "y1": 9.45303121148891
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          94.49497353588622,
+          6.8020208076592725,
+          -135.45772455738916
+        ],
+        "max": [
+          102.97820682814104,
+          15.020153059531145,
+          -126.97449126513432
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 55.79285996432219,
+        "z": -143.53285890405496,
+        "r": 0.6123233963112564,
+        "y0": 1.5,
+        "y1": 8.901519544051512
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          51.84538287416138,
+          6.4343463627010085,
+          -147.48033599421578
+        ],
+        "max": [
+          59.740337054483,
+          14.082583224887571,
+          -139.58538181389414
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 30.288913410535294,
+        "z": -115.5752477600002,
+        "r": 0.5917336273935936,
+        "y0": 1.5,
+        "y1": 8.350007876614114
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          26.6355758763411,
+          6.066671917742744,
+          -119.22858529419439
+        ],
+        "max": [
+          33.94225094472949,
+          13.145013390243998,
+          -111.921910225806
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 17.26870578073699,
+        "z": -155.83785731422378,
+        "r": 0.5711438584759309,
+        "y0": 1.5,
+        "y1": 7.79849620917672
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          13.909507802509406,
+          5.698997472784479,
+          -159.19705529245135
+        ],
+        "max": [
+          20.627903758964575,
+          12.207443555600424,
+          -152.4786593359962
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -17.94305635855418,
+        "z": -156.3373248108355,
+        "r": 0.550554089558268,
+        "y0": 1.5,
+        "y1": 7.246984541739323
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -21.008114780815152,
+          5.331323027826215,
+          -159.40238323309646
+        ],
+        "max": [
+          -14.877997936293209,
+          11.269873720956848,
+          -153.27226638857454
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 7.088550636557187,
+        "z": -187.72779583848697,
+        "r": 0.7091643207240517,
+        "y0": 1.5,
+        "y1": 11.4954728765371
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          1.7576317690707333,
+          8.163648584358068,
+          -193.05871470597341
+        ],
+        "max": [
+          12.41946950404364,
+          18.49230389011307,
+          -182.39687697100052
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -14.574761148489742,
+        "z": -212.33387646335854,
+        "r": 0.6885745518063889,
+        "y0": 1.5,
+        "y1": 10.943961209099703
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -19.611540460009586,
+          7.795974139399803,
+          -217.37065577487837
+        ],
+        "max": [
+          -9.5379818369699,
+          17.554734055469496,
+          -207.2970971518387
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -16.329508187582896,
+        "z": -253.58295029311756,
+        "r": 0.6679847828887261,
+        "y0": 1.5,
+        "y1": 10.392449541662307
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -21.072147943136127,
+          7.428299694441538,
+          -258.3255900486708
+        ],
+        "max": [
+          -11.586868432029664,
+          16.61716422082592,
+          -248.84031053756433
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 26.534319679830993,
+        "z": -239.11134019703508,
+        "r": 0.6473950139710632,
+        "y0": 1.5,
+        "y1": 9.84093787422491
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          22.085819480244375,
+          7.060625249483273,
+          -243.5598403966217
+        ],
+        "max": [
+          30.98281987941761,
+          15.679594386182346,
+          -234.66283999744846
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 54.505673419839724,
+        "z": -265.521537454246,
+        "r": 0.6268052450534005,
+        "y0": 1.5,
+        "y1": 9.289426206787514
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          50.351312776219714,
+          6.692950804525009,
+          -269.675898097866
+        ],
+        "max": [
+          58.66003406345973,
+          14.742024551538773,
+          -261.367176810626
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 74.25826558440498,
+        "z": -184.07436303995232,
+        "r": 0.6761820271709766,
+        "y0": 1.5,
+        "y1": 10.612018584936875
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          69.39852233910531,
+          7.574679056624584,
+          -188.93410628525197
+        ],
+        "max": [
+          79.11800882970465,
+          16.99043159439269,
+          -179.21461979465266
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 89.13201469362086,
+        "z": -154.27882614395895,
+        "r": 0.6555922582533138,
+        "y0": 1.5,
+        "y1": 10.060506917499477
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          84.5664110042878,
+          7.207004611666319,
+          -158.844429833292
+        ],
+        "max": [
+          93.69761838295392,
+          16.052861759749113,
+          -149.7132224546259
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 52.453242558699685,
+        "z": -166.3559914805668,
+        "r": 0.635002489335651,
+        "y0": 1.5,
+        "y1": 9.508995250062082
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          48.18177842533324,
+          6.839330166708055,
+          -170.62745561393322
+        ],
+        "max": [
+          56.72470669206613,
+          15.115291925105538,
+          -162.08452734720035
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 41.44407141591586,
+        "z": -137.31866865617562,
+        "r": 0.6144127204179882,
+        "y0": 1.5,
+        "y1": 8.957483582624683
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          37.46674683851602,
+          6.47165572174979,
+          -141.29599323357544
+        ],
+        "max": [
+          45.42139599331569,
+          14.177722090461963,
+          -133.3413440787758
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 7.203260504404177,
+        "z": -118.48226929505591,
+        "r": 0.5938229515003253,
+        "y0": 1.5,
+        "y1": 8.405971915187287
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          3.5200754829709573,
+          6.103981276791525,
+          -122.16545431648913
+        ],
+        "max": [
+          10.886445525837397,
+          13.240152255818389,
+          -114.7990842736227
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 5.373024024090476,
+        "z": -161.79999976976234,
+        "r": 0.5732331825826625,
+        "y0": 1.5,
+        "y1": 7.854460247749891
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          1.9839785586238676,
+          5.736306831833261,
+          -165.18904523522895
+        ],
+        "max": [
+          8.762069489557085,
+          12.302582421174815,
+          -158.41095430429573
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -28.837723965925292,
+        "z": -174.16618871613807,
+        "r": 0.5526434136649998,
+        "y0": 1.5,
+        "y1": 7.302948580312495
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -31.932629875425288,
+          5.368632386874997,
+          -177.26109462563807
+        ],
+        "max": [
+          -25.742818056425296,
+          11.365012586531241,
+          -171.07128280663807
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 4.361619026961009,
+        "z": -198.39293289362175,
+        "r": 0.7112536448307835,
+        "y0": 1.5,
+        "y1": 11.551436915110273
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -0.9991473277644705,
+          8.200957943406848,
+          -203.75369924834723
+        ],
+        "max": [
+          9.722385381686488,
+          18.587442755687462,
+          -193.03216653889626
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -8.326672372261967,
+        "z": -229.77704150343612,
+        "r": 0.6906638759131207,
+        "y0": 1.5,
+        "y1": 10.999925247672875
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -13.393299171020836,
+          7.833283498448584,
+          -234.843668302195
+        ],
+        "max": [
+          -3.2600455735031,
+          17.64987292104389,
+          -224.71041470467725
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 28.22638739656462,
+        "z": -216.0306394239628,
+        "r": 0.6700741069954579,
+        "y0": 1.5,
+        "y1": 10.448413580235478
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          23.453900153772363,
+          7.4656090534903194,
+          -220.80312666675508
+        ],
+        "max": [
+          32.99887463935687,
+          16.712303086400315,
+          -211.25815218117054
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 41.778411599802496,
+        "z": -244.51847941009555,
+        "r": 0.6494843380777949,
+        "y0": 1.5,
+        "y1": 9.896901912798082
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          37.30006391297685,
+          7.097934608532055,
+          -248.9968270969212
+        ],
+        "max": [
+          46.25675928662814,
+          15.774733251756741,
+          -240.0401317232699
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 77.89605367451507,
+        "z": -261.051037644445,
+        "r": 0.6288945691601322,
+        "y0": 1.5,
+        "y1": 9.345390245360685
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          73.71184554365604,
+          6.73026016357379,
+          -265.235245775304
+        ],
+        "max": [
+          82.0802618053741,
+          14.837163417113166,
+          -256.86682951358597
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 77.75500823261129,
+        "z": -217.15036517126836,
+        "r": 0.6083048002424694,
+        "y0": 1.5,
+        "y1": 8.793878577923287
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          73.86493965771886,
+          6.362585718615526,
+          -221.04043374616077
+        ],
+        "max": [
+          81.64507680750371,
+          13.89959358246959,
+          -213.26029659637595
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 111.48442395067138,
+        "z": -201.98182070933507,
+        "r": 0.5877150313248066,
+        "y0": 1.5,
+        "y1": 8.242366910485892
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          107.88849493174557,
+          5.994911273657261,
+          -205.57774972826087
+        ],
+        "max": [
+          115.0803529695972,
+          12.962023747826017,
+          -198.38589169040927
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 76.83940950612006,
+        "z": -178.95440846791138,
+        "r": 0.5671252624071438,
+        "y0": 1.5,
+        "y1": 7.690855243048496
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          73.53762004316087,
+          5.627236828698997,
+          -182.25619793087057
+        ],
+        "max": [
+          80.14119896907926,
+          12.024453913182443,
+          -175.6526190049522
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 87.20657797495761,
+        "z": -146.13930540352476,
+        "r": 0.546535493489481,
+        "y0": 1.5,
+        "y1": 7.1393435756110994
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          84.19892806796503,
+          5.259562383740733,
+          -149.14695531051734
+        ],
+        "max": [
+          90.2142278819502,
+          11.08688407853887,
+          -143.13165549653218
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 50.84979372261278,
+        "z": -161.58518080981602,
+        "r": 0.7051457246552646,
+        "y0": 1.5,
+        "y1": 11.387831910408877
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          45.57628337039471,
+          8.091887940272585,
+          -166.8586911620341
+        ],
+        "max": [
+          56.12330407483085,
+          18.30931424769509,
+          -156.31167045759796
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 34.78414716746926,
+        "z": -133.84788844356248,
+        "r": 0.6845559557376019,
+        "y0": 1.5,
+        "y1": 10.83632024297148
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          29.8047763712178,
+          7.72421349531432,
+          -138.82725923981394
+        ],
+        "max": [
+          39.763517963720716,
+          17.371744413051516,
+          -128.86851764731102
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -3.0543425006204714,
+        "z": -119.77570640130884,
+        "r": 0.663966186819939,
+        "y0": 1.5,
+        "y1": 10.284808575534083
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -7.739573740905316,
+          7.356539050356056,
+          -124.46093764159369
+        ],
+        "max": [
+          1.630888739664373,
+          16.43417457840794,
+          -115.09047516102399
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -0.8764097726531404,
+        "z": -164.1768384110946,
+        "r": 0.6433764179022763,
+        "y0": 1.5,
+        "y1": 9.733296908096685
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -5.267501456971373,
+          6.988864605397791,
+          -168.56793009541283
+        ],
+        "max": [
+          3.5146819116650923,
+          15.496604743764367,
+          -159.78574672677635
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -33.91035498287155,
+        "z": -182.13174267841754,
+        "r": 0.6227866489846134,
+        "y0": 1.5,
+        "y1": 9.18178524065929
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -38.00730711122318,
+          6.621190160439527,
+          -186.22869480676917
+        ],
+        "max": [
+          -29.813402854519932,
+          14.559034909120793,
+          -178.0347905500659
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 2.155811826239173,
+        "z": -203.87062897110468,
+        "r": 0.6021968800669507,
+        "y0": 1.5,
+        "y1": 8.630273573221892
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -1.647000746145837,
+          6.253515715481263,
+          -207.6734415434897
+        ],
+        "max": [
+          5.958624398624183,
+          13.62146507447722,
+          -200.06781639871966
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -5.7657612210126885,
+        "z": -237.9486804105799,
+        "r": 0.5816071111492879,
+        "y0": 1.5,
+        "y1": 8.078761905784496
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -9.274434237431088,
+          5.885841270522998,
+          -241.45735342699828
+        ],
+        "max": [
+          -2.25708820459429,
+          12.683895239833646,
+          -234.4400073941615
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 30.31999902381501,
+        "z": -220.77569597633442,
+        "r": 0.561017342231625,
+        "y0": 1.5,
+        "y1": 7.527250238347101
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          27.105465563363225,
+          5.518166825564734,
+          -223.9902294367862
+        ],
+        "max": [
+          33.5345324842668,
+          11.746325405190072,
+          -217.56116251588264
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 48.855044420942136,
+        "z": -247.5630821511924,
+        "r": 0.5404275733139622,
+        "y0": 1.5,
+        "y1": 6.975738570909703
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          45.93465051645696,
+          5.150492380606469,
+          -250.48347605567756
+        ],
+        "max": [
+          51.77543832542731,
+          10.808755570546495,
+          -244.64268824670722
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 115.42140614916957,
+        "z": -179.8212294131737,
+        "r": 0.5898043554315384,
+        "y0": 1.5,
+        "y1": 8.298330949059064
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          111.79562964300473,
+          6.032220632706043,
+          -183.44700591933855
+        ],
+        "max": [
+          119.04718265533441,
+          13.05716261340041,
+          -176.19545290700887
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 74.93301657702597,
+        "z": -166.53340055628013,
+        "r": 0.5692145865138755,
+        "y0": 1.5,
+        "y1": 7.746819281621668
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          71.60137962682775,
+          5.664546187747779,
+          -169.86503750647836
+        ],
+        "max": [
+          78.26465352722418,
+          12.119592778756836,
+          -163.2017636060819
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 73.93066793477423,
+        "z": -130.99961313071725,
+        "r": 0.5486248175962127,
+        "y0": 1.5,
+        "y1": 7.195307614184271
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          70.89317054054263,
+          5.296871742789515,
+          -134.03711052494887
+        ],
+        "max": [
+          76.96816532900584,
+          11.182022944113262,
+          -127.96211573648564
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 42.19507888086125,
+        "z": -156.03153351655448,
+        "r": 0.7072350487619964,
+        "y0": 1.5,
+        "y1": 11.443795948982048
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          36.89172104140416,
+          8.129197299321365,
+          -161.33489135601158
+        ],
+        "max": [
+          47.498436720318345,
+          18.404453113269483,
+          -150.72817567709737
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 17.024482157604737,
+        "z": -134.55444078150543,
+        "r": 0.6866452798443337,
+        "y0": 1.5,
+        "y1": 10.89228428154465
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          12.015263874114256,
+          7.761522854363101,
+          -139.5636590649959
+        ],
+        "max": [
+          22.03370044109522,
+          17.466883278625907,
+          -129.54522249801497
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -24.618773575842923,
+        "z": -133.25824979457406,
+        "r": 0.6660555109266708,
+        "y0": 1.5,
+        "y1": 10.340772614107255
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -29.333852303366793,
+          7.393848409404837,
+          -137.97332852209792
+        ],
+        "max": [
+          -19.903694848319052,
+          16.529313443982332,
+          -128.5431710670502
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -10.183481148572248,
+        "z": -176.47743235007817,
+        "r": 0.645465742009008,
+        "y0": 1.5,
+        "y1": 9.789260946669858
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -14.604420320129506,
+          7.026173964446572,
+          -180.89837152163543
+        ],
+        "max": [
+          -5.76254197701499,
+          15.591743609338758,
+          -172.05649317852092
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": -36.48679703049032,
+        "z": -205.04026541458157,
+        "r": 0.6248759730913451,
+        "y0": 1.5,
+        "y1": 9.23774927923246
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          -40.61359664608097,
+          6.658499519488308,
+          -209.1670650301722
+        ],
+        "max": [
+          -32.359997414899674,
+          14.654173774695185,
+          -200.91346579899093
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 5.069196034503413,
+        "z": -216.63918707699284,
+        "r": 0.6042862041736824,
+        "y0": 1.5,
+        "y1": 8.686237611795065
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          1.2365359748793785,
+          6.290825074530043,
+          -220.47184713661687
+        ],
+        "max": [
+          8.901856094127448,
+          13.71660394005161,
+          -212.8065270173688
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 8.846289703981604,
+        "z": -252.58212369618707,
+        "r": 0.5836964352560196,
+        "y0": 1.5,
+        "y1": 8.134725944357669
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          5.307769200324181,
+          5.923150629571779,
+          -256.1206441998445
+        ],
+        "max": [
+          12.384810207639028,
+          12.779034105408037,
+          -249.04360319252964
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 39.837869539777984,
+        "z": -225.8853087513699,
+        "r": 0.5631066663383568,
+        "y0": 1.5,
+        "y1": 7.583214276920272
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          36.59348859208717,
+          5.555476184613515,
+          -229.12968969906072
+        ],
+        "max": [
+          43.0822504874688,
+          11.841464270764464,
+          -222.6409278036791
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 67.06747776934216,
+        "z": -245.62798095790492,
+        "r": 0.542516897420694,
+        "y0": 1.5,
+        "y1": 7.031702609482876
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          64.11723637761796,
+          5.187801739655251,
+          -248.57822234962913
+        ],
+        "max": [
+          70.01771916106637,
+          10.90389443612089,
+          -242.67773956618072
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 61.98505868569784,
+        "z": -207.08279135935197,
+        "r": 0.7011271285864775,
+        "y0": 1.5,
+        "y1": 11.280190944280651
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          56.768956848748154,
+          8.020127296187102,
+          -212.29889319630166
+        ],
+        "max": [
+          67.20116052264751,
+          18.12632460527711,
+          -201.86668952240228
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 92.7125573593105,
+        "z": -200.86095025801978,
+        "r": 0.6805373596688148,
+        "y0": 1.5,
+        "y1": 10.728679276843256
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          87.79059507832743,
+          7.652452851228838,
+          -205.78291253900287
+        ],
+        "max": [
+          97.63451964029356,
+          17.188754770633537,
+          -195.9389879770367
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 117.2340624198982,
+        "z": -169.93507511088922,
+        "r": 0.6599475907511521,
+        "y0": 1.5,
+        "y1": 10.17716760940586
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          112.60623969488174,
+          7.284778406270574,
+          -174.5628978359057
+        ],
+        "max": [
+          121.86188514491465,
+          16.25118493598996,
+          -165.30725238587274
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 74.66851572266758,
+        "z": -160.10803007533644,
+        "r": 0.6393578218334892,
+        "y0": 1.5,
+        "y1": 9.625655941968462
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          70.33483255361773,
+          6.917103961312309,
+          -164.44171324438628
+        ],
+        "max": [
+          79.00219889171743,
+          15.313615101346388,
+          -155.7743469062866
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 68.06631230159387,
+        "z": -123.9627676454766,
+        "r": 0.6187680529158265,
+        "y0": 1.5,
+        "y1": 9.074144274531065
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          64.02676868851063,
+          6.549429516354045,
+          -128.00231125855984
+        ],
+        "max": [
+          72.10585591467711,
+          14.376045266702812,
+          -119.92322403239336
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 37.907121319789375,
+        "z": -152.3260542198064,
+        "r": 0.5981782839981636,
+        "y0": 1.5,
+        "y1": 8.52263260709367
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          34.16171726267275,
+          6.18175507139578,
+          -156.071458276923
+        ],
+        "max": [
+          41.652525376906,
+          13.438475432059239,
+          -148.58065016268978
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "forest trunk",
+        "x": 8.738864902002813,
+        "z": -134.48679175984017,
+        "r": 0.5775885150805009,
+        "y0": 1.5,
+        "y1": 7.971120939656274
+      },
+      {
+        "kind": "box",
+        "name": "forest canopy",
+        "min": [
+          5.287600400852801,
+          5.814080626437516,
+          -137.93805626099018
+        ],
+        "max": [
+          12.190129403152826,
+          12.500905597415665,
+          -131.03552725869017
+        ]
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 31.47669630262693,
+        "z": -192.71291326984104,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 28.259544909242116,
+        "z": -194.99586479086042,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 35.97466711511339,
+        "z": -194.94541876478624,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 32.75751572172857,
+        "z": -197.22837028580565,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 29.54036432834376,
+        "z": -199.51132180682507,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 26.323212934958946,
+        "z": -201.79427332784448,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 51.10606155461265,
+        "z": -180.077224837688,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 47.888910161227834,
+        "z": -182.3601763587074,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 44.67175876784302,
+        "z": -184.64312787972682,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 41.454607374458206,
+        "z": -186.92607940074623,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 38.237455981073396,
+        "z": -189.20903092176565,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "cylinder",
+        "name": "stump",
+        "x": 35.020304587688585,
+        "z": -191.49198244278503,
+        "r": 0.4,
+        "y0": 1.5,
+        "y1": 2
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -11.19,
+          9.5,
+          -5.19
+        ],
+        "max": [
+          -7.81,
+          12.88,
+          -1.8099999999999998
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -11.19,
+          9.5,
+          1.8099999999999998
+        ],
+        "max": [
+          -7.81,
+          12.88,
+          5.19
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          7.81,
+          9.5,
+          -5.19
+        ],
+        "max": [
+          11.19,
+          12.88,
+          -1.8099999999999998
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          7.81,
+          9.5,
+          1.8099999999999998
+        ],
+        "max": [
+          11.19,
+          12.88,
+          5.19
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          -21.69,
+          6,
+          -1.6900000000000002
+        ],
+        "max": [
+          -18.31,
+          9.38,
+          1.6900000000000002
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "chhatri",
+        "min": [
+          18.31,
+          6,
+          -1.6900000000000002
+        ],
+        "max": [
+          21.69,
+          9.38,
+          1.6900000000000002
+        ]
+      },
+      {
+        "kind": "box",
+        "name": "rising city",
+        "min": [
+          17,
+          1.5,
+          -188
+        ],
+        "max": [
+          63,
+          21.5,
+          -180
+        ]
+      }
+    ],
+    "naga": [
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -8.63664671650508,
+        "z": 577.584044845414,
+        "r": 3.7159836941547537,
+        "y0": 1.5,
+        "y1": 4.306924821629119
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 5.842103188349728,
+        "z": 559.0739572626705,
+        "r": 2.8399345156177267,
+        "y0": 1.5,
+        "y1": 4.6691195985014735
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 11.312459863256386,
+        "z": 585.1605436981783,
+        "r": 3.9638853380120223,
+        "y0": 1.5,
+        "y1": 5.031314375373828
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 30.437110686064592,
+        "z": 602.8429480801648,
+        "r": 3.951695129230335,
+        "y0": 1.5,
+        "y1": 3.710056027127482
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 6.4985068122287855,
+        "z": 604.4715321029723,
+        "r": 3.0756459506933074,
+        "y0": 1.5,
+        "y1": 4.072250803999836
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 11.158054233695063,
+        "z": 622.6028855991248,
+        "r": 2.1995967721562804,
+        "y0": 1.5,
+        "y1": 4.4344455808721905
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -2.1675194256012973,
+        "z": 642.4704213188637,
+        "r": 3.3235475945505755,
+        "y0": 1.5,
+        "y1": 4.796640357744545
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -10.55020043204451,
+        "z": 616.8075387096883,
+        "r": 2.4474984160135485,
+        "y0": 1.5,
+        "y1": 5.158835134616899
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -32.60117547392868,
+        "z": 617.8398201949934,
+        "r": 3.571449238407844,
+        "y0": 1.5,
+        "y1": 5.521029911489254
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -14.481231341546847,
+        "z": 599.871842404797,
+        "r": 2.695400059870817,
+        "y0": 1.5,
+        "y1": 5.883224688361608
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -27.622312089782394,
+        "z": 584.2431086488001,
+        "r": 3.8193508822651125,
+        "y0": 1.5,
+        "y1": 6.2454194652339625
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -4.710733058352468,
+        "z": 592.1917477980011,
+        "r": 2.943301703728085,
+        "y0": 1.5,
+        "y1": 3.607614240709333
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -0.8800179705282937,
+        "z": 573.5767495198731,
+        "r": 2.067252525191058,
+        "y0": 1.5,
+        "y1": 3.9698090175816874
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 20.060552904641728,
+        "z": 561.1127990450432,
+        "r": 3.191203347585353,
+        "y0": 1.5,
+        "y1": 4.3320037944540415
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 17.570898874177146,
+        "z": 588.3624795768008,
+        "r": 2.315154169048326,
+        "y0": 1.5,
+        "y1": 4.694198571326396
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 38.2848171966667,
+        "z": 597.1065161281683,
+        "r": 3.4391049914426217,
+        "y0": 1.5,
+        "y1": 5.05639334819875
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 14.255221744504695,
+        "z": 606.6089119454524,
+        "r": 2.5630558129055947,
+        "y0": 1.5,
+        "y1": 5.418588125071105
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 32.18510232753401,
+        "z": 607.4291913806521,
+        "r": 3.6870066352998903,
+        "y0": 1.5,
+        "y1": 5.780782901943459
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 7.668266368807571,
+        "z": 606.9514296503241,
+        "r": 2.810957456762863,
+        "y0": 1.5,
+        "y1": 6.1429776788158135
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 8.830691304049367,
+        "z": 626.2217797100059,
+        "r": 3.9349082791571584,
+        "y0": 1.5,
+        "y1": 3.5051724542911837
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -8.262545380752444,
+        "z": 644.2222357519364,
+        "r": 3.058859100620131,
+        "y0": 1.5,
+        "y1": 3.8673672311635383
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -14.271941745566236,
+        "z": 617.1428873443126,
+        "r": 2.182809922083104,
+        "y0": 1.5,
+        "y1": 4.229562008035892
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -36.9864650168428,
+        "z": 614.2174114631493,
+        "r": 3.3067607444773994,
+        "y0": 1.5,
+        "y1": 4.591756784908247
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -16.77170218562396,
+        "z": 597.5925313990932,
+        "r": 2.4307115659403724,
+        "y0": 1.5,
+        "y1": 4.953951561780601
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -27.23162898366042,
+        "z": 579.2071098186296,
+        "r": 3.554662388334668,
+        "y0": 1.5,
+        "y1": 5.316146338652956
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -4.606991719163504,
+        "z": 589.374773315171,
+        "r": 2.6786132097976405,
+        "y0": 1.5,
+        "y1": 5.67834111552531
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 2.897451053560377,
+        "z": 571.2459026121153,
+        "r": 3.802564032191936,
+        "y0": 1.5,
+        "y1": 6.040535892397664
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 3.562219019090471,
+        "z": 594.9030156014419,
+        "r": 2.9265148536549086,
+        "y0": 1.5,
+        "y1": 6.402730669270019
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 18.104102633404455,
+        "z": 600.9381135573697,
+        "r": 2.914324644873221,
+        "y0": 1.5,
+        "y1": 5.081472321023673
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 30.007796089239317,
+        "z": 618.8687187422643,
+        "r": 2.0382754663361937,
+        "y0": 1.5,
+        "y1": 5.443667097896027
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 6.119374065323688,
+        "z": 611.2035146826468,
+        "r": 3.1622262887304893,
+        "y0": 1.5,
+        "y1": 5.805861874768382
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -0.28969035239313917,
+        "z": 630.083099375907,
+        "r": 2.2861771101934623,
+        "y0": 1.5,
+        "y1": 6.168056651640736
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -3.673236203092777,
+        "z": 606.4276458317214,
+        "r": 3.4101279325877574,
+        "y0": 1.5,
+        "y1": 3.5302514271161067
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -21.17790377833006,
+        "z": 612.7541569508741,
+        "r": 2.5340787540507304,
+        "y0": 1.5,
+        "y1": 3.892446203988461
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -42.01837844676256,
+        "z": 601.3666117687912,
+        "r": 3.658029576445026,
+        "y0": 1.5,
+        "y1": 4.254640980860815
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -17.19799589814991,
+        "z": 591.1111683316892,
+        "r": 2.781980397907999,
+        "y0": 1.5,
+        "y1": 4.61683575773317
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -20.229286820934046,
+        "z": 569.4050413046266,
+        "r": 3.9059312203022944,
+        "y0": 1.5,
+        "y1": 4.979030534605524
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": -1.0439495485959172,
+        "z": 586.0422871498663,
+        "r": 3.029882041765267,
+        "y0": 1.5,
+        "y1": 5.341225311477878
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 13.19370102250827,
+        "z": 571.5996389463974,
+        "r": 2.15383286322824,
+        "y0": 1.5,
+        "y1": 5.703420088350233
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga rock",
+        "x": 6.995119731303306,
+        "z": 594.9387758500703,
+        "r": 3.277783685622535,
+        "y0": 1.5,
+        "y1": 6.065614865222587
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": 6.5,
+        "z": 604,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": 5.258610463437158,
+        "z": 607.8206041399011,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": 2.0086104634371584,
+        "z": 610.1818673559185,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": -2.0086104634371575,
+        "z": 610.1818673559185,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": -5.258610463437158,
+        "z": 607.8206041399011,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      },
+      {
+        "kind": "cylinder",
+        "name": "naga pillar",
+        "x": -6.5,
+        "z": 604,
+        "r": 0.45,
+        "y0": 1.5,
+        "y1": 6.9
+      }
+    ]
+  },
+  "measure": {
+    "adult": {
+      "description": "adult build standing",
+      "standing": 1.6521732219517886,
+      "seated": 1.1335538249265638,
+      "eye": 1.38915909917471,
+      "eyeSeated": 0.8705397021494852,
+      "head": 0.4630530330582367,
+      "halfWidth": 0.279070191095737
+    },
+    "slim": {
+      "description": "slim build standing",
+      "standing": 1.5881024681258322,
+      "seated": 1.0646955736401746,
+      "eye": 1.3554896498218314,
+      "eyeSeated": 0.8320827553361738,
+      "head": 0.4473563200732118,
+      "halfWidth": 0.3035153883194947
+    },
+    "stout": {
+      "description": "stout build standing",
+      "standing": 1.7207050708444074,
+      "seated": 1.2391299164638414,
+      "eye": 1.3752675081829628,
+      "eyeSeated": 0.8936923538023969,
+      "head": 0.4630530330582367,
+      "halfWidth": 0.2870298850055117
+    },
+    "big": {
+      "description": "big build standing",
+      "standing": 1.7225437211466001,
+      "seated": 1.2164816945093953,
+      "eye": 1.4695262696580378,
+      "eyeSeated": 0.9634642430208329,
+      "head": 0.48659810253577407,
+      "halfWidth": 0.3295456815248198
+    },
+    "elder": {
+      "description": "elder build standing",
+      "standing": 1.6624074788180248,
+      "seated": 1.161682334595728,
+      "eye": 1.3565099361658581,
+      "eyeSeated": 0.8557847919435614,
+      "head": 0.4552046765657243,
+      "halfWidth": 0.2743401878568262
+    },
+    "kid": {
+      "description": "kid build standing",
+      "standing": 1.2613756060817312,
+      "seated": 0.9449298723036281,
+      "eye": 1.032843714414643,
+      "eyeSeated": 0.7163979806365395,
+      "head": 0.4395079635806991,
+      "halfWidth": 0.2648801813790047
+    },
+    "baby": {
+      "description": "Swaddled baby bundle",
+      "standing": 1.0731349756159343,
+      "seated": 1.0731349756159343,
+      "eye": 0.864,
+      "eyeSeated": 0.864,
+      "head": 0.4104,
+      "halfWidth": 0.36075372277070766
+    },
+    "ganesha": {
+      "description": "Ganesha seated at the writing desk",
+      "standing": 1.63728,
+      "seated": 1.63728,
+      "eye": 1.09512,
+      "eyeSeated": 1.09512,
+      "head": 0.55296,
+      "halfWidth": 0.5812979746004667
+    },
+    "agni": {
+      "description": "Agni standing (body height, not flame hair)",
+      "standing": 2.1639070221344157,
+      "seated": 2.1639070221344157,
+      "eye": 1.4412590656674522,
+      "eyeSeated": 1.4412590656674522,
+      "head": 0.48527241268264376,
+      "halfWidth": 0.45878399999999997
+    },
+    "deer": {
+      "description": "Stag in side view",
+      "standing": 1.28088,
+      "seated": 1.28088,
+      "eye": 0.9568800000000001,
+      "eyeSeated": 0.9568800000000001,
+      "head": 0.216,
+      "halfWidth": 0.7691580766295426
+    },
+    "naga": {
+      "description": "Coiled naga with hood",
+      "standing": 1.5331088598585427,
+      "seated": 1.5331088598585427,
+      "eye": 1.2852000000000001,
+      "eyeSeated": 1.2852000000000001,
+      "head": 0.648,
+      "halfWidth": 0.46965452465528246
+    },
+    "pot": {
+      "description": "Cooking pot",
+      "standing": 0.34776,
+      "seated": 0.34776,
+      "eye": 0.34776,
+      "eyeSeated": 0.34776,
+      "head": 0.2,
+      "halfWidth": 0.3888
+    },
+    "flat": {
+      "description": "A person lying flat on a wide card",
+      "standing": 0.7963252258789771,
+      "seated": 0.7963252258789771,
+      "eye": 0.43797887423343745,
+      "eyeSeated": 0.43797887423343745,
+      "head": 0.5616,
+      "halfWidth": 1.0081583999999997
     }
   }
 }

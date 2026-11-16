@@ -9,6 +9,7 @@ import { Batch, boxGeo, lam, V } from "./kit";
 import { ctex, rep, stoneHD, grassHD, rng, jit } from "./paint";
 import { twoTone } from "./shade";
 import { G, PAL, VIL, HERM, DEER, LAC, ARENA, CITY, NAGA, RIVER_Z } from "./places";
+import { beginSet, keepBox, keepCyl, resetKeepout } from "./keepout";
 
 // ---------------- painted textures ----------------
 const thatchTex = () => ctex("thatch", 512, 512, (g, r) => {
@@ -109,6 +110,7 @@ const pavRoof = (r: number) => {
 };
 /** a chhatri: four slim pillars, a slab and a pavilion roof (kiosk on palace roofs) */
 const chhatri = (b: Batch, x: number, y: number, z: number, s: number, mats: { stone: THREE.Material; dome: THREE.Material; gold: THREE.Material }) => {
+  keepBox("chhatri", [x - 1.3 * s, y, z - 1.3 * s], [x + 1.3 * s, y + 2.6 * s, z + 1.3 * s]);
   for (const [dx, dz] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) b.add(cyl(0.12 * s, 0.12 * s, 1.6 * s, 6), mats.stone, tr(x + dx * 0.8 * s, y, z + dz * 0.8 * s));
   b.add(boxGeo(V(x - 1.15 * s, y + 1.6 * s, z - 1.15 * s), V(x + 1.15 * s, y + 1.85 * s, z + 1.15 * s)), mats.stone);
   b.add(pavRoof(1.15 * s), mats.dome, tr(x, y + 1.85 * s, z));
@@ -117,7 +119,7 @@ const chhatri = (b: Batch, x: number, y: number, z: number, s: number, mats: { s
 /** row of arches: pillars + lintel + parapet along x from x0 to x1 at z, height h, facing +z or -z */
 const arcade = (b: Batch, x0: number, x1: number, z: number, y: number, h: number, depth: number, n: number, stone: THREE.Material, trim: THREE.Material) => {
   const step = (x1 - x0) / n;
-  for (let i = 0; i <= n; i++) b.add(boxGeo(V(x0 + i * step - 0.32, y, z - 0.32), V(x0 + i * step + 0.32, y + h, z + 0.32), 2), stone);
+  for (let i = 0; i <= n; i++) { b.add(boxGeo(V(x0 + i * step - 0.32, y, z - 0.32), V(x0 + i * step + 0.32, y + h, z + 0.32), 2), stone); keepCyl("arcade pillar", x0 + i * step, z, 0.38, y, y + h); }
   // scalloped arch heads as small boxes stepping in (reads as an arch with ink)
   for (let i = 0; i < n; i++) {
     const cx = x0 + (i + 0.5) * step, hw = step / 2 - 0.32;
@@ -126,13 +128,16 @@ const arcade = (b: Batch, x0: number, x1: number, z: number, y: number, h: numbe
   b.add(boxGeo(V(x0 - 0.5, y + h, z - 0.45), V(x1 + 0.5, y + h + 0.7, z + depth + 0.4), 2), stone); // roof slab over the walk
   b.add(boxGeo(V(x0 - 0.55, y + h + 0.7, z - 0.55), V(x1 + 0.55, y + h + 0.9, z - 0.25), 2), trim); // cornice
   b.add(boxGeo(V(x0 - 0.5, y, z + depth), V(x1 + 0.5, y + h + 0.7, z + depth + 0.5), 2), stone); // back wall
+  keepBox("arcade back wall", [x0 - 0.5, y, z + depth], [x1 + 0.5, y + h + 0.7, z + depth + 0.5]);
 };
 /** a round-canopy tree (mango / banyan): trunk + clustered leaf balls; banyan adds aerial roots */
 export const tree = (b: Batch, x: number, z: number, h: number, seed: number, kind: "mango" | "banyan" | "forest" = "forest", y = G) => {
   const r = rng(seed), bark = M.bark();
   const tw = kind === "banyan" ? 0.9 : 0.24 + h * 0.016;
   b.add(cyl(tw * 0.75, tw, h * 0.55, 8), bark, tr(x, y, z, r() * 3));
+  keepCyl(kind + " trunk", x, z, Math.max(0.45, tw * 1.4), y, y + h * 0.6);
   const n = kind === "banyan" ? 9 : 5, R = kind === "banyan" ? h * 0.55 : h * 0.32;
+  keepBox(kind + " canopy", [x - R, y + h * 0.4, z - R], [x + R, y + h * 1.02, z + R]);
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2 + r(), d = i === 0 ? 0 : R * (0.45 + 0.35 * r()), s = R * (0.55 + 0.3 * r());
     const g = new THREE.IcosahedronGeometry(1, 1); g.scale(s, s * 0.78, s);
@@ -143,6 +148,7 @@ export const tree = (b: Batch, x: number, z: number, h: number, seed: number, ki
 };
 const palmTree = (b: Batch, x: number, z: number, h: number, seed: number, y = G) => {
   const r = rng(seed), lean = (r() - 0.5) * 0.3;
+  keepCyl("palm trunk", x, z, 0.3, y, y + h);
   const segs = 6;
   for (let i = 0; i < segs; i++) b.add(cyl(0.2, 0.24, h / segs + 0.05, 7), M.bark(), tr(x + lean * h * (i / segs) ** 2, y + (i * h) / segs, z));
   const tx = x + lean * h, ty = y + h;
@@ -156,6 +162,8 @@ const palmTree = (b: Batch, x: number, z: number, h: number, seed: number, y = G
 };
 /** mud hut with a thatched hip roof, doorway facing +z (rotated by yaw) */
 const hut = (b: Batch, x: number, z: number, yaw: number, w: number, d: number, seed: number) => {
+  const rr = (Math.max(w, d) + Math.min(w, d)) * 0.42;
+  keepBox("mud hut", [x - rr, G, z - rr], [x + rr, G + 4.2, z + rr]);
   const m = new THREE.Matrix4().compose(V(x, G, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)), V(1, 1, 1));
   const add = (g: THREE.BufferGeometry, mat: THREE.Material) => b.add(g, mat, m);
   add(boxGeo(V(-w / 2, 0, -d / 2), V(-0.45, 2.3, d / 2), 2), M.mud());
@@ -186,6 +194,7 @@ export type Dyn = {
 };
 
 export const buildSets = (root: THREE.Object3D): Sets => {
+  resetKeepout();
   const S: Record<string, THREE.Group> = {};
   const group = (n: string) => { const g = new THREE.Group(); g.name = n; root.add(g); S[n] = g; return g; };
   const stoneM = { stone: M.red(), dome: M.dome(), gold: M.goldm() };
@@ -215,6 +224,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   }
 
   // ---------------- Hastinapura palace (north bank) ----------------
+  beginSet("palace");
   {
     const b = new Batch(), [px, , pz] = PAL;
     const red = M.red(), cream = M.cream();
@@ -236,6 +246,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     }
     // main palace block behind with jharokhas and a central dome
     b.add(boxGeo(V(px - 22, G, pz + 26), V(px + 22, G + 12, pz + 40), 3), red);
+    keepBox("palace main block", [px - 22, G, pz + 26], [px + 22, G + 12, pz + 40]);
     b.add(boxGeo(V(px - 22.4, G + 12, pz + 25.6), V(px + 22.4, G + 12.5, pz + 40.4)), cream);
     for (let i = 0; i < 7; i++) for (const y of [4.5, 8.5]) {
       const x = px - 18 + i * 6;
@@ -247,7 +258,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     shikhara(b, px, G + 14.5, pz + 33, 5.2, 11, stoneM);
     for (const sx of [-1, 1]) chhatri(b, px + sx * 17, G + 12.5, pz + 29, 1.6, stoneM);
     // gate towers at the courtyard's river side
-    for (const sx of [-1, 1]) { b.add(boxGeo(V(px + sx * 15 - 1.4, G, pz - 19.5), V(px + sx * 15 + 1.4, G + 7, pz - 16.5), 2), red); chhatri(b, px + sx * 15, G + 7, pz - 18, 1.1, stoneM); }
+    for (const sx of [-1, 1]) { b.add(boxGeo(V(px + sx * 15 - 1.4, G, pz - 19.5), V(px + sx * 15 + 1.4, G + 7, pz - 16.5), 2), red); keepBox("gate tower", [px + sx * 15 - 1.4, G, pz - 19.5], [px + sx * 15 + 1.4, G + 7, pz - 16.5]); chhatri(b, px + sx * 15, G + 7, pz - 18, 1.1, stoneM); }
     // mango trees + planters in the courtyard
     tree(b, px - 14, pz + 4, 7.5, 11, "mango", G + 0.12);
     tree(b, px + 15, pz + 8, 7, 12, "mango", G + 0.12);
@@ -258,6 +269,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   }
 
   // ---------------- fisher village (south bank) ----------------
+  beginSet("village");
   {
     const b = new Batch(), [vx, , vz] = VIL;
     hut(b, vx - 9, vz - 6, 0.3, 4.2, 3.6, 1);
@@ -267,7 +279,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     hut(b, vx + 20, vz - 13, -0.5, 4.2, 3.6, 5);
     for (const [x, z, h, s] of [[-14, -2, 9, 1], [6, -1, 10, 2], [16, 1, 8.5, 3], [-4, -16, 11, 4], [24, -6, 9, 5], [-24, -4, 10, 6]]) palmTree(b, vx + x, vz + z, h, s);
     // boats pulled up on the sand
-    for (const [x, z, yaw] of [[-7, 14, 0.2], [9, 14.4, -0.1]]) { b.add(boatGeo(5), M.boat(), tr(vx + x, 0.35, vz + z, yaw)); b.add(boxGeo(V(-2.4, 0.18, -0.08), V(2.4, 0.34, 0.08)), M.boatTrim(), tr(vx + x, 0.35, vz + z, yaw)); }
+    for (const [x, z, yaw] of [[-7, 14, 0.2], [9, 14.4, -0.1]]) { b.add(boatGeo(5), M.boat(), tr(vx + x, 0.35, vz + z, yaw)); b.add(boxGeo(V(-2.4, 0.18, -0.08), V(2.4, 0.34, 0.08)), M.boatTrim(), tr(vx + x, 0.35, vz + z, yaw)); keepBox("beached boat", [vx + x - 2.8, 0.3, vz + z - 0.8], [vx + x + 2.8, 1.1, vz + z + 0.8]); }
     // net drying poles
     for (const x of [-12, -9]) b.add(cyl(0.06, 0.06, 2.2, 5), M.wood(), tr(vx + x, G, vz + 3));
     b.add(boxGeo(V(vx - 12, G + 1.0, vz + 2.98), V(vx - 9, G + 2.1, vz + 3.02)), lam("net", () => ({ color: "#b8a888", side: THREE.DoubleSide })));
@@ -276,6 +288,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   }
 
   // ---------------- forest hermitage (golden hour home of Vyasa and Ganesha) ----------------
+  beginSet("hermitage");
   {
     const b = new Batch(), [hx, , hz] = HERM;
     tree(b, hx - 5, hz + 6, 12, 7, "banyan");
@@ -297,6 +310,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     const [hx, , hz] = HERM;
     const top = new THREE.Mesh(boxGeo(V(-0.45, 0.22, -0.3), V(0.45, 0.28, 0.3)), M.wood()), legs = new THREE.Mesh(mergeGeometries([[-0.38, -0.24], [0.38, -0.24], [0.38, 0.24], [-0.38, 0.24]].map(([x, z]) => boxGeo(V(x - 0.04, 0, z - 0.04), V(x + 0.04, 0.22, z + 0.04)))), M.darkwood());
     desk.add(top, legs); desk.position.set(hx + 2.0, G + 0.3, hz - 0.4);
+    keepBox("writing desk", [hx + 1.5, G + 0.3, hz - 0.75], [hx + 2.5, G + 0.65, hz - 0.05]);
     desk.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
     S.hermitage.add(desk);
   }
@@ -304,6 +318,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   pages.castShadow = true; pages.receiveShadow = true; desk.add(pages); pages.position.set(0, 0.28, 0);
 
   // ---------------- Pandu's clearing (forest east) ----------------
+  beginSet("deer");
   {
     const b = new Batch(), [dx, , dz] = DEER;
     for (let i = 0; i < 60; i++) { const r = rng(500 + i), a = r() * Math.PI * 2, d = 13 + r() * 45; tree(b, dx + Math.cos(a) * d, dz + Math.sin(a) * d, 8 + r() * 8, 600 + i); }
@@ -311,10 +326,12 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   }
 
   // ---------------- the lacquer house (night) ----------------
+  beginSet("lac");
   {
     const b = new Batch(), [lx, , lz] = LAC;
     const lq = M.lacquer(), lqd = M.lacquerDark(), gold = M.goldm();
     b.add(boxGeo(V(lx - 5, G, lz - 4), V(lx + 5, G + 3.4, lz + 4)), lq);
+    keepBox("lacquer house", [lx - 5, G, lz - 4], [lx + 5, G + 8.9, lz + 4]);
     b.add(boxGeo(V(lx - 5.4, G + 3.4, lz - 4.4), V(lx + 5.4, G + 3.7, lz + 4.4)), gold);
     b.add(boxGeo(V(lx - 4, G + 3.7, lz - 3), V(lx + 4, G + 6.4, lz + 3)), lq);
     const roof = new THREE.ConeGeometry(6.4, 2.6, 4, 1); roof.rotateY(Math.PI / 4); roof.scale(1.15, 1, 0.85);
@@ -324,7 +341,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     b.add(boxGeo(V(lx - 0.8, G, lz - 4.06), V(lx + 0.8, G + 2.4, lz - 3.98)), lam("lacDoor", () => ({ color: "#2a0e12" })));
     for (const x of [-5, 5]) for (const z of [-4, 4]) b.add(cyl(0.22, 0.22, 3.4, 8), gold, tr(lx + x, G, lz + z));
     // houses of the town behind
-    for (const [x, z, w, h] of [[-16, 10, 6, 5], [14, 12, 7, 6], [-24, -2, 5, 4], [22, -4, 6, 5]]) { b.add(boxGeo(V(lx + x - w / 2, G, lz + z - 3), V(lx + x + w / 2, G + h, lz + z + 3)), M.mud()); const r = new THREE.ConeGeometry(w * 0.85, 2.2, 4, 1); r.rotateY(Math.PI / 4); b.add(r.translate(0, 1.1, 0), M.thatch(), tr(lx + x, G + h, lz + z)); }
+    for (const [x, z, w, h] of [[-16, 10, 6, 5], [14, 12, 7, 6], [-24, -2, 5, 4], [22, -4, 6, 5]]) { b.add(boxGeo(V(lx + x - w / 2, G, lz + z - 3), V(lx + x + w / 2, G + h, lz + z + 3)), M.mud()); keepBox("town house", [lx + x - w / 2, G, lz + z - 3], [lx + x + w / 2, G + h, lz + z + 3]); const r = new THREE.ConeGeometry(w * 0.85, 2.2, 4, 1); r.rotateY(Math.PI / 4); b.add(r.translate(0, 1.1, 0), M.thatch(), tr(lx + x, G + h, lz + z)); }
     for (let i = 0; i < 20; i++) { const r = rng(1200 + i); tree(b, lx - 50 + r() * 100, lz + 18 + r() * 30, 8 + r() * 6, 1300 + i); }
     b.build(group("lac"));
   }
@@ -335,14 +352,15 @@ export const buildSets = (root: THREE.Object3D): Sets => {
   const lacFire = new THREE.Group(); S.lac.add(lacFire);
 
   // ---------------- the contest arena (Panchala) ----------------
+  beginSet("arena");
   const wheel = new THREE.Group(), bigBow = new THREE.Group();
   {
     const b = new Batch(), [ax, , az] = ARENA;
     const marble = M.marble(), red = M.red(), gold = M.goldm();
     b.add(boxGeo(V(ax - 26, G - 0.3, az - 18), V(ax + 26, G + 0.15, az + 22), 3), marble);
     // pavilion: pillars around three sides, striped canopy
-    for (let i = 0; i <= 10; i++) for (const z of [az + 14]) if (i !== 5) b.add(cyl(0.3, 0.34, 6, 10), red, tr(ax - 22 + i * 4.4, G + 0.15, z)); // no pillar right behind the dais
-    for (let i = 0; i <= 6; i++) for (const x of [ax - 22, ax + 22]) b.add(cyl(0.3, 0.34, 6, 10), red, tr(x, G + 0.15, az - 12 + i * 4.4));
+    for (let i = 0; i <= 10; i++) for (const z of [az + 14]) if (i !== 5) { b.add(cyl(0.3, 0.34, 6, 10), red, tr(ax - 22 + i * 4.4, G + 0.15, z)); keepCyl("pavilion pillar", ax - 22 + i * 4.4, z, 0.38, G + 0.15, G + 6.15); } // no pillar right behind the dais
+    for (let i = 0; i <= 6; i++) for (const x of [ax - 22, ax + 22]) { b.add(cyl(0.3, 0.34, 6, 10), red, tr(x, G + 0.15, az - 12 + i * 4.4)); keepCyl("pavilion pillar", x, az - 12 + i * 4.4, 0.38, G + 0.15, G + 6.15); }
     const canopy = (x0: number, x1: number, z0: number, z1: number) => { const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0, 8, 2); g.rotateX(-Math.PI / 2); const p = g.attributes.position as THREE.BufferAttribute; for (let i = 0; i < p.count; i++) p.setY(i, -0.4 * Math.sin(((p.getX(i) - (x0 - x1) / 2) / (x1 - x0)) * Math.PI * 4) ** 2); g.translate((x0 + x1) / 2, G + 6.3, (z0 + z1) / 2); g.computeVertexNormals(); b.add(g, M.cloth("#d8343c", "#f2c230")); };
     canopy(ax - 23, ax + 23, az + 10, az + 18);
     canopy(ax - 26, ax - 18, az - 13, az + 10); canopy(ax + 18, ax + 26, az - 13, az + 10);
@@ -350,12 +368,15 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     for (const sx of [-1, 1]) for (let k = 0; k < 2; k++) b.add(boxGeo(V(ax + sx * 21 - 2.2 + k * sx * 1.2, G + 0.15, az - 11), V(ax + sx * 21 + 2.2 - (1 - k) * 0, G + 0.6 + k * 0.45, az + 9)), marble);
     // Draupadi's dais at the back
     b.add(boxGeo(V(ax - 4, G + 0.15, az + 9), V(ax + 4, G + 1.0, az + 13)), marble);
+    keepBox("draupadi dais", [ax - 4.2, G + 0.15, az + 8.8], [ax + 4.2, G + 1.15, az + 13.2]);
     b.add(boxGeo(V(ax - 4.2, G + 1.0, az + 8.8), V(ax + 4.2, G + 1.15, az + 13.2)), gold);
     // the target pole (centre), with a platform
     b.add(cyl(1.6, 1.8, 0.6, 16), marble, tr(ax, G + 0.15, az));
     b.add(cyl(0.16, 0.2, 15, 10), gold, tr(ax, G + 0.75, az));
+    keepCyl("target pole", ax, az, 0.3, G + 0.15, G + 15.75);
     // garden + palace walls behind
     b.add(boxGeo(V(ax - 40, G, az + 26), V(ax + 40, G + 10, az + 34), 3), M.marble());
+    keepBox("palace wall", [ax - 40, G, az + 26], [ax + 40, G + 10, az + 34]);
     for (const x of [-30, -15, 0, 15, 30]) chhatri(b, ax + x, G + 10, az + 30, 1.4, { stone: marble, dome: M.dome(), gold });
     for (let i = 0; i < 16; i++) { const r = rng(1500 + i); palmTree(b, ax - 45 + r() * 90, az - 30 - r() * 20, 8 + r() * 4, 1600 + i); }
     b.build(group("arena"));
@@ -373,16 +394,18 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     const curveP = new THREE.QuadraticBezierCurve3(V(-2.6, 1.4, 0), V(0, 0.6, 0), V(2.6, 1.4, 0));
     const bowM = new THREE.Mesh(new THREE.TubeGeometry(curveP, 24, 0.09, 6), lam("bowwood", () => ({ color: "#7a3f22" })));
     bigBow.add(stand, bowM); bigBow.position.set(ax - 6, G + 0.15, az - 4); bigBow.rotation.y = 0.3;
+    keepBox("bow stand", [ax - 7.8, G + 0.15, az - 4.6], [ax - 4.2, G + 1.6, az - 3.4]);
     bigBow.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
     S.arena.add(bigBow);
   }
 
   // ---------------- the new city's clearing + Khandava forest ----------------
+  beginSet("city");
   const city = new THREE.Group();
   {
     const b = new Batch(), [cx, , cz] = CITY;
     for (let i = 0; i < 70; i++) { const r = rng(1800 + i), a = r() * Math.PI * 2, d = 26 + r() * 60, x = cx + Math.cos(a) * d, z = cz + Math.sin(a) * d, h = 9 + r() * 8; tree(b, x, z, h, 1900 + i); CITY_TREES.push([x, G + h * 0.85, z]); }
-    for (let i = 0; i < 12; i++) { const r = rng(2100 + i); b.add(cyl(0.35, 0.4, 0.5, 8), M.bark(), tr(cx - 14 + r() * 28, G, cz - 12 + r() * 24)); } // stumps
+    for (let i = 0; i < 12; i++) { const r = rng(2100 + i); b.add(cyl(0.35, 0.4, 0.5, 8), M.bark(), tr(cx - 14 + r() * 28, G, cz - 12 + r() * 24)); keepCyl("stump", cx - 14 + r() * 28, cz - 12 + r() * 24, 0.4, G, G + 0.5); } // stumps
     b.build(group("city"));
     // the rising city: a white palace + walls (scaled up from the ground per shot)
     const cb = new Batch(), marble = M.marble(), gold = M.goldm();
@@ -394,10 +417,12 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     for (const sx of [-1, 1]) { cb.add(boxGeo(V(sx * 20 - 3, 0, -4), V(sx * 20 + 3, 6, 4), 3), marble); chhatri(cb, sx * 20, 6, 0, 1.3, { stone: marble, dome: M.dome(), gold }); }
     cb.build(city);
     city.position.set(cx, G, cz + 6);
+    keepBox("rising city", [cx - 23, G, cz + 2], [cx + 23, G + 20, cz + 10]);
     S.city.add(city);
   }
 
   // ---------------- the snake kingdom (under the river) ----------------
+  beginSet("naga");
   const nectar = new THREE.InstancedMesh(new THREE.LatheGeometry([0, 0.28, 0.42, 0.46, 0.4, 0.26, 0.22, 0.26].map((r, i) => new THREE.Vector2(Math.max(0.001, r), i * 0.12)), 16), lam("nectarJar", () => ({ color: "#d8945a" })), 8);
   {
     const b = new Batch(), [nx, ny, nz] = NAGA;
@@ -406,12 +431,12 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     g.computeVertexNormals(); g.translate(nx, ny, nz);
     const uv = g.attributes.uv as THREE.BufferAttribute; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * 25, uv.getY(i) * 25);
     b.add(g, M.seabed());
-    for (let i = 0; i < 40; i++) { const r = rng(2500 + i), a = r() * 7, d = 6 + r() * 40; const rg = new THREE.IcosahedronGeometry(1, 0); rg.scale(1 + r() * 2.5, 0.8 + r() * 3, 1 + r() * 2.5); b.add(rg, M.rock(), tr(nx + Math.cos(a) * d, ny, nz + Math.sin(a) * d, r() * 3)); }
+    for (let i = 0; i < 40; i++) { const r = rng(2500 + i), a = r() * 7, d = 6 + r() * 40; const rg = new THREE.IcosahedronGeometry(1, 0); rg.scale(1 + r() * 2.5, 0.8 + r() * 3, 1 + r() * 2.5); b.add(rg, M.rock(), tr(nx + Math.cos(a) * d, ny, nz + Math.sin(a) * d, r() * 3)); keepCyl("naga rock", nx + Math.cos(a) * d, nz + Math.sin(a) * d, 2 + r() * 2, ny, ny + 2 + r() * 3); }
     for (let i = 0; i < 30; i++) { const r = rng(2700 + i), a = r() * 7, d = 4 + r() * 25; const c = new THREE.IcosahedronGeometry(0.5 + r() * 0.6, 1); c.scale(1, 1.4, 1); b.add(c, M.coral(i), tr(nx + Math.cos(a) * d, ny + 0.3, nz + Math.sin(a) * d)); }
     for (let i = 0; i < 26; i++) { const r = rng(2900 + i), a = r() * 7, d = 5 + r() * 25, w = new THREE.PlaneGeometry(0.4, 3 + r() * 3, 1, 4); const pp = w.attributes.position as THREE.BufferAttribute; for (let k = 0; k < pp.count; k++) pp.setX(k, pp.getX(k) + 0.3 * Math.sin(pp.getY(k) * 1.5)); w.translate(0, 1.5 + r() * 1.5, 0); b.add(w, M.weed(), tr(nx + Math.cos(a) * d, ny, nz + Math.sin(a) * d, r() * 3)); }
     // the naga palace: a ring of pale pillars around a round floor
     b.add(cyl(7, 7.2, 0.4, 24), lam("tealstone", () => ({ color: "#2c5e5c" })), tr(nx, ny, nz + 4));
-    for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; if (Math.sin(a) < -0.5) continue; b.add(cyl(0.35, 0.4, 5, 10), M.marble(), tr(nx + Math.cos(a) * 6.5, ny + 0.4, nz + 4 + Math.sin(a) * 6.5)); }
+    for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; if (Math.sin(a) < -0.5) continue; b.add(cyl(0.35, 0.4, 5, 10), M.marble(), tr(nx + Math.cos(a) * 6.5, ny + 0.4, nz + 4 + Math.sin(a) * 6.5)); keepCyl("naga pillar", nx + Math.cos(a) * 6.5, nz + 4 + Math.sin(a) * 6.5, 0.45, ny, ny + 5.4); }
     b.build(group("naga"));
     nectar.castShadow = true; nectar.receiveShadow = true;
     S.naga.add(nectar);

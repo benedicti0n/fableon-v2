@@ -1,7 +1,7 @@
 // Export the runtime catalog to schema/catalog.json. Lists live in the engine sources (single source of truth); status
 // and descriptions are added here so the validator and future models see what is implemented.
 import { build } from 'esbuild';
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -134,7 +134,26 @@ try {
     external: ['three', 'three/*'],
   });
   const mod = await import(pathToFileURL(bundle).href);
-  writeFileSync(out, JSON.stringify(mod.default, null, 2) + '\n');
+  const catalog = mod.default;
+  const runtimePath = join(root, 'schema', 'catalog.runtime.json');
+  const previous = existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null;
+  if (existsSync(runtimePath)) {
+    const runtime = JSON.parse(readFileSync(runtimePath, 'utf8'));
+    for (const set of catalog.sets) {
+      const info = runtime.sets?.[set.name];
+      if (info) Object.assign(set, { front: info.front, bounds: info.bounds, marks: info.marks });
+    }
+    catalog.keepout = runtime.keepout ?? {};
+    catalog.measure = runtime.measure ?? {};
+  } else if (previous?.keepout) {
+    for (const set of catalog.sets) {
+      const old = previous.sets?.find((s) => s.name === set.name);
+      if (old) Object.assign(set, { front: old.front, bounds: old.bounds, marks: old.marks });
+    }
+    catalog.keepout = previous.keepout;
+    catalog.measure = previous.measure;
+  }
+  writeFileSync(out, JSON.stringify(catalog, null, 2) + '\n');
   console.log(`catalog: wrote ${out}`);
 } finally {
   rmSync(bundle, { force: true });

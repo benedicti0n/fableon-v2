@@ -11,3 +11,4 @@ __pycache__/
 fixtures/*/render/
 fixtures/*/audio/
 fixtures/*/qa/
+schema/catalog.runtime.json

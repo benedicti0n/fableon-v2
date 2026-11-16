@@ -164,6 +164,17 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 ```
 Members expand deterministically with the legacy `hh(i, salt)` hash; `seedBase + i` is the identity (blink seed).
 
+## Authoring metadata in the catalog
+
+`schema/catalog.json` also carries the data the Phase 2C compiler and in-frame validator need:
+
+- Each set entry has `front` (default viewing direction in degrees, 0 = +z), `bounds` (establishing box, world
+  metres) and `marks`: `{ name, pos, facing, description }` points an authoring board can place actors on.
+- Top-level `keepout` maps each set to its solid scenery volumes (`box` min/max or vertical `cylinder`) for
+  occlusion tests. `npm run catalog` exports them from the browser, because the scenery needs the DOM to build.
+- Top-level `measure` maps every cast build and special to `{ description, standing, seated, eye, eyeSeated, head,
+  halfWidth }` in metres at scale 1, measured from the real drawing code.
+
 ## Rules the validator enforces (CLI `fableon validate`)
 - Schema-valid; every who, spec, set, place, pose, expression, prop, effect kind and set piece exists in the catalog.
 - Catalog entries are `{ name, status, description }`; entries with `"status": "planned"` are rejected with “not

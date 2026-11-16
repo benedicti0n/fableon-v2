@@ -11,6 +11,9 @@ import { GradeEffect, GRADES, gradeFor } from "./grade";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
 import type { Wd } from "./core/anchors";
+import { SET_INFO } from "./marks";
+import { measureSubjects } from "./measure";
+import { KEEPOUT } from "./keepout";
 
 // Project data is fetched before anything is built. render.cjs serves the project under /project/; a project must
 // provide both storyboard.json and words.json — there is no compiled-in timeline any more.
@@ -134,4 +137,7 @@ const camJumps = () => {
 };
 (window as unknown as Record<string, unknown>).camJumps = camJumps;
 (window as unknown as Record<string, unknown>).EVENTS = [...new Set([...camJumps(), ...RT.JUMP_EVENTS])].sort((a, b) => a - b);
+// Authoring metadata: marks/front/bounds per set, scenery keep-out volumes and measured subject sizes. Exported by
+// `render.cjs catalog`; not used by normal renders.
+(window as unknown as Record<string, unknown>).CATALOG_INFO = { sets: SET_INFO, keepout: KEEPOUT, measure: measureSubjects() };
 (window as unknown as Record<string, unknown>).ready = true;
