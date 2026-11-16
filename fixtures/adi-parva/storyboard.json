@@ -24187,7 +24187,7 @@
         "word": "In",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
