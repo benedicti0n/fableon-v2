@@ -56,7 +56,7 @@ const unionBox = (subjects) => {
 
 const sideOffset = { front: 0, left: -30, right: 30, frontLeft: -15, frontRight: 15 };
 
-export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASPECT }) {
+export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASPECT, over = null, toLook = null }) {
   const size = key.size ?? "medium";
   const cfg = SIZE[size];
   if (!cfg) throw new Error(`unknown camera size "${size}"`);
@@ -64,6 +64,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const vfov0 = key.fov ?? cfg.fov;
   const primary = subjects[0];
   const pb = primary ? subjBox(primary) : null;
+  const ob = over ? subjBox(over) : null;
   const box = subjects.length ? unionBox(subjects) : null;
   const target = size === "establishing"
     ? [(setInfo.bounds.min[0] + setInfo.bounds.max[0]) / 2, (setInfo.bounds.min[1] + setInfo.bounds.max[1]) / 2, (setInfo.bounds.min[2] + setInfo.bounds.max[2]) / 2]
@@ -108,6 +109,16 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     });
   };
   let camera = cameraAt(0, distance, camY);
+  if (over && primary) {
+    let dx = over.pos[0] - primary.pos[0], dz = over.pos[2] - primary.pos[2];
+    let dl = Math.hypot(dx, dz);
+    if (dl < 0.01) { const a = baseAngle * DEG; dx = Math.sin(a); dz = Math.cos(a); dl = 1; }
+    dx /= dl; dz /= dl;
+    const side = key.side === 'left' ? -1 : 1, perp = [-dz * side, 0, dx * side];
+    const camDist = Math.max(distance, dl + 0.9);
+    camera = [ (pb.x0 + pb.x1) / 2 + dx * camDist + perp[0] * camDist * 0.32, (over.pos[1] + ob.eye) / 2 + 0.25 * ob.h, (pb.z0 + pb.z1) / 2 + dz * camDist + perp[2] * camDist * 0.32 ];
+    vfov = (2 * Math.atan(Math.tan((vfov * DEG) / 2) * distance / camDist)) / DEG;
+  }
   let attempts = 0;
   const trySpot = (yaw, dist, y, fov) => {
     attempts++;
@@ -115,7 +126,8 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     vfov = fov; distance = dist;
     return !insideKeepout(camera, keepout) && checks();
   };
-  if (!trySpot(0, distance, camY, vfov)) {
+  const startOk = over ? (!insideKeepout(camera, keepout) && checks()) : trySpot(0, distance, camY, vfov);
+  if (!startOk) {
     let ok = false;
     for (const yaw of [15, -15, 30, -30]) if (!ok) { yawOffset = yaw; ok = trySpot(yaw, distance, camY, vfov); }
     if (!ok) { yawOffset = 0; raised = 1; ok = trySpot(0, distance, camY + 1, vfov); }
@@ -127,6 +139,11 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     if (!ok) throw new Error(`no clear view of ${subjects.map((s) => s.id).join('+')} at ${key.at}`);
   }
   const look = lookBase();
+  if (key.third) {
+    const f = [look[0] - camera[0], 0, look[2] - camera[2]], fl = Math.hypot(f[0], f[2]) || 1;
+    const right = [-f[2] / fl, 0, f[0] / fl], shift = (key.third === 'left' ? 1 : -1) * spanH / 6;
+    look[0] += right[0] * shift; look[2] += right[2] * shift;
+  }
   // projected eye-line fraction, useful in tests and reports
   const fwd = [look[0] - camera[0], look[1] - camera[1], look[2] - camera[2]];
   const fl = Math.hypot(...fwd) || 1; fwd[0] /= fl; fwd[1] /= fl; fwd[2] /= fl;
@@ -138,16 +155,17 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const eyeLine = zc > 0 ? 0.5 - 0.5 * (yc / zc) / Math.tan((vfov * DEG) / 2) : 0.5;
   const move = key.move ?? "push";
   const rate = move === "hold" ? 0.0015 : cfg.rate;
-  const type = move === "tiltUp" || move === "tiltDown" ? "tilt" : "dolly";
+  const type = move === "tiltUp" || move === "tiltDown" || move === "pan" ? "tilt" : "dolly";
   const push = move === "glide" || move === "crane"
     ? { from: key.at, rate: 0 }
     : { from: key.at, rate, ...(key.punch ? { punch: 0.006, punchAt: key.punch } : {}) };
   const out = {
     type, pos: camera, look, fov: vfov, roll: ((key.roll ?? 0) * DEG),
     push, subjects: subjects.map((s) => s.id),
+    ...(over ? { over: over.id } : {}),
     ...(key.cut ? { cut: true } : {}),
     ...(move === "glide" || move === "crane" ? { dur: Math.round((key.glide ?? 0.8) * 30) } : {}),
-    ...(type === "tilt" ? { lookTo: [look[0], look[1] + (move === "tiltUp" ? spanV : -spanV), look[2]], tiltDur: Math.round((key.glide ?? 1.2) * 30) } : {}),
+    ...(type === "tilt" ? { lookTo: toLook ?? [look[0], look[1] + (move === "tiltUp" ? spanV : -spanV), look[2]], tiltDur: Math.round((key.glide ?? 1.2) * 30) } : {}),
   };
   return { key: out, debug: { attempts, yawOffset, raised, closer, eyeLine, distance, spanV, spanH, vfov, fovH: fovH(vfov, aspect), dof: cfg.dof, primary: primary?.id } };
 }

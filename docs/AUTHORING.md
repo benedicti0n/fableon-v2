@@ -161,5 +161,18 @@ Constants as implemented (`cli/src/solver.js`):
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
   camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
+### Composition grammar (F2)
+
+- `"over": "<id>"` places that actor's head/shoulder large in the lower front corner (left/right per `side`) while
+  `"on"` is framed by `size` behind it. The camera sits behind and beside the over actor; the over actor is exempt from
+  the foreground-blocker check.
+- `"third": "left" | "right"` offsets the look point by one sixth of the coverage width so the primary subject sits on
+  a vertical third (look room).
+- `"to": "<id or mark>"` with `move: "tiltUp" | "tiltDown" | "pan"` becomes a v1 tilt key whose `lookTo` is the target's
+  eye (or mark position); `move: "reveal"` compiles to two keys: the start framing at the key anchor and the target
+  framing at `glide` seconds later, with the v1 glide transition.
+- `size: "insert"` on a mark/prop frames the mark tightly (0.8 m). New marks: `arena.bowstand`, `arena.target`,
+  `palace.tree`, `lac.house`, `village.hutDoor`, `city.palace` (plus the existing prop marks).
+- Occlusion fallback applies to all of these.
 - The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt`, the default DOF entry and `subjects` on the
   v1 camera key.

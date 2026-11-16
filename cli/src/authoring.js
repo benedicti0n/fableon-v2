@@ -369,6 +369,17 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
   return { id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false };
 };
 
+const lookPointFor = (id, out, keyStart, keyEnd, ctx, shot) => {
+  const actor = (out.actors ?? []).find((a) => a.id === id || a.who === id);
+  const fx = (out.fx ?? []).find((e) => e.id === id);
+  if (actor || fx) {
+    const st = subjectSamples(id, out, out, Math.max(keyStart, keyEnd - 1), keyEnd, [], ctx, 'to');
+    return [st.pos[0], st.pos[1] + (st.seated ? st.measure.eyeSeated : st.measure.eye) * st.scale, st.pos[2]];
+  }
+  const p = markPos(id, shot.sets ?? [], ctx.catalog);
+  return p;
+};
+
 const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);

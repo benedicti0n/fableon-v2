@@ -414,6 +414,8 @@
             "glide",
             "tiltUp",
             "tiltDown",
+            "pan",
+            "reveal",
             "follow",
             "crane"
           ]
@@ -429,6 +431,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "over": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "third": {
+          "enum": [
+            "left",
+            "right"
+          ]
         }
       }
     },

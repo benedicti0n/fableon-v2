@@ -111,6 +111,16 @@
           "description": "The mango tree in the courtyard."
         },
         {
+          "name": "tree",
+          "pos": [
+            -14,
+            1.62,
+            46
+          ],
+          "facing": 180,
+          "description": "The mango tree in the courtyard."
+        },
+        {
           "name": "plate",
           "pos": [
             0,
@@ -152,6 +162,16 @@
         },
         {
           "name": "hut",
+          "pos": [
+            1,
+            1.5,
+            -40.4
+          ],
+          "facing": 180,
+          "description": "Kunti's hut doorway."
+        },
+        {
+          "name": "hutDoor",
           "pos": [
             1,
             1.5,
@@ -379,6 +399,16 @@
           ],
           "facing": 180,
           "description": "The centre of the lacquer house."
+        },
+        {
+          "name": "house",
+          "pos": [
+            -160,
+            1.5,
+            70
+          ],
+          "facing": 180,
+          "description": "The lacquer house building."
         }
       ]
     },
@@ -421,6 +451,16 @@
           "description": "The giant bow on its stand."
         },
         {
+          "name": "bowstand",
+          "pos": [
+            164,
+            1.65,
+            66
+          ],
+          "facing": 180,
+          "description": "The giant bow and its stand."
+        },
+        {
           "name": "pole",
           "pos": [
             170,
@@ -429,6 +469,16 @@
           ],
           "facing": 180,
           "description": "The target pole at the arena centre."
+        },
+        {
+          "name": "target",
+          "pos": [
+            170,
+            18.9,
+            70
+          ],
+          "facing": 180,
+          "description": "The target at the top of the contest pole."
         },
         {
           "name": "seats",
@@ -509,6 +559,16 @@
           ],
           "facing": 180,
           "description": "The edge of the Khandava forest."
+        },
+        {
+          "name": "palace",
+          "pos": [
+            40,
+            1.5,
+            -184
+          ],
+          "facing": 180,
+          "description": "The rising palace of Indraprastha."
         }
       ]
     },
