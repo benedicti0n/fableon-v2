@@ -1,0 +1,215 @@
+{
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "Savitri chooses Satyavan herself, and the sage Narada warns that Satyavan has only one defect: he will die within a year.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "He hath one only defect that hath overwhelmed all his virtues."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F2",
+      "claim": "Told to pick another husband, Savitri refuses, saying a daughter can be given away only once and she will not choose twice.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Twice I shall not select."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": false
+    },
+    {
+      "id": "F3",
+      "claim": "Savitri counts the days to her husband's death and keeps the prediction constantly in mind.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "she had counted the days as they passed"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F4",
+      "claim": "Satyavan goes into the forest to gather fruit and cut wood, and while working he is overcome by pain in his head.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "O Savitri, owing to this hard exercise my head acheth, and all my limbs and my heart also are afflicted sorely!"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F5",
+      "claim": "Yama, the god of death, arrives in person, dark-skinned, red-eyed, robed in red, carrying a noose.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "she saw a person clad in red attire with his head decked with a diadem"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F6",
+      "claim": "Yama explains he came himself rather than sending emissaries because Satyavan is too virtuous to be taken by messengers.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "He deserveth not to be borne away by my emissaries. Therefore is it that I have come personally."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F7",
+      "claim": "Yama draws Satyavan's life out of his body, binds it, and heads south while Savitri follows him on foot.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Yama by main force pulled out of the body of Satyavan, a person of the measure of the thumb, bound in noose"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F8",
+      "claim": "Savitri does not fight Yama; she follows him and argues, and he is pleased by her reasoned speech and offers her a boon.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "I have been pleased with these words of thine couched in proper letters and accents, and based on reason. Do thou ask for a boon!"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F9",
+      "claim": "Each boon Yama grants excludes Satyavan's life, and Savitri's first three requests are for her father-in-law's sight, his kingdom, and sons for her father.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Except the life of thy husband, O thou of faultless features, I will bestow on thee any boon that thou mayst solicit!"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F10",
+      "claim": "Savitri's fourth boon is a hundred sons born to herself and Satyavan, which Yama grants without seeing the trap.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "let there be a century of sons possessed of strength and prowess and capable of perpetuating our race!"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F11",
+      "claim": "Savitri then points out that the promised sons cannot exist without their father, and demands Satyavan's life back so Yama's own words come true.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "the boon thou hast already given me is incapable of accomplishment without union with my husband"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F12",
+      "claim": "Yama concedes, unties the noose, and grants Satyavan a life of four hundred years.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Yama, the dispenser of justice, untied his noose"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F13",
+      "claim": "Satyavan wakes on Savitri's lap, believing he has slept a long time, and asks where the dark figure dragging him away has gone.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Alas, I have slept long! Wherefore didst thou not awake me? And where is that same sable person that was dragging me away?"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F14",
+      "claim": "Savitri later tells the assembled sages that Yama granted her five boons in total.",
+      "kind": "number",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "And he granted me five boons, of which do ye hear from me!"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F15",
+      "claim": "Savitri's father-in-law Dyumatsena regains his sight, and news soon arrives that his enemy is dead and his kingdom awaits him.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Meanwhile the mighty Dyumatsena, having regained his sight, could see everything."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    }
+  ],
+  "version": 1
+}

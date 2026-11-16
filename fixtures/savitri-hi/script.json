@@ -1,0 +1,701 @@
+{
+  "version": 2,
+  "title": "सावित्री और सत्यवान",
+  "characters": [
+    {
+      "id": "savitri",
+      "name": "सावित्री",
+      "role": "राजकुमारी",
+      "look": "युवा राजकुमारी, साधारण वस्त्र, दृढ़ निगाहें"
+    },
+    {
+      "id": "satyavan",
+      "name": "सत्यवान",
+      "role": "सावित्री का पति",
+      "look": "युवा वनवासी, सीधा-सादा"
+    },
+    {
+      "id": "yama",
+      "name": "यम",
+      "role": "मृत्यु के देवता",
+      "look": "काला शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश"
+    }
+  ],
+  "names": [
+    {
+      "word": "सावित्री",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "सत्यवान",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "यम",
+      "phonemes": null,
+      "suggested": true
+    }
+  ],
+  "lines": [
+    {
+      "n": 0,
+      "text": "एक राजकुमारी ने ऐसे आदमी से शादी की जिसकी उम्र सिर्फ़ एक साल थी।",
+      "gloss": "A princess married a man who had only one year to live.",
+      "beat": "hook",
+      "facts": [
+        "F1"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.4,
+        "pauses": [
+          {
+            "after": "राजकुमारी",
+            "s": 0.25
+          }
+        ],
+        "emphasis": [
+          "एक",
+          "साल"
+        ]
+      },
+      "look": {
+        "set": "palace",
+        "mark": "courtyard",
+        "who": [
+          "savitri"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री महल के आँगन में खड़ी है, निर्णायक भाव से।"
+      }
+    },
+    {
+      "n": 1,
+      "text": "उसने ख़ुद सत्यवान को चुना था।",
+      "gloss": "She herself chose Satyavan.",
+      "beat": "setting",
+      "facts": [
+        "F1"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "ख़ुद"
+        ]
+      },
+      "look": {
+        "set": "hermitage",
+        "mark": "clearing",
+        "who": [
+          "savitri",
+          "satyavan"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री और सत्यवान वन में आमने-सामने खड़े हैं।"
+      }
+    },
+    {
+      "n": 2,
+      "text": "नारद ने चेताया कि सत्यवान में एक दोष है।",
+      "gloss": "Narada warned that Satyavan has one defect.",
+      "beat": "setting",
+      "facts": [
+        "F1"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "एक",
+          "दोष"
+        ]
+      },
+      "look": {
+        "set": "hermitage",
+        "mark": "hut",
+        "who": [
+          "savitri"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री ऋषि की बात सुन रही है।"
+      }
+    },
+    {
+      "n": 3,
+      "text": "वह एक साल के भीतर मर जाएगा।",
+      "gloss": "He will die within a year.",
+      "beat": "setting",
+      "facts": [
+        "F1"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "एक",
+          "साल"
+        ]
+      },
+      "look": {
+        "set": "hermitage",
+        "mark": "hut",
+        "who": [
+          "savitri"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री की आँखों में दृढ़ता है।"
+      }
+    },
+    {
+      "n": 4,
+      "text": "सावित्री ने फिर भी शादी की।",
+      "gloss": "Savitri still married.",
+      "beat": "setting",
+      "facts": [
+        "F1"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "फिर",
+          "भी"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "satyavan"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "गाँव में विवाह का दृश्य।"
+      }
+    },
+    {
+      "n": 5,
+      "text": "उसने दिन गिनने शुरू कर दिए।",
+      "gloss": "She started counting the days.",
+      "beat": "setting",
+      "facts": [
+        "F3"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "दिन",
+          "गिनने"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "hut",
+        "who": [
+          "savitri"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री झोपड़ी के बाहर खड़ी है, सोच में।"
+      }
+    },
+    {
+      "n": 6,
+      "text": "भविष्यवाणी हर समय उसके दिमाग़ में रहती।",
+      "gloss": "The prophecy stayed in her mind all the time.",
+      "beat": "setting",
+      "facts": [
+        "F3"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "हर",
+          "समय"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "hut",
+        "who": [
+          "savitri"
+        ],
+        "pose": "stand",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री चिंतित दिख रही है।"
+      }
+    },
+    {
+      "n": 7,
+      "text": "एक दिन सत्यवान जंगल में लकड़ी काटने गया काम करते-करते उसके सिर में तेज़ दर्द हुआ।",
+      "gloss": "One day Satyavan went to the forest to cut wood. While working, he got a sharp pain in his head.",
+      "beat": "action",
+      "facts": [
+        "F4"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "जंगल",
+          "लकड़ी",
+          "तेज़",
+          "दर्द"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "satyavan"
+        ],
+        "pose": "walk",
+        "expr": "neutral",
+        "prop": "axe",
+        "note": "सत्यवान कुल्हाड़ी लेकर जंगल की ओर जा रहा है।"
+      }
+    },
+    {
+      "n": 8,
+      "text": "वहीं यम प्रकट हुए काले शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश।",
+      "gloss": "Right there Yama appeared. Dark body, red eyes, red robe, noose in hand.",
+      "beat": "action",
+      "facts": [
+        "F5"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "यम",
+          "काले",
+          "लाल",
+          "पाश"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama"
+        ],
+        "pose": "stand",
+        "expr": "stern",
+        "prop": null,
+        "note": "यम अचानक प्रकट होते हैं, हाथ में पाश।"
+      }
+    },
+    {
+      "n": 9,
+      "text": "उसने कहा, मैं ख़ुद आया हूँ क्योंकि सत्यवान बहुत धर्मात्मा है।",
+      "gloss": "He said, I came myself because Satyavan is very virtuous.",
+      "beat": "action",
+      "facts": [
+        "F6"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "ख़ुद",
+          "धर्मात्मा"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama",
+          "satyavan"
+        ],
+        "pose": "talk",
+        "expr": "stern",
+        "prop": null,
+        "note": "यम सत्यवान से बात कर रहे हैं।"
+      }
+    },
+    {
+      "n": 10,
+      "text": "यम ने सत्यवान के प्राण निकालकर बाँध लिए और दक्षिण की ओर चल दिए सावित्री पीछे-पीछे चल दी।",
+      "gloss": "Yama drew out Satyavan's life, bound it, and headed south. Savitri followed behind.",
+      "beat": "action",
+      "facts": [
+        "F7"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "प्राण",
+          "दक्षिण",
+          "पीछे-पीछे"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama"
+        ],
+        "pose": "walk",
+        "expr": "stern",
+        "prop": null,
+        "note": "यम प्राण लेकर दक्षिण दिशा में जा रहे हैं।"
+      }
+    },
+    {
+      "n": 11,
+      "text": "उसने लड़ाई नहीं की, बस बातें कीं।",
+      "gloss": "She did not fight, just talked.",
+      "beat": "snap",
+      "facts": [
+        "F8"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.3,
+        "pauses": [
+          {
+            "after": "की",
+            "s": 0.2
+          }
+        ],
+        "emphasis": [
+          "लड़ाई",
+          "बातें"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री यम से बात कर रही है, शांत भाव से।"
+      }
+    },
+    {
+      "n": 12,
+      "text": "यम उसकी बातों से खुश हुए और वरदान देने को कहा।",
+      "gloss": "Yama was pleased with her words and offered a boon.",
+      "beat": "deadpan",
+      "facts": [
+        "F8"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.4,
+        "pauses": [
+          {
+            "after": "खुश",
+            "s": 0.25
+          }
+        ],
+        "emphasis": [
+          "वरदान"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama",
+          "savitri"
+        ],
+        "pose": "talk",
+        "expr": "smile",
+        "prop": null,
+        "note": "यम प्रसन्न मुद्रा में वरदान देने की बात कर रहे हैं।"
+      }
+    },
+    {
+      "n": 13,
+      "text": "लेकिन हर वरदान में सत्यवान का जीवन शामिल नहीं था।",
+      "gloss": "But every boon excluded Satyavan's life.",
+      "beat": "deadpan",
+      "facts": [
+        "F9"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.4,
+        "pauses": [
+          {
+            "after": "लेकिन",
+            "s": 0.3
+          }
+        ],
+        "emphasis": [
+          "जीवन"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama",
+          "savitri"
+        ],
+        "pose": "talk",
+        "expr": "stern",
+        "prop": null,
+        "note": "यम शर्त स्पष्ट कर रहे हैं।"
+      }
+    },
+    {
+      "n": 14,
+      "text": "यह ऐसा है जैसे कोई दुकानदार कहे, सब कुछ मुफ़्त है, सिर्फ़ वह चीज़ नहीं जो आपको चाहिए।",
+      "gloss": "It is like a shopkeeper saying everything is free except the thing you want.",
+      "beat": "explain",
+      "facts": [],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.4,
+        "pauses": [
+          {
+            "after": "है",
+            "s": 0.25
+          }
+        ],
+        "emphasis": [
+          "मुफ़्त",
+          "चाहिए"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri"
+        ],
+        "pose": "think",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री सोच में पड़ गई है, दर्शक को समझाने वाला भाव।"
+      }
+    },
+    {
+      "n": 15,
+      "text": "सावित्री ने पहला वर माँगा: ससुर की आँखें वापस मिलें दूसरा: ससुर का राज्य वापस मिले",
+      "gloss": "Savitri asked the first boon: father-in-law's eyesight restored. Second: father-in-law's kingdom restored. Third: a hundred sons for her father.",
+      "beat": "consequence",
+      "facts": [
+        "F9"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "पहला",
+          "आँखें",
+          "दूसरा",
+          "राज्य"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री वर माँग रही है।"
+      }
+    },
+    {
+      "n": 16,
+      "text": "तीसरा: अपने पिता के लिए सौ पुत्र हों।",
+      "gloss": "Savitri asked the first boon: father-in-law's eyesight restored. Second: father-in-law's kingdom restored. Third: a hundred sons for her father.",
+      "beat": "consequence",
+      "facts": [
+        "F9"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0.2,
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री वर माँग रही है।"
+      }
+    },
+    {
+      "n": 17,
+      "text": "चौथा वर: सावित्री और सत्यवान के सौ पुत्र हों यम ने तुरंत कहा, तथास्तु।",
+      "gloss": "Fourth boon: a hundred sons for Savitri and Satyavan. Yama immediately said, so be it.",
+      "beat": "consequence",
+      "facts": [
+        "F10"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "चौथा",
+          "सौ",
+          "तुरंत"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री चौथा वर माँग रही है, यम बिना सोचे दे रहे हैं।"
+      }
+    },
+    {
+      "n": 18,
+      "text": "सावित्री बोली, बिना पति के सौ पुत्र कैसे होंगे?",
+      "gloss": "Savitri said, how can there be a hundred sons without a husband?",
+      "beat": "consequence",
+      "facts": [
+        "F11"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0,
+        "pauses": [
+          {
+            "after": "बोली",
+            "s": 0.25
+          }
+        ],
+        "emphasis": [
+          "बिना",
+          "पति"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "savitri",
+          "yama"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "सावित्री यम को तर्क से घेर रही है।"
+      }
+    },
+    {
+      "n": 19,
+      "text": "यम हार गए और सत्यवान को चार सौ साल की उम्र दे दी।",
+      "gloss": "Yama conceded and gave Satyavan a life of four hundred years.",
+      "beat": "consequence",
+      "facts": [
+        "F12"
+      ],
+      "delivery": {
+        "tone": "matter-of-fact",
+        "pauseBefore": 0,
+        "pauses": [],
+        "emphasis": [
+          "हार",
+          "चार"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "yama",
+          "savitri"
+        ],
+        "pose": "talk",
+        "expr": "neutral",
+        "prop": null,
+        "note": "यम ने पाश खोल दिया, सत्यवान को जीवनदान दिया।"
+      }
+    },
+    {
+      "n": 20,
+      "text": "सत्यवान की आँख खुली, उसने पूछा, वह काला आदमी कहाँ गया?",
+      "gloss": "Satyavan woke and asked, where did the dark man go?",
+      "beat": "twist",
+      "facts": [
+        "F13"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauseBefore": 0.4,
+        "pauses": [
+          {
+            "after": "खुली",
+            "s": 0.25
+          }
+        ],
+        "emphasis": [
+          "काला",
+          "आदमी"
+        ]
+      },
+      "look": {
+        "set": "village",
+        "mark": "front",
+        "who": [
+          "satyavan",
+          "savitri"
+        ],
+        "pose": "sit",
+        "expr": "dazed",
+        "prop": null,
+        "note": "सत्यवान सावित्री की गोद में जागा, भ्रमित है।"
+      }
+    }
+  ],
+  "seconds": 90,
+  "wps": 2.56
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "S1",
+      "title": "The Mahabharata, Book 3: Vana Parva, Sections CCXCII-CCXCVII (Pativrata-mahatmya: the story of Savitri)",
+      "kind": "file",
+      "path": "research/sources/vanaparva-savitri.txt",
+      "url": "https://www.swaveda.com/texts/mahabharata/3292",
+      "retrievedAt": "2026-11-16T21:54:07.987Z",
+      "sha256": "96e3f737e2c166500c16c7d24f66e53b02bf72ec5a19a4992c12394bccf555a4",
+      "chars": 43479
+    }
+  ]
+}

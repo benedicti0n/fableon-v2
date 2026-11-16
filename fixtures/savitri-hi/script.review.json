@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "lines": [
+    {
+      "n": 0,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1"
+      ],
+      "note": "Hook summarizing Savitri's marriage to a man fated to die within a year.",
+      "fix": ""
+    },
+    {
+      "n": 1,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1"
+      ],
+      "note": "States Savitri chose Satyavan herself.",
+      "fix": ""
+    },
+    {
+      "n": 2,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1"
+      ],
+      "note": "Narada warns of Satyavan's defect.",
+      "fix": ""
+    },
+    {
+      "n": 3,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1"
+      ],
+      "note": "The defect is that he will die within a year.",
+      "fix": ""
+    },
+    {
+      "n": 4,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1",
+        "F3"
+      ],
+      "note": "Savitri married despite the warning (implied by later husband reference).",
+      "fix": ""
+    },
+    {
+      "n": 5,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F3"
+      ],
+      "note": "Savitri counts the days to his death.",
+      "fix": ""
+    },
+    {
+      "n": 6,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F3"
+      ],
+      "note": "She keeps the prophecy constantly in mind.",
+      "fix": ""
+    },
+    {
+      "n": 7,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F4"
+      ],
+      "note": "Satyavan goes to forest, works, and gets head pain.",
+      "fix": ""
+    },
+    {
+      "n": 8,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F5"
+      ],
+      "note": "Yama appears with described attributes.",
+      "fix": ""
+    },
+    {
+      "n": 9,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F6"
+      ],
+      "note": "Yama explains his direct arrival due to virtue.",
+      "fix": ""
+    },
+    {
+      "n": 10,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F7"
+      ],
+      "note": "Yama takes life and heads south; Savitri follows.",
+      "fix": ""
+    },
+    {
+      "n": 11,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F8"
+      ],
+      "note": "She does not fight, only talks/argues.",
+      "fix": ""
+    },
+    {
+      "n": 12,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F8"
+      ],
+      "note": "Yama is pleased and offers boon.",
+      "fix": ""
+    },
+    {
+      "n": 13,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F9"
+      ],
+      "note": "Each boon excludes Satyavan's life.",
+      "fix": ""
+    },
+    {
+      "n": 14,
+      "verdict": "opinion",
+      "craft": "ok",
+      "facts": [],
+      "note": "Analogy comparing exclusions to a shopkeeper's offer.",
+      "fix": ""
+    },
+    {
+      "n": 15,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F9"
+      ],
+      "note": "First two boons: father-in-law's sight and kingdom.",
+      "fix": ""
+    },
+    {
+      "n": 16,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F9"
+      ],
+      "note": "Third boon: sons for her father.",
+      "fix": ""
+    },
+    {
+      "n": 17,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F10"
+      ],
+      "note": "Fourth boon: hundred sons for Savitri and Satyavan; Yama grants immediately.",
+      "fix": ""
+    },
+    {
+      "n": 18,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F11"
+      ],
+      "note": "Savitri points out impossibility without husband.",
+      "fix": ""
+    },
+    {
+      "n": 19,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F12"
+      ],
+      "note": "Yama concedes and grants four hundred years.",
+      "fix": ""
+    },
+    {
+      "n": 20,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F13"
+      ],
+      "note": "Satyavan wakes and asks about the dark man.",
+      "fix": ""
+    }
+  ]
+}

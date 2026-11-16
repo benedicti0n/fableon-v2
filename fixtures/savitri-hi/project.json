@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "savitri-hi",
+  "title": "Savitri and Satyavan",
+  "topic": "Savitri and Satyavan: the princess who out-argued Death",
+  "seconds": 90,
+  "language": "hi",
+  "voice": {
+    "provider": "elevenlabs",
+    "model": "eleven_v3",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "language": "hi",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "style": 0,
+      "use_speaker_boost": true,
+      "speed": 1
+    },
+    "maxCharsPerRun": 10000,
+    "tones": {
+      "deadpan": {
+        "stability": 0.85,
+        "style": 0,
+        "speed": 1
+      },
+      "mock-serious": {
+        "stability": 0.6,
+        "style": 0.15,
+        "speed": 1
+      },
+      "matter-of-fact": {
+        "stability": 0.7,
+        "style": 0.05,
+        "speed": 1
+      },
+      "warm": {
+        "stability": 0.45,
+        "style": 0.1,
+        "speed": 1
+      },
+      "excited": {
+        "stability": 0.3,
+        "style": 0.35,
+        "speed": 1.05
+      },
+      "tense": {
+        "stability": 0.5,
+        "style": 0.2,
+        "speed": 1
+      },
+      "awe": {
+        "stability": 0.55,
+        "style": 0.15,
+        "speed": 0.95
+      },
+      "whisper": {
+        "stability": 0.7,
+        "style": 0.05,
+        "speed": 0.95
+      }
+    },
+    "rate": {
+      "wordsPerSecond": 2.56,
+      "charactersPerSecond": 11.51
+    }
+  },
+  "research": {
+    "web": false,
+    "maxSources": 8
+  },
+  "models": {
+    "default": {
+      "provider": "deepseek",
+      "model": null
+    },
+    "script": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinking": "disabled",
+      "temperature": 0.4,
+      "maxTokens": 24000
+    }
+  },
+  "autopilot": false
+}
