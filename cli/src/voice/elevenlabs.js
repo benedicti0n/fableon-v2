@@ -8,7 +8,7 @@ import { atomicWrite, backupBeforeWrite, sha256 } from '../core/artifacts.js';
 import { repoModels } from '../core/model-config.js';
 import { normalizeWord } from '../../../shared/words.mjs';
 import { silencePcm, VOICE_SR, wavFromPcm } from './wav.js';
-import { renderDeliveryBlock } from './delivery.js';
+import { isV3, renderDeliveryBlock } from './delivery.js';
 
 export const ELEVENLABS_BASE = 'https://api.elevenlabs.io';
 export const DEFAULT_MODEL = 'eleven_multilingual_v2';
@@ -191,6 +191,47 @@ async function decodePcm(audioBase64, projectDir, index) {
   }
 }
 
+
+/** Cuts requested by delivery marks: insert before word index `index` (0..words.length). */
+export function pauseCuts(words, lines) {
+  const cuts = [];
+  for (const line of lines) {
+    const d = line.delivery;
+    if (!d) continue;
+    const indexes = words.map((w, i) => (w.line === line.n ? i : -1)).filter((i) => i >= 0);
+    if (!indexes.length) continue;
+    if (d.pauseBefore > 0) cuts.push({ index: indexes[0], seconds: Number(d.pauseBefore), reason: `line ${line.n} pauseBefore` });
+    for (const p of d.pauses ?? []) {
+      const idx = indexes.find((i) => normalizeWord(words[i].w) === normalizeWord(p.after));
+      if (idx !== undefined) cuts.push({ index: idx + 1, seconds: Number(p.s), reason: `line ${line.n} pause after "${p.after}"` });
+      else cuts.push({ warning: `line ${line.n} pause word "${p.after}" not found`, seconds: 0 });
+    }
+  }
+  return cuts;
+}
+
+/** Insert exact silence at word gaps, then shift word times. Never cuts inside a word. */
+export function applyPauseCuts(pcm, words, cuts) {
+  const warnings = cuts.filter((c) => c.warning).map((c) => c.warning);
+  const byIndex = new Map();
+  for (const c of cuts) if (!c.warning && c.seconds > 0) byIndex.set(c.index, Math.max(byIndex.get(c.index) ?? 0, c.seconds));
+  const points = [...byIndex.entries()].map(([index, seconds]) => {
+    let time;
+    if (index <= 0) time = 0;
+    else if (index >= words.length) time = pcm.length / (2 * VOICE_SR);
+    else time = Math.max(words[index - 1].b, (words[index - 1].b + words[index].a) / 2);
+    return { index, seconds, sample: Math.max(0, Math.min(pcm.length, Math.round(time * VOICE_SR) * 2)) };
+  }).sort((a, b) => b.sample - a.sample);
+  let out = pcm;
+  for (const p of points) out = Buffer.concat([out.subarray(0, p.sample), silencePcm(p.seconds), out.subarray(p.sample)]);
+  const asc = [...points].sort((a, b) => a.sample - b.sample);
+  const shifted = words.map((w) => {
+    const add = asc.filter((p) => p.sample <= Math.round(w.a * VOICE_SR) * 2).reduce((n, p) => n + p.seconds, 0);
+    return { ...w, a: +(w.a + add).toFixed(3), b: +(w.b + add).toFixed(3) };
+  });
+  return { pcm: out, words: shifted, warnings };
+}
+
 /**
  * Synthesize all beat blocks, concatenate with beat pauses and write project/voice.wav. Returns words, billing,
  * warnings and the cache/API call details.
@@ -203,7 +244,26 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
   const maxChars = Number(voice.maxCharsPerRun ?? 10000);
   let spent = 0;
   const words = [], warnings = [], calls = [];
-  const pcm = [];
+  let pcm = [];
+  const allLines = blocks.flatMap((b) => b.lines);
+  const single = isV3(model) ? renderDeliveryBlock(allLines, model, { localPauses: true }) : null;
+  if (single && charCount(single.text) <= 5000) {
+    const res = await requestSpeech({ projectDir, model, voiceId, text: single.text, settings, previousText: null, nextText: null, maxChars, spent });
+    spent += res.chars;
+    calls.push({ hash: res.hash, cached: res.cached, chars: res.chars, costUsd: res.costUsd });
+    const blockPcm = await decodePcm(res.audioBase64, projectDir, 0);
+    const { alignment } = chooseAlignment(single.spokenText, res);
+    const mapped = wordsFromAlignment({ blockText: single.spokenText, lines: single.lines, alignment, blockStart: 0, blockDuration: blockPcm.length / (2 * VOICE_SR) });
+    if (!mapped.words.length) throw new Error('ElevenLabs returned no character alignment');
+    const inserted = applyPauseCuts(blockPcm, mapped.words, pauseCuts(mapped.words, allLines));
+    pcm = [inserted.pcm];
+    words.push(...inserted.words);
+    warnings.push(...mapped.warnings, ...inserted.warnings);
+    const wav = wavFromPcm(Buffer.concat(pcm));
+    backupBeforeWrite(projectDir, 'voice', 'voice.wav', wav);
+    atomicWrite(join(projectDir, 'voice.wav'), wav);
+    return { words, warnings, calls, characters: res.chars, costUsd: res.costUsd, cached: res.cached, model, voiceId, mode: 'single' };
+  }
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
     const lines = block.lines;

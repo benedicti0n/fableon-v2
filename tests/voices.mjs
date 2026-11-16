@@ -2,7 +2,7 @@
 import { mkdtempSync, readFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { synthesizeElevenLabs, wordsFromAlignment } from '../cli/src/voice/elevenlabs.js';
+import { applyPauseCuts, pauseCuts, synthesizeElevenLabs, wordsFromAlignment } from '../cli/src/voice/elevenlabs.js';
 import { wavFromPcm, VOICE_SR } from '../cli/src/voice/wav.js';
 import { normalizeWord } from '../shared/words.mjs';
 import { AUDITION_TEXT, pickCandidates } from '../cli/src/voice/auditions.js';
@@ -64,6 +64,13 @@ export async function runVoiceTests() {
   const voice = { model: 'eleven_multilingual_v2', settings: { stability: 0.5, style: 0, speed: 1 }, tones: { deadpan: { stability: 0.85, style: 0, speed: 1 } } };
   ok('tone settings', toneSettings(voice, 'deadpan').stability === 0.85 && toneSettings(voice, 'deadpan', { expressive: true }).style === 0.35, JSON.stringify(toneSettings(voice, 'deadpan')));
   ok('v3 tone is a tag', toneSettings({ ...voice, model: 'eleven_v3' }, 'deadpan').stability === 0.5, 'v3 settings');
+
+  const gapWords = [{ w: 'एक', a: 0, b: 0.6, line: 0 }, { w: 'दो', a: 0.8, b: 1.4, line: 0 }];
+  const gapPcm = Buffer.alloc(VOICE_SR * 2 * 2);
+  const cuts = pauseCuts(gapWords, [{ n: 0, delivery: { pauseBefore: 0.4, pauses: [{ after: 'एक', s: 0.3 }] } }]);
+  const inserted = applyPauseCuts(gapPcm, gapWords, cuts);
+  ok('pause cuts inserted', inserted.pcm.length === gapPcm.length + (0.4 + 0.3) * VOICE_SR * 2 && inserted.words[1].a === 1.5, JSON.stringify(inserted.words));
+  ok('pause never inside word', inserted.words[0].a === 0.4 && inserted.words[0].b === 1 && inserted.words[1].a === 1.5 && inserted.words[1].b === 2.1, JSON.stringify(inserted.words));
 
   const oldFetch = globalThis.fetch;
   const oldKey = process.env.ELEVENLABS_API_KEY;

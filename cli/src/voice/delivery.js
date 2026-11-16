@@ -39,22 +39,22 @@ const pauseMark = (seconds, model) => (isV3(model) ? (seconds < 0.3 ? '...' : '[
 const emphasisMark = (model) => (isV3(model) ? '...' : '<break time="0.12s" />');
 
 /** Render one script line with its delivery marks. Returns the request text and the spoken text (marks removed). */
-export function renderDeliveryLine(line, model) {
+export function renderDeliveryLine(line, model, { localPauses = false } = {}) {
   const d = line.delivery ?? {};
   const emphasis = new Set((d.emphasis ?? []).map(normalizeWord));
   const pauses = (d.pauses ?? []).map((p) => ({ after: normalizeWord(p.after), s: p.s }));
   const tokens = wordTokens(line.text);
   const parts = [];
-  if (!isV3(model) && d.pauseBefore > 0) parts.push(pauseMark(d.pauseBefore, model));
+  if (!localPauses && !isV3(model) && d.pauseBefore > 0) parts.push(pauseMark(d.pauseBefore, model));
   if (isV3(model)) {
     const tag = TONE_TAGS[d.tone];
     if (tag) parts.push(tag);
-    if (d.pauseBefore > 0) parts.push(pauseMark(d.pauseBefore, model));
+    if (!localPauses && d.pauseBefore > 0) parts.push(pauseMark(d.pauseBefore, model));
   }
   for (const t of tokens) {
     if (emphasis.has(t.norm)) parts.push(emphasisMark(model));
     parts.push(t.raw);
-    for (const p of pauses) if (p.after === t.norm) parts.push(pauseMark(p.s, model));
+    if (!localPauses) for (const p of pauses) if (p.after === t.norm) parts.push(pauseMark(p.s, model));
   }
   const text = parts.join(' ');
   return { text, spokenText: stripDelivery(text) };
@@ -69,11 +69,11 @@ export function stripDelivery(text) {
 }
 
 /** Render consecutive lines and return spoken ranges per line plus the full request text. */
-export function renderDeliveryBlock(lines, model) {
+export function renderDeliveryBlock(lines, model, opts = {}) {
   const out = [], ranges = [];
   let spoken = '';
   for (const line of lines) {
-    const r = renderDeliveryLine(line, model);
+    const r = renderDeliveryLine(line, model, opts);
     if (spoken) spoken += ' ';
     const start = spoken.length;
     spoken += r.spokenText;
