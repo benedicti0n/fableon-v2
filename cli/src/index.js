@@ -5,6 +5,8 @@ import { runDoctor } from './doctor.js';
 import { validateCommand } from './validate.js';
 import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
+import { schemaCommand } from './schema.js';
+import { catalogCardCommand } from './catalog-card.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -27,6 +29,19 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--deep', 'also run the in-frame/occlusion check')
     .action((opts) => validateCommand(opts.project, opts.deep));
+
+  program
+    .command('schema')
+    .description('write a per-project specialised authoring schema')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--out <file>', 'output schema file')
+    .action((opts) => schemaCommand(opts.project, opts.out));
+
+  program
+    .command('catalog-card')
+    .description('print a compact catalog card for director prompts')
+    .option('--out <file>', 'write the card to a file')
+    .action((opts) => catalogCardCommand(opts.out));
 
   program
     .command('frames')

@@ -13,6 +13,7 @@ import { runAuthoring } from './authoring.mjs';
 import { runSolver } from './solver.mjs';
 import { runFramesTests } from './frames.mjs';
 import { runVisibility } from './visibility.mjs';
+import { runSchemaTests } from './schema.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -82,6 +83,8 @@ try {
   check('frames validator', frameCheck.ok, `${frameCheck.checks.filter((c) => c.ok).length}/${frameCheck.checks.length} checks`);
   const visibility = runVisibility();
   check('visibility solver', visibility.ok, `${visibility.checks.filter((c) => c.ok).length}/${visibility.checks.length} checks`);
+  const schemaTests = runSchemaTests();
+  check('strict schema', schemaTests.ok, `${schemaTests.checks.filter((c) => c.ok).length}/${schemaTests.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

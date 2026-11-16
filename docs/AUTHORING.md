@@ -101,6 +101,19 @@ seconds in the board and frames in v1. `until`, `from`, `toAt` and `visible` anc
 Set pieces pass through with string anchors and seconds converted to frames where v1 is frame-based. Crowd layouts and
 set-piece grids accept points and marks.
 
+## Strict schemas and model cards
+
+`schema/authoring.schema.json` is closed: every effect kind, set piece, crowd, motion, animate value, special params
+and camera form has its own definition. The only open object is the explicit `raw` escape hatch.
+
+`fableon schema --project <dir> [--out file]` writes a per-project schema with enums for this board's cast ids and
+groups, poses, expressions, props, specials, sets, lights, marks, effect variants and line numbers in anchor strings.
+When the board has no `raw`, the per-project schema closes `raw` completely. This is the structured-output contract for
+Phase 3.
+
+`fableon catalog-card [--out file]` prints a compact plain-text catalog (sets/marks, poses, expressions, props,
+specials with params, effects with key params, set pieces and measured sizes) under 12 KB for director prompts.
+
 ## Escape hatch
 
 A shot, actor or effect may carry a `"raw": { …v1 fields… }` object. It is merged after the compiled fields and is

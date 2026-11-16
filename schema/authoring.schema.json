@@ -24,6 +24,9 @@
       "type": "number",
       "minimum": 0
     },
+    "partial": {
+      "type": "boolean"
+    },
     "flash": {
       "$ref": "#/$defs/Anchor"
     },
@@ -75,58 +78,2260 @@
     }
   },
   "$defs": {
-    "Anchor": {
-      "oneOf": [
-        {
-          "type": "string",
-          "minLength": 1
+    "DeerParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "graze": {
+          "type": "number"
         },
-        {
-          "type": "object"
+        "phase": {
+          "type": "number"
+        },
+        "expr": {
+          "enum": [
+            "neutral",
+            "shock"
+          ]
         }
-      ]
+      }
     },
-    "Point": {
+    "AgniParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "burp": {
+          "$ref": "#/$defs/Animated"
+        }
+      }
+    },
+    "PotParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "FlatParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pose": {
+          "enum": [
+            "stand",
+            "walk",
+            "run",
+            "sit",
+            "point",
+            "vow",
+            "pray",
+            "shout",
+            "armsUp",
+            "shrug",
+            "fold",
+            "bless",
+            "present",
+            "hold",
+            "belly",
+            "drink",
+            "flex",
+            "aim",
+            "shake",
+            "wave",
+            "talk",
+            "sneak",
+            "stir",
+            "offer",
+            "dust",
+            "chop",
+            "carry",
+            "throw",
+            "hips",
+            "think",
+            "grab"
+          ]
+        }
+      }
+    },
+    "NagaParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "col": {
+          "type": "string"
+        },
+        "king": {
+          "type": "boolean"
+        }
+      }
+    },
+    "BabyParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wrap": {
+          "type": "string"
+        },
+        "skin": {
+          "type": "string"
+        }
+      }
+    },
+    "GaneshaParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "write": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "writeSpeed": {
+          "type": "number"
+        },
+        "puzzled": {
+          "type": "number"
+        },
+        "down": {
+          "type": "number"
+        },
+        "look": {
+          "type": "number"
+        },
+        "pen": {
+          "type": "boolean"
+        },
+        "ear": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/Animated"
+            }
+          ]
+        },
+        "expr": {
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
+        }
+      }
+    },
+    "Animated": {
       "oneOf": [
         {
-          "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
-          "items": {
-            "type": "number"
-          }
-        },
-        {
-          "type": "string",
-          "minLength": 1
+          "type": "number"
         },
         {
           "type": "object",
           "additionalProperties": false,
+          "required": [
+            "keys"
+          ],
           "properties": {
-            "mark": {
-              "type": "string"
+            "keys": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  {
+                    "$ref": "#/$defs/Anchor"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false
+              }
             },
-            "nudge": {
-              "$ref": "#/$defs/Vec3"
+            "ease": {
+              "enum": [
+                "linear",
+                "smooth",
+                "glide",
+                "step"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Crowd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "seedBase",
+        "layout"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "seedBase": {
+          "type": "integer"
+        },
+        "generator": {
+          "enum": [
+            "kaurava"
+          ]
+        },
+        "cast": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "grid"
+              ],
+              "properties": {
+                "grid": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "origin",
+                    "cols",
+                    "dx",
+                    "dz"
+                  ],
+                  "properties": {
+                    "origin": {
+                      "$ref": "#/$defs/Point"
+                    },
+                    "cols": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "dx": {
+                      "type": "number"
+                    },
+                    "dz": {
+                      "type": "number"
+                    },
+                    "rowShift": {
+                      "type": "number"
+                    },
+                    "xStart": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
             },
-            "d": {
-              "$ref": "#/$defs/Vec3"
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "points"
+              ],
+              "properties": {
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Point"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "first": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "index",
+            "who"
+          ],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0
             },
-            "on": {
-              "type": "string"
+            "who": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "pose": {
+          "oneOf": [
+            {
+              "enum": [
+                "stand",
+                "walk",
+                "run",
+                "sit",
+                "point",
+                "vow",
+                "pray",
+                "shout",
+                "armsUp",
+                "shrug",
+                "fold",
+                "bless",
+                "present",
+                "hold",
+                "belly",
+                "drink",
+                "flex",
+                "aim",
+                "shake",
+                "wave",
+                "talk",
+                "sneak",
+                "stir",
+                "offer",
+                "dust",
+                "chop",
+                "carry",
+                "throw",
+                "hips",
+                "think",
+                "grab"
+              ]
             },
-            "attach": {
-              "$ref": "#/$defs/Attach"
+            {
+              "$ref": "#/$defs/PosePick"
+            }
+          ]
+        },
+        "expr": {
+          "oneOf": [
+            {
+              "enum": [
+                "neutral",
+                "stern",
+                "grin",
+                "laugh",
+                "whistle",
+                "nervous",
+                "shock",
+                "relief",
+                "relief_open",
+                "dazed",
+                "pained",
+                "smile",
+                "smile_closed",
+                "lick"
+              ]
+            },
+            {
+              "$ref": "#/$defs/ExprPick"
+            }
+          ]
+        },
+        "scale": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/ScaleRange"
+            }
+          ]
+        },
+        "facing": {
+          "enum": [
+            -1,
+            0,
+            1
+          ]
+        },
+        "seated": {
+          "type": "boolean"
+        },
+        "noBlob": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PosePick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "salt",
+        "below",
+        "a",
+        "b"
+      ],
+      "properties": {
+        "salt": {
+          "type": "number"
+        },
+        "below": {
+          "type": "number"
+        },
+        "a": {
+          "enum": [
+            "stand",
+            "walk",
+            "run",
+            "sit",
+            "point",
+            "vow",
+            "pray",
+            "shout",
+            "armsUp",
+            "shrug",
+            "fold",
+            "bless",
+            "present",
+            "hold",
+            "belly",
+            "drink",
+            "flex",
+            "aim",
+            "shake",
+            "wave",
+            "talk",
+            "sneak",
+            "stir",
+            "offer",
+            "dust",
+            "chop",
+            "carry",
+            "throw",
+            "hips",
+            "think",
+            "grab"
+          ]
+        },
+        "b": {
+          "enum": [
+            "stand",
+            "walk",
+            "run",
+            "sit",
+            "point",
+            "vow",
+            "pray",
+            "shout",
+            "armsUp",
+            "shrug",
+            "fold",
+            "bless",
+            "present",
+            "hold",
+            "belly",
+            "drink",
+            "flex",
+            "aim",
+            "shake",
+            "wave",
+            "talk",
+            "sneak",
+            "stir",
+            "offer",
+            "dust",
+            "chop",
+            "carry",
+            "throw",
+            "hips",
+            "think",
+            "grab"
+          ]
+        }
+      }
+    },
+    "ExprPick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "salt",
+        "below",
+        "a",
+        "b"
+      ],
+      "properties": {
+        "salt": {
+          "type": "number"
+        },
+        "below": {
+          "type": "number"
+        },
+        "a": {
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
+        },
+        "b": {
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
+        }
+      }
+    },
+    "ScaleRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "salt",
+        "min",
+        "span"
+      ],
+      "properties": {
+        "salt": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number"
+        },
+        "span": {
+          "type": "number"
+        }
+      }
+    },
+    "Motion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "keys"
+          ],
+          "properties": {
+            "type": {
+              "const": "path"
+            },
+            "keys": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  {
+                    "$ref": "#/$defs/Anchor"
+                  },
+                  {
+                    "$ref": "#/$defs/Point"
+                  }
+                ],
+                "items": false
+              }
+            },
+            "ease": {
+              "enum": [
+                "linear",
+                "smooth",
+                "glide",
+                "step"
+              ]
+            },
+            "walk": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "rate": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                }
+              }
+            },
+            "bob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "amp",
+                "freq"
+              ],
+              "properties": {
+                "amp": {
+                  "type": "number"
+                },
+                "freq": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "at",
+            "v",
+            "a"
+          ],
+          "properties": {
+            "type": {
+              "const": "ballistic"
             },
             "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "v": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            },
+            "a": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            },
+            "floorY": {
+              "type": "number"
+            },
+            "spin": {
+              "type": "number"
+            },
+            "delay": {
+              "type": "number"
+            }
+          }
+        }
+      ]
+    },
+    "Spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skin"
+      ],
+      "properties": {
+        "skin": {
+          "type": "string"
+        },
+        "build": {
+          "enum": [
+            "adult",
+            "stout",
+            "kid",
+            "big",
+            "elder",
+            "slim",
+            "baby"
+          ]
+        },
+        "top": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lower": {
+          "type": "string"
+        },
+        "sari": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "border": {
+          "type": "string"
+        },
+        "drape": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "head": {
+          "enum": [
+            "crown",
+            "crownSmall",
+            "turban",
+            "bun",
+            "hair",
+            "long",
+            "bald",
+            "topknot",
+            null
+          ]
+        },
+        "hairCol": {
+          "type": "string"
+        },
+        "crownCol": {
+          "type": "string"
+        },
+        "turbanCol": {
+          "type": "string"
+        },
+        "beard": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "beardLong": {
+          "type": "boolean"
+        },
+        "moustache": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "necklace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tilak": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blindfold": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blind": {
+          "type": "boolean"
+        },
+        "flower": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "belly": {
+          "type": "number"
+        },
+        "earrings": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Effect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "sparkle"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "offsets": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "pop": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "stagger": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "card": {
+              "enum": [
+                "cut",
+                "soft",
+                "glow",
+                "fire"
+              ]
+            },
+            "twinkle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "freq",
+                "depth"
+              ],
+              "properties": {
+                "freq": {
+                  "type": "number"
+                },
+                "depth": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "halo"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
               "type": "string"
             },
-            "screen": {
-              "$ref": "#/$defs/Vec3"
+            "card": {
+              "enum": [
+                "soft",
+                "glow",
+                "cut",
+                "fire"
+              ]
             },
-            "actor": {
+            "peak": {
+              "type": "number"
+            },
+            "visible": {
+              "$ref": "#/$defs/Window"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "knot"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "bob": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "heart"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "bob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "amp",
+                "freq"
+              ],
+              "properties": {
+                "amp": {
+                  "type": "number"
+                },
+                "freq": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "puff"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "dur": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "toAt",
+            "fromPoint",
+            "to"
+          ],
+          "properties": {
+            "kind": {
+              "const": "arrow"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "toAt": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "to": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "rot": {
+              "type": "number"
+            },
+            "stuck": {
+              "type": "boolean"
+            },
+            "fromPoint": {
+              "$ref": "#/$defs/Point"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "stars"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "period": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "dur": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "from": {
+              "$ref": "#/$defs/Anchor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos",
+            "variant"
+          ],
+          "properties": {
+            "kind": {
+              "const": "emblem"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "variant": {
+              "enum": [
+                "wheel",
+                "wind",
+                "bolt",
+                "horse"
+              ]
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "bob": {
+              "type": "number"
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "lump"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos",
+            "motion"
+          ],
+          "properties": {
+            "kind": {
+              "const": "mango"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "rotOffset": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "splash"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "dur": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "bubbles"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "area": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "offset": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            },
+            "rise": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "saltX": {
+              "type": "number"
+            },
+            "saltZ": {
+              "type": "number"
+            },
+            "saltPhase": {
+              "type": "number"
+            },
+            "saltSize": {
+              "type": "number"
+            },
+            "jitter": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "burst"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
               "type": "string"
+            },
+            "phase": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "fire"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "spots": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "source": {
+              "enum": [
+                "cityTreetops"
+              ]
+            },
+            "filter": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "zAfter": {
+                  "type": "number"
+                },
+                "radius": {
+                  "type": "number"
+                }
+              }
+            },
+            "yLift": {
+              "type": "number"
+            },
+            "sizeLift": {
+              "type": "number"
+            },
+            "spread": {
+              "type": "number"
+            },
+            "pop": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "hashSalt": {
+              "type": "number"
+            },
+            "visible": {
+              "$ref": "#/$defs/Window"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "smoke"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "area": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "offset": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            },
+            "rise": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "saltX": {
+              "type": "number"
+            },
+            "saltZ": {
+              "type": "number"
+            },
+            "saltPhase": {
+              "type": "number"
+            },
+            "saltSize": {
+              "type": "number"
+            },
+            "jitter": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos",
+            "motion"
+          ],
+          "properties": {
+            "kind": {
+              "const": "pigeon"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "dust"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "dur": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "rise": {
+              "type": "number"
+            },
+            "size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "seed": {
+              "type": "number"
+            },
+            "delay": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "sweat"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "rate": {
+              "type": "number"
+            },
+            "spread": {
+              "type": "number"
+            },
+            "drop": {
+              "type": "number"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "petals"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "spread": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "SetAction": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece"
+          ],
+          "properties": {
+            "piece": {
+              "const": "pages"
+            },
+            "height": {
+              "$ref": "#/$defs/Animated"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "motion"
+          ],
+          "properties": {
+            "piece": {
+              "const": "boat"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "yaw": {
+              "type": "number"
+            },
+            "roll": {
+              "type": "number"
+            },
+            "rollBob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "amp",
+                "freq"
+              ],
+              "properties": {
+                "amp": {
+                  "type": "number"
+                },
+                "freq": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "grid",
+            "count"
+          ],
+          "properties": {
+            "piece": {
+              "const": "jars"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "grid": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "origin",
+                "cols",
+                "dx",
+                "dz"
+              ],
+              "properties": {
+                "origin": {
+                  "$ref": "#/$defs/Point"
+                },
+                "cols": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "dx": {
+                  "type": "number"
+                },
+                "dz": {
+                  "type": "number"
+                },
+                "rowShift": {
+                  "type": "number"
+                }
+              }
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "appear": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "to": {
+                  "$ref": "#/$defs/Anchor"
+                }
+              }
+            },
+            "lids": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "stay",
+                    "pop"
+                  ]
+                },
+                "since": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "windowEnd": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "hashSalt": {
+                  "type": "number"
+                },
+                "overrides": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/JarOverride"
+                  }
+                },
+                "velocity": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "spin": {
+                  "type": "number"
+                },
+                "cullY": {
+                  "type": "number"
+                }
+              }
+            },
+            "kids": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "since": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "windowEnd": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "hashSalt": {
+                  "type": "number"
+                },
+                "overrides": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/JarOverride"
+                  }
+                },
+                "seedBase": {
+                  "type": "integer"
+                },
+                "cullDistance": {
+                  "type": "number"
+                },
+                "sink": {
+                  "type": "number"
+                },
+                "rise": {
+                  "type": "number"
+                },
+                "scale": {
+                  "type": "number"
+                },
+                "pose": {
+                  "enum": [
+                    "stand",
+                    "walk",
+                    "run",
+                    "sit",
+                    "point",
+                    "vow",
+                    "pray",
+                    "shout",
+                    "armsUp",
+                    "shrug",
+                    "fold",
+                    "bless",
+                    "present",
+                    "hold",
+                    "belly",
+                    "drink",
+                    "flex",
+                    "aim",
+                    "shake",
+                    "wave",
+                    "talk",
+                    "sneak",
+                    "stir",
+                    "offer",
+                    "dust",
+                    "chop",
+                    "carry",
+                    "throw",
+                    "hips",
+                    "think",
+                    "grab"
+                  ]
+                },
+                "expr": {
+                  "enum": [
+                    "neutral",
+                    "stern",
+                    "grin",
+                    "laugh",
+                    "whistle",
+                    "nervous",
+                    "shock",
+                    "relief",
+                    "relief_open",
+                    "dazed",
+                    "pained",
+                    "smile",
+                    "smile_closed",
+                    "lick"
+                  ]
+                },
+                "noBlob": {
+                  "type": "boolean"
+                },
+                "generator": {
+                  "enum": [
+                    "kaurava"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "since",
+            "to",
+            "origin"
+          ],
+          "properties": {
+            "piece": {
+              "const": "nectar"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "since": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "to": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "origin": {
+              "$ref": "#/$defs/Point"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "radius": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "y": {
+              "type": "number"
+            },
+            "zOffset": {
+              "type": "number"
+            },
+            "scale": {
+              "type": "number"
+            },
+            "angleStart": {
+              "type": "number"
+            },
+            "angleSpan": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "piece": {
+              "const": "city"
+            },
+            "from": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "to": {
+              "$ref": "#/$defs/Anchor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece"
+          ],
+          "properties": {
+            "piece": {
+              "const": "wheel"
+            },
+            "spin": {
+              "type": "number"
+            },
+            "stopAt": {
+              "$ref": "#/$defs/Anchor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "at"
+          ],
+          "properties": {
+            "piece": {
+              "const": "bigBow"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "dur": {
+              "type": "number"
+            },
+            "amp": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "piece",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "piece": {
+              "const": "ladduPlate"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "scale": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "to": {
+          "$ref": "#/$defs/Anchor"
+        }
+      }
+    },
+    "JarOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "at"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "at": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "who": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expr": {
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
+        }
+      }
+    },
+    "Anchor": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:[0-9]+\\.[A-Za-z']+(?:#[0-9]+)?(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|shot(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|end(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|f[0-9]+)$"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line",
+            "word"
+          ],
+          "properties": {
+            "line": {
+              "type": "number"
+            },
+            "word": {
+              "type": "string"
+            },
+            "nth": {
+              "type": "number"
+            },
+            "offset": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frame"
+          ],
+          "properties": {
+            "frame": {
+              "type": "number"
+            },
+            "offset": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "end"
+          ],
+          "properties": {
+            "end": {
+              "const": true
+            },
+            "offset": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shot"
+          ],
+          "properties": {
+            "shot": {
+              "const": true
+            },
+            "offset": {
+              "type": "number"
             }
           }
         }
@@ -152,6 +2357,188 @@
         "prop"
       ]
     },
+    "Point": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9]*\\.[A-Za-z][A-Za-z0-9]*$"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mark"
+          ],
+          "properties": {
+            "mark": {
+              "type": "string"
+            },
+            "nudge": {
+              "$ref": "#/$defs/Vec3"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "on",
+            "attach"
+          ],
+          "properties": {
+            "on": {
+              "type": "string"
+            },
+            "attach": {
+              "$ref": "#/$defs/Attach"
+            },
+            "d": {
+              "$ref": "#/$defs/Vec3"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "at",
+            "d"
+          ],
+          "properties": {
+            "at": {
+              "type": "string"
+            },
+            "d": {
+              "$ref": "#/$defs/Vec3"
+            },
+            "screen": {
+              "$ref": "#/$defs/Vec3"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "actor",
+            "attach"
+          ],
+          "properties": {
+            "actor": {
+              "type": "string"
+            },
+            "attach": {
+              "$ref": "#/$defs/Attach"
+            },
+            "d": {
+              "$ref": "#/$defs/Vec3"
+            }
+          }
+        }
+      ]
+    },
+    "Talk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base"
+      ],
+      "properties": {
+        "base": {
+          "type": "string"
+        },
+        "rate": {
+          "type": "number"
+        }
+      }
+    },
+    "Appear": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at"
+      ],
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "stagger": {
+          "type": "number"
+        },
+        "pop": {
+          "type": "number"
+        }
+      }
+    },
+    "Visible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "to": {
+          "$ref": "#/$defs/Anchor"
+        }
+      }
+    },
+    "Animate": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "keys"
+          ],
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  {
+                    "$ref": "#/$defs/Anchor"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false
+              }
+            },
+            "ease": {
+              "enum": [
+                "linear",
+                "smooth",
+                "glide",
+                "step"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Raw": {
+      "type": "object",
+      "additionalProperties": true
+    },
     "Cast": {
       "type": "object",
       "additionalProperties": false,
@@ -162,7 +2549,7 @@
               "type": "string"
             },
             {
-              "type": "object"
+              "$ref": "#/$defs/Spec"
             }
           ]
         },
@@ -170,7 +2557,9 @@
           "type": "number"
         },
         "variant": {
-          "type": "string"
+          "enum": [
+            "priest"
+          ]
         },
         "group": {
           "type": "array",
@@ -179,6 +2568,505 @@
           }
         }
       }
+    },
+    "Row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row",
+        "at"
+      ],
+      "properties": {
+        "row": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "at": {
+          "type": "string"
+        },
+        "nudge": {
+          "$ref": "#/$defs/Vec3"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "curve": {
+          "type": "number"
+        },
+        "facing": {
+          "oneOf": [
+            {
+              "enum": [
+                "camera",
+                "front",
+                "left",
+                "right"
+              ]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "front": {
+          "type": "number"
+        },
+        "pose": {
+          "type": "string"
+        },
+        "expr": {
+          "type": "string"
+        },
+        "mirror": {
+          "type": "boolean"
+        },
+        "seated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cast": {
+          "type": "string"
+        },
+        "spec": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/Spec"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "special": {
+          "enum": [
+            "ganesha",
+            "agni",
+            "deer",
+            "naga",
+            "baby",
+            "pot",
+            "flat"
+          ]
+        },
+        "params": {
+          "type": "object"
+        },
+        "variant": {
+          "enum": [
+            "priest"
+          ]
+        },
+        "seed": {
+          "type": "number"
+        },
+        "at": {
+          "$ref": "#/$defs/Point"
+        },
+        "nudge": {
+          "$ref": "#/$defs/Vec3"
+        },
+        "pos": {
+          "$ref": "#/$defs/Point"
+        },
+        "motion": {
+          "$ref": "#/$defs/Motion"
+        },
+        "animate": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/Animate"
+          }
+        },
+        "scale": {
+          "type": "number"
+        },
+        "mirror": {
+          "type": "boolean"
+        },
+        "noBlob": {
+          "type": "boolean"
+        },
+        "blobScale": {
+          "type": "number"
+        },
+        "yaw": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pose": {
+          "type": "string"
+        },
+        "expr": {
+          "type": "string"
+        },
+        "prop": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "facing": {
+          "oneOf": [
+            {
+              "enum": [
+                "camera",
+                "front",
+                "left",
+                "right"
+              ]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "look": {
+          "type": "number"
+        },
+        "seated": {
+          "type": "boolean"
+        },
+        "headTilt": {
+          "type": "number"
+        },
+        "tilt": {
+          "type": "number"
+        },
+        "talk": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Talk"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appear": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Appear"
+            },
+            {
+              "$ref": "#/$defs/Anchor"
+            }
+          ]
+        },
+        "enter": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "exit": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "says": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/Anchor"
+          }
+        },
+        "do": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {
+                "$ref": "#/$defs/Anchor"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "pose": {
+                    "type": "string"
+                  },
+                  "expr": {
+                    "type": "string"
+                  },
+                  "prop": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "facing": {
+                    "oneOf": [
+                      {
+                        "enum": [
+                          "camera",
+                          "front",
+                          "left",
+                          "right"
+                        ]
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "look": {
+                    "type": "number"
+                  },
+                  "seated": {
+                    "type": "boolean"
+                  },
+                  "headTilt": {
+                    "type": "number"
+                  },
+                  "tilt": {
+                    "type": "number"
+                  },
+                  "talk": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/Talk"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "visible": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/Visible"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "appear": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/Appear"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "scale": {
+                    "type": "number"
+                  },
+                  "mirror": {
+                    "type": "boolean"
+                  },
+                  "noBlob": {
+                    "type": "boolean"
+                  },
+                  "blobScale": {
+                    "type": "number"
+                  },
+                  "yaw": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "params": {
+                    "type": "object"
+                  }
+                }
+              }
+            ],
+            "items": false
+          }
+        },
+        "row": {
+          "$ref": "#/$defs/Row"
+        },
+        "raw": {
+          "$ref": "#/$defs/Raw"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "ganesha"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/GaneshaParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "deer"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/DeerParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "baby"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/BabyParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "naga"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/NagaParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "flat"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/FlatParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "agni"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/AgniParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "pot"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/PotParams"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": null
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "type": "object",
+                "additionalProperties": false,
+                "maxProperties": 0
+              }
+            }
+          }
+        }
+      ]
     },
     "Shot": {
       "type": "object",
@@ -285,407 +3173,155 @@
         "crowds": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": true
+            "$ref": "#/$defs/Crowd"
           }
         },
         "fx": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": true,
-            "required": [
-              "kind",
-              "at"
-            ]
+            "$ref": "#/$defs/Effect"
           }
         },
         "set": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": true,
-            "required": [
-              "piece"
-            ]
+            "$ref": "#/$defs/SetAction"
           }
         },
         "raw": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/Raw"
         }
       }
     },
     "Camera": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "raw": {
+      "oneOf": [
+        {
           "type": "object",
-          "additionalProperties": true
-        },
-        "at": {
-          "$ref": "#/$defs/Anchor"
-        },
-        "cut": {
-          "type": "boolean"
-        },
-        "dur": {
-          "type": "number"
-        },
-        "type": {
-          "enum": [
-            "dolly",
-            "fixed",
-            "tilt"
-          ]
-        },
-        "pos": {
-          "$ref": "#/$defs/Point"
-        },
-        "look": {
-          "$ref": "#/$defs/Point"
-        },
-        "fov": {
-          "type": "number"
-        },
-        "roll": {
-          "type": "number"
-        },
-        "push": {
-          "type": "object"
-        },
-        "lookTo": {
-          "$ref": "#/$defs/Point"
-        },
-        "tiltDur": {
-          "type": "number"
-        },
-        "subjects": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "size": {
-          "enum": [
-            "close",
-            "medium",
-            "full",
-            "wide",
-            "establishing",
-            "insert"
-          ]
-        },
-        "on": {
-          "oneOf": [
-            {
+          "additionalProperties": false,
+          "required": [
+            "at"
+          ],
+          "properties": {
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "cut": {
+              "type": "boolean"
+            },
+            "dur": {
+              "type": "number"
+            },
+            "size": {
+              "enum": [
+                "close",
+                "medium",
+                "full",
+                "wide",
+                "establishing",
+                "insert"
+              ]
+            },
+            "on": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "angle": {
+              "enum": [
+                "eye",
+                "low",
+                "high",
+                "overhead"
+              ]
+            },
+            "side": {
+              "enum": [
+                "front",
+                "left",
+                "right",
+                "frontLeft",
+                "frontRight"
+              ]
+            },
+            "move": {
+              "enum": [
+                "push",
+                "hold",
+                "glide",
+                "tiltUp",
+                "tiltDown",
+                "pan",
+                "reveal",
+                "follow",
+                "crane"
+              ]
+            },
+            "punch": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "roll": {
+              "type": "number"
+            },
+            "fov": {
+              "type": "number"
+            },
+            "glide": {
+              "type": "number"
+            },
+            "over": {
               "type": "string"
             },
-            {
+            "to": {
+              "type": "string"
+            },
+            "toSize": {
+              "enum": [
+                "close",
+                "medium",
+                "full",
+                "wide",
+                "establishing",
+                "insert"
+              ]
+            },
+            "third": {
+              "enum": [
+                "left",
+                "right"
+              ]
+            },
+            "later": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "scenery": {
+              "type": "boolean"
             }
-          ]
-        },
-        "angle": {
-          "enum": [
-            "eye",
-            "low",
-            "high",
-            "overhead"
-          ]
-        },
-        "side": {
-          "enum": [
-            "front",
-            "left",
-            "right",
-            "frontLeft",
-            "frontRight"
-          ]
-        },
-        "move": {
-          "enum": [
-            "push",
-            "hold",
-            "glide",
-            "tiltUp",
-            "tiltDown",
-            "pan",
-            "reveal",
-            "follow",
-            "crane"
-          ]
-        },
-        "punch": {
-          "$ref": "#/$defs/Anchor"
-        },
-        "glide": {
-          "type": "number"
-        },
-        "later": {
-          "type": "array",
-          "items": {
-            "type": "string"
           }
         },
-        "over": {
-          "type": "string"
-        },
-        "to": {
-          "type": "string"
-        },
-        "third": {
-          "enum": [
-            "left",
-            "right"
-          ]
-        },
-        "scenery": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Row": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "row",
-        "at"
-      ],
-      "properties": {
-        "row": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "at": {
-          "type": "string"
-        },
-        "nudge": {
-          "$ref": "#/$defs/Vec3"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "curve": {
-          "type": "number"
-        },
-        "facing": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            }
-          ]
-        },
-        "front": {
-          "type": "number"
-        },
-        "pose": {
-          "type": "string"
-        },
-        "expr": {
-          "type": "string"
-        },
-        "mirror": {
-          "type": "boolean"
-        },
-        "seated": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Actor": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "cast": {
-          "type": "string"
-        },
-        "spec": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object"
-            }
-          ]
-        },
-        "id": {
-          "type": "string"
-        },
-        "special": {
-          "type": "string"
-        },
-        "params": {
-          "type": "object"
-        },
-        "variant": {
-          "type": "string"
-        },
-        "seed": {
-          "type": "number"
-        },
-        "at": {
-          "$ref": "#/$defs/Point"
-        },
-        "nudge": {
-          "$ref": "#/$defs/Vec3"
-        },
-        "pos": {
-          "$ref": "#/$defs/Point"
-        },
-        "motion": {
+        {
           "type": "object",
-          "additionalProperties": true
-        },
-        "animate": {
-          "type": "object",
-          "additionalProperties": true
-        },
-        "scale": {
-          "type": "number"
-        },
-        "mirror": {
-          "type": "boolean"
-        },
-        "noBlob": {
-          "type": "boolean"
-        },
-        "blobScale": {
-          "type": "number"
-        },
-        "yaw": {
-          "oneOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
+          "additionalProperties": false,
+          "required": [
+            "raw"
+          ],
+          "properties": {
+            "raw": {
+              "$ref": "#/$defs/Raw"
             }
-          ]
-        },
-        "pose": {
-          "type": "string"
-        },
-        "expr": {
-          "type": "string"
-        },
-        "prop": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "facing": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            }
-          ]
-        },
-        "look": {
-          "type": "number"
-        },
-        "seated": {
-          "type": "boolean"
-        },
-        "headTilt": {
-          "type": "number"
-        },
-        "tilt": {
-          "type": "number"
-        },
-        "talk": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "appear": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "at"
-              ],
-              "properties": {
-                "at": {
-                  "$ref": "#/$defs/Anchor"
-                },
-                "stagger": {
-                  "type": "number"
-                },
-                "pop": {
-                  "type": "number"
-                }
-              }
-            }
-          ]
-        },
-        "enter": {
-          "$ref": "#/$defs/Anchor"
-        },
-        "exit": {
-          "$ref": "#/$defs/Anchor"
-        },
-        "says": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": {
-            "$ref": "#/$defs/Anchor"
           }
-        },
-        "do": {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "minItems": 2,
-            "maxItems": 2,
-            "prefixItems": [
-              {
-                "$ref": "#/$defs/Anchor"
-              },
-              {
-                "type": "object",
-                "additionalProperties": true
-              }
-            ],
-            "items": false
-          }
-        },
-        "row": {
-          "$ref": "#/$defs/Row"
-        },
-        "raw": {
-          "type": "object",
-          "additionalProperties": true
         }
-      }
+      ]
     }
   }
 }

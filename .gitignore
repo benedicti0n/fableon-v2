@@ -12,3 +12,4 @@ fixtures/*/render/
 fixtures/*/audio/
 fixtures/*/qa/
 schema/catalog.runtime.json
+fixtures/*/schema.json
