@@ -13,6 +13,16 @@ Workspace, GPU rendering (ANGLE Metal on macOS), `fableon` CLI (doctor, init, vo
 ## Phase 3 — Pipeline core (CLI first)
 Project folder format + stage dependency graph with input hashing and invalidation; job runner; model router (OpenAI-compatible providers, per-stage settings, fallbacks); prompts + JSON schemas for research, script, fact-check and storyboard with validator-feedback retries; `fableon run --to <stage>`; cost/time estimates.
 
+### Phase 3B carry-over (from 2F)
+1. A subject's body leaving the side of the frame, and the `over` actor's size band, are unchecked (S14 opening: small Pandu under a big deer cut at the left edge).
+2. The edge-intruder warning missed Satyavati's sliver at the right edge in L5.
+3. Tangents: a pole/pillar/trunk landing on a head (S27 opening, middle priest).
+4. Expression/talk beats need a readable face (S38 Agni at ~22 % body: pained → relief and burp unreadable).
+5. Kunti's entrance in S14 happens off-screen unflagged; the L16 pop-in was removed instead of using the 0.5 s rule.
+6. The director guide must describe each size by what it shows in this house style (close ≈ head to knees, medium ≈ whole figure), not by film-school names.
+
+Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later phase, so new topics must be stageable in those sets for now. Phase 3A's script catalog card enforces that.
+
 ## Phase 4 — Backend API
 Node server: projects, artifacts, stages, jobs (REST + WebSocket progress), file serving for audio/video/stills.
 
