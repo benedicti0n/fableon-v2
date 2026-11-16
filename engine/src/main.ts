@@ -29,7 +29,7 @@ const PROJECT = await loadProject();
 // from storyboard + words (legacy:true shots still come from story.ts).
 let RT: Runtime = {
   SHOTS: STORY_SHOTS, TOTAL: STORY_TOTAL, FLASH_AT: STORY_FLASH, XFADE: STORY_XFADE,
-  layersAt: storyLayersAt, dofAt: storyDofAt, kickCam: storyKickCam, KICKS: STORY_KICKS,
+  layersAt: storyLayersAt, dofAt: storyDofAt, kickCam: storyKickCam, KICKS: STORY_KICKS, JUMP_EVENTS: [],
 };
 try {
   if (PROJECT.storyboard) {
@@ -142,7 +142,7 @@ const drawShot = (id: number, f: number) => {
   xfade: RT.SHOTS.filter((s) => RT.XFADE[s.id]).map((s) => [s.a - RT.XFADE[s.id] / 2, s.a + RT.XFADE[s.id] / 2]),
   planned: RT.KICKS.map(([f]) => [f, f + 8]),
 };
-(window as unknown as Record<string, unknown>).camJumps = () => {
+const camJumps = () => {
   const out: number[] = [];
   for (const s of RT.SHOTS) for (let f = s.a + 1; f < s.b; f++) {
     const c0 = s.cam(f - 1), c1 = s.cam(f);
@@ -151,6 +151,8 @@ const drawShot = (id: number, f: number) => {
   }
   return out;
 };
+(window as unknown as Record<string, unknown>).camJumps = camJumps;
+(window as unknown as Record<string, unknown>).EVENTS = [...new Set([...camJumps(), ...RT.JUMP_EVENTS])].sort((a, b) => a - b);
 // Structural snapshot for `fableon diff`; never called during normal renders. It walks the same layers and
 // world.update path as renderFrame but captures stage/pose state instead of drawing pixels.
 (window as unknown as Record<string, unknown>).DEBUG_STATE = (f: number) => {

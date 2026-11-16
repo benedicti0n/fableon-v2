@@ -516,6 +516,7 @@
       "required": ["at"],
       "properties": {
         "at": { "$ref": "#/$defs/Anchor" },
+        "jump": { "type": "boolean" },
         "params": { "type": "object", "additionalProperties": true },
         "scale": { "type": "number" },
         "mirror": { "type": "boolean" },

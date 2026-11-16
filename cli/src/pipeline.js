@@ -37,6 +37,7 @@ async function writeMeta(dir) {
   await run(process.execPath, renderArgs(dir, 'list', '--out', join(dir, 'shots.json')), { cwd: ROOT });
   await run(process.execPath, renderArgs(dir, 'qa', '--out', join(dir, 'qa_meta.json')), { cwd: ROOT });
   await run(process.execPath, renderArgs(dir, 'cuts', '--out', join(dir, 'cuts.json')), { cwd: ROOT });
+  await run(process.execPath, renderArgs(dir, 'events', '--out', join(dir, 'events.json')), { cwd: ROOT });
 }
 
 export async function shotsCommand(dirArg) {
@@ -155,9 +156,7 @@ const listOf = (text) => {
   try { return JSON.parse(text.slice(i)); } catch { return []; }
 };
 
-// Phase 1 fixture only: these three frame-diff spikes are intended impact pops from the prototype, not defects
-// (named as acceptable in the phase prompt). Anything else is unexplained and fails the QA gate.
-const KNOWN_POPS = new Set([1249, 2152, 2715]);
+
 
 export async function qaCommand(dirArg) {
   const dir = projectDir(dirArg);
@@ -171,11 +170,10 @@ export async function qaCommand(dirArg) {
   const report = readFileSync(join(out, 'report.md'), 'utf8').split('\n');
   const line = (p) => report.find((l) => l.startsWith(p)) || '';
   const specs = line('SPECS '), loudness = line('LOUDNESS '), framesLine = line('FRAMES '), popsLine = line('POPS ');
-  const cutsPath = join(dir, 'cuts.json');
-  const cuts = existsSync(cutsPath) ? JSON.parse(readFileSync(cutsPath, 'utf8')) : [];
+  const eventsPath = existsSync(join(dir, 'events.json')) ? join(dir, 'events.json') : join(dir, 'cuts.json');
+  const events = existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : [];
   const pops = listOf(popsLine);
-  const known = pops.filter((p) => KNOWN_POPS.has(p));
-  const unexplained = pops.filter((p) => !cuts.some((c) => Math.abs(c - p) <= 1) && !KNOWN_POPS.has(p));
+  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 1));
   const black = listOf((/black (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const white = listOf((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const frozen = listOf((/frozen spans >=12f (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
@@ -186,9 +184,8 @@ export async function qaCommand(dirArg) {
     `- ${specs}`,
     `- ${loudness}`,
     `- ${framesLine}`,
-    `- planned camera cuts ignored (±1 frame): ${cuts.length} frames from cuts.json`,
+    `- planned events ignored (±1 frame): ${events.length} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'}`,
     `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`,
-    `- known intended pops (fixture): ${known.length ? known.join(', ') : 'none'}`,
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
     '',
     `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length})`,

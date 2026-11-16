@@ -31,7 +31,7 @@ export type Talk = { base: Expr; rate?: number };
 export type Appear = { at: Anchor; pop?: number; stagger?: number };
 export type Visible = { from: Anchor; to: Anchor };
 export type Beat = {
-  at: Anchor; params?: Record<string, unknown>; scale?: number; mirror?: boolean; noBlob?: boolean; blobScale?: number;
+  at: Anchor; jump?: boolean; params?: Record<string, unknown>; scale?: number; mirror?: boolean; noBlob?: boolean; blobScale?: number;
   yaw?: number | null; pose?: Pose; expr?: Expr; prop?: PropK; facing?: -1 | 0 | 1; look?: number; seated?: boolean;
   headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null; visible?: Visible | null;
 };

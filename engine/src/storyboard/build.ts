@@ -26,7 +26,7 @@ export type Runtime = {
   SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
   layersAt: (f: number) => { id: number; alpha: number }[];
   dofAt: (f: number) => { cInf: number; focus?: (f: number) => V3 };
-  kickCam: (f: number, c: Cam) => Cam; KICKS: Kick[];
+  kickCam: (f: number, c: Cam) => Cam; KICKS: Kick[]; JUMP_EVENTS: number[];
 };
 
 type Targets = Map<string, (f: number) => V3>;
@@ -425,12 +425,21 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
   });
 
+  const jumps: number[] = [];
+  for (const { s, start } of shots) {
+    for (const a of s.actors ?? []) {
+      if (a.appear) jumps.push(anchor(a.appear.at, start));
+      if (a.visible) { jumps.push(anchor(a.visible.from, start)); jumps.push(anchor(a.visible.to, start)); }
+      for (const b of a.beats ?? []) if (b.jump !== false) jumps.push(anchor(b.at, start));
+    }
+    for (const x of s.set ?? []) if (x.piece === "bigBow") jumps.push(anchor(x.at, start) + (x.dur ?? 10));
+  }
   const SHOTS = assembleShots(defs, TOTAL, defaults.setPieces?.pages?.height ?? 0.3);
   const XFADE = crossfades(SHOTS, sb.crossfade ?? 10);
   const KICKS: Kick[] = (sb.kicks ?? []).map((k) => [anchor(k.at), k.amp] as Kick).sort((a, b) => a[0] - b[0]);
   const sortedDofs = dofs.sort((a, b) => a.f - b.f);
   return {
-    SHOTS, TOTAL, KICKS, XFADE,
+    SHOTS, TOTAL, KICKS, XFADE, JUMP_EVENTS: [...new Set(jumps)].filter((f) => f >= 0).sort((a, b) => a - b),
     FLASH_AT: sb.flash ? anchor(sb.flash) : -1000,
     layersAt: (f: number) => layersAtShots(SHOTS, XFADE, f),
     dofAt: (f: number) => dofAtList(sortedDofs, f),
