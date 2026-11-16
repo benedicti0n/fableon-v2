@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/review.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "lines"],
+  "properties": {
+    "version": { "const": 1 },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["n", "verdict", "facts", "note", "fix"],
+        "properties": {
+          "n": { "type": "integer", "minimum": 0 },
+          "verdict": { "enum": ["ok", "unsupported", "distorted", "opinion"] },
+          "facts": { "type": "array", "items": { "type": "string" } },
+          "note": { "type": "string" },
+          "fix": { "type": "string" }
+        }
+      }
+    }
+  }
+}
