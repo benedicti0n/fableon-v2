@@ -72,7 +72,7 @@ export async function runParity() {
       const max = Math.max(...p.frames.map((f) => mad.get(f) ?? Infinity));
       worst = Math.max(worst, max);
       console.log(`  ${p.id.padEnd(6)}  ${String(p.frames.length).padStart(6)}  ${max.toFixed(3)}`);
-      if (max > LIMIT) bad.push(`${p.id} (${max.toFixed(3)})`);
+      if (max > LIMIT) { bad.push(`${p.id} (${max.toFixed(3)})`); console.log(`    frames ${p.frames.map((f) => `${f}:${(mad.get(f) ?? 0).toFixed(2)}`).join(' ')}`); }
     }
     const ok = bad.length === 0;
     console.log(`${ok ? 'PASS' : 'FAIL'} storyboard parity: ${frames.length} frames, max MAD ${worst.toFixed(3)} (limit ${LIMIT})${bad.length ? `; over: ${bad.join(', ')}` : ''}`);

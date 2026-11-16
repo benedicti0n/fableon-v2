@@ -606,7 +606,7 @@
     },
     {
       "name": "heart",
-      "status": "planned",
+      "status": "implemented",
       "description": "Heart card for falling in love or affection."
     },
     {
@@ -646,7 +646,7 @@
     },
     {
       "name": "petals",
-      "status": "planned",
+      "status": "implemented",
       "description": "Falling flower petals around a box."
     },
     {
@@ -688,7 +688,7 @@
     },
     {
       "name": "boat",
-      "status": "planned",
+      "status": "implemented",
       "description": "Satyavati's boat on the river; motion and roll."
     },
     {

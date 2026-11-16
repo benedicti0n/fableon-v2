@@ -120,6 +120,32 @@
         0,
         0.6
       ]
+    },
+    "GHAT": [
+      0,
+      1.62,
+      24.6
+    ],
+    "BG": [
+      0,
+      1.62,
+      25.2
+    ],
+    "KHUT": {
+      "at": "VIL",
+      "d": [
+        1.0,
+        0,
+        -6.4
+      ]
+    },
+    "KS": {
+      "at": "VIL",
+      "d": [
+        1.3,
+        0,
+        -6.1
+      ]
     }
   },
   "cast": {
@@ -1070,7 +1096,921 @@
           "expr": "neutral",
           "params": {
             "writeSpeed": 2.0,
-            "ear": 0
+            "ear": {
+              "keys": [
+                [
+                  {
+                    "shot": true,
+                    "offset": 0
+                  },
+                  0.19769068066737105
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 1
+                  },
+                  0.06968062448462288
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 2
+                  },
+                  -0.06325520448405496
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 3
+                  },
+                  -0.19171947816572854
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 4
+                  },
+                  -0.3066309659034446
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 5
+                  },
+                  -0.3998664930948565
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 6
+                  },
+                  -0.46483517416857273
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 7
+                  },
+                  -0.4969443269616876
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 8
+                  },
+                  -0.49392413268056373
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 9
+                  },
+                  -0.45598809100187904
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 10
+                  },
+                  -0.3858179276289959
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 11
+                  },
+                  -0.2883740211992021
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 12
+                  },
+                  -0.170544750598259
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 13
+                  },
+                  -0.0406595505693951
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 14
+                  },
+                  0.09209990193875096
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 15
+                  },
+                  0.21834874703039261
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 16
+                  },
+                  0.32916236426752526
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 17
+                  },
+                  0.41670726042109396
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 18
+                  },
+                  0.4747948246654962
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 19
+                  },
+                  0.49931880586891036
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 20
+                  },
+                  0.48854558639934914
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 21
+                  },
+                  0.44323673278513376
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 22
+                  },
+                  0.3665951600366461
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 23
+                  },
+                  0.2640387153116517
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 24
+                  },
+                  0.14281718645554445
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 25
+                  },
+                  0.011499809354549483
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 26
+                  },
+                  -0.12063049742928035
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 27
+                  },
+                  -0.24423334875780733
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 28
+                  },
+                  -0.3505711713695902
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 29
+                  },
+                  -0.4321268691333834
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 30
+                  },
+                  -0.4831352119073284
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 31
+                  },
+                  -0.49999038374832766
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 32
+                  },
+                  -0.48150088059954493
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 33
+                  },
+                  -0.42897373855758886
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 34
+                  },
+                  -0.3461221385634544
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 35
+                  },
+                  -0.23880291900715772
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 36
+                  },
+                  -0.11460255166629137
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 37
+                  },
+                  0.01769915136683034
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 38
+                  },
+                  0.14874968883159492
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 39
+                  },
+                  0.26928500524916765
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 40
+                  },
+                  0.370784373577498
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 41
+                  },
+                  0.44607273145170895
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 42
+                  },
+                  0.489827891433656
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 43
+                  },
+                  0.49895677021822854
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 44
+                  },
+                  0.4728140408868508
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 45
+                  },
+                  0.41324775152523646
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 46
+                  },
+                  0.3244686853929622
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 47
+                  },
+                  0.21275269766711447
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 48
+                  },
+                  0.08599707078686938
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 49
+                  },
+                  -0.046837750045564064
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 50
+                  },
+                  -0.17636157709407227
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 51
+                  },
+                  -0.2934182791224061
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 52
+                  },
+                  -0.38973303480790233
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 53
+                  },
+                  -0.4584972857320902
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 54
+                  },
+                  -0.49485003820622986
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 55
+                  },
+                  -0.49622149036423335
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 56
+                  },
+                  -0.46251469327995287
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 57
+                  },
+                  -0.3961124043555589
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 58
+                  },
+                  -0.301708648510122
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 59
+                  },
+                  -0.18597689422749064
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 60
+                  },
+                  -0.057098301334075174
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 61
+                  },
+                  0.07581661099410378
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 62
+                  },
+                  0.2033719932962769
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 63
+                  },
+                  0.3165508650920016
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 64
+                  },
+                  0.407352531629229
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 65
+                  },
+                  0.46935815867313063
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 66
+                  },
+                  0.4981845244525703
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 67
+                  },
+                  0.49179387271717245
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 68
+                  },
+                  0.45063796317252813
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 69
+                  },
+                  0.3776261362660659
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 70
+                  },
+                  0.27791964984653283
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 71
+                  },
+                  0.1585668261845536
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 72
+                  },
+                  0.028004801070261345
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 73
+                  },
+                  -0.10453690330218264
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 74
+                  },
+                  -0.2296888198071989
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 75
+                  },
+                  -0.3386038706669035
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 76
+                  },
+                  -0.42358277365655
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 77
+                  },
+                  -0.47861830982797177
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 78
+                  },
+                  -0.4998199780793587
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 79
+                  },
+                  -0.4856890174386124
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 80
+                  },
+                  -0.4372243555398933
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 81
+                  },
+                  -0.35785199372038323
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 82
+                  },
+                  -0.2531828205548794
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 83
+                  },
+                  -0.13061597416129833
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 84
+                  },
+                  0.0011842081228558207
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 85
+                  },
+                  0.1329006778945636
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 86
+                  },
+                  0.25522230444770766
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 87
+                  },
+                  0.35950208520929733
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 88
+                  },
+                  0.4383684084867379
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 89
+                  },
+                  0.48624615792882503
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 90
+                  },
+                  0.49975082145637306
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 91
+                  },
+                  0.4779277448225345
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 92
+                  },
+                  0.4223196167988781
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 93
+                  },
+                  0.3368574154115247
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 94
+                  },
+                  0.22758252431530016
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 95
+                  },
+                  0.10221966309657954
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 96
+                  },
+                  -0.030369178635262697
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 97
+                  },
+                  -0.16081120158126547
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 98
+                  },
+                  -0.2798853665856901
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 99
+                  },
+                  -0.379174236436625
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 100
+                  },
+                  -0.4516590104749951
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 101
+                  },
+                  -0.4922156885932631
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 102
+                  },
+                  -0.49797729043870903
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 103
+                  },
+                  -0.4685365242887979
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 104
+                  },
+                  -0.40597457879203486
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 105
+                  },
+                  -0.3147140022657128
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 106
+                  },
+                  -0.20120606961741355
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 107
+                  },
+                  -0.07347473714433175
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 108
+                  },
+                  0.05945057663066493
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 109
+                  },
+                  0.18817328696114485
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 110
+                  },
+                  0.30359389412007975
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 111
+                  },
+                  0.3975532334919971
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 112
+                  },
+                  0.4634092527088925
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 113
+                  },
+                  0.49650654304491804
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 114
+                  },
+                  0.49450543356240595
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 115
+                  },
+                  0.45754738411054
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 116
+                  },
+                  0.3882449854282454
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 117
+                  },
+                  0.29149727325111924
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 118
+                  },
+                  0.17414341199922512
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 119
+                  },
+                  0.04447922939158569
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 120
+                  },
+                  -0.08832922150149415
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 121
+                  },
+                  -0.21489361705361013
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 122
+                  },
+                  -0.3262670303408319
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 123
+                  },
+                  -0.4145763957541196
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 124
+                  },
+                  -0.47357906159348057
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 125
+                  },
+                  -0.4991040875460454
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 126
+                  },
+                  -0.4893470914162292
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 127
+                  },
+                  -0.44499780218341667
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 128
+                  },
+                  -0.3691913025710199
+                ],
+                [
+                  {
+                    "shot": true,
+                    "offset": 129
+                  },
+                  -0.2672864078242976
+                ]
+              ],
+              "ease": "linear"
+            }
           },
           "beats": [
             {
@@ -1142,11 +2082,200 @@
         "word": "Our",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "palace",
         "village"
+      ],
+      "camera": [
+        {
+          "at": {
+            "line": 4,
+            "word": "Our",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": [
+            3.4,
+            1.35,
+            2.2
+          ],
+          "look": [
+            -1.0,
+            2.6,
+            24
+          ],
+          "fov": 44,
+          "push": {
+            "from": {
+              "line": 4,
+              "word": "Our",
+              "offset": -2
+            },
+            "rate": 0.0018
+          }
+        },
+        {
+          "at": {
+            "line": 4,
+            "word": "fisherman's",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "boat",
+            "d": [
+              0.8,
+              1.5,
+              -4.2
+            ]
+          },
+          "look": {
+            "at": "boat",
+            "d": [
+              0,
+              1.15,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 4,
+              "word": "fisherman's",
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "cut": true
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 4,
+            "word": "Our",
+            "offset": -2
+          },
+          "cInf": 0
+        },
+        {
+          "at": {
+            "line": 4,
+            "word": "fisherman's",
+            "offset": -2
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "shantanu",
+          "pos": {
+            "at": "GHAT",
+            "d": [
+              -1.6,
+              0,
+              -0.2
+            ]
+          },
+          "pose": "stand",
+          "expr": "neutral",
+          "facing": 1,
+          "beats": [
+            {
+              "at": {
+                "line": 4,
+                "word": "falling"
+              },
+              "pose": "pray",
+              "expr": "smile_closed"
+            }
+          ]
+        },
+        {
+          "who": "satyavati",
+          "pos": {
+            "at": "boat",
+            "d": [
+              0,
+              0.12,
+              0
+            ]
+          },
+          "pose": "carry",
+          "prop": "oar",
+          "expr": "smile",
+          "facing": -1,
+          "noBlob": true
+        }
+      ],
+      "fx": [
+        {
+          "kind": "heart",
+          "at": {
+            "line": 4,
+            "word": "falling"
+          },
+          "pos": {
+            "at": "GHAT",
+            "d": [
+              -1.6,
+              2.7,
+              -0.5
+            ]
+          },
+          "size": 0.8,
+          "pop": 0.18,
+          "bob": {
+            "amp": 0.1,
+            "freq": 0.954929658
+          }
+        }
+      ],
+      "set": [
+        {
+          "piece": "boat",
+          "id": "boat",
+          "motion": {
+            "type": "path",
+            "ease": "linear",
+            "keys": [
+              [
+                {
+                  "shot": true,
+                  "offset": 0
+                },
+                [
+                  3.2,
+                  0.25,
+                  9.5
+                ]
+              ],
+              [
+                {
+                  "shot": true,
+                  "offset": 86
+                },
+                [
+                  2.196667,
+                  0.25,
+                  9.5
+                ]
+              ]
+            ],
+            "bob": {
+              "amp": 0.05,
+              "freq": 0.318309886
+            }
+          },
+          "yaw": 0.15,
+          "rollBob": {
+            "amp": 0.02,
+            "freq": 0.318309886
+          }
+        }
       ]
     },
     {
@@ -1682,10 +2811,162 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "village"
+      ],
+      "camera": [
+        {
+          "at": {
+            "line": 9,
+            "word": "The",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "VFRONT",
+            "d": [
+              -0.3,
+              0.7,
+              6.4
+            ]
+          },
+          "look": {
+            "at": "VFRONT",
+            "d": [
+              0,
+              2.6,
+              0
+            ]
+          },
+          "fov": 44,
+          "push": {
+            "from": {
+              "line": 9,
+              "word": "The",
+              "offset": -2
+            },
+            "rate": 0.002
+          }
+        },
+        {
+          "at": {
+            "line": 9,
+            "word": "Bhishma",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "DV",
+            "d": [
+              0.15,
+              1.35,
+              2.3
+            ]
+          },
+          "look": {
+            "at": "DV",
+            "d": [
+              0,
+              1.85,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 9,
+              "word": "Bhishma",
+              "offset": -2
+            },
+            "rate": 0.003
+          },
+          "cut": true,
+          "roll": 0.04
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 9,
+            "word": "The",
+            "offset": -2
+          },
+          "cInf": 0
+        },
+        {
+          "at": {
+            "line": 9,
+            "word": "Bhishma",
+            "offset": -2
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "devavrata",
+          "pos": {
+            "at": "DV",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "stand",
+          "expr": "neutral",
+          "headTilt": 3
+        },
+        {
+          "who": "fisher",
+          "pos": {
+            "at": "FA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "armsUp",
+          "expr": "shock",
+          "facing": -1
+        },
+        {
+          "who": "satyavati",
+          "pos": {
+            "at": "SA",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "pray",
+          "expr": "shock",
+          "facing": -1
+        }
+      ],
+      "fx": [
+        {
+          "kind": "petals",
+          "at": {
+            "line": 9,
+            "word": "rain",
+            "offset": -15
+          },
+          "pos": {
+            "at": "VFRONT",
+            "d": [
+              0,
+              7,
+              0
+            ]
+          },
+          "count": 70,
+          "spread": 7
+        }
       ]
     },
     {
@@ -1825,7 +3106,7 @@
         "word": "Unluckily",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "palace"
@@ -1833,7 +3114,102 @@
       "sun": {
         "az": 160,
         "el": 8
-      }
+      },
+      "camera": [
+        {
+          "at": {
+            "line": 11,
+            "word": "Unluckily",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "BG",
+            "d": [
+              0.25,
+              1.6,
+              -2.3
+            ]
+          },
+          "look": {
+            "at": "BG",
+            "d": [
+              0,
+              1.3,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 11,
+              "word": "Unluckily",
+              "offset": -2
+            },
+            "rate": 0.003
+          }
+        },
+        {
+          "at": {
+            "line": 11,
+            "word": "see",
+            "offset": -2
+          },
+          "type": "fixed",
+          "dur": 40,
+          "pos": {
+            "at": "BG",
+            "d": [
+              1.5,
+              4.8,
+              -13
+            ]
+          },
+          "look": {
+            "at": "BG",
+            "d": [
+              0,
+              1,
+              3
+            ]
+          },
+          "fov": 44
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 11,
+            "word": "Unluckily",
+            "offset": -2
+          },
+          "cInf": 16
+        },
+        {
+          "at": {
+            "line": 11,
+            "word": "see",
+            "offset": -2
+          },
+          "dur": 40,
+          "cInf": 0
+        }
+      ],
+      "actors": [
+        {
+          "who": "bhishmaOld",
+          "pos": {
+            "at": "BG",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "fold",
+          "expr": "neutral"
+        }
+      ]
     },
     {
       "id": "L12",
@@ -2559,7 +3935,7 @@
         "word": "Bhishma's",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "palace"
@@ -2567,7 +3943,68 @@
       "sun": {
         "az": 160,
         "el": 8
-      }
+      },
+      "camera": [
+        {
+          "at": {
+            "line": 33,
+            "word": "Bhishma's",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "BG",
+            "d": [
+              0.2,
+              1.6,
+              -2.2
+            ]
+          },
+          "look": {
+            "at": "BG",
+            "d": [
+              0,
+              1.3,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 33,
+              "word": "Bhishma's",
+              "offset": -2
+            },
+            "rate": 0.004
+          },
+          "roll": 0.03
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 33,
+            "word": "Bhishma's",
+            "offset": -2
+          },
+          "cInf": 16
+        }
+      ],
+      "actors": [
+        {
+          "who": "bhishmaOld",
+          "pos": {
+            "at": "BG",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "vow",
+          "expr": "stern"
+        }
+      ]
     },
     {
       "id": "S35",
@@ -2576,7 +4013,7 @@
         "word": "Kunti's",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -2584,7 +4021,68 @@
       "sun": {
         "az": 115,
         "el": 10
-      }
+      },
+      "camera": [
+        {
+          "at": {
+            "line": 33,
+            "word": "Kunti's",
+            "offset": -2
+          },
+          "type": "dolly",
+          "pos": {
+            "at": "KS",
+            "d": [
+              -0.2,
+              1.2,
+              2.1
+            ]
+          },
+          "look": {
+            "at": "KS",
+            "d": [
+              0,
+              1.1,
+              0
+            ]
+          },
+          "fov": 38,
+          "push": {
+            "from": {
+              "line": 33,
+              "word": "Kunti's",
+              "offset": -2
+            },
+            "rate": 0.004
+          },
+          "roll": -0.03
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 33,
+            "word": "Kunti's",
+            "offset": -2
+          },
+          "cInf": 12
+        }
+      ],
+      "actors": [
+        {
+          "who": "kunti",
+          "pos": {
+            "at": "KS",
+            "d": [
+              0,
+              0,
+              0
+            ]
+          },
+          "pose": "shrug",
+          "expr": "nervous"
+        }
+      ]
     },
     {
       "id": "S36",

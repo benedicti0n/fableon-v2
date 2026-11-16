@@ -110,19 +110,24 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 }
 ```
 
-## Effect (unlit cards; implemented kinds are sparkle, halo, knot and sweat)
+## Effect (unlit cards; implemented kinds are sparkle, halo, knot, sweat, heart and petals)
 ```jsonc
 { "kind": "sparkle", "id": null, "motion": null, "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
 { "kind": "halo", "at": Anchor, "pos": Point, "size": 2.8, "pop": 0.4, "color": "#fff0a0", "card": "soft" }
 { "kind": "knot", "at": Anchor, "pos": Point, "size": 0.55, "pop": 0.18, "bob": 0.05 }
 { "kind": "sweat", "at": Anchor, "pos": Point, "count": 3, "rate": 0.8, "spread": 0.1, "drop": 0.5, "size": 0.12 }
-// 2B adds: heart, emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, petals, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
+{ "kind": "heart", "at": Anchor, "pos": Point, "size": 0.8, "pop": 0.18, "bob": { "amp": 0.1, "freq": 0.95 } }
+{ "kind": "petals", "at": Anchor, "pos": Point, "count": 70, "spread": 7 }
+// 2B adds: emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
 ```
 
 ## SetAction (dynamic set pieces)
 ```jsonc
-{ "piece": "pages", "height": 0.3 }   // Animated number; the default for every shot is 0.3 (current SHOTS wrapper)
-// 2B adds: boat(path), jars(appear window, lid pops), wheel(spin, stopAt), city(rise), ladduPlate, nectar(drink window), boat, bigBow(wobble)
+{ "piece": "pages", "height": 0.3 }   // Animated number; default 0.3 from schema/catalog.json defaults
+{ "piece": "boat", "id": "boat",      // moving-target id; Points/cameras can follow it
+  "motion": { "type": "path", … },    // path/ballistic (see Motion)
+  "yaw": 0.15, "roll": 0, "rollBob": { "amp": 0.02, "freq": 0.318 } }
+// 2B adds: jars(appear window, lid pops), wheel(spin, stopAt), city(rise), ladduPlate, nectar(drink window), bigBow(wobble)
 ```
 
 ## Rules the validator enforces (CLI `fableon validate`)

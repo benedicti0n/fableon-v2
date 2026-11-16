@@ -73,7 +73,13 @@ export function validateStoryboard(dirArg) {
   // ---- shots, catalog names, anchors in time order ----
   const shots = Array.isArray(sb.shots) ? sb.shots : [];
   const cast = sb.cast && typeof sb.cast === 'object' ? sb.cast : {};
-  const points = new Set([...places, ...Object.keys(sb.points ?? {})]);
+  const moving = new Set();
+  for (const s of shots) {
+    for (const a of s.actors ?? []) if (a?.id) moving.add(a.id);
+    for (const e of s.fx ?? []) if (e?.id) moving.add(e.id);
+    for (const x of s.set ?? []) if (x?.id) moving.add(x.id);
+  }
+  const points = new Set([...places, ...Object.keys(sb.points ?? {}), ...moving]);
   let prevStart = -Infinity;
   shots.forEach((s, i) => {
     const sp = `/shots/${i}`;

@@ -49,8 +49,12 @@ export type Sparkle = {
 export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire" };
 export type Knot = { kind: "knot"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
 export type Sweat = { kind: "sweat"; id?: string; motion?: Motion; at: Anchor; pos: Point; count?: number; rate?: number; spread?: number; drop?: number; size?: number };
-export type Effect = Sparkle | Halo | Knot | Sweat;
-export type SetAction = { piece: "pages"; height?: Animated };
+export type Heart = { kind: "heart"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: { amp: number; freq: number } };
+export type Petals = { kind: "petals"; id?: string; motion?: Motion; at: Anchor; pos: Point; count?: number; spread?: number };
+export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals;
+export type PagesAction = { piece: "pages"; height?: Animated };
+export type BoatAction = { piece: "boat"; id?: string; motion: Motion; yaw?: number; roll?: number; rollBob?: { amp: number; freq: number } };
+export type SetAction = PagesAction | BoatAction;
 export type Shot = {
   id: string; start: Anchor; legacy?: boolean; light: "day" | "golden" | "night" | "deep"; sets: string[];
   sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; fx?: Effect[]; set?: SetAction[];

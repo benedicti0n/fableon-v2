@@ -69,7 +69,7 @@
         "down": { "type": "number" },
         "look": { "type": "number" },
         "pen": { "type": "boolean" },
-        "ear": { "type": "number" },
+        "ear": { "oneOf": [{ "type": "number" }, { "$ref": "#/$defs/Animated" }] },
         "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] }
       }
     },
@@ -495,6 +495,26 @@
           "additionalProperties": false,
           "required": ["kind", "at", "pos"],
           "properties": {
+            "kind": { "const": "heart" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "pop": { "type": "number", "exclusiveMinimum": 0 },
+            "bob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["amp", "freq"],
+              "properties": { "amp": { "type": "number" }, "freq": { "type": "number" } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
             "kind": { "const": "sweat" },
             "id": { "type": "string", "minLength": 1 },
             "motion": { "$ref": "#/$defs/Motion" },
@@ -506,17 +526,52 @@
             "drop": { "type": "number" },
             "size": { "type": "number", "exclusiveMinimum": 0 }
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
+            "kind": { "const": "petals" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "count": { "type": "integer", "minimum": 1 },
+            "spread": { "type": "number", "exclusiveMinimum": 0 }
+          }
         }
       ]
     },
     "SetAction": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["piece"],
-      "properties": {
-        "piece": { "const": "pages" },
-        "height": { "$ref": "#/$defs/Animated" }
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece"],
+          "properties": {
+            "piece": { "const": "pages" },
+            "height": { "$ref": "#/$defs/Animated" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece", "motion"],
+          "properties": {
+            "piece": { "const": "boat" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "yaw": { "type": "number" },
+            "roll": { "type": "number" },
+            "rollBob": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["amp", "freq"],
+              "properties": { "amp": { "type": "number" }, "freq": { "type": "number" } }
+            }
+          }
+        }
+      ]
     }
   }
 }

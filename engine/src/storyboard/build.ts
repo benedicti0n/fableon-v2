@@ -2,7 +2,7 @@
 // hybrid reuses the hand-written ShotDef and DOF entries for shots marked "legacy": true.
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
-import { who, fx } from "../cast";
+import { who, fx, petals } from "../cast";
 import type { Sets } from "../sets";
 import type { V3 } from "../places";
 import { PLACES, PlaceName } from "../places";
@@ -14,7 +14,7 @@ import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../cor
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
-import { fxSparkle, fxKnot, fxHalo } from "../people";
+import { fxSparkle, fxKnot, fxHalo, fxHeart } from "../people";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Motion, Point, Shot, Storyboard } from "./types";
@@ -141,9 +141,13 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const expr = talkSpec ? talk(T(f) * (talkSpec.rate ?? 1), talkSpec.base) : (st.expr ?? "neutral");
     const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined };
     if (a.special === "ganesha") {
+      const pv = (key: string, d = 0) => {
+        const v = params[key];
+        return v && typeof v === "object" && "keys" in v ? animated(v as Animated, f, shotStart) : num(v, d);
+      };
       const o = {
-        write: typeof params.write === "number" ? params.write : writeT(T(f), num(params.writeSpeed, 1.6)),
-        expr, puzzled: num(params.puzzled), down: num(params.down), look: num(params.look), ear: num(params.ear),
+        write: typeof params.write === "number" ? params.write : writeT(T(f), pv("writeSpeed", 1.6)),
+        expr, puzzled: pv("puzzled"), down: pv("down"), look: pv("look"), ear: pv("ear"),
         pen: params.pen !== false,
       };
       gnCard(out, cam, o, T(f), pos, scale);
@@ -174,6 +178,12 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         const d = offs[i] ?? [0, 0, 0];
         fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k);
       }
+    } else if (e.kind === "heart") {
+      const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.8) * k;
+      const bob = e.bob ? e.bob.amp * Math.sin(2 * Math.PI * e.bob.freq * T(f)) : 0;
+      fx(out, "heart", 256, 256, (p) => fxHeart(p), pos[0], pos[1] + bob, pos[2], size, size);
+    } else if (e.kind === "petals") {
+      petals(out, T(f), pos[0], pos[2], pos[1], e.count ?? 1, e.spread ?? 1, T(a));
     } else if (e.kind === "sweat") {
       if (f >= a) for (let i = 0, n = e.count ?? 1; i < n; i++) {
         const ph = (((T(f) * (e.rate ?? 1) + i / n) % 1) + 1) % 1, size = e.size ?? 0.12;
@@ -195,6 +205,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   for (const { s, start } of shots) {
     for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
     for (const e of s.fx ?? []) if (e.id) motionTargets.set(e.id, e.motion ? (() => { const m = motionFn(e.motion!, e.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(e.pos, f));
+    for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());
   }
   shots.forEach(({ s, start }, i) => {
     const b = i + 1 < shots.length ? shots[i + 1].start : TOTAL;
@@ -212,7 +223,14 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         for (const e of s.fx ?? []) effect(out, e, f, start, cam);
       },
       pose: (t, f, sets: Sets) => {
-        for (const x of s.set ?? []) if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? (defaults.setPieces?.pages?.height ?? 0.3) : animated(x.height, f, start), 1);
+        for (const x of s.set ?? []) {
+          if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? (defaults.setPieces?.pages?.height ?? 0.3) : animated(x.height, f, start), 1);
+          else if (x.piece === "boat") {
+            const b = x.id && motionTargets.has(x.id) ? motionTargets.get(x.id)!(f) : motionFn(x.motion, undefined, start).at(f);
+            sets.dyn.boat.visible = true; sets.dyn.boat.position.set(b[0], b[1] - 0.05, b[2]);
+            sets.dyn.boat.rotation.set(0, x.yaw ?? 0, (x.roll ?? 0) + (x.rollBob ? x.rollBob.amp * Math.sin(2 * Math.PI * x.rollBob.freq * t) : 0));
+          }
+        }
       },
       ...(s.sun ? { sunAz: s.sun.az, sunEl: s.sun.el } : (() => { const d = defaults.sunBySet && s.sets.map((x) => defaults.sunBySet![x]).find(Boolean); return d ? { sunAz: d.az, sunEl: d.el } : {}; })()),
     };
