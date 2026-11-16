@@ -105,9 +105,10 @@ export class Fx {
 export type Place = {
   key: string; draw: (p: Pen) => void; x: number; y: number; z: number;
   scale?: number; mirror?: boolean; yaw?: number; geo?: string; roll?: number; size: [number, number, number]; shadow?: boolean;
+  id?: string; measure?: string; seated?: boolean; person?: boolean;
 };
 export type FxPlace = { key: string; cw: number; ch: number; draw: (p: Pen) => void; x: number; y: number; z: number; w: number; h: number;
-  flat?: boolean; rot?: number; kind?: "cut" | "soft" | "glow" | "fire"; up?: boolean };
+  flat?: boolean; rot?: number; kind?: "cut" | "soft" | "glow" | "fire"; up?: boolean; id?: string; measure?: string };
 export type Stage = { places: Place[]; fx: FxPlace[] };
 export type CamInfo = { pos: THREE.Vector3; right: THREE.Vector3; sun: THREE.Vector3; light: LightName; pxH: number };
 
@@ -159,7 +160,7 @@ export const blob = (out: Stage, cam: CamInfo, x: number, y: number, z: number, 
 
 /** a character card at (x, y, z), facing the camera (front / 3-4 view); i = identity (blink seed) */
 export const who = (out: Stage, cam: CamInfo, i: number, spec: Spec, o: Opts, x: number, y: number, z: number,
-  extra: { scale?: number; mirror?: boolean; noBlob?: boolean; t?: number; yaw?: number; roll?: number } = {}) => {
+  extra: { scale?: number; mirror?: boolean; noBlob?: boolean; t?: number; yaw?: number; roll?: number; id?: string; measure?: string; seated?: boolean } = {}) => {
   const sc = extra.scale ?? 1;
   const d = cam.pos.distanceTo(new THREE.Vector3(x, y + 1.2 * sc, z)) / sc;
   const [w, h, k] = tier(d);
@@ -167,18 +168,18 @@ export const who = (out: Stage, cam: CamInfo, i: number, spec: Spec, o: Opts, x:
   const blink = o.blink ?? (extra.t !== undefined ? lidAt(extra.t, i) : 0);
   const oo: Opts = { ...o, light, blink, seed: o.seed ?? ((i * 5 + 3) % 7) + 1 };
   const key = `P|${i}|${specKey(spec)}|${fkey(oo)}`;
-  out.places.push({ key, x, y, z, scale: sc, mirror, size: [w, h, k], draw: (p) => { person(p, spec, oo); }, yaw: extra.yaw, roll: extra.roll });
+  out.places.push({ key, x, y, z, scale: sc, mirror, size: [w, h, k], draw: (p) => { person(p, spec, oo); }, yaw: extra.yaw, roll: extra.roll, id: extra.id, measure: extra.measure ?? spec.build ?? 'adult', seated: extra.seated ?? oo.seated, person: true });
   if (!extra.noBlob) blob(out, cam, x, y, z, sc * (spec.build === "big" || spec.build === "stout" ? 1.15 : spec.build === "kid" ? 0.8 : 1));
 };
 /** any custom drawing on a body / wide / baby card */
 export const card = (out: Stage, cam: CamInfo, key: string, draw: (p: Pen, light: number) => void, x: number, y: number, z: number,
-  extra: { scale?: number; mirror?: boolean; geo?: "body" | "wide" | "baby"; noBlob?: boolean; yaw?: number; roll?: number; blobScale?: number } = {}) => {
+  extra: { scale?: number; mirror?: boolean; geo?: "body" | "wide" | "baby"; noBlob?: boolean; yaw?: number; roll?: number; blobScale?: number; id?: string; measure?: string; seated?: boolean; person?: boolean } = {}) => {
   const sc = extra.scale ?? 1, geo = extra.geo ?? "body";
   const d = cam.pos.distanceTo(new THREE.Vector3(x, y + 1.0 * sc, z)) / sc;
   const [w0, h0] = geo === "wide" ? [1000, 700] : geo === "baby" ? [600, 700] : [600, 1000];
   const [w, h, k] = tier(d, w0, h0);
   const light = light2D(cam, !!extra.mirror);
-  out.places.push({ key: `C|${key}|${q(light)}`, x, y, z, scale: sc, mirror: extra.mirror, geo, size: [w, h, k], draw: (p) => draw(p, light), yaw: extra.yaw, roll: extra.roll });
+  out.places.push({ key: `C|${key}|${q(light)}`, x, y, z, scale: sc, mirror: extra.mirror, geo, size: [w, h, k], draw: (p) => draw(p, light), yaw: extra.yaw, roll: extra.roll, id: extra.id, measure: extra.measure, seated: extra.seated, person: extra.person });
   if (!extra.noBlob) blob(out, cam, x, y, z, sc * (extra.blobScale ?? 1));
 };
 /** camera-facing effect card (w x h metres, centred) */

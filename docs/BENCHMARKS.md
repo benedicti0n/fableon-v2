@@ -98,3 +98,15 @@ Final-quality fixture run after the changes:
 | final 1440x2560, fresh `work/adi-final` | **619.4 s** | 0.170 | 3639 frames, 121.300 s, 1440x2560 | PASS — 0 unexplained pops |
 
 This is back to the Phase 2A final speed (626.8 s) and 27 % faster than the Phase 2B run (853.8 s).
+
+## Phase 2E — coverage pass
+
+`render.cjs coverage` renders object-ID silhouettes at 180x320 into a nearest-filter render target; solo passes use a
+72x128 target for visible-fraction. Same M1, Metal path, warm browser:
+
+| workload | per frame |
+|---|---:|
+| one frame, no solo subjects | 18-23 ms (first frame 84 ms incl. shader compile) |
+| one frame, 6 solo subjects | 62.4 ms |
+
+The 6-subject case is ~4 % over the 60 ms target; the cost is the six extra scene renders, not the ID readback.

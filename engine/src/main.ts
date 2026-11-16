@@ -14,6 +14,7 @@ import type { Wd } from "./core/anchors";
 import { SET_INFO } from "./marks";
 import { measureSubjects } from "./measure";
 import { KEEPOUT } from "./keepout";
+import type { Place } from "./cast";
 
 // Project data is fetched before anything is built. render.cjs serves the project under /project/; a project must
 // provide both storyboard.json and words.json — there is no compiled-in timeline any more.
@@ -54,6 +55,159 @@ const cam = new THREE.PerspectiveCamera(40, W / H, 0.15, 1500);
 const world = new World();
 scene.add(world.root);
 noInkFallback(world.root);
+
+const MEASURE = measureSubjects();
+
+// ---------- coverage pass: the same frame as flat object IDs ----------
+// Separate scene, separate unlit material, no post chain. This path is only used by `fableon frames` and
+// `render.cjs coverage`; it never runs during normal renders.
+const COV_W = 180, COV_H = 320;
+const covCanvas = document.createElement("canvas"); covCanvas.width = COV_W; covCanvas.height = COV_H;
+const covCtx = covCanvas.getContext("2d")!;
+const covRT = new THREE.WebGLRenderTarget(COV_W, COV_H, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType });
+const SOLO_W = 72, SOLO_H = 128, SOLO_K = (COV_W * COV_H) / (SOLO_W * SOLO_H);
+const covSoloRT = new THREE.WebGLRenderTarget(SOLO_W, SOLO_H, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType });
+const covScene = new THREE.Scene();
+const covStatic = new THREE.Group(); const covDyn = new THREE.Group(); covScene.add(covStatic, covDyn);
+const covIds = new Map<string, { i: number; c: [number, number, number] }>();
+const covPalette: string[] = [];
+const covFor = (id: string) => {
+  let v = covIds.get(id);
+  if (!v) {
+    const i = covIds.size + 1;
+    v = { i, c: [((i * 73) % 240) + 8, ((i * 151) % 240) + 8, ((i * 199) % 240) + 8] };
+    covIds.set(id, v); covPalette[i] = id;
+  }
+  return v;
+};
+const covColor = (id: string) => { const c = covFor(id).c; return new THREE.Color(c[0] / 255, c[1] / 255, c[2] / 255); };
+const covMat = (id: string, tex?: THREE.Texture) => new THREE.ShaderMaterial({
+  uniforms: { map: { value: tex ?? null }, color: { value: covColor(id) }, hasMap: { value: tex ? 1 : 0 } },
+  vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+  fragmentShader: "uniform sampler2D map; uniform vec3 color; uniform float hasMap; varying vec2 vUv; void main(){ if (hasMap > 0.5 && texture2D(map, vUv).a < 0.5) discard; gl_FragColor = vec4(color, 1.0); }",
+  depthTest: true, depthWrite: true, side: THREE.DoubleSide, toneMapped: false, fog: false,
+});
+const covMeshes: THREE.Mesh[] = [];
+const covAdd = (parent: THREE.Object3D, m: THREE.Mesh, id: string, set?: string, pos?: THREE.Vector3) => {
+  m.userData.id = id; m.userData.set = set; m.userData.pos = pos ?? m.position.clone();
+  parent.add(m); covMeshes.push(m); return m;
+};
+const covBox = (min: number[], max: number[], id: string, set?: string) => {
+  const g = new THREE.BoxGeometry(max[0] - min[0], max[1] - min[1], max[2] - min[2]);
+  const m = new THREE.Mesh(g, covMat(id)); m.position.set((min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2);
+  m.userData.baseVisible = true; covAdd(covStatic, m, id, set, m.position.clone());
+};
+const covCyl = (v: any, id: string, set?: string) => {
+  const g = new THREE.CylinderGeometry(v.r, v.r, v.y1 - v.y0, 12);
+  const m = new THREE.Mesh(g, covMat(id)); m.position.set(v.x, (v.y0 + v.y1) / 2, v.z);
+  covAdd(covStatic, m, id, set, m.position.clone());
+};
+// solid set volumes exported by F1; one ID per volume (the column case)
+for (const [set, vols] of Object.entries(KEEPOUT)) for (const v of vols) {
+  if (v.kind === "box") covBox(v.min, v.max, `world:${set}.${v.name}`, set); else covCyl(v, `world:${set}.${v.name}`, set);
+}
+for (const [set, info] of Object.entries(SET_INFO)) for (const m of info.marks) {
+  covBox([m.pos[0] - 0.18, m.pos[1], m.pos[2] - 0.18], [m.pos[0] + 0.18, m.pos[1] + 0.36, m.pos[2] + 0.18], `mark:${set}.${m.name}`, set);
+}
+// ground and water reserved IDs
+const covGround = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400).rotateX(-Math.PI / 2), covMat("ground"));
+covGround.position.y = 1.5; covAdd(covStatic, covGround, "ground");
+const covWater = new THREE.Mesh(new THREE.PlaneGeometry(1400, 40).rotateX(-Math.PI / 2), covMat("water"));
+covWater.position.y = 0.25; covAdd(covStatic, covWater, "water");
+const covSkyId = "sky";
+const covDistance = (p: THREE.Vector3) => cam.position.distanceTo(p);
+const covProject = (p: [number, number, number]) => {
+  const v = new THREE.Vector3(...p).project(cam);
+  return { x: (v.x + 1) / 2, y: (1 - v.y) / 2 };
+};
+const covHead = (p: Place) => {
+  const m = MEASURE[p.measure ?? "adult"] ?? MEASURE.adult;
+  const sc = p.scale ?? 1, top = p.y + (p.seated ? m.seated : m.standing) * sc, chin = top - m.head * sc, eye = p.y + (p.seated ? m.eyeSeated : m.eye) * sc;
+  const hw = m.head * 0.35 * sc;
+  return { headBox: { x0: covProject([p.x - hw, top, p.z]).x, y0: covProject([p.x, top, p.z]).y, x1: covProject([p.x + hw, top, p.z]).x, y1: covProject([p.x, chin, p.z]).y }, eye: covProject([p.x, eye, p.z]), chin: covProject([p.x, chin, p.z]) };
+};
+function covAddDynamicPiece(obj: THREE.Object3D, id: string) {
+  if (!obj.visible) return;
+  const clone = obj.clone(true);
+  clone.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.material = covMat(id); m.userData.id = id; } });
+  const pos = new THREE.Vector3(); obj.getWorldPosition(pos);
+  clone.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.userData.pos = pos.clone(); covMeshes.push(m); } });
+  covDyn.add(clone);
+}
+function coverageFrame(f: number, opts: any = {}) {
+  const t0 = performance.now();
+  const shot = RT.SHOTS.find((s) => f >= s.a && f < s.b);
+  if (!shot) return { frame: f, ms: 0, shot: null, ids: [], people: [], subjects: {} };
+  world.update(shot, f, cam, scene, H, RT.kickCam);
+  covDyn.clear(); covMeshes.length = 0;
+  for (const m of covStatic.children) { const mesh = m as THREE.Mesh; if (mesh.userData.set) mesh.visible = shot.sets.includes(mesh.userData.set); else mesh.visible = true; }
+  covGround.visible = !shot.sets.includes("naga"); covWater.visible = !shot.sets.includes("naga");
+  const items: any[] = [];
+  const addItem = (id: string, kind: string, pos: THREE.Vector3, p?: Place) => {
+    const col = covFor(id).c;
+    const item: any = { id, kind, color: col, pos: pos.toArray(), distance: covDistance(pos) };
+    if (p?.person) Object.assign(item, { measure: p.measure, seated: !!p.seated, person: true, ...covHead(p) });
+    items.push(item);
+    return item;
+  };
+  addItem("sky", "sky", new THREE.Vector3(cam.position.x, cam.position.y, cam.position.z));
+  for (const m of covStatic.children) { const mesh = m as THREE.Mesh; if (mesh.visible && mesh.userData.id && !["ground", "water", "sky"].includes(mesh.userData.id)) addItem(mesh.userData.id, "world", mesh.position.clone()); }
+  for (const id of ["ground", "water"]) { const mesh = covStatic.children.find((m) => (m as THREE.Mesh).userData.id === id) as THREE.Mesh; if (mesh?.visible) addItem(id, id, mesh.position.clone()); }
+  for (let i = 0; i < world.coverageCards.actors.length; i++) {
+    const a = world.coverageCards.actors[i], p = world.coverageCards.places[i]; const tex = a.r?.tex;
+    if (!tex) continue;
+    const mesh = new THREE.Mesh(a.mesh.geometry, covMat(p.id ?? `actor#${i}`, tex));
+    mesh.position.copy(a.mesh.position); mesh.quaternion.copy(a.mesh.quaternion); mesh.scale.copy(a.mesh.scale); mesh.visible = true;
+    covAdd(covDyn, mesh, p.id ?? `actor#${i}`, undefined, mesh.position.clone());
+    addItem(p.id ?? `actor#${i}`, p.person ? "person" : "actor", mesh.position, p);
+  }
+  for (let i = 0; i < world.coverageCards.fxs.length; i++) {
+    const x = world.coverageCards.fxs[i], p = x.p as any; const tex = (x.mesh.material as THREE.MeshBasicMaterial)?.map as THREE.Texture | undefined;
+    if (!tex || String(p.key ?? '').startsWith('blob|')) continue;
+    const mesh = new THREE.Mesh(x.mesh.geometry, covMat(p.id ?? `fx#${i}`, tex));
+    mesh.position.copy(x.mesh.position); mesh.quaternion.copy(x.mesh.quaternion); mesh.scale.copy(x.mesh.scale);
+    covAdd(covDyn, mesh, p.id ?? `fx#${i}`, undefined, mesh.position.clone());
+    addItem(p.id ?? `fx#${i}`, "effect", mesh.position);
+  }
+  const dyn = world.sets.dyn as any;
+  for (const [id, obj] of Object.entries(dyn)) covAddDynamicPiece(obj as THREE.Object3D, id);
+  // dynamic set pieces IDs are added as one item each
+  for (const id of Object.keys(dyn)) { const obj = dyn[id] as THREE.Object3D; if (obj.visible !== false) { const pos = new THREE.Vector3(); obj.getWorldPosition(pos); if (!items.some((x) => x.id === id)) addItem(id, "setPiece", pos); } }
+  const oldSpace = renderer.outputColorSpace; renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  const oldClear = new THREE.Color(); renderer.getClearColor(oldClear); const oldAlpha = renderer.getClearAlpha();
+  renderer.setClearColor(covColor(covSkyId), 1);
+  renderer.setRenderTarget(covRT); renderer.clear(); renderer.render(covScene, cam);
+  const raw = new Uint8Array(COV_W * COV_H * 4); renderer.readRenderTargetPixels(covRT, 0, 0, COV_W, COV_H, raw);
+  const colorKey = (r: number, g: number, b: number) => `${r},${g},${b}`;
+  const byColor = new Map<string, string>(); for (const [id, v] of covIds) byColor.set(colorKey(v.c[0], v.c[1], v.c[2]), id);
+  byColor.set(colorKey(covFor(covSkyId).c[0], covFor(covSkyId).c[1], covFor(covSkyId).c[2]), covSkyId);
+  const stats = new Map<string, any>();
+  const at = (id: string) => { let s = stats.get(id); if (!s) { s = { id, pixels: 0, x0: 1, y0: 1, x1: 0, y1: 0, distance: Infinity }; stats.set(id, s); } return s; };
+  for (let yy = 0; yy < COV_H; yy++) for (let xx = 0; xx < COV_W; xx++) {
+    const o = (yy * COV_W + xx) * 4, id = byColor.get(colorKey(raw[o], raw[o + 1], raw[o + 2]));
+    if (!id) continue;
+    const s = at(id), top = 1 - (yy + 1) / COV_H;
+    s.pixels++; s.x0 = Math.min(s.x0, xx / COV_W); s.x1 = Math.max(s.x1, (xx + 1) / COV_W); s.y0 = Math.min(s.y0, top); s.y1 = Math.max(s.y1, top + 1 / COV_H);
+  }
+  for (const item of items) { const s = stats.get(item.id); if (s) s.distance = Math.min(s.distance, item.distance); }
+  const ids = [...stats.values()].map((s) => ({ ...s, bbox: { x0: s.x0, y0: s.y0, x1: s.x1, y1: s.y1 } }));
+  const request = [...new Set([...(opts.subjects ?? []), ...(opts.over ? [opts.over] : []), ...(opts.with ?? [])])];
+  const visible: Record<string, number> = {};
+  for (const id of request) {
+    for (const m of covMeshes) m.visible = m.userData.id === id;
+    renderer.setRenderTarget(covSoloRT); renderer.clear(); renderer.render(covScene, cam);
+    const solo = new Uint8Array(SOLO_W * SOLO_H * 4); renderer.readRenderTargetPixels(covSoloRT, 0, 0, SOLO_W, SOLO_H, solo);
+    const c = covFor(id).c, r = c[0], g = c[1], b = c[2]; let n = 0;
+    for (let o = 0; o < solo.length; o += 4) if (Math.abs(solo[o] - r) <= 2 && Math.abs(solo[o + 1] - g) <= 2 && Math.abs(solo[o + 2] - b) <= 2) n++;
+    const hit = stats.get(id)?.pixels ?? 0; visible[id] = n ? Math.min(1, hit / (n * SOLO_K)) : 0;
+  }
+  for (const m of covMeshes) m.visible = true;
+  renderer.setRenderTarget(null); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace;
+  let png = "";
+  if (opts.png) { const img = covCtx.createImageData(COV_W, COV_H); for (let y = 0; y < COV_H; y++) for (let x = 0; x < COV_W; x++) { const o = ((COV_H - 1 - y) * COV_W + x) * 4, q = (y * COV_W + x) * 4; img.data[q] = raw[o]; img.data[q + 1] = raw[o + 1]; img.data[q + 2] = raw[o + 2]; img.data[q + 3] = 255; } covCtx.putImageData(img, 0, 0); png = covCanvas.toDataURL("image/png"); }
+  return { frame: f, shot: shot.id, ms: performance.now() - t0, ids, people: items.filter((i) => i.person), subjects: visible, items };
+}
+(window as unknown as Record<string, unknown>).coverageFrame = coverageFrame;
 
 const makeBloom = () => {
   const b = new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.5, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true, levels: 6, radius: 0.6 });

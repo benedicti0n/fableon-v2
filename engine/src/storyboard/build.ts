@@ -198,7 +198,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const state = actorState(a, f, shotStart);
     if (!state) return;
     const { st, params, pos, scale, expr, moving } = state;
-    const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined };
+    const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined, id: a.id ?? a.who, seated: st.seated };
     if (a.special === "ganesha") {
       const pv = (key: string, d = 0) => {
         const v = params[key];
@@ -209,31 +209,31 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         expr, puzzled: pv("puzzled"), down: pv("down"), look: pv("look"), ear: pv("ear"),
         pen: params.pen !== false,
       };
-      gnCard(out, cam, o, T(f), pos, scale);
+      gnCard(out, cam, o, T(f), pos, scale, { id: a.id ?? a.who, measure: 'ganesha', person: true });
       return;
     }
     if (a.special === "deer") {
       const graze = num(params.graze, 0), phase = num(params.phase, 0);
-      card(out, cam, `deer|${expr}|${graze}|${phase}`, (p, light) => deer(p, { phase, graze, expr: expr === "shock" ? "shock" : "neutral", light }), pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.6 });
+      card(out, cam, `deer|${expr}|${graze}|${phase}`, (p, light) => deer(p, { phase, graze, expr: expr === "shock" ? "shock" : "neutral", light }), pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.6, id: a.id ?? a.who, measure: 'deer', person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "baby") {
-      card(out, cam, `baby|${String(params.wrap ?? "")}|${String(params.skin ?? "")}`, (p, light) => baby(p, { light, wrap: typeof params.wrap === "string" ? params.wrap : undefined, skin: typeof params.skin === "string" ? params.skin : undefined }), pos[0], pos[1], pos[2], { geo: "baby", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 0.6 });
+      card(out, cam, `baby|${String(params.wrap ?? "")}|${String(params.skin ?? "")}`, (p, light) => baby(p, { light, wrap: typeof params.wrap === "string" ? params.wrap : undefined, skin: typeof params.skin === "string" ? params.skin : undefined }), pos[0], pos[1], pos[2], { geo: "baby", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 0.6, id: a.id ?? a.who, measure: 'baby', person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "naga") {
       const col = typeof params.col === "string" ? params.col : "#3f9a6a", king = params.king === true;
-      card(out, cam, `naga|${col}|${Math.floor(T(f) * 6) % 12}|${king}|${expr}`, (p, light) => naga(p, { col, king, t: T(f), light, expr: expr === "grin" ? "grin" : "smile" }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.4 });
+      card(out, cam, `naga|${col}|${Math.floor(T(f) * 6) % 12}|${king}|${expr}`, (p, light) => naga(p, { col, king, t: T(f), light, expr: expr === "grin" ? "grin" : "smile" }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.4, id: a.id ?? a.who, measure: 'naga', person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "agni") {
       const pv = (key: string, d = 0) => { const v = params[key]; return v && typeof v === "object" && "keys" in v ? animated(v as Animated, f, shotStart) : num(v, d); };
       const tq = Math.floor(T(f) * 8) / 8, burp = pv("burp");
-      card(out, cam, `agni|${Math.floor(T(f) * 8) % 6}|${expr}|${burp.toFixed(3)}|${lidAt(T(f), 90)}`, (p, light) => agni(p, { t: tq, light, expr: expr === "relief_open" ? "relief_open" : "pained", burp, blink: lidAt(T(f), 90) }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2 });
+      card(out, cam, `agni|${Math.floor(T(f) * 8) % 6}|${expr}|${burp.toFixed(3)}|${lidAt(T(f), 90)}`, (p, light) => agni(p, { t: tq, light, expr: expr === "relief_open" ? "relief_open" : "pained", burp, blink: lidAt(T(f), 90) }), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2, id: a.id ?? a.who, measure: a.special ?? 'adult', person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "pot") {
-      card(out, cam, "pot", (p) => jarShape(p, 300, 700, 140, 2.4, false), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2 });
+      card(out, cam, "pot", (p) => jarShape(p, 300, 700, 140, 2.4, false), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2, id: a.id ?? a.who, measure: a.special ?? 'adult', person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "flat") {
@@ -326,7 +326,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       const pick = <T,>(v: T | { salt: number; below: number; a: T; b: T }) => typeof v === "object" && v && "salt" in v ? (hh(i, v.salt) < v.below ? v.a : v.b) : v;
       const pose = c.pose ? pick(c.pose) : "stand", expr = c.expr ? pick(c.expr) : "neutral";
       const scale = c.scale && typeof c.scale === "object" ? c.scale.min + hh(i, c.scale.salt) * c.scale.span : (c.scale ?? 1);
-      who(out, cam, c.seedBase + i, sp, { pose, expr, facing: c.facing, seated: c.seated, t: T(f) }, pos[0], pos[1], pos[2], { t: T(f), scale, noBlob: c.noBlob });
+      who(out, cam, c.seedBase + i, sp, { pose, expr, facing: c.facing, seated: c.seated, t: T(f) }, pos[0], pos[1], pos[2], { t: T(f), scale, noBlob: c.noBlob, id: `crowd#${i}`, measure: sp.build ?? 'adult' });
     }
   };
 
@@ -374,7 +374,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       if (!specs) { specs = Array.from({ length: x.count }, (_, j) => { const ov = overrides.get(j); return ov?.who ? spec(ov.who) : KAURAVA(j); }); jarSpecMemo.set(x, specs); }
       const sp = specs[i];
       who(out, cam, (kd.seedBase ?? 100) + i, sp, { pose: kd.pose ?? "armsUp", expr: o?.expr ?? kd.expr ?? "grin", t: T(f) },
-        p[0], p[1] - (kd.sink ?? 0.95) + (kd.rise ?? 1.45) * k, p[2] + 0.02, { t: T(f), noBlob: kd.noBlob ?? true, scale: kd.scale ?? 0.78 });
+        p[0], p[1] - (kd.sink ?? 0.95) + (kd.rise ?? 1.45) * k, p[2] + 0.02, { t: T(f), noBlob: kd.noBlob ?? true, scale: kd.scale ?? 0.78, id: `jarKid#${i}`, measure: 'kid' });
     }
   };
 
@@ -501,7 +501,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         for (const a of s.actors ?? []) actor(out, cam, a, f, start);
         for (const c of s.crowds ?? []) crowd(out, cam, c, f, start);
         for (const x of s.set ?? []) if (x.piece === "jars") jarsKids(out, cam, x, f, start);
-        for (const e of s.fx ?? []) effect(out, e, f, start, cam);
+        for (let ei = 0; ei < (s.fx ?? []).length; ei++) { const e = s.fx![ei]; const before = out.fx.length; effect(out, e, f, start, cam); for (let k = before; k < out.fx.length; k++) { out.fx[k].id = e.id ?? `${e.kind}#${ei}`; out.fx[k].measure = e.kind; } }
       },
       pose: (t, f, sets: Sets) => {
         for (const x of s.set ?? []) {

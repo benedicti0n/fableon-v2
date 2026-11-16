@@ -9,6 +9,7 @@
 //   node engine/scripts/render.cjs cuts     --out <cuts.json>
 //   node engine/scripts/render.cjs events   --out <events.json>
 //   node engine/scripts/render.cjs catalog  --out <catalog.runtime.json>
+//   node engine/scripts/render.cjs coverage --frames 0,45 --out cov.json [--jobs jobs.json] [--png dir]
 //
 // --jobs is a JSON array of [from, to, outfile] triples: one browser, many clips (existing clips are skipped).
 // --project <dir> serves that folder under /project/ (words.json + storyboard.json); both files are required.
@@ -49,8 +50,8 @@ const srv = http.createServer((q, s) => {
   s.setHeader('Content-Type', mime(p)); s.end(fs.readFileSync(p));
 }).listen(port);
 const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
-const framesCsv = mode === 'stills' ? need('frames') : '';
-const out = ['stills', 'video', 'list', 'qa', 'cuts', 'events', 'catalog'].includes(mode) ? need('out') : '';
+const framesCsv = ['stills', 'coverage'].includes(mode) ? String(opt.frames || '') : '';
+const out = ['stills', 'video', 'list', 'qa', 'cuts', 'events', 'catalog', 'coverage'].includes(mode) ? need('out') : '';
 const jobsFile = mode === 'segments' ? need('jobs') : '';
 (async () => {
   const b = await chromium.launch(launchOptions());
@@ -87,6 +88,23 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
   }
   else if (mode === 'events') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.EVENTS))); console.log('events json', out); }
   else if (mode === 'catalog') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.CATALOG_INFO), null, 2) + '\n'); console.log('catalog json', out); }
+  else if (mode === 'coverage') {
+    const jobs = opt.jobs ? JSON.parse(fs.readFileSync(String(opt.jobs), 'utf8')) : framesCsv.split(',').filter(Boolean).map((f) => ({ frame: +f }));
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    const rows = [];
+    for (const job of jobs) {
+      const r = await pg.evaluate(([f, o]) => window.coverageFrame(f, o), [job.frame, { subjects: job.subjects || [], over: job.over || null, with: job.with || [], png: !!opt.png }]);
+      if (opt.png && r.png) {
+        const dir = path.resolve(String(opt.png)); fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(path.join(dir, `${job.frame}.png`), Buffer.from(r.png.split(',')[1], 'base64'));
+        fs.writeFileSync(path.join(dir, `${job.frame}.legend.json`), JSON.stringify({ shot: r.shot, items: r.items, ids: r.ids }, null, 2) + '\n');
+      }
+      delete r.png; rows.push({ ...job, ...r });
+      console.log('coverage', job.frame, (r.ms || 0).toFixed(1) + 'ms', r.shot || '-');
+    }
+    fs.writeFileSync(out, JSON.stringify(rows, null, 2) + '\n');
+    console.log('coverage json', out);
+  }
   else if (mode === 'qa') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.QA))); console.log('qa json', out); }
   else if (mode === 'cuts') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.camJumps()))); console.log('cuts json', out); }
   else if (mode === 'list') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.SHOTLIST))); console.log('shots json', out); }
