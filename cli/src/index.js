@@ -8,6 +8,9 @@ import { framesCommand } from './frames.js';
 import { schemaCommand } from './schema.js';
 import { catalogCardCommand } from './catalog-card.js';
 import { reviewCommand } from './review.js';
+import { newCommand, statusCommand, approveCommand } from './core/commands.js';
+import { runCommand } from './run-command.js';
+import { modelsCommand } from './models-command.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -23,6 +26,49 @@ export function main(argv = process.argv) {
     .command('doctor')
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
+
+  program
+    .command('new <dir>')
+    .description('create a new brief → research → script → fact-check → voice project')
+    .requiredOption('--topic <text>', 'story topic')
+    .option('--seconds <n>', 'target length in seconds', '90')
+    .option('--voice <id>', 'Kokoro voice id', 'am_michael')
+    .action((dir, opts) => newCommand(dir, opts));
+
+  program
+    .command('status')
+    .description('show pipeline stage status, approvals, tokens and pronunciation TODOs')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => statusCommand(opts.project));
+
+  program
+    .command('approve')
+    .description('approve the current output of one pipeline stage')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--stage <name>', 'stage name')
+    .action((opts) => approveCommand(opts.project, opts.stage));
+
+  program
+    .command('run')
+    .description('run pipeline stages in dependency order')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--to <stage>', 'last stage to run', 'voice')
+    .option('--only <stage>', 'run only this stage')
+    .option('--force', 'overwrite hand-edited outputs')
+    .option('--autopilot', 'do not stop for approvals')
+    .option('--no-cache', 'bypass the model response cache')
+    .option('--fit <mode>', 'voice fit on|off', 'on')
+    .action(async (opts) => { try { await runCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('models')
+    .description('list or check provider models')
+    .argument('<mode>', 'list or check')
+    .requiredOption('--provider <name>', 'deepseek, openai-compatible or mock')
+    .option('--model <id>', 'model id')
+    .option('--base-url <url>', 'OpenAI-compatible base URL')
+    .option('--key-env <name>', 'API key environment variable')
+    .action(async (mode, opts) => { try { await modelsCommand(mode, opts.provider, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('validate')

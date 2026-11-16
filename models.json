@@ -1,0 +1,7 @@
+{
+  "default": { "provider": "deepseek", "model": null },
+  "timeoutMs": 120000,
+  "maxRepairs": 2,
+  "providers": {},
+  "prices": {}
+}

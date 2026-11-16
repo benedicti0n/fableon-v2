@@ -1,7 +1,7 @@
 // `fableon doctor`: prove the machine can build and run the fixture pipeline, one line per check.
 import { existsSync, readdirSync, statSync, statfsSync } from 'node:fs';
 import { join } from 'node:path';
-import { ENGINE, ROOT, capture, findPython } from './env.js';
+import { ENGINE, ROOT, capture, findPython, loadDotEnv } from './env.js';
 
 const GB = 1024 ** 3;
 
@@ -76,9 +76,14 @@ function diskCheck() {
   }
 }
 
+export function keyCheck(name) {
+  return { label: name, ok: true, detail: process.env[name] ? 'SET (value hidden)' : 'MISSING (optional)' };
+}
+
 export function runDoctor() {
+  loadDotEnv();
   const py = findPython();
-  const checks = [nodeCheck(), pythonCheck(py), packageCheck(py), toolCheck('ffmpeg'), toolCheck('ffprobe'), webglCheck(), distCheck(), diskCheck()];
+  const checks = [nodeCheck(), pythonCheck(py), packageCheck(py), toolCheck('ffmpeg'), toolCheck('ffprobe'), webglCheck(), distCheck(), diskCheck(), keyCheck('DEEPSEEK_API_KEY'), keyCheck('TAVILY_API_KEY')];
   console.log('fableon doctor\n');
   let bad = 0;
   for (const c of checks) {

@@ -14,3 +14,5 @@ fixtures/*/qa/
 schema/catalog.runtime.json
 fixtures/*/schema.json
 fixtures/*/frames.json
+
+.fableon/
