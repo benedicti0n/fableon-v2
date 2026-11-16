@@ -5,6 +5,7 @@ import { capture, loadDotEnv, ROOT } from '../env.js';
 import { historyPath, readJson, writeJsonArtifact } from '../core/artifacts.js';
 import { run } from '../env.js';
 import { synthesize } from '../voice/index.js';
+import { countWords } from '../../../shared/words.mjs';
 import { WPS } from './script.js';
 
 const probe = (file) => Number(capture('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', file]));
@@ -17,13 +18,23 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true 
   const provider = voice.provider ?? voice.engine ?? 'kokoro';
   const language = voice.language ?? project.language ?? 'en';
   if (!existsSync(join(projectDir, 'SCRIPT.md'))) throw new Error('voice needs SCRIPT.md');
-  const result = await synthesize({ provider, projectDir, project: { ...project, voice: { ...voice, language } } });
+  const target = Number(project.seconds);
+  const rate = voice.rate?.wordsPerSecond ?? null;
+  let speed = voice.settings?.speed ?? voice.speed ?? 1;
+  if (provider === 'elevenlabs' && rate && existsSync(join(projectDir, 'script.json'))) {
+    const script = readJson(join(projectDir, 'script.json'));
+    const naturalEstimate = script.lines.reduce((n, l) => n + countWords(l.text), 0) / rate;
+    speed = Math.max(0.7, Math.min(1.2, speed * (naturalEstimate / target)));
+  }
+  const voiceWithSpeed = provider === 'elevenlabs'
+    ? { ...voice, language, settings: { ...(voice.settings ?? {}), speed } }
+    : { ...voice, language };
+  const result = await synthesize({ provider, projectDir, project: { ...project, voice: voiceWithSpeed } });
   const voicePath = join(projectDir, 'voice.wav'), wordsPath = join(projectDir, 'words.json');
   if (!existsSync(voicePath)) throw new Error(`${provider} did not write voice.wav`);
   const natural = probe(voicePath);
-  const target = Number(project.seconds);
   const delta = Math.abs(natural - target) / target;
-  if (fit && delta > 0.10) throw new Error(`voice is ${natural.toFixed(2)} s, ${(delta * 100).toFixed(1)} % from ${target} s (outside 10 %); change the script to about ${Math.round(target * WPS)} words or pass --fit off`);
+  if (fit && delta > 0.10) throw new Error(`voice is ${natural.toFixed(2)} s, ${(delta * 100).toFixed(1)} % from ${target} s (outside 10 %); change the script to about ${Math.round(target * (rate ?? WPS))} words or pass --fit off`);
   if (fit) {
     const atempo = natural / target;
     const tmp = join(projectDir, 'voice.fit.wav');

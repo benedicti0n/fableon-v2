@@ -84,7 +84,7 @@ From the model table:
 |---|---|---|
 | `eleven_multilingual_v2` | yes | default, 29 languages, 10,000-char request limit, most stable for long form |
 | `eleven_flash_v2_5` | yes | 32 languages, 40,000-char limit, lower price |
-| `eleven_v3` | yes | 70+ languages, 5,000-char limit, expressive |
+| `eleven_v3` | yes | 70+ languages, **5,000-character per-request limit**, expressive |
 | `eleven_v3_conversational` | yes | low-latency v3, 70+ languages |
 | `eleven_v4` / `eleven_v4_turbo` | yes | 90+ languages; the models page documents v4 through the Text to Dialogue API, so this provider does not default to it |
 
@@ -156,8 +156,13 @@ carried by its good-news/bad-news wording, the 0.5 s local pause before each lin
 not expose a v3 “stability mode” field, so `voice.tones` stores `stability`, `style` and `speed` for both models.
 
 Pauses before punchlines are inserted as exact local silence (the model tags do not guarantee a duration); in-line
-pauses use the model's break/tag. The alignment builder strips `[tags]` and `<break>` markup before building
-`words.json`, and tests assert every spoken word keeps monotonic timings.
+pauses use the model's break/tag. For the chosen v3 voice the whole script is sent in **one request** when its rendered
+text is ≤ **5,000 characters** (the documented v3 limit), then the exact pause silences are cut into the audio at the
+word gaps from the alignment; per-block requests are the fallback over the limit. The alignment builder strips
+`[tags]`, `...` and `<break>` markup before building `words.json`, and tests assert every spoken word keeps monotonic
+timings. The chosen default is Callum (`N2lVS1w4EtoT3dr4eOWO`) × `eleven_v3`, default tone settings. The script budget uses **2.56 words/s** / **11.51 characters/s** measured on the round-2 clean
+control take (64 words / 25.2 s = 2.54, rounded up for the line-gap budget); the dramatic pauses are added locally and
+are not counted twice.
 
 ### Round-2 delivery auditions (2026-11-17)
 
