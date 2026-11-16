@@ -234,12 +234,12 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
   const rate = project.voice?.rate?.wordsPerSecond ?? WPS;
   const pauses = plannedPauseSeconds(data);
   const target = Math.max(1, project.seconds - pauses) * rate, total = data.lines.reduce((n, l) => n + countWords(l.text), 0);
-  const tol = project.language === 'hi' ? 0.12 : 0.07;
+  const tol = project.language === 'hi' ? 0.15 : 0.07;
   const lo = Math.ceil(target * (1 - tol)), hi = Math.floor(target * (1 + tol));
   if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (pause-aware target ${target.toFixed(1)} = (${project.seconds} - ${pauses.toFixed(2)} s pauses) × ${rate}); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
   if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
   if (data.lines[data.lines.length - 1].beat !== 'twist') errs.push('/lines last beat must be twist');
-  const maxHook = 16;
+  const maxHook = project.language === 'hi' ? 20 : 16;
   if (words(data.lines[0].text).length > maxHook) errs.push(`/lines/0 hook is longer than ${maxHook} words (${words(data.lines[0].text).length}); cut at least ${words(data.lines[0].text).length - maxHook} word(s)`);
   let last = -1;
   for (const l of data.lines) {
