@@ -113,7 +113,7 @@ const defaults = ${JSON.stringify({
 export default {
   places: PLACES,
   sets: SET_NAMES.map((n) => e(n, setDesc[n])),
-  cast: { C: Object.keys(C).map((n) => e(n, "Cast spec C." + n)), KIDS: Object.keys(KIDS).map((n) => e(n, "Kid cast spec KIDS." + n)), KAURAVA: { name: "KAURAVA", status: "implemented", description: "Kaurava kid spec generator by index.", generator: true } },
+  cast: { C: Object.keys(C).map((n) => ({ ...e(n, "Cast spec C." + n), spec: C[n] })), KIDS: Object.keys(KIDS).map((n) => ({ ...e(n, "Kid cast spec KIDS." + n), spec: KIDS[n] })), KAURAVA: { name: "KAURAVA", status: "implemented", description: "Kaurava kid spec generator by index.", generator: true } },
   poses: POSES.map((n) => e(n, poses[n])),
   expressions: EXPRS.map((n) => e(n, exprs[n])),
   props: PROPS.map((n) => e(n, props[n])),

@@ -1,0 +1,568 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/authoring.schema.json",
+  "title": "Fableon authoring board",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "shots"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "fps": {
+      "type": "number",
+      "minimum": 1
+    },
+    "tailFrames": {
+      "type": "number",
+      "minimum": 0
+    },
+    "crossfade": {
+      "type": "number",
+      "minimum": 0
+    },
+    "flash": {
+      "$ref": "#/$defs/Anchor"
+    },
+    "points": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/Point"
+      }
+    },
+    "cast": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/Cast"
+      }
+    },
+    "groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "kicks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "amp"
+        ],
+        "properties": {
+          "at": {
+            "$ref": "#/$defs/Anchor"
+          },
+          "amp": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Shot"
+      }
+    }
+  },
+  "$defs": {
+    "Anchor": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "Point": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mark": {
+              "type": "string"
+            },
+            "nudge": {
+              "$ref": "#/$defs/Vec3"
+            },
+            "d": {
+              "$ref": "#/$defs/Vec3"
+            },
+            "on": {
+              "type": "string"
+            },
+            "attach": {
+              "$ref": "#/$defs/Attach"
+            },
+            "at": {
+              "type": "string"
+            },
+            "screen": {
+              "$ref": "#/$defs/Vec3"
+            },
+            "actor": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Vec3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "Attach": {
+      "enum": [
+        "head",
+        "eyes",
+        "crown",
+        "chest",
+        "feet",
+        "handL",
+        "handR",
+        "prop"
+      ]
+    },
+    "Cast": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "spec": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "seed": {
+          "type": "number"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "group": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "start"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "light": {
+          "enum": [
+            "day",
+            "golden",
+            "night",
+            "deep"
+          ]
+        },
+        "sets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sun": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "az",
+            "el"
+          ],
+          "properties": {
+            "az": {
+              "type": "number"
+            },
+            "el": {
+              "type": "number"
+            }
+          }
+        },
+        "camera": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Camera"
+          }
+        },
+        "dof": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "cInf"
+            ],
+            "properties": {
+              "at": {
+                "$ref": "#/$defs/Anchor"
+              },
+              "cInf": {
+                "type": "number"
+              },
+              "dur": {
+                "type": "number"
+              },
+              "focus": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/$defs/Point"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/Actor"
+              }
+            ]
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Row"
+          }
+        },
+        "crowds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "fx": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "kind",
+              "at"
+            ]
+          }
+        },
+        "set": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "piece"
+            ]
+          }
+        },
+        "raw": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "Camera": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "raw": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "Row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row",
+        "at"
+      ],
+      "properties": {
+        "row": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "at": {
+          "type": "string"
+        },
+        "nudge": {
+          "$ref": "#/$defs/Vec3"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "curve": {
+          "type": "number"
+        },
+        "facing": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "front": {
+          "type": "number"
+        },
+        "pose": {
+          "type": "string"
+        },
+        "expr": {
+          "type": "string"
+        },
+        "mirror": {
+          "type": "boolean"
+        },
+        "seated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cast": {
+          "type": "string"
+        },
+        "spec": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "special": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "seed": {
+          "type": "number"
+        },
+        "at": {
+          "$ref": "#/$defs/Point"
+        },
+        "nudge": {
+          "$ref": "#/$defs/Vec3"
+        },
+        "pos": {
+          "$ref": "#/$defs/Point"
+        },
+        "motion": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "animate": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "scale": {
+          "type": "number"
+        },
+        "mirror": {
+          "type": "boolean"
+        },
+        "noBlob": {
+          "type": "boolean"
+        },
+        "blobScale": {
+          "type": "number"
+        },
+        "yaw": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pose": {
+          "type": "string"
+        },
+        "expr": {
+          "type": "string"
+        },
+        "prop": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "facing": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "look": {
+          "type": "number"
+        },
+        "seated": {
+          "type": "boolean"
+        },
+        "headTilt": {
+          "type": "number"
+        },
+        "tilt": {
+          "type": "number"
+        },
+        "talk": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appear": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at"
+              ],
+              "properties": {
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "stagger": {
+                  "type": "number"
+                },
+                "pop": {
+                  "type": "number"
+                }
+              }
+            }
+          ]
+        },
+        "enter": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "exit": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "says": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/Anchor"
+          }
+        },
+        "do": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {
+                "$ref": "#/$defs/Anchor"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ],
+            "items": false
+          }
+        },
+        "row": {
+          "$ref": "#/$defs/Row"
+        },
+        "raw": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

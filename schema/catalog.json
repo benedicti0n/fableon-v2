@@ -568,149 +568,480 @@
       {
         "name": "vyasa",
         "status": "implemented",
-        "description": "Cast spec C.vyasa"
+        "description": "Cast spec C.vyasa",
+        "spec": {
+          "skin": "#7f4b2e",
+          "build": "elder",
+          "top": null,
+          "lower": "#e8a33a",
+          "drape": "#d9772b",
+          "head": "bun",
+          "hairCol": "#eeeae4",
+          "beard": "#eeeae4",
+          "beardLong": true,
+          "necklace": "#7a4b2a",
+          "tilak": "#f4f1ea"
+        }
       },
       {
         "name": "shantanu",
         "status": "implemented",
-        "description": "Cast spec C.shantanu"
+        "description": "Cast spec C.shantanu",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "stout",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#3f5fb5",
+          "head": "crown",
+          "moustache": "#3a2418",
+          "necklace": "#e8b53a",
+          "earrings": "#e8b53a"
+        }
       },
       {
         "name": "satyavati",
         "status": "implemented",
-        "description": "Cast spec C.satyavati"
+        "description": "Cast spec C.satyavati",
+        "spec": {
+          "skin": "#a8693f",
+          "build": "slim",
+          "top": "#e0565a",
+          "sari": "#2f8a8a",
+          "border": "#f2c230",
+          "head": "long",
+          "hairCol": "#1e1418",
+          "flower": "#fff2c8",
+          "earrings": "#e8b53a"
+        }
       },
       {
         "name": "fisher",
         "status": "implemented",
-        "description": "Cast spec C.fisher"
+        "description": "Cast spec C.fisher",
+        "spec": {
+          "skin": "#c98c5c",
+          "build": "stout",
+          "top": null,
+          "lower": "#e9e2cf",
+          "head": "turban",
+          "turbanCol": "#d8402e",
+          "moustache": "#eeeae4",
+          "beard": null
+        }
       },
       {
         "name": "devavrata",
         "status": "implemented",
-        "description": "Cast spec C.devavrata"
+        "description": "Cast spec C.devavrata",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "adult",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#c8342e",
+          "head": "crownSmall",
+          "hairCol": "#2a1a1e",
+          "necklace": "#e8b53a",
+          "earrings": "#e8b53a"
+        }
       },
       {
         "name": "bhishmaOld",
         "status": "implemented",
-        "description": "Cast spec C.bhishmaOld"
+        "description": "Cast spec C.bhishmaOld",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "elder",
+          "top": null,
+          "lower": "#f6f2e8",
+          "border": "#e8b53a",
+          "drape": "#c8342e",
+          "head": "crownSmall",
+          "hairCol": "#f2f0ea",
+          "beard": "#f2f0ea",
+          "beardLong": true,
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "dhritarashtra",
         "status": "implemented",
-        "description": "Cast spec C.dhritarashtra"
+        "description": "Cast spec C.dhritarashtra",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "stout",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#7a3f9a",
+          "head": "crown",
+          "blind": true,
+          "moustache": "#2a1a1e",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "pandu",
         "status": "implemented",
-        "description": "Cast spec C.pandu"
+        "description": "Cast spec C.pandu",
+        "spec": {
+          "skin": "#ffdcbc",
+          "build": "adult",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#2f8a5a",
+          "head": "crown",
+          "moustache": "#3a2418",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "kunti",
         "status": "implemented",
-        "description": "Cast spec C.kunti"
+        "description": "Cast spec C.kunti",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "slim",
+          "top": "#c8342e",
+          "sari": "#6a4fb5",
+          "border": "#e8b53a",
+          "head": "long",
+          "hairCol": "#1e1418",
+          "earrings": "#e8b53a",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "madri",
         "status": "implemented",
-        "description": "Cast spec C.madri"
+        "description": "Cast spec C.madri",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "slim",
+          "top": "#f2c230",
+          "sari": "#3f9a6a",
+          "border": "#e8b53a",
+          "head": "long",
+          "hairCol": "#1e1418",
+          "earrings": "#e8b53a"
+        }
       },
       {
         "name": "gandhari",
         "status": "implemented",
-        "description": "Cast spec C.gandhari"
+        "description": "Cast spec C.gandhari",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "slim",
+          "top": "#f2c230",
+          "sari": "#b5344a",
+          "border": "#e8b53a",
+          "head": "long",
+          "hairCol": "#1e1418",
+          "blindfold": "#f6efdc",
+          "earrings": "#e8b53a",
+          "belly": 0
+        }
       },
       {
         "name": "yudhi",
         "status": "implemented",
-        "description": "Cast spec C.yudhi"
+        "description": "Cast spec C.yudhi",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "adult",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#e8b53a",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "bhima",
         "status": "implemented",
-        "description": "Cast spec C.bhima"
+        "description": "Cast spec C.bhima",
+        "spec": {
+          "skin": "#c98c5c",
+          "build": "big",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#c8342e",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "moustache": "#2a1a1e"
+        }
       },
       {
         "name": "arjuna",
         "status": "implemented",
-        "description": "Cast spec C.arjuna"
+        "description": "Cast spec C.arjuna",
+        "spec": {
+          "skin": "#a8693f",
+          "build": "adult",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#3f6fb5",
+          "head": "hair",
+          "hairCol": "#2a1a1e"
+        }
       },
       {
         "name": "nakula",
         "status": "implemented",
-        "description": "Cast spec C.nakula"
+        "description": "Cast spec C.nakula",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "slim",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#2f8a5a",
+          "head": "hair",
+          "hairCol": "#2a1a1e"
+        }
       },
       {
         "name": "sahadeva",
         "status": "implemented",
-        "description": "Cast spec C.sahadeva"
+        "description": "Cast spec C.sahadeva",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "slim",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#e07a2e",
+          "head": "hair",
+          "hairCol": "#2a1a1e"
+        }
       },
       {
         "name": "duryodhana",
         "status": "implemented",
-        "description": "Cast spec C.duryodhana"
+        "description": "Cast spec C.duryodhana",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "stout",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#7a3f9a",
+          "head": "crownSmall",
+          "moustache": "#2a1a1e",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "draupadi",
         "status": "implemented",
-        "description": "Cast spec C.draupadi"
+        "description": "Cast spec C.draupadi",
+        "spec": {
+          "skin": "#a8693f",
+          "build": "slim",
+          "top": "#f2c230",
+          "sari": "#d8343c",
+          "border": "#e8b53a",
+          "head": "long",
+          "hairCol": "#1e1418",
+          "flower": "#fff2c8",
+          "earrings": "#e8b53a",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "king1",
         "status": "implemented",
-        "description": "Cast spec C.king1"
+        "description": "Cast spec C.king1",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "stout",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#2f6fb5",
+          "head": "turban",
+          "turbanCol": "#f2c230",
+          "moustache": "#2a1a1e",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "king2",
         "status": "implemented",
-        "description": "Cast spec C.king2"
+        "description": "Cast spec C.king2",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "adult",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#2f8a5a",
+          "head": "crown",
+          "moustache": "#3a2418",
+          "necklace": "#e8b53a"
+        }
       },
       {
         "name": "sage",
         "status": "implemented",
-        "description": "Cast spec C.sage"
+        "description": "Cast spec C.sage",
+        "spec": {
+          "skin": "#c98c5c",
+          "build": "elder",
+          "top": null,
+          "lower": "#e8a33a",
+          "head": "bun",
+          "hairCol": "#6a6a72",
+          "beard": "#8a8a92",
+          "beardLong": false,
+          "tilak": "#f4f1ea"
+        }
       },
       {
         "name": "priest",
         "status": "implemented",
-        "description": "Cast spec C.priest"
+        "description": "Cast spec C.priest",
+        "spec": {
+          "skin": "#a8693f",
+          "build": "adult",
+          "top": null,
+          "lower": "#f6efdc",
+          "drape": "#f2deb0",
+          "head": "topknot",
+          "hairCol": "#2a1a1e"
+        }
       }
     ],
     "KIDS": [
       {
         "name": "yudhi",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.yudhi"
+        "description": "Kid cast spec KIDS.yudhi",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "kid",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#e8b53a",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "necklace": null,
+          "moustache": null,
+          "beard": null
+        }
       },
       {
         "name": "bhima",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.bhima"
+        "description": "Kid cast spec KIDS.bhima",
+        "spec": {
+          "skin": "#c98c5c",
+          "build": "kid",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#c8342e",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "moustache": null,
+          "beard": null,
+          "necklace": null
+        }
       },
       {
         "name": "arjuna",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.arjuna"
+        "description": "Kid cast spec KIDS.arjuna",
+        "spec": {
+          "skin": "#a8693f",
+          "build": "kid",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#3f6fb5",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "moustache": null,
+          "beard": null,
+          "necklace": null
+        }
       },
       {
         "name": "nakula",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.nakula"
+        "description": "Kid cast spec KIDS.nakula",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "kid",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#2f8a5a",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "moustache": null,
+          "beard": null,
+          "necklace": null
+        }
       },
       {
         "name": "sahadeva",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.sahadeva"
+        "description": "Kid cast spec KIDS.sahadeva",
+        "spec": {
+          "skin": "#f4c9a0",
+          "build": "kid",
+          "top": null,
+          "lower": "#f6efdc",
+          "border": "#e8b53a",
+          "drape": "#e07a2e",
+          "head": "hair",
+          "hairCol": "#2a1a1e",
+          "moustache": null,
+          "beard": null,
+          "necklace": null
+        }
       },
       {
         "name": "duryodhana",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.duryodhana"
+        "description": "Kid cast spec KIDS.duryodhana",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "kid",
+          "top": null,
+          "lower": "#f2e6c4",
+          "border": "#e8b53a",
+          "drape": "#7a3f9a",
+          "head": "hair",
+          "moustache": null,
+          "necklace": null,
+          "beard": null
+        }
       },
       {
         "name": "duhshala",
         "status": "implemented",
-        "description": "Kid cast spec KIDS.duhshala"
+        "description": "Kid cast spec KIDS.duhshala",
+        "spec": {
+          "skin": "#e7b07e",
+          "build": "kid",
+          "top": "#f2c230",
+          "sari": "#7a3f9a",
+          "border": "#e8b53a",
+          "head": "long",
+          "hairCol": "#1e1418"
+        }
       }
     ],
     "KAURAVA": {

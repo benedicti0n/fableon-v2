@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
 import { validateCommand } from './validate.js';
+import { compileCommand } from './compile.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -24,6 +25,12 @@ export function main(argv = process.argv) {
     .description('validate a project storyboard (schema, catalog, word anchors, time order)')
     .requiredOption('--project <dir>', 'project folder')
     .action((opts) => validateCommand(opts.project));
+
+  program
+    .command('compile')
+    .description('expand an authoring board.json into storyboard.json and validate it')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => compileCommand(opts.project));
 
   program
     .command('init <name>')

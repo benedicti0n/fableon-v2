@@ -9,6 +9,7 @@ import { runMotionTests } from './motion.test.mjs';
 import { runStartAnchors } from './start-anchors.mjs';
 import { runValidator } from './validator.mjs';
 import { runCatalog } from './catalog.mjs';
+import { runAuthoring } from './authoring.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -70,6 +71,8 @@ try {
   await audio();
   const catalog = runCatalog();
   check('catalog metadata', catalog.ok, `${catalog.sets} sets, ${catalog.marks} marks, ${catalog.volumes} volumes, ${catalog.measures} measures`);
+  const authoring = runAuthoring();
+  check('authoring', authoring.ok, `${authoring.checks.filter((c) => c.ok).length}/${authoring.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();
