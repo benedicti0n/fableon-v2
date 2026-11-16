@@ -162,8 +162,12 @@ const palmTree = (b: Batch, x: number, z: number, h: number, seed: number, y = G
 };
 /** mud hut with a thatched hip roof, doorway facing +z (rotated by yaw) */
 const hut = (b: Batch, x: number, z: number, yaw: number, w: number, d: number, seed: number) => {
-  const rr = (Math.max(w, d) + Math.min(w, d)) * 0.42;
-  keepBox("mud hut", [x - rr, G, z - rr], [x + rr, G + 4.2, z + rr]);
+  const rr = (Math.max(w, d) + Math.min(w, d)) * 0.42, t = 0.35;
+  keepBox("mud hut wall -x", [x - rr, G, z - rr], [x - rr + t, G + 2.3, z + rr]);
+  keepBox("mud hut wall +x", [x + rr - t, G, z - rr], [x + rr, G + 2.3, z + rr]);
+  keepBox("mud hut wall -z", [x - rr, G, z - rr], [x + rr, G + 2.3, z - rr + t]);
+  keepBox("mud hut wall +z", [x - rr, G, z + rr - t], [x + rr, G + 2.3, z + rr]);
+  keepBox("mud hut roof", [x - rr, G + 2.3, z - rr], [x + rr, G + 4.2, z + rr]);
   const m = new THREE.Matrix4().compose(V(x, G, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)), V(1, 1, 1));
   const add = (g: THREE.BufferGeometry, mat: THREE.Material) => b.add(g, mat, m);
   add(boxGeo(V(-w / 2, 0, -d / 2), V(-0.45, 2.3, d / 2), 2), M.mud());
@@ -417,7 +421,7 @@ export const buildSets = (root: THREE.Object3D): Sets => {
     for (const sx of [-1, 1]) { cb.add(boxGeo(V(sx * 20 - 3, 0, -4), V(sx * 20 + 3, 6, 4), 3), marble); chhatri(cb, sx * 20, 6, 0, 1.3, { stone: marble, dome: M.dome(), gold }); }
     cb.build(city);
     city.position.set(cx, G, cz + 6);
-    keepBox("rising city", [cx - 23, G, cz + 2], [cx + 23, G + 20, cz + 10]);
+    keepBox("rising city", [cx - 23, G, cz - 2], [cx + 23, G + 20, cz + 2]);
     S.city.add(city);
   }
 

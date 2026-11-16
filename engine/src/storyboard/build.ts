@@ -130,7 +130,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   };
 
   type ActorState = { st: Partial<Actor>; params: Record<string, unknown>; pos: V3; scale: number; expr: Expr; moving: Moving | null };
-  const actorState = (a: Actor, f: number, shotStart: number): ActorState | null => {
+  const actorState = (a: Actor, f: number, shotStart: number, ignoreVisible = false): ActorState | null => {
     let st: Partial<Actor> = { ...a };
     let params = { ...(a.params ?? {}) };
     const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at, shotStart), b })).sort((x, y) => x.f - y.f);
@@ -140,7 +140,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       if (bp) params = { ...params, ...bp };
     }
     const vis = st.visible;
-    if (vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return null;
+    if (!ignoreVisible && vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return null;
     const p = st.pos;
     const moving = a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
     if (!p && !a.motion) throw new Error(`actor "${a.who}" has no pos or motion`);
@@ -215,7 +215,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const ref = actorById.get(id);
     if (!ref) throw new Error(`attachment references unknown actor "${id}" (give the actor an id)`);
     const a = ref.a, start = ref.start;
-    const state = actorState(a, f, start);
+    const state = actorState(a, f, start, true);
     if (!state) throw new Error(`attachment actor "${id}" is not drawn at frame ${f}`);
     const { st, params, pos, scale, expr } = state;
     const pen = drawingPen();

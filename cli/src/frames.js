@@ -121,10 +121,11 @@ export function projectSubject(ctx, shot, actor, key, f, start, keepout = [], ov
   const right = b.r;
   const half = s.measure.halfWidth * s.scale;
   const fullH = (s.seated ? s.measure.seated : s.measure.standing) * s.scale;
-  const top = s.pos[1] + fullH;
+  const eyeY = s.pos[1] + (s.seated ? s.measure.eyeSeated : s.measure.eye) * s.scale;
   const mode = (key.fov ?? 40) <= 38 ? 'close' : (key.fov ?? 40) <= 40 ? 'medium' : 'full';
   const covered = mode === 'close' ? Math.min(fullH, 2.4 * s.measure.head * s.scale) : mode === 'medium' ? Math.min(fullH, 0.62 * s.measure.standing * s.scale) : fullH;
-  const y0 = top - covered, y1 = top;
+  const y0 = mode === 'full' ? s.pos[1] : eyeY - 0.6 * covered;
+  const y1 = mode === 'full' ? s.pos[1] + fullH : eyeY + 0.4 * covered;
   const corners = [];
   for (const dx of [-half, half]) for (const y of [y0, y1]) for (const dz of [-0.02, 0.02]) {
     const p = [s.pos[0] + right[0] * dx + b.f[0] * dz, y, s.pos[2] + right[2] * dx + b.f[2] * dz];

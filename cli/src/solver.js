@@ -29,7 +29,7 @@ export function blocked(from, to, keepout) {
   for (let i = 1; i < 50; i++) {
     const t = i / 50, p = [from[0] + (to[0] - from[0]) * t, from[1] + (to[1] - from[1]) * t, from[2] + (to[2] - from[2]) * t];
     const v = insideKeepout(p, keepout);
-    if (v) return v;
+    if (v && !pointInside(to, v)) return v;
   }
   return null;
 }
@@ -78,7 +78,9 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const highY = primary ? primary.pos[1] + Math.max(2.5, Math.min(4, 0.8 * pb.h)) : target[1] + 3;
   const overheadY = primary ? primary.pos[1] + 8 : target[1] + 8;
   const camY = angleY === "low" ? waistY : angleY === "high" ? highY : angleY === "overhead" ? overheadY : eyeY;
-  let vfov = vfov0, distance = fitDistance(spanV, spanH, vfov, aspect);
+  const fitV = size === 'wide' ? spanV : size === 'establishing' ? spanV * 1.1 : spanV * 1.2;
+  const fitH = size === 'wide' ? spanH : size === 'establishing' ? spanH * 1.1 : spanH * 1.2;
+  let vfov = vfov0, distance = fitDistance(fitV, fitH, vfov, aspect);
   let yawOffset = 0, raised = 0, closer = false;
   const lookBase = () => {
     const ly = size === "close" || size === "medium" ? (primary ? pb.eye - (0.5 - cfg.eyeLine) * spanV : target[1]) : size === "full" ? (primary ? primary.pos[1] + 0.5 * pb.h : target[1]) : target[1];

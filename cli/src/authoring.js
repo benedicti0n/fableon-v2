@@ -18,11 +18,11 @@ export function parseAnchor(value, fps = FPS) {
   if (/^f\d+$/.test(s)) return { frame: Number(s.slice(1)) };
   if (/^shot(?:[+-]\d+(?:\.\d+)?[fs])?$/.test(s)) {
     const m = /^shot(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
-    return { shot: true, offset: m ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
+    return { shot: true, offset: m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
   }
   if (/^end(?:[+-]\d+(?:\.\d+)?[fs])?$/.test(s)) {
     const m = /^end(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
-    return { end: true, offset: m ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
+    return { end: true, offset: m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0 };
   }
   const m = /^(\d+)\.([^#+\-]+)(?:#(\d+))?(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
   if (!m) throw new Error(`bad anchor "${s}" (use 13.word, 13.word#1+0.4s, shot+1.2s, end+4f or f90)`);
@@ -216,6 +216,7 @@ const compileEffect = (e, shot, ctx) => {
   for (const k of ['until', 'from', 'toAt']) if (e[k] !== undefined) out[k] = parseAnchor(e[k], ctx.fps);
   if (e.visible) out.visible = { from: parseAnchor(e.visible.from, ctx.fps), to: parseAnchor(e.visible.to, ctx.fps) };
   if (e.fromPoint !== undefined) out.from = resolvePoint(e.fromPoint, sets, ctx.catalog);
+  delete out.fromPoint;
   if (e.to !== undefined) out.to = resolvePoint(e.to, sets, ctx.catalog);
   for (const k of ['dur', 'period']) if (typeof e[k] === 'number') out[k] = Math.round(e[k] * ctx.fps);
   if (e.raw) { ctx.raw++; Object.assign(out, e.raw); }
@@ -254,9 +255,12 @@ const compileCrowd = (c, shot, ctx) => {
   return out;
 };
 
-const pointAt = (p, f, ctx) => {
+const pointAt = (p, f, ctx, depth = 0) => {
   if (Array.isArray(p)) return p;
   if (!p || typeof p !== 'object') throw new Error(`bad point ${JSON.stringify(p)}`);
+  if (depth > 16) throw new Error(`point cycle at "${p.at}"`);
+  const named = p.at ? ctx.board.points?.[p.at] : null;
+  if (named) { const b = pointAt(named, f, ctx, depth + 1), d = p.d ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; }
   const base = p.at && ctx.catalog.places[p.at] ? ctx.catalog.places[p.at] : [0, 0, 0];
   const d = p.d ?? [0, 0, 0];
   return [base[0] + d[0], base[1] + d[1], base[2] + d[2]];
@@ -302,7 +306,7 @@ const subjectFor = (id, compiled, shot, f, ctx) => {
   if (a) return actorStateAt(a, f, compiled, ctx);
   const fx = (compiled.fx ?? []).find((x) => x.id === id);
   if (fx) {
-    const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ?? [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
+    const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ? pointAt(fx.pos, f, ctx) : [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
     return { id, moveId: id, pos, measure: { standing: 0.9, seated: 0.9, eye: 0.6, eyeSeated: 0.6, head: 0.25, halfWidth: 0.35 }, scale: 1, seated: false };
   }
   const p = markPos(id, shot.sets ?? [], ctx.catalog);
@@ -335,14 +339,15 @@ const compileShot = (shot, board, words, catalog, fps, ctx) => {
       const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };
       const keepout = catalog.keepout?.[sets[0]] ?? [];
       const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, setInfo: info, keepout });
-      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look };
+      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id)) };
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {
         if (!primary.moveId) throw new Error(`shot ${shot.id}: follow camera needs a moving id on "${primary.id}"`);
         const a0 = (baseAngleFor(k, info) * Math.PI) / 180;
-        key.pos = { at: primary.moveId, d: [Math.sin(a0) * solved.debug.distance, solved.key.pos[1] - primary.pos[1], Math.cos(a0) * solved.debug.distance] };
-        key.look = { at: primary.moveId, d: [0, (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, 0] };
+        const eye = (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale;
+        key.pos = { at: primary.moveId, d: [Math.sin(a0) * solved.debug.distance, eye + 0.2, Math.cos(a0) * solved.debug.distance] };
+        key.look = { at: primary.moveId, d: [0, eye * 0.9, 0] };
       }
       cameras.push(key);
       if (!shot.dof && solved.debug.dof > 0) dofs.push({ at: parseAnchor(k.at, fps), cInf: solved.debug.dof, dur: 0, ...(primary?.moveId ? { focus: { actor: primary.moveId, attach: 'eyes', d: [0, 0, 0] } } : primary ? { focus: [primary.pos[0], primary.pos[1] + (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, primary.pos[2]] } : {}) });
@@ -385,11 +390,13 @@ export function compileBoard(board, words, catalog) {
       return Math.round(hit.a * fps) + (a.offset ?? 0);
     },
   };
+  const ctx0 = Object.entries(board.cast ?? {}).filter(([, d]) => !d.group);
   const out = {
     version: 1, fps, tailFrames: board.tailFrames ?? 36, crossfade: board.crossfade ?? 10,
     ...(board.flash !== undefined ? { flash: parseAnchor(board.flash, fps) } : {}),
     ...(board.points ? { points: Object.fromEntries(Object.entries(board.points).map(([k, v]) => [k, resolvePoint(v, [], catalog)])) } : {}),
   };
+  for (const [id, def] of ctx0) ctx.cast[id] = { spec: def.spec, seed: def.seed ?? stableSeed(id) };
   out.shots = (board.shots ?? []).map((s) => compileShot(s, board, words, catalog, fps, ctx));
   out.cast = ctx.cast;
   out.kicks = (board.kicks ?? []).map((k) => ({ at: parseAnchor(k.at, fps), amp: k.amp }));
