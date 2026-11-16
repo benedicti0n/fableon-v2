@@ -60,6 +60,8 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
   await pg.goto(`http://localhost:${port}/index.html?w=${W}&h=${H}&ms=${MS}&off=${OFF}`);
   await pg.waitForFunction(() => window.ready, null, { timeout: 300000 });
   const total = await pg.evaluate(() => window.TOTAL);
+  const buildError = await pg.evaluate(() => window.BUILD_ERROR ?? null);
+  if (buildError) throw new Error(`engine build error: ${buildError}`);
   console.log('ready', ((Date.now() - t0) / 1000).toFixed(1) + 's', 'TOTAL', total);
   const gl = await glInfo(pg);
   console.log('GL', JSON.stringify(gl));

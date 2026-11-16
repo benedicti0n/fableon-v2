@@ -8,7 +8,10 @@ import { World } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur } from "./lensblur";
 import { GradeEffect, GRADES, gradeFor } from "./grade";
-import { SHOTS, TOTAL, FLASH_AT, layersAt, dofAt, kickCam, XFADE, KICKS } from "./story";
+import { SHOTS as STORY_SHOTS, TOTAL as STORY_TOTAL, FLASH_AT as STORY_FLASH, layersAt as storyLayersAt, dofAt as storyDofAt, kickCam as storyKickCam, XFADE as STORY_XFADE, KICKS as STORY_KICKS } from "./story";
+import { buildStoryboard, Runtime } from "./storyboard/build";
+import type { Storyboard } from "./storyboard/types";
+import type { Wd } from "./core/anchors";
 
 // Project data is fetched before anything is built. render.cjs serves the project under /project/; when no
 // storyboard is present this resolves to {words:null, storyboard:null} and the compiled-in story.ts is used.
@@ -21,6 +24,23 @@ const loadProject = async (): Promise<ProjectData> => {
   return { words, storyboard };
 };
 const PROJECT = await loadProject();
+
+// Without a storyboard the compiled-in story.ts is used exactly as before. With one, build the runtime ShotDef[]
+// from storyboard + words (legacy:true shots still come from story.ts).
+let RT: Runtime = {
+  SHOTS: STORY_SHOTS, TOTAL: STORY_TOTAL, FLASH_AT: STORY_FLASH, XFADE: STORY_XFADE,
+  layersAt: storyLayersAt, dofAt: storyDofAt, kickCam: storyKickCam, KICKS: STORY_KICKS,
+};
+try {
+  if (PROJECT.storyboard) {
+    if (!PROJECT.words) throw new Error("project has storyboard.json but no words.json");
+    RT = buildStoryboard(PROJECT.storyboard as Storyboard, PROJECT.words as Wd[]);
+  }
+} catch (e) {
+  (window as unknown as Record<string, unknown>).BUILD_ERROR = e instanceof Error ? e.message : String(e);
+  (window as unknown as Record<string, unknown>).ready = true;
+  throw e;
+}
 
 const q = new URLSearchParams(location.search);
 const W = +(q.get("w") || 1440), H = +(q.get("h") || 2560), MS = +(q.get("ms") ?? 4);
@@ -66,12 +86,12 @@ const fwd = new THREE.Vector3(), fpt = new THREE.Vector3();
 const PROF: Record<string, number> = {};
 (window as unknown as Record<string, unknown>).PROF = PROF;
 const drawShot = (id: number, f: number) => {
-  const s = SHOTS[id - 1];
+  const s = RT.SHOTS[id - 1];
   let t0 = performance.now();
-  const target = world.update(s, f, cam, scene, H, kickCam);
+  const target = world.update(s, f, cam, scene, H, RT.kickCam);
   PROF.update = performance.now() - t0; t0 = performance.now();
   noInkFallback(world.root);
-  const d = dofAt(f);
+  const d = RT.dofAt(f);
   cam.getWorldDirection(fwd);
   if (d.focus) fpt.set(...d.focus(f)); else fpt.copy(target);
   lens.focus = Math.max(0.3, fpt.sub(cam.position).dot(fwd));
@@ -84,9 +104,9 @@ const drawShot = (id: number, f: number) => {
   PROF.render = performance.now() - t0;
 };
 
-(window as unknown as Record<string, unknown>).TOTAL = TOTAL;
+(window as unknown as Record<string, unknown>).TOTAL = RT.TOTAL;
 (window as unknown as Record<string, unknown>).renderFrame = (f: number, quality = 0.94) => {
-  const layers = layersAt(f);
+  const layers = RT.layersAt(f);
   g2.globalAlpha = 1;
   layers.forEach((l, i) => {
     drawShot(l.id, f);
@@ -95,7 +115,7 @@ const drawShot = (id: number, f: number) => {
     g2.drawImage(renderer.domElement, 0, 0);
     PROF.blit = performance.now() - t2;
   });
-  const flash = f >= FLASH_AT && f < FLASH_AT + 4 ? [1, 0.75, 0.45, 0.2][f - FLASH_AT] : 0;
+  const flash = f >= RT.FLASH_AT && f < RT.FLASH_AT + 4 ? [1, 0.75, 0.45, 0.2][f - RT.FLASH_AT] : 0;
   if (flash > 0) { g2.globalAlpha = flash; g2.fillStyle = "#ffffff"; g2.fillRect(0, 0, W, H); }
   g2.globalAlpha = 1;
   const t1 = performance.now();
@@ -103,16 +123,16 @@ const drawShot = (id: number, f: number) => {
   PROF.encode = performance.now() - t1;
   return url;
 };
-(window as unknown as Record<string, unknown>).shotOf = (f: number) => layersAt(f).map((l) => l.id);
-(window as unknown as Record<string, unknown>).SHOTLIST = SHOTS.map((s) => [s.id, s.a, s.b, s.light, s.sets.join("+")]);
+(window as unknown as Record<string, unknown>).shotOf = (f: number) => RT.layersAt(f).map((l) => l.id);
+(window as unknown as Record<string, unknown>).SHOTLIST = RT.SHOTS.map((s) => [s.id, s.a, s.b, s.light, s.sets.join("+")]);
 (window as unknown as Record<string, unknown>).QA = {
-  shots: SHOTS.map((s) => ({ id: s.id, a: s.a, b: s.b })), flash: [FLASH_AT, FLASH_AT + 4],
-  xfade: SHOTS.filter((s) => XFADE[s.id]).map((s) => [s.a - XFADE[s.id] / 2, s.a + XFADE[s.id] / 2]),
-  planned: KICKS.map(([f]) => [f, f + 8]),
+  shots: RT.SHOTS.map((s) => ({ id: s.id, a: s.a, b: s.b })), flash: [RT.FLASH_AT, RT.FLASH_AT + 4],
+  xfade: RT.SHOTS.filter((s) => RT.XFADE[s.id]).map((s) => [s.a - RT.XFADE[s.id] / 2, s.a + RT.XFADE[s.id] / 2]),
+  planned: RT.KICKS.map(([f]) => [f, f + 8]),
 };
 (window as unknown as Record<string, unknown>).camJumps = () => {
   const out: number[] = [];
-  for (const s of SHOTS) for (let f = s.a + 1; f < s.b; f++) {
+  for (const s of RT.SHOTS) for (let f = s.a + 1; f < s.b; f++) {
     const c0 = s.cam(f - 1), c1 = s.cam(f);
     const d = Math.hypot(c1.pos[0] - c0.pos[0], c1.pos[1] - c0.pos[1], c1.pos[2] - c0.pos[2]) + Math.hypot(c1.look[0] - c0.look[0], c1.look[1] - c0.look[1], c1.look[2] - c0.look[2]);
     if (d > 0.25) out.push(f);

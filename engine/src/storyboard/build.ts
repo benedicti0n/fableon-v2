@@ -1,0 +1,190 @@
+// Build ShotDef[] from a storyboard + the project's words. Math comes from core/ (shared with story.ts); the legacy
+// hybrid reuses the hand-written ShotDef and DOF entries for shots marked "legacy": true.
+import type { Cam, ShotDef } from "../world";
+import type { Stage, CamInfo } from "../cast";
+import { who, fx } from "../cast";
+import type { Sets } from "../sets";
+import type { V3 } from "../places";
+import { PLACES, PlaceName } from "../places";
+import { C, KIDS } from "../castlist";
+import type { Spec } from "../people";
+import { makeAnchors, Wd } from "../core/anchors";
+import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
+import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
+import { gnCard } from "../core/specials";
+import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
+import { fxSparkle, fxKnot, fxHalo } from "../people";
+import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
+import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Point, Shot, Storyboard } from "./types";
+
+export type Runtime = {
+  SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
+  layersAt: (f: number) => { id: number; alpha: number }[];
+  dofAt: (f: number) => { cInf: number; focus?: (f: number) => V3 };
+  kickCam: (f: number, c: Cam) => Cam; KICKS: Kick[];
+};
+
+type Targets = Map<string, (f: number) => V3>;
+const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const num = (v: unknown, d = 0) => (typeof v === "number" ? v : d);
+
+export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = new Map()): Runtime {
+  const fps = sb.fps ?? 30;
+  const { A, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
+  const anchor = (a: Anchor): number => {
+    if ("frame" in a) return a.frame + (a.offset ?? 0);
+    if ("end" in a) return END + (a.offset ?? 0);
+    return A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
+  };
+  const named = sb.points ?? {};
+  const point = (p: Point, f: number, depth = 0): V3 => {
+    if (Array.isArray(p)) return [p[0], p[1], p[2]];
+    if (depth > 16) throw new Error(`point cycle at "${p.at}"`);
+    const base = named[p.at] ? point(named[p.at], f, depth + 1)
+      : targets.has(p.at) ? targets.get(p.at)!(f)
+      : PLACES[p.at as PlaceName];
+    if (!base) throw new Error(`unknown point "${p.at}"`);
+    return add(base, p.d);
+  };
+  const animated = (a: Animated, f: number): number => {
+    if (typeof a === "number") return a;
+    const keys = a.keys.map(([at, v]) => [anchor(at), v] as [number, number]).sort((x, y) => x[0] - y[0]);
+    if (f <= keys[0][0]) return keys[0][1];
+    if (f >= keys[keys.length - 1][0]) return keys[keys.length - 1][1];
+    let i = 0; while (i + 1 < keys.length && f >= keys[i + 1][0]) i++;
+    const [f0, v0] = keys[i], [f1, v1] = keys[i + 1], u = f1 === f0 ? 1 : (f - f0) / (f1 - f0);
+    const k = a.ease === "step" ? (u < 1 ? 0 : 1) : a.ease === "smooth" ? smooth(u) : a.ease === "glide" ? glide(u) : u;
+    return v0 + (v1 - v0) * k;
+  };
+  const camera = (keys: CamKey[]): ((f: number) => Cam) => {
+    if (!keys.length) throw new Error("storyboard shot has no camera keys");
+    const built: Key[] = keys.map((k) => {
+      const f = anchor(k.at);
+      const rest = { fov: k.fov, roll: k.roll ?? 0 };
+      if (k.type === "tilt") {
+        const look0 = point(k.look, f);
+        return { f, dur: k.dur, cut: k.cut, s: (ff: number) => {
+          const u = glide((ff - f) / (k.tiltDur ?? 26));
+          const l = k.lookTo ? point(k.lookTo, ff) : look0;
+          return { pos: point(k.pos, ff), look: [look0[0] + (l[0] - look0[0]) * u, look0[1] + (l[1] - look0[1]) * u, look0[2] + (l[2] - look0[2]) * u], ...rest };
+        } };
+      }
+      if (k.type === "fixed") return { f, dur: k.dur, cut: k.cut, s: (ff: number) => ({ pos: point(k.pos, ff), look: point(k.look, ff), ...rest }) };
+      const from = k.push ? anchor(k.push.from) : f;
+      const rate = k.push?.rate ?? 0.0025, punch = k.push?.punch ?? 0, pf = k.push?.punchAt ? anchor(k.push.punchAt) : -1;
+      return { f, dur: k.dur, cut: k.cut, s: (ff: number) => dolly(point(k.pos, ff), point(k.look, ff), from, rate, rest, punch, pf)(ff) };
+    });
+    return run(built);
+  };
+
+  const cast = sb.cast ?? {};
+  const spec = (id: string): Spec => {
+    const e = cast[id];
+    if (!e) throw new Error(`actor "${id}" is not declared under cast`);
+    if (typeof e.spec !== "string") return e.spec as unknown as Spec;
+    const [group, ...rest] = e.spec.split(".");
+    const key = rest.join(".");
+    const s = group === "C" ? C[key] : group === "KIDS" ? (KIDS as Record<string, Spec>)[key] : undefined;
+    if (!s) throw new Error(`cast "${id}" has unknown spec "${e.spec}"`);
+    return s;
+  };
+
+  const actor = (out: Stage, cam: CamInfo, a: Actor, f: number) => {
+    let st: Partial<Actor> = { ...a };
+    let params = { ...(a.params ?? {}) };
+    const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at), b })).sort((x, y) => x.f - y.f);
+    for (const { f: bf, b } of beats) if (f >= bf) {
+      const { at: _at, params: bp, ...rest } = b;
+      st = { ...st, ...rest };
+      if (bp) params = { ...params, ...bp };
+    }
+    const vis = st.visible;
+    if (vis && (f < anchor(vis.from) || f >= anchor(vis.to))) return;
+    const p = st.pos;
+    if (!p) throw new Error(`actor "${a.who}" has no pos`);
+    const pos = point(p, f);
+    const ap = st.appear;
+    const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
+    if (scale === 0) return;
+    const talkSpec = st.talk;
+    const expr = talkSpec ? talk(T(f) * (talkSpec.rate ?? 1), talkSpec.base) : (st.expr ?? "neutral");
+    const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined };
+    if (a.special === "ganesha") {
+      const o = {
+        write: typeof params.write === "number" ? params.write : writeT(T(f), num(params.writeRate, 1.6)),
+        expr, puzzled: num(params.puzzled), down: num(params.down), look: num(params.look), ear: num(params.ear),
+        pen: params.pen !== false,
+      };
+      gnCard(out, cam, o, T(f), pos, scale);
+      return;
+    }
+    if (a.special) throw new Error(`special "${a.special}" is not implemented in Phase 2A (shot frame ${f})`);
+    const e = cast[a.who];
+    const opts = {
+      pose: st.pose, expr, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f),
+    };
+    who(out, cam, e.seed, spec(a.who), opts, pos[0], pos[1], pos[2], common);
+  };
+
+  const effect = (out: Stage, e: Effect, f: number) => {
+    const a = anchor(e.at), pos = point(e.pos, f);
+    if (e.kind === "sparkle") {
+      const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
+      const offs = e.offsets ?? [[0, 0, 0]];
+      const tw = e.twinkle, stagger = e.pop?.stagger ?? 0;
+      for (let i = 0; i < count; i++) {
+        const k = pop(T(f), T(a) + i * stagger, 0.18) * (tw ? 1 - tw.depth + tw.depth * Math.sin(T(f) * tw.freq + i) : 1);
+        if (k === 0) continue;
+        const d = offs[i] ?? [0, 0, 0];
+        fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k);
+      }
+    } else if (e.kind === "halo") {
+      const k = pop(T(f), T(a), e.pop ?? 0.4), size = (e.size ?? 2.8) * k;
+      fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0"), pos[0], pos[1], pos[2], size, size, { kind: e.card ?? "soft" });
+    } else {
+      const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.55) * k;
+      fx(out, "knot", 256, 256, (p) => fxKnot(p, 1), pos[0], pos[1] + (e.bob ?? 0.05) * Math.sin(T(f) * 3), pos[2], size, size);
+    }
+  };
+
+  const defs: Def[] = [];
+  const dofs: Dof[] = [];
+  const shots = [...(sb.shots ?? [])].map((s) => ({ s, start: anchor(s.start) })).sort((x, y) => x.start - y.start);
+  shots.forEach(({ s, start }, i) => {
+    const b = i + 1 < shots.length ? shots[i + 1].start : TOTAL;
+    if (s.legacy) {
+      const legacy = LEGACY_SHOTS.find((x) => x.a === start);
+      if (!legacy) throw new Error(`legacy shot "${s.id}" starts at frame ${start}, no story.ts shot has that start`);
+      defs.push({ from: start, light: legacy.light, sets: legacy.sets, cam: legacy.cam, stage: legacy.stage, pose: legacy.pose, sunAz: legacy.sunAz, sunEl: legacy.sunEl });
+      dofs.push(...LEGACY_DOFS.filter((d) => d.f >= start && d.f < b));
+      return;
+    }
+    const def: Def = {
+      from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? []),
+      stage: (t, f, out, cam) => {
+        for (const a of s.actors ?? []) actor(out, cam, a, f);
+        for (const e of s.fx ?? []) effect(out, e, f);
+      },
+      pose: (t, f, sets: Sets) => {
+        for (const x of s.set ?? []) if (x.piece === "pages") sets.dyn.pages.scale.set(1, x.height === undefined ? 0.3 : animated(x.height, f), 1);
+      },
+      ...(s.sun ? { sunAz: s.sun.az, sunEl: s.sun.el } : s.sets.includes("hermitage") ? { sunAz: 115, sunEl: 18 } : {}),
+    };
+    defs.push(def);
+    for (const d of s.dof ?? [{ at: s.start, cInf: 0 }]) {
+      dofs.push({ f: anchor(d.at), cInf: d.cInf, dur: d.dur, focus: d.focus ? (ff: number) => point(d.focus!, ff) : undefined });
+    }
+  });
+
+  const SHOTS = assembleShots(defs, TOTAL);
+  const XFADE = crossfades(SHOTS, sb.crossfade ?? 10);
+  const KICKS: Kick[] = (sb.kicks ?? []).map((k) => [anchor(k.at), k.amp] as Kick).sort((a, b) => a[0] - b[0]);
+  const sortedDofs = dofs.sort((a, b) => a.f - b.f);
+  return {
+    SHOTS, TOTAL, KICKS, XFADE,
+    FLASH_AT: sb.flash ? anchor(sb.flash) : -1000,
+    layersAt: (f: number) => layersAtShots(SHOTS, XFADE, f),
+    dofAt: (f: number) => dofAtList(sortedDofs, f),
+    kickCam: (f: number, c: Cam) => kickCamWith(f, c, KICKS),
+  };
+}
