@@ -16,6 +16,10 @@ const OFF = new Set((q.get("off") || "").split(",").filter(Boolean));
 
 const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: "high-performance", stencil: false });
 renderer.setPixelRatio(1); renderer.setSize(W, H); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
+const gl = renderer.getContext();
+const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+// Reported by the frame driver (`fableon doctor`, render.cjs) so a silent software fallback is visible. Not a visual change.
+(window as unknown as Record<string, unknown>).GLINFO = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
 document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(40, W / H, 0.15, 1500);

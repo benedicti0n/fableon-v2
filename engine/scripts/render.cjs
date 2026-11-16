@@ -33,15 +33,12 @@ const MS = +(opt.msaa ?? 4), OFF = String(opt.off || '');
 const need = (k) => { if (opt[k] === undefined || opt[k] === true) { console.error(`render.cjs ${mode}: missing --${k}\n\n${usage}`); process.exit(1); } return String(opt[k]); };
 const port = 8800 + Math.floor(Math.random() * 900);
 const srv = http.createServer((q, s) => { const p = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (!fs.existsSync(p)) { s.statusCode = 404; return s.end(); } s.setHeader('Content-Type', p.endsWith('.js') ? 'text/javascript' : 'text/html'); s.end(fs.readFileSync(p)); }).listen(port);
-const EXE = process.env.CHROME_PATH || undefined;
-const GL_ARGS = process.env.RENDER_GL === 'swiftshader'
-  ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
-  : ['--ignore-gpu-blocklist', '--enable-gpu']; // Phase 1: measure and pick the fastest working flags per OS
+const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
 const framesCsv = mode === 'stills' ? need('frames') : '';
 const out = ['stills', 'video', 'list', 'qa', 'cuts'].includes(mode) ? need('out') : '';
 const jobsFile = mode === 'segments' ? need('jobs') : '';
 (async () => {
-  const b = await chromium.launch({ ...(EXE ? { executablePath: EXE } : {}), args: GL_ARGS });
+  const b = await chromium.launch(launchOptions());
   const pg = await b.newPage({ viewport: { width: 400, height: 400 } });
   pg.on('pageerror', (e) => console.log('PAGEERR', e.message));
   pg.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('CONSOLE', m.type(), m.text().slice(0, 300)); });
@@ -50,6 +47,11 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
   await pg.waitForFunction(() => window.ready, null, { timeout: 300000 });
   const total = await pg.evaluate(() => window.TOTAL);
   console.log('ready', ((Date.now() - t0) / 1000).toFixed(1) + 's', 'TOTAL', total);
+  const gl = await glInfo(pg);
+  console.log('GL', JSON.stringify(gl));
+  if (!process.env.RENDER_GL || process.env.RENDER_GL === 'gpu') {
+    if (isSoftware(gl.renderer)) console.warn('WARNING GPU request fell back to software WebGL:', gl.renderer, '— see docs/BENCHMARKS.md; set RENDER_GL=swiftshader to silence');
+  }
   if (mode === 'segments') {
     // one browser, many clips (skips clips that already exist)
     const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
