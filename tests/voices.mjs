@@ -6,6 +6,8 @@ import { synthesizeElevenLabs, wordsFromAlignment } from '../cli/src/voice/eleve
 import { wavFromPcm, VOICE_SR } from '../cli/src/voice/wav.js';
 import { normalizeWord } from '../shared/words.mjs';
 import { AUDITION_TEXT, pickCandidates } from '../cli/src/voice/auditions.js';
+import { deliveryErrors } from '../cli/src/stages/script.js';
+import { renderDeliveryBlock, renderDeliveryLine, stripDelivery, toneSettings } from '../cli/src/voice/delivery.js';
 
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const alignmentFor = (text, secondsPerChar = 0.05) => {
@@ -47,6 +49,21 @@ export async function runVoiceTests() {
   const picked = pickCandidates(sample, 2);
   ok('audition voice ranking', picked[0].name === 'Bravo' && picked[1].name === 'Charlie', JSON.stringify(picked));
   ok('audition sample budget', AUDITION_TEXT.length > 30 && AUDITION_TEXT.length * 6 * 3 < 3000, `${AUDITION_TEXT.length} chars`);
+
+  const line = { n: 0, text: 'यम ने कहा, अब सुनो।', delivery: { tone: 'mock-serious', pauseBefore: 0.4, pauses: [{ after: 'कहा', s: 0.3 }], emphasis: ['सुनो'] } };
+  const v3 = renderDeliveryLine(line, 'eleven_v3');
+  const v2 = renderDeliveryLine(line, 'eleven_multilingual_v2');
+  ok('v3 delivery tag', v3.text.includes('[sarcastic]') && v3.text.includes('[pause]') && v3.text.includes('...'), v3.text);
+  ok('v2 delivery break', v2.text.includes('<break time="0.40s" />') && v2.text.includes('<break time="0.12s" />'), v2.text);
+  ok('delivery tags not spoken', !stripDelivery(v3.text).includes('[') && !stripDelivery(v2.text).includes('<'), JSON.stringify([stripDelivery(v3.text), stripDelivery(v2.text)]));
+  ok('delivery word validation', deliveryErrors(line).length === 0 && deliveryErrors({ n: 1, text: 'यम ने कहा।', delivery: { emphasis: ['नहीं'] } }).some((e) => /not a word/.test(e)), 'validation');
+  const block = renderDeliveryBlock([line], 'eleven_v3');
+  const mappedBlock = wordsFromAlignment({ blockText: block.spokenText, lines: block.lines, alignment: alignmentFor(block.spokenText), blockStart: 0, blockDuration: 2 });
+  ok('delivery tags not in words', mappedBlock.words.length === 5 && mappedBlock.words.every((w) => !/[\[\]<]/.test(w.w) && w.w !== '...'), JSON.stringify(mappedBlock.words));
+
+  const voice = { model: 'eleven_multilingual_v2', settings: { stability: 0.5, style: 0, speed: 1 }, tones: { deadpan: { stability: 0.85, style: 0, speed: 1 } } };
+  ok('tone settings', toneSettings(voice, 'deadpan').stability === 0.85 && toneSettings(voice, 'deadpan', { expressive: true }).style === 0.35, JSON.stringify(toneSettings(voice, 'deadpan')));
+  ok('v3 tone is a tag', toneSettings({ ...voice, model: 'eleven_v3' }, 'deadpan').stability === 0.5, 'v3 settings');
 
   const oldFetch = globalThis.fetch;
   const oldKey = process.env.ELEVENLABS_API_KEY;

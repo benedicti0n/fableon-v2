@@ -14,8 +14,8 @@ export function scriptBlocks(projectDir) {
     const blocks = [];
     for (const line of script.lines ?? []) {
       const last = blocks[blocks.length - 1];
-      if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text });
-      else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text }] });
+      if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text, delivery: line.delivery });
+      else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text, delivery: line.delivery }] });
     }
     return blocks;
   }

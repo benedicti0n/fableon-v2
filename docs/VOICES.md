@@ -57,9 +57,10 @@ timing cannot be mapped (with a warning in the run log and the stage result).
 
 For continuity across requests the docs offer `previous_text` / `next_text` and `previous_request_ids` /
 `next_request_ids` (maximum 3 ids; request ids win if both are sent). The provider sends the text of the adjacent beat
-blocks (500 characters each side). Beat blocks are consecutive script lines with the same beat; a 0.26 s local pause
-is inserted between blocks (Kokoro's `BEAT_GAP`). This keeps the request stateless and does not depend on response
-headers.
+blocks (500 characters each side) for **multilingual v2 / flash**. The live v3 test returned HTTP 400:
+`Providing previous_text or next_text is not yet supported with the 'eleven_v3' model.` The provider therefore omits
+text stitching for v3/v4; v3 relies on its audio tags and punctuation. Beat blocks are consecutive script lines with
+the same beat; a 0.26 s local pause is inserted between blocks (Kokoro's `BEAT_GAP`).
 
 ### Voice settings
 
@@ -137,6 +138,36 @@ The account lists 21 premade voices; `/v2/voices?language=hi` filters on the `la
 though some voices have `verified_languages` containing `hi`. Auditions therefore filter account voices locally on
 `verified_languages`, and use `/v1/shared-voices?language=hi&use_cases=narrative_story`, which does return the shared
 Hindi narration library.
+
+### Delivery direction (2026-11-17)
+
+`script.json` lines may carry `delivery: {tone, pauseBefore, pauses, emphasis}`. Model support, verified against the
+current docs and the round-2 live run:
+
+| control | eleven_multilingual_v2 | eleven_v3 |
+|---|---|---|
+| pause | SSML `<break time="x.xs" />`, up to 3 s | no SSML break; use `[pause]`, `...` or punctuation |
+| tone | per-request `voice_settings` (stability/style/speed) | audio tags such as `[sarcastic]`, `[warmly]`, `[excited]`, `[nervously]`, `[softly, with wonder]`, `[whispers]` |
+| emphasis | 0.12 s `<break>` before the word | leading ellipsis before the word |
+| stitching | `previous_text` / `next_text` | not supported (HTTP 400) |
+
+`deadpan` and `matter-of-fact` use no v3 tag (the model has no documented flat-delivery tag); the deadpan pair is
+carried by its good-news/bad-news wording, the 0.5 s local pause before each line and the emphasis mark. The API does
+not expose a v3 “stability mode” field, so `voice.tones` stores `stability`, `style` and `speed` for both models.
+
+Pauses before punchlines are inserted as exact local silence (the model tags do not guarantee a duration); in-line
+pauses use the model's break/tag. The alignment builder strips `[tags]` and `<break>` markup before building
+`words.json`, and tests assert every spoken word keeps monotonic timings.
+
+### Round-2 delivery auditions (2026-11-17)
+
+A six-line Savitri excerpt with delivery marks was synthesized in two variants with Callum × multilingual v2,
+Callum × v3 and George × v3, plus a Callum × v3 **clean** control with no marks. Default uses the base tone settings;
+expressive uses stability 0.25 / style 0.35. The excerpt's hook, deadpan good-news/bad-news pair and twist each carry a
+0.4–0.5 s local pause and emphasis.
+
+**7 takes, 2,965 characters (rendered), $0.2372.** Files are in `work/savitri-hi/voice/auditions/round2/` with
+`round2.md`; the mp3s are not committed.
 
 ### Auditions (2026-11-17)
 

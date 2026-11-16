@@ -101,6 +101,10 @@ tokens per run.
 cached by request hash; `voice.maxCharsPerRun` (default 10,000) caps live characters and `logs/calls.jsonl` records
 characters and cost. See `docs/VOICES.md` for the verified API facts and prices.
 
+Script lines can carry `delivery` (`tone`, `pauseBefore`, `pauses`, `emphasis`); every referenced word is validated
+against the line. ElevenLabs renders v3 tone tags/ellipses and v2 SSML breaks/per-tone settings, inserts exact local
+silence for `pauseBefore`, and strips markup before `words.json`. `voice.tones` stores the per-tone stability/style/speed.
+
 After synthesis the stage applies the same length fit: if the natural duration is within ±10 % of
 `project.seconds`, pitch-preserving `ffmpeg atempo` goes to the exact target and `words.json` is scaled; outside the
 band it stops with the measured length and a suggested word count. `--fit off` keeps the natural length. Kokoro can

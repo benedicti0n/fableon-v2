@@ -27,6 +27,16 @@ function capitalizedNames(text) {
   return names;
 }
 
+export function deliveryErrors(line) {
+  const d = line.delivery;
+  if (!d) return [];
+  const errs = [];
+  const spoken = new Set(normalizedTokens(line.text));
+  for (const p of d.pauses ?? []) if (!spoken.has(normalizeWord(p.after))) errs.push(`/lines/${line.n}/delivery/pauses "${p.after}" is not a word in the line`);
+  for (const w of d.emphasis ?? []) if (!spoken.has(normalizeWord(w))) errs.push(`/lines/${line.n}/delivery/emphasis "${w}" is not a word in the line`);
+  return errs;
+}
+
 export function validateScript(data, { project, facts, catalog, sourceTexts = [] }) {
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
@@ -46,6 +56,7 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
     if (['setting', 'action', 'snap', 'consequence'].includes(l.beat) && !(l.facts ?? []).length) errs.push(`/lines/${l.n} needs at least one verified fact`);
     for (const id of l.facts ?? []) if (!factMap(facts).get(id)?.verified) errs.push(`/lines/${l.n} cites ${id}, which is missing or unverified`);
     if (!catalog.sets.some((s) => s.name === l.look?.set)) errs.push(`/lines/${l.n}/look/set "${l.look?.set}" is not in the catalog`);
+    errs.push(...deliveryErrors(l));
     const chars = new Set(data.characters.map((c) => c.id));
     for (const who of l.look?.who ?? []) if (!chars.has(who)) errs.push(`/lines/${l.n}/look/who "${who}" is not declared`);
   }

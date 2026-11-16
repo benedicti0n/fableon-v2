@@ -57,8 +57,32 @@
               "who": { "type": "array", "items": { "type": "string" } },
               "note": { "type": "string" }
             }
-          }
+          },
+          "delivery": { "$ref": "#/$defs/delivery" }
         }
+      }
+    }
+  },
+  "$defs": {
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tone": { "enum": ["deadpan", "mock-serious", "matter-of-fact", "warm", "excited", "tense", "awe", "whisper"] },
+        "pauseBefore": { "type": "number", "minimum": 0, "maximum": 1.2 },
+        "pauses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["after", "s"],
+            "properties": {
+              "after": { "type": "string", "minLength": 1 },
+              "s": { "type": "number", "minimum": 0.15, "maximum": 1 }
+            }
+          }
+        },
+        "emphasis": { "type": "array", "items": { "type": "string", "minLength": 1 } }
       }
     }
   }

@@ -45,6 +45,19 @@
             "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 }
           }
         },
+        "tones": {
+          "type": "object",
+          "propertyNames": { "enum": ["deadpan", "mock-serious", "matter-of-fact", "warm", "excited", "tense", "awe", "whisper"] },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "stability": { "type": "number", "minimum": 0, "maximum": 1 },
+              "style": { "type": "number", "minimum": 0, "maximum": 1 },
+              "speed": { "type": "number", "minimum": 0.25, "maximum": 4 }
+            }
+          }
+        },
         "maxCharsPerRun": { "type": "integer", "minimum": 1 }
       }
     },

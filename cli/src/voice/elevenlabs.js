@@ -8,6 +8,7 @@ import { atomicWrite, backupBeforeWrite, sha256 } from '../core/artifacts.js';
 import { repoModels } from '../core/model-config.js';
 import { normalizeWord } from '../../../shared/words.mjs';
 import { silencePcm, VOICE_SR, wavFromPcm } from './wav.js';
+import { renderDeliveryBlock } from './delivery.js';
 
 export const ELEVENLABS_BASE = 'https://api.elevenlabs.io';
 export const DEFAULT_MODEL = 'eleven_multilingual_v2';
@@ -42,7 +43,7 @@ function cachePath(projectDir, hash) {
  * Request one block. Returns the decoded response plus billing/cache metadata. The cache key includes the provider,
  * model, voice, text, settings and stitching context, so an identical take is never billed twice.
  */
-async function requestBlock({ projectDir, model, voiceId, text, settings, previousText, nextText, maxChars, spent }) {
+export async function requestSpeech({ projectDir, model, voiceId, text, settings, previousText, nextText, maxChars, spent, stage = 'voice' }) {
   const key = voiceApiKey();
   if (!key) throw new Error('elevenlabs: ELEVENLABS_API_KEY is missing (set it in the environment or .env)');
   const outputFormat = settings.outputFormat ?? 'mp3_44100_128';
@@ -58,14 +59,14 @@ async function requestBlock({ projectDir, model, voiceId, text, settings, previo
     },
     apply_text_normalization: settings.apply_text_normalization ?? 'auto',
     ...(model !== 'eleven_multilingual_v2' && settings.languageCode ? { language_code: settings.languageCode } : {}),
-    ...(previousText ? { previous_text: previousText.slice(-500) } : {}),
-    ...(nextText ? { next_text: nextText.slice(0, 500) } : {}),
+    ...(!/^eleven_(v3|v4)/.test(model) && previousText ? { previous_text: previousText.slice(-500) } : {}),
+    ...(!/^eleven_(v3|v4)/.test(model) && nextText ? { next_text: nextText.slice(0, 500) } : {}),
   };
   const hash = requestHash({ provider: 'elevenlabs', model, voiceId, text, settings: body.voice_settings, outputFormat, previousText: body.previous_text ?? null, nextText: body.next_text ?? null });
   const cached = cachePath(projectDir, hash);
   if (existsSync(cached)) {
     const hit = JSON.parse(readFileSync(cached, 'utf8'));
-    logCall(projectDir, { ts: now(), stage: 'voice', provider: 'elevenlabs', model, voiceId, requestHash: hash, cached: true, ms: 0, characters: 0, costUsd: 0, ok: true });
+    logCall(projectDir, { ts: now(), stage, provider: 'elevenlabs', model, voiceId, requestHash: hash, cached: true, ms: 0, characters: 0, costUsd: 0, ok: true });
     return { ...hit, hash, cached: true, chars: 0, costUsd: 0 };
   }
   const chars = charCount(text);
@@ -88,7 +89,7 @@ async function requestBlock({ projectDir, model, voiceId, text, settings, previo
   const costUsd = (chars / 1000) * pricePer1k(model);
   const record = { audioBase64: j.audio_base64, alignment: j.alignment ?? null, normalizedAlignment: j.normalized_alignment ?? null, chars, costUsd, model, voiceId, outputFormat };
   atomicWrite(cached, JSON.stringify(record) + '\n');
-  logCall(projectDir, { ts: now(), stage: 'voice', provider: 'elevenlabs', model, voiceId, requestHash: hash, cached: false, ms: Date.now() - t0, characters: chars, costUsd, ok: true });
+  logCall(projectDir, { ts: now(), stage, provider: 'elevenlabs', model, voiceId, requestHash: hash, cached: false, ms: Date.now() - t0, characters: chars, costUsd, ok: true });
   return { ...record, hash, cached: false, chars, costUsd };
 }
 
@@ -96,7 +97,7 @@ function tokenSpans(text) {
   const out = [];
   const re = /\S+/g;
   let m;
-  while ((m = re.exec(text))) out.push({ raw: m[0], norm: normalizeWord(m[0]), start: m.index, end: m.index + m[0].length });
+  while ((m = re.exec(text))) { const norm = normalizeWord(m[0]); if (norm) out.push({ raw: m[0], norm, start: m.index, end: m.index + m[0].length }); }
   return out;
 }
 
@@ -119,7 +120,8 @@ export function wordsFromAlignment({ blockText, lines, alignment, blockStart = 0
     while (i < chars.length && !/\s/.test(chars[i])) i++;
     const e = i - 1;
     if (starts[s] === undefined || ends[e] === undefined) continue;
-    spans.push({ raw: chars.slice(s, e + 1).join(''), norm: normalizeWord(chars.slice(s, e + 1).join('')), a: starts[s], b: ends[e] });
+    const norm = normalizeWord(chars.slice(s, e + 1).join(''));
+    if (norm) spans.push({ raw: chars.slice(s, e + 1).join(''), norm, a: starts[s], b: ends[e] });
   }
   const orig = tokenSpans(blockText).map((t) => {
     const line = lines.find((l) => t.start >= l.start && t.start < l.end)?.n ?? lines[lines.length - 1]?.n ?? 0;
@@ -205,18 +207,17 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks }) {
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
     const lines = block.lines;
-    let cursor = 0;
-    const ranges = lines.map((l) => { const start = cursor; cursor += l.text.length; const end = cursor; cursor += 1; return { n: l.n, start, end }; });
-    const text = lines.map((l) => l.text).join(' ');
-    const previousText = i > 0 ? blocks[i - 1].lines.map((l) => l.text).join(' ') : null;
-    const nextText = i + 1 < blocks.length ? blocks[i + 1].lines.map((l) => l.text).join(' ') : null;
-    const blockRes = await requestBlock({ projectDir, model, voiceId, text, settings, previousText, nextText, maxChars, spent });
+    const rendered = renderDeliveryBlock(lines, model);
+    const text = rendered.text;
+    const previousText = i > 0 ? renderDeliveryBlock(blocks[i - 1].lines, model).spokenText : null;
+    const nextText = i + 1 < blocks.length ? renderDeliveryBlock(blocks[i + 1].lines, model).spokenText : null;
+    const blockRes = await requestSpeech({ projectDir, model, voiceId, text, settings, previousText, nextText, maxChars, spent });
     spent += blockRes.chars;
     calls.push({ hash: blockRes.hash, cached: blockRes.cached, chars: blockRes.chars, costUsd: blockRes.costUsd });
     const pcmBlock = await decodePcm(blockRes.audioBase64, projectDir, i);
     const blockStart = pcm.reduce((n, b) => n + b.length, 0) / (2 * VOICE_SR);
-    const { alignment } = chooseAlignment(text, blockRes);
-    const mapped = wordsFromAlignment({ blockText: text, lines: ranges, alignment, blockStart, blockDuration: pcmBlock.length / (2 * VOICE_SR) });
+    const { alignment } = chooseAlignment(rendered.spokenText, blockRes);
+    const mapped = wordsFromAlignment({ blockText: rendered.spokenText, lines: rendered.lines, alignment, blockStart, blockDuration: pcmBlock.length / (2 * VOICE_SR) });
     if (!mapped.words.length) throw new Error(`ElevenLabs returned no character alignment for block ${i + 1}`);
     words.push(...mapped.words);
     warnings.push(...mapped.warnings.map((w) => `block ${i + 1}: ${w}`));

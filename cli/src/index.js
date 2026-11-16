@@ -13,6 +13,7 @@ import { runCommand } from './run-command.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
+import { runRound2 } from './voice/round2.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -179,6 +180,7 @@ export function main(argv = process.argv) {
     .option('--voice-id <id>', 'provider voice id')
     .option('--voices <n>', 'number of audition voices', '4')
     .option('--models <list>', 'comma-separated audition models')
+    .option('--round <n>', 'audition round (1 or 2)', '1')
     .action(async (mode, opts) => {
       if (mode === 'check') {
         try { const r = await voiceCheckCommand(opts); if (!r.ok) process.exitCode = 1; }
@@ -189,7 +191,7 @@ export function main(argv = process.argv) {
         if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
         try {
           const models = opts.models ? opts.models.split(',').map((x) => x.trim()).filter(Boolean) : null;
-          const r = await runAuditions(opts.project, { voices: Number(opts.voices ?? 4), models });
+          const r = opts.round === '2' ? await runRound2(opts.project) : await runAuditions(opts.project, { voices: Number(opts.voices ?? 4), models });
           if (!r.ok) process.exitCode = 1;
         } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
         return;

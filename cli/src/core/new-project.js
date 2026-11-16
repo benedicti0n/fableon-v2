@@ -16,6 +16,16 @@ export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', 
       ? {
         provider: 'elevenlabs', model: 'eleven_multilingual_v2', voiceId: null, language: 'hi',
         settings: { stability: 0.5, similarity_boost: 0.75, style: 0, use_speaker_boost: true, speed: 1 },
+        tones: {
+          deadpan: { stability: 0.85, style: 0, speed: 1 },
+          'mock-serious': { stability: 0.6, style: 0.15, speed: 1 },
+          'matter-of-fact': { stability: 0.7, style: 0.05, speed: 1 },
+          warm: { stability: 0.45, style: 0.1, speed: 1 },
+          excited: { stability: 0.3, style: 0.35, speed: 1.05 },
+          tense: { stability: 0.5, style: 0.2, speed: 1 },
+          awe: { stability: 0.55, style: 0.15, speed: 0.95 },
+          whisper: { stability: 0.7, style: 0.05, speed: 0.95 },
+        },
         maxCharsPerRun: 10000,
       }
       : { engine: 'kokoro', voice, speed: 1.35, language: 'en' },
