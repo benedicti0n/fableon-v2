@@ -1,6 +1,6 @@
 // Per-project authoring schema specialization: fixed enums for this board's words, cast, sets and marks.
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { ROOT } from './env.js';
 import { projectDir, requireFile } from './project.js';
 
@@ -54,7 +54,8 @@ export function specializeSchema(dirArg) {
 
 export function schemaCommand(dirArg, outArg) {
   const { schema, board } = specializeSchema(dirArg);
-  const out = outArg ? projectDir(join(process.cwd(), outArg)) : join(projectDir(dirArg), 'schema.json');
+  const out = outArg ? (isAbsolute(outArg) ? outArg : resolve(process.cwd(), outArg)) : join(projectDir(dirArg), 'schema.json');
+  if (outArg) mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(schema, null, 2) + '\n');
   const size = readFileSync(out).length;
   console.log(`schema: ${out} (${size} bytes, ${(board.shots ?? []).length} shots)`);

@@ -101,6 +101,16 @@ seconds in the board and frames in v1. `until`, `from`, `toAt` and `visible` anc
 Set pieces pass through with string anchors and seconds converted to frames where v1 is frame-based. Crowd layouts and
 set-piece grids accept points and marks.
 
+## Partial boards and previews
+
+A board may set `"partial": true`; then every shot must have an explicit `"end"` anchor (e.g. `"end": "shot+2.4s"`).
+The compiler writes the v1 shot `end`, so the selected ranges do not stretch across omitted shots.
+
+- `fableon stills --project <dir> --shots S14,S27 --frames start,mid,end` renders only those ranges.
+- `fableon render --project <dir> --shots S14,S27` renders only those clips.
+- `fableon review --project <dir> --compare <fixture> --shots … --out sheet.jpg` writes the labelled side-by-side sheet
+  (compiled left of each pair, comparison right; start/mid/end per shot).
+
 ## Strict schemas and model cards
 
 `schema/authoring.schema.json` is closed: every effect kind, set piece, crowd, motion, animate value, special params

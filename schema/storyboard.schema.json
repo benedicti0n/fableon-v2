@@ -1126,6 +1126,9 @@
           "items": {
             "$ref": "#/$defs/SetAction"
           }
+        },
+        "end": {
+          "$ref": "#/$defs/Anchor"
         }
       }
     },

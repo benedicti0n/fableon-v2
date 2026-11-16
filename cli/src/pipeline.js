@@ -23,6 +23,13 @@ function prepare(dir) {
   assertProjectInputs(dir);
 }
 
+function shotRows(dir) {
+  const rows = readShots(dir);
+  const sb = JSON.parse(readFileSync(requireFile(dir, 'storyboard.json'), 'utf8'));
+  const ids = (sb.shots ?? []).map((s) => s.id);
+  return rows.map(([n, a, b], i) => ({ id: ids[i] ?? String(n), n, a, b }));
+}
+
 function segments(dir, shots) {
   return shots.map(([id, a, b]) => [a, b, join(dir, 'render', `seg_${pad(id)}.mp4`)]);
 }
@@ -51,12 +58,26 @@ export async function initCommand(name, from) {
   for (const f of r.copied) console.log(`  ${f}`);
 }
 
-export async function stillsCommand(dirArg, framesCsv, qualityName) {
+export async function stillsCommand(dirArg, framesCsv, qualityName, shotsCsv) {
   const dir = projectDir(dirArg);
   prepare(dir);
   const q = quality(qualityName);
-  if (!framesCsv) throw new Error('missing --frames 60,640');
-  await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', framesCsv, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
+  let frames = framesCsv;
+  if (shotsCsv) {
+    const wanted = new Set(shotsCsv.split(',').map((s) => s.trim()).filter(Boolean));
+    const shots = shotRows(dir).filter((s) => wanted.has(s.id) || wanted.has(String(s.n)));
+    if (!shots.length) throw new Error(`no shots matched --shots ${shotsCsv}`);
+    const tokens = (framesCsv ?? 'start,mid,end').split(',').map((s) => s.trim()).filter(Boolean);
+    const list = [];
+    for (const { a, b } of shots) for (const t of tokens) {
+      const f = t === 'start' ? a : t === 'mid' ? Math.floor((a + b) / 2) : t === 'end' ? b - 1 : Number(t);
+      if (!Number.isFinite(f)) throw new Error(`bad frame token "${t}" (use start, mid, end or a number)`);
+      list.push(f);
+    }
+    frames = [...new Set(list)].join(',');
+  }
+  if (!frames) throw new Error('missing --frames 60,640');
+  await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', frames, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
   console.log(`stills: wrote ${join(dir, 'stills')}`);
 }
 
@@ -104,12 +125,20 @@ async function workers(dir, segs, q, n) {
   if (missing.length) throw new Error(`render finished but ${missing.length} clip(s) are missing: ${missing.map((s) => s[2]).join(', ')}`);
 }
 
-export async function renderCommand(dirArg, { qualityName = 'preview', workers: n = 2, detach = false } = {}) {
+export async function renderCommand(dirArg, { qualityName = 'preview', workers: n = 2, detach = false, shots: shotFilter = null } = {}) {
   const dir = projectDir(dirArg);
   prepare(dir);
   const q = quality(qualityName);
   if (!Number.isInteger(n) || n < 1 || n > 16) throw new Error('--workers must be an integer 1..16');
-  const segs = segments(dir, readShots(dir));
+  const wanted = shotFilter ? new Set(String(shotFilter).split(',').map((s) => s.trim()).filter(Boolean)) : null;
+  let all = readShots(dir);
+  if (wanted) {
+    const rows = shotRows(dir).filter((s) => wanted.has(s.id) || wanted.has(String(s.n)));
+    if (!rows.length) throw new Error(`no shots matched --shots ${shotFilter}`);
+    const nums = new Set(rows.map((s) => s.n));
+    all = all.filter(([id]) => nums.has(id));
+  }
+  const segs = segments(dir, all);
   const renderDir = join(dir, 'render');
   mkdirSync(renderDir, { recursive: true });
   for (const f of readdirSync(renderDir)) if (f.endsWith('.part.mp4')) rmSync(join(renderDir, f));
@@ -118,7 +147,7 @@ export async function renderCommand(dirArg, { qualityName = 'preview', workers: 
   if (detach) {
     const log = join(renderDir, 'render.log');
     const out = openSync(log, 'a');
-    const child = spawn(process.execPath, [join(CLI, 'bin', 'fableon.js'), 'render', '--project', dir, '--quality', qualityName, '--workers', String(n)], { cwd: ROOT, detached: true, stdio: ['ignore', out, out] });
+    const child = spawn(process.execPath, [join(CLI, 'bin', 'fableon.js'), 'render', '--project', dir, '--quality', qualityName, '--workers', String(n), ...(shotFilter ? ['--shots', shotFilter] : [])], { cwd: ROOT, detached: true, stdio: ['ignore', out, out] });
     child.unref();
     console.log(`render: detached pid ${child.pid}; log ${log}`);
     console.log(`render: follow with: tail -f ${log}`);

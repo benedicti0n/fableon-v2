@@ -384,6 +384,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
   const out = { id: shot.id, start, light: shot.light ?? 'day', sets };
+  if (shot.end !== undefined) out.end = parseAnchor(shot.end, fps);
   if (shot.sun) out.sun = shot.sun;
   const list = [];
   for (const entry of shot.actors ?? []) {
@@ -471,7 +472,8 @@ export function compileBoard(board, words, catalog) {
   };
   for (const [id, def] of ctx0) ctx.cast[id] = { spec: def.spec, seed: def.seed ?? stableSeed(id) };
   const starts = (board.shots ?? []).map((s) => ctx.anchorFrame(parseAnchor(s.start, fps)));
-  out.shots = (board.shots ?? []).map((s, i) => compileShot(s, board, words, catalog, fps, ctx, i + 1 < starts.length ? starts[i + 1] : end + (board.tailFrames ?? 36)));
+  if (board.partial) for (const s of board.shots ?? []) if (s.end === undefined) throw new Error(`shot ${s.id} needs an explicit end anchor in a partial board`);
+  out.shots = (board.shots ?? []).map((s, i) => compileShot(s, board, words, catalog, fps, ctx, s.end !== undefined ? ctx.anchorFrame(parseAnchor(s.end, fps), starts[i]) : i + 1 < starts.length ? starts[i + 1] : end + (board.tailFrames ?? 36)));
   out.cast = ctx.cast;
   out.kicks = (board.kicks ?? []).map((k) => ({ at: parseAnchor(k.at, fps), amp: k.amp }));
   return { storyboard: out, stats: { raw: ctx.raw, cast: Object.keys(ctx.cast).length } };

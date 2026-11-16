@@ -3,7 +3,7 @@
 import type { ShotDef } from "../world";
 import type { Sets } from "../sets";
 
-export type Def = Omit<ShotDef, "id" | "a" | "b"> & { from: number };
+export type Def = Omit<ShotDef, "id" | "a" | "b"> & { from: number; end?: number };
 export type Dof = { f: number; dur?: number; cInf: number; focus?: (f: number) => [number, number, number] };
 
 /** jars stay hidden in every other shot; the wrapper is part of the look and is shared. */
@@ -12,7 +12,7 @@ export const hideJars = (s: Sets) => { s.dyn.jars.visible = s.dyn.lids.visible =
 export const assembleShots = (defs: Def[], total: number, pagesDefault = 0.3): ShotDef[] => {
   const sorted = [...defs].sort((a, b) => a.from - b.from);
   return sorted.map((d, i) => {
-    const a = i === 0 ? 0 : d.from, b = i + 1 < sorted.length ? sorted[i + 1].from : total;
+    const a = d.from, b = d.end ?? (i + 1 < sorted.length ? sorted[i + 1].from : total);
     const pose = d.pose;
     return { ...d, id: i + 1, a, b, pose: (t: number, f: number, s: Sets) => {
       hideJars(s); s.dyn.city.visible = false; s.dyn.ladduPlate.visible = false; s.dyn.pages.scale.set(1, pagesDefault, 1);

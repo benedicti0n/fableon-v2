@@ -7,6 +7,7 @@ import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
 import { schemaCommand } from './schema.js';
 import { catalogCardCommand } from './catalog-card.js';
+import { reviewCommand } from './review.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -44,6 +45,15 @@ export function main(argv = process.argv) {
     .action((opts) => catalogCardCommand(opts.out));
 
   program
+    .command('review')
+    .description('write a labelled side-by-side review sheet for selected shots')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--compare <dir>', 'comparison project folder')
+    .option('--shots <ids>', 'comma-separated shot ids')
+    .option('--out <file>', 'output sheet path')
+    .action((opts) => reviewCommand(opts.project, opts.compare, opts.shots, opts.out));
+
+  program
     .command('frames')
     .description('check every named camera subject against the safe area and scenery occlusion')
     .requiredOption('--project <dir>', 'project folder')
@@ -71,9 +81,10 @@ export function main(argv = process.argv) {
     .command('stills')
     .description('render selected frames as JPEG stills')
     .requiredOption('--project <dir>', 'project folder')
-    .requiredOption('--frames <list>', 'comma-separated frame numbers, e.g. 60,640')
+    .option('--frames <list>', 'frame numbers or start,mid,end', 'start,mid,end')
+    .option('--shots <ids>', 'only these shot ids, e.g. S14,S27')
     .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
-    .action((opts) => stillsCommand(opts.project, opts.frames, opts.quality));
+    .action((opts) => stillsCommand(opts.project, opts.frames, opts.quality, opts.shots));
 
   program
     .command('render')
@@ -81,8 +92,9 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
     .option('--workers <n>', 'parallel segment workers', '2')
+    .option('--shots <ids>', 'render only these shot ids, e.g. S14,S27')
     .option('--detach', 'keep rendering after this process exits')
-    .action((opts) => renderCommand(opts.project, { qualityName: opts.quality, workers: Number(opts.workers), detach: !!opts.detach }));
+    .action((opts) => renderCommand(opts.project, { qualityName: opts.quality, workers: Number(opts.workers), detach: !!opts.detach, shots: opts.shots }));
 
   program
     .command('audio')
