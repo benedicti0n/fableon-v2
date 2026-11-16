@@ -10,6 +10,18 @@ import { LensBlur } from "./lensblur";
 import { GradeEffect, GRADES, gradeFor } from "./grade";
 import { SHOTS, TOTAL, FLASH_AT, layersAt, dofAt, kickCam, XFADE, KICKS } from "./story";
 
+// Project data is fetched before anything is built. render.cjs serves the project under /project/; when no
+// storyboard is present this resolves to {words:null, storyboard:null} and the compiled-in story.ts is used.
+type ProjectData = { words: unknown | null; storyboard: unknown | null };
+const loadProject = async (): Promise<ProjectData> => {
+  const get = async (name: string) => {
+    try { const r = await fetch(`/project/${name}`); return r.ok ? await r.json() : null; } catch { return null; }
+  };
+  const [words, storyboard] = await Promise.all([get("words.json"), get("storyboard.json")]);
+  return { words, storyboard };
+};
+const PROJECT = await loadProject();
+
 const q = new URLSearchParams(location.search);
 const W = +(q.get("w") || 1440), H = +(q.get("h") || 2560), MS = +(q.get("ms") ?? 4);
 const OFF = new Set((q.get("off") || "").split(",").filter(Boolean));

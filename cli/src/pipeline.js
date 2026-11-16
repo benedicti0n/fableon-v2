@@ -19,14 +19,14 @@ function segments(dir, shots) {
   return shots.map(([id, a, b]) => [a, b, join(dir, 'render', `seg_${pad(id)}.mp4`)]);
 }
 
-function renderArgs(...extra) {
-  return [RENDER_CJS, ...extra, '--size', '540x960', '--msaa', '0'];
+function renderArgs(dir, ...extra) {
+  return [RENDER_CJS, ...extra, '--project', dir, '--size', '540x960', '--msaa', '0'];
 }
 
 async function writeMeta(dir) {
-  await run(process.execPath, renderArgs('list', '--out', join(dir, 'shots.json')), { cwd: ROOT });
-  await run(process.execPath, renderArgs('qa', '--out', join(dir, 'qa_meta.json')), { cwd: ROOT });
-  await run(process.execPath, renderArgs('cuts', '--out', join(dir, 'cuts.json')), { cwd: ROOT });
+  await run(process.execPath, renderArgs(dir, 'list', '--out', join(dir, 'shots.json')), { cwd: ROOT });
+  await run(process.execPath, renderArgs(dir, 'qa', '--out', join(dir, 'qa_meta.json')), { cwd: ROOT });
+  await run(process.execPath, renderArgs(dir, 'cuts', '--out', join(dir, 'cuts.json')), { cwd: ROOT });
 }
 
 export async function shotsCommand(dirArg) {
@@ -47,12 +47,12 @@ export async function stillsCommand(dirArg, framesCsv, qualityName) {
   assertFixtureTimeline(dir);
   const q = quality(qualityName);
   if (!framesCsv) throw new Error('missing --frames 60,640');
-  await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', framesCsv, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
+  await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', framesCsv, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
   console.log(`stills: wrote ${join(dir, 'stills')}`);
 }
 
 function worker(dir, jobsFile, q, i) {
-  const child = spawn(process.execPath, [RENDER_CJS, 'segments', '--jobs', jobsFile, '--size', q.size, '--msaa', '0'], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, [RENDER_CJS, 'segments', '--jobs', jobsFile, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'] });
   const relay = (stream, tag) => {
     let buf = '';
     stream.on('data', (d) => {

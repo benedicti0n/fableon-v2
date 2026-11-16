@@ -9,6 +9,8 @@
 //   node engine/scripts/render.cjs cuts     --out <cuts.json>
 //
 // --jobs is a JSON array of [from, to, outfile] triples: one browser, many clips (existing clips are skipped).
+// --project <dir> serves that folder under /project/ (words.json + storyboard.json); with no storyboard the engine
+// falls back to the compiled-in story.ts, exactly as before.
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path'), { spawn } = require('child_process');
 const root = path.join(__dirname, '..', 'dist');
@@ -30,9 +32,21 @@ const mode = opt._[0];
 if (!mode || opt.help) { console.log(usage); process.exit(mode ? 0 : 1); }
 const [W, H] = String(opt.size || '1440x2560').split(/[x:]/).map(Number);
 const MS = +(opt.msaa ?? 4), OFF = String(opt.off || '');
+const PROJECT = opt.project ? path.resolve(String(opt.project)) : null;
 const need = (k) => { if (opt[k] === undefined || opt[k] === true) { console.error(`render.cjs ${mode}: missing --${k}\n\n${usage}`); process.exit(1); } return String(opt[k]); };
 const port = 8800 + Math.floor(Math.random() * 900);
-const srv = http.createServer((q, s) => { const p = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (!fs.existsSync(p)) { s.statusCode = 404; return s.end(); } s.setHeader('Content-Type', p.endsWith('.js') ? 'text/javascript' : 'text/html'); s.end(fs.readFileSync(p)); }).listen(port);
+const mime = (p) => p.endsWith('.js') ? 'text/javascript' : p.endsWith('.json') ? 'application/json' : p.endsWith('.jpg') || p.endsWith('.jpeg') ? 'image/jpeg' : p.endsWith('.png') ? 'image/png' : 'text/html';
+const srv = http.createServer((q, s) => {
+  const url = decodeURIComponent(q.url.split('?')[0]);
+  let p;
+  if (url.startsWith('/project/')) {
+    if (!PROJECT) { s.statusCode = 404; return s.end(); }
+    p = path.resolve(PROJECT, url.slice('/project/'.length));
+    if (p !== PROJECT && !p.startsWith(PROJECT + path.sep)) { s.statusCode = 403; return s.end(); }
+  } else p = path.join(root, url);
+  if (!fs.existsSync(p) || !fs.statSync(p).isFile()) { s.statusCode = 404; return s.end(); }
+  s.setHeader('Content-Type', mime(p)); s.end(fs.readFileSync(p));
+}).listen(port);
 const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
 const framesCsv = mode === 'stills' ? need('frames') : '';
 const out = ['stills', 'video', 'list', 'qa', 'cuts'].includes(mode) ? need('out') : '';
