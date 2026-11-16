@@ -35,7 +35,7 @@ export function runAuthoring() {
     shots: [{
       id: 'test', start: '1.Vyasa', light: 'day', sets: ['village'],
       camera: [{ raw: { at: '1.Vyasa', type: 'fixed', pos: [0, 2, 0], look: [0, 1.5, -5], fov: 40 } }],
-      actors: [{ cast: 'kunti', at: 'village.front', pose: 'stir', says: ['2.His', '2.His+0.4s'] }],
+      actors: [{ cast: 'kunti', id: 'kunti', at: 'village.front', pose: 'stir', says: ['2.His', '2.His+0.4s'] }],
     }],
   };
   const a = compileBoard(board, words, catalog);
@@ -44,5 +44,9 @@ export function runAuthoring() {
   ok('compiled shot', a.storyboard.shots.length === 1 && a.storyboard.shots[0].actors.length === 1);
   ok('compiled talk beats', a.storyboard.shots[0].actors[0].beats?.length === 2);
   ok('compiled cast', a.storyboard.cast.kunti?.spec === 'C.kunti');
+  const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
+  const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
+  ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);
+  ok('semantic camera dof', compileBoard(semantic, words, catalog).storyboard.shots[0].dof?.[0]?.cInf === 13);
   return { ok: errors.length === 0, errors, checks };
 }

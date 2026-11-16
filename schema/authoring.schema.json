@@ -323,6 +323,106 @@
         "raw": {
           "type": "object",
           "additionalProperties": true
+        },
+        "at": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "cut": {
+          "type": "boolean"
+        },
+        "dur": {
+          "type": "number"
+        },
+        "type": {
+          "enum": [
+            "dolly",
+            "fixed",
+            "tilt"
+          ]
+        },
+        "pos": {
+          "$ref": "#/$defs/Point"
+        },
+        "look": {
+          "$ref": "#/$defs/Point"
+        },
+        "fov": {
+          "type": "number"
+        },
+        "roll": {
+          "type": "number"
+        },
+        "push": {
+          "type": "object"
+        },
+        "lookTo": {
+          "$ref": "#/$defs/Point"
+        },
+        "tiltDur": {
+          "type": "number"
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "size": {
+          "enum": [
+            "close",
+            "medium",
+            "full",
+            "wide",
+            "establishing",
+            "insert"
+          ]
+        },
+        "on": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "angle": {
+          "enum": [
+            "eye",
+            "low",
+            "high",
+            "overhead"
+          ]
+        },
+        "side": {
+          "enum": [
+            "front",
+            "left",
+            "right",
+            "frontLeft",
+            "frontRight"
+          ]
+        },
+        "move": {
+          "enum": [
+            "push",
+            "hold",
+            "glide",
+            "tiltUp",
+            "tiltDown",
+            "follow",
+            "crane"
+          ]
+        },
+        "punch": {
+          "$ref": "#/$defs/Anchor"
+        },
+        "glide": {
+          "type": "number"
         }
       }
     },

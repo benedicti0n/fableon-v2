@@ -6,6 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT } from './env.js';
+import { SIZE, solveCamera } from './solver.js';
 
 const FPS = 30;
 const normAngle = (deg) => (deg * Math.PI) / 180;
@@ -253,56 +254,131 @@ const compileCrowd = (c, shot, ctx) => {
   return out;
 };
 
+const pointAt = (p, f, ctx) => {
+  if (Array.isArray(p)) return p;
+  if (!p || typeof p !== 'object') throw new Error(`bad point ${JSON.stringify(p)}`);
+  const base = p.at && ctx.catalog.places[p.at] ? ctx.catalog.places[p.at] : [0, 0, 0];
+  const d = p.d ?? [0, 0, 0];
+  return [base[0] + d[0], base[1] + d[1], base[2] + d[2]];
+};
+
+const motionAt = (m, f, p0, ctx) => {
+  if (!m) return null;
+  if (m.type === 'ballistic') {
+    const t = (f - ctx.anchorFrame(m.at)) / ctx.fps - (m.delay ?? 0), u = Math.max(0, t);
+    return [p0[0] + m.v[0] * u + m.a[0] * u * u, p0[1] + m.v[1] * u + m.a[1] * u * u, p0[2] + m.v[2] * u + m.a[2] * u * u];
+  }
+  const keys = m.keys.map(([a, p]) => [ctx.anchorFrame(a), pointAt(p, f, ctx)]).sort((x, y) => x[0] - y[0]);
+  if (f <= keys[0][0]) return keys[0][1];
+  if (f >= keys[keys.length - 1][0]) return keys[keys.length - 1][1];
+  let i = 0; while (i + 1 < keys.length && f >= keys[i + 1][0]) i++;
+  const [f0, a] = keys[i], [f1, b] = keys[i + 1], u = f1 === f0 ? 1 : (f - f0) / (f1 - f0);
+  return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u];
+};
+
+const castSpec = (id, ctx) => {
+  const e = ctx.cast[id];
+  if (!e) return null;
+  if (typeof e.spec === 'object') return e.spec;
+  const [g, ...rest] = String(e.spec).split('.');
+  const list = g === 'C' ? ctx.catalog.cast.C : g === 'KIDS' ? ctx.catalog.cast.KIDS : null;
+  return list?.find((x) => x.name === rest.join('.'))?.spec ?? null;
+};
+
+const actorStateAt = (a, f, shot, ctx) => {
+  const start = ctx.anchorFrame(shot.start);
+  let st = { ...a };
+  for (const b of a.beats ?? []) if (f >= ctx.anchorFrame(b.at, start)) st = { ...st, ...b };
+  const base = a.pos ? pointAt(a.pos, f, ctx) : [0, 0, 0];
+  const pos = a.motion ? motionAt(a.motion, f, base, ctx) : base;
+  const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
+  const key = a.special ? a.special : (spec.build ?? 'adult');
+  const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
+  return { id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who };
+};
+
+const subjectFor = (id, compiled, shot, f, ctx) => {
+  const a = (compiled.actors ?? []).find((x) => x.id === id || x.who === id);
+  if (a) return actorStateAt(a, f, compiled, ctx);
+  const fx = (compiled.fx ?? []).find((x) => x.id === id);
+  if (fx) {
+    const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ?? [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
+    return { id, moveId: id, pos, measure: { standing: 0.9, seated: 0.9, eye: 0.6, eyeSeated: 0.6, head: 0.25, halfWidth: 0.35 }, scale: 1, seated: false };
+  }
+  const p = markPos(id, shot.sets ?? [], ctx.catalog);
+  return { id, moveId: null, pos: p, measure: ctx.catalog.measure.adult, scale: 1, seated: false };
+};
+
 const compileShot = (shot, board, words, catalog, fps, ctx) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
   const out = { id: shot.id, start, light: shot.light ?? 'day', sets };
   if (shot.sun) out.sun = shot.sun;
-  const cameras = [];
+  const list = [];
+  for (const entry of shot.actors ?? []) {
+    if (entry && typeof entry === 'object' && entry.row) list.push(...expandRow(entry.row, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)));
+    else if (typeof entry === 'string' && board.groups?.[entry]) throw new Error(`shot ${shot.id}: group "${entry}" must be used in a row`);
+    else list.push(compileActor(entry, { ...shot, sets }, ctx));
+  }
+  for (const r of shot.rows ?? []) list.push(...expandRow(r, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)));
+  if (list.length) out.actors = list;
+  if (shot.crowds) out.crowds = shot.crowds.map((c) => compileCrowd(c, { ...shot, sets }, ctx));
+  if (shot.fx) out.fx = shot.fx.map((e) => compileEffect(e, { ...shot, sets }, ctx));
+  if (shot.set) out.set = shot.set.map((x) => convertSetAction(x, { ...shot, sets }, ctx));
+  const cameras = [], dofs = [];
   for (const k of shot.camera ?? []) {
-    if (k.size !== undefined) throw new Error(`shot ${shot.id}: semantic camera size "${k.size}" needs the F4 solver`);
-    if (k.raw) ctx.raw++;
-    const raw = k.raw ?? k;
-    const key = { ...raw, at: parseAnchor(raw.at, fps) };
-    if (raw.pos !== undefined) key.pos = resolvePoint(raw.pos, sets, catalog);
-    if (raw.look !== undefined) key.look = resolvePoint(raw.look, sets, catalog);
-    if (raw.lookTo !== undefined) key.lookTo = resolvePoint(raw.lookTo, sets, catalog);
-    if (raw.push) key.push = { ...raw.push, from: parseAnchor(raw.push.from, fps), ...(raw.push.punchAt ? { punchAt: parseAnchor(raw.push.punchAt, fps) } : {}) };
-    if (raw.subjects) key.subjects = raw.subjects;
-    cameras.push(key);
+    const semantic = k.size !== undefined || k.on !== undefined;
+    if (semantic) {
+      const on = k.on === undefined ? (out.actors ?? []).map((a) => a.id ?? a.who) : Array.isArray(k.on) ? k.on : [k.on];
+      const f = ctx.anchorFrame(parseAnchor(k.at, fps), start);
+      const subjects = on.map((id) => subjectFor(id, out, shot, f, ctx));
+      const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };
+      const keepout = catalog.keepout?.[sets[0]] ?? [];
+      const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, setInfo: info, keepout });
+      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look };
+      if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
+      delete key.subjects; // F5 adds the v1 subjects field
+      const primary = subjects[0];
+      if ((k.move ?? 'push') === 'follow' && primary) {
+        if (!primary.moveId) throw new Error(`shot ${shot.id}: follow camera needs a moving id on "${primary.id}"`);
+        const a0 = (baseAngleFor(k, info) * Math.PI) / 180;
+        key.pos = { at: primary.moveId, d: [Math.sin(a0) * solved.debug.distance, solved.key.pos[1] - primary.pos[1], Math.cos(a0) * solved.debug.distance] };
+        key.look = { at: primary.moveId, d: [0, (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, 0] };
+      }
+      cameras.push(key);
+      if (!shot.dof && solved.debug.dof > 0) dofs.push({ at: parseAnchor(k.at, fps), cInf: solved.debug.dof, dur: 0, ...(primary?.moveId ? { focus: { actor: primary.moveId, attach: 'eyes', d: [0, 0, 0] } } : primary ? { focus: [primary.pos[0], primary.pos[1] + (primary.seated ? primary.measure.eyeSeated : primary.measure.eye) * primary.scale, primary.pos[2]] } : {}) });
+    } else {
+      if (k.raw) ctx.raw++;
+      const raw = k.raw ?? k;
+      const key = { ...raw, at: parseAnchor(raw.at, fps) };
+      if (raw.pos !== undefined) key.pos = resolvePoint(raw.pos, sets, catalog);
+      if (raw.look !== undefined) key.look = resolvePoint(raw.look, sets, catalog);
+      if (raw.lookTo !== undefined) key.lookTo = resolvePoint(raw.lookTo, sets, catalog);
+      if (raw.push) key.push = { ...raw.push, from: parseAnchor(raw.push.from, fps), ...(raw.push.punchAt ? { punchAt: parseAnchor(raw.push.punchAt, fps) } : {}) };
+      if (raw.subjects) key.subjects = raw.subjects;
+      cameras.push(key);
+    }
   }
   const rawShot = shot.raw ?? {};
   if (shot.raw) ctx.raw++;
   if (!cameras.length && rawShot.camera) cameras.push(...rawShot.camera.map((k) => ({ ...k, ...(typeof k.at === 'string' ? { at: parseAnchor(k.at, fps) } : {}) })));
-  if (cameras.length) out.camera = cameras.sort((a, b) => ctx.anchorFrame(a.at) - ctx.anchorFrame(b.at));
+  if (cameras.length) out.camera = cameras.sort((a, b) => ctx.anchorFrame(a.at, start) - ctx.anchorFrame(b.at, start));
   if (shot.dof) out.dof = shot.dof.map((d) => compileDof(d, { ...ctx, sets }));
-  if (shot.actors) {
-    const list = [];
-    for (const entry of shot.actors) {
-      if (entry && typeof entry === 'object' && entry.row) list.push(...expandRow(entry, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)));
-      else if (typeof entry === 'string' && board.groups?.[entry]) throw new Error(`shot ${shot.id}: group "${entry}" must be used in a row`);
-      else list.push(compileActor(entry, { ...shot, sets }, ctx));
-    }
-    out.actors = list;
-  }
-  if (shot.rows) {
-    out.actors = [...(out.actors ?? []), ...shot.rows.flatMap((r) => expandRow(r, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)))];
-  }
-  if (shot.crowds) out.crowds = shot.crowds.map((c) => compileCrowd(c, { ...shot, sets }, ctx));
-  if (shot.fx) out.fx = shot.fx.map((e) => compileEffect(e, { ...shot, sets }, ctx));
-  if (shot.set) out.set = shot.set.map((x) => convertSetAction(x, { ...shot, sets }, ctx));
+  else if (dofs.length) out.dof = dofs;
   if (rawShot.camera) delete rawShot.camera;
   Object.assign(out, rawShot);
   return out;
 };
+
+const baseAngleFor = (k, info) => (info.front ?? 0) + ({ front: 0, left: -30, right: 30, frontLeft: -15, frontRight: 15 }[k.side ?? 'front'] ?? 0);
 
 export function compileBoard(board, words, catalog) {
   const fps = board.fps ?? FPS;
   const end = Math.round((words[words.length - 1]?.b ?? 0) * fps);
   const ctx = {
     board, words, catalog, fps, cast: {}, raw: 0,
-    anchorFrame: (a) => {
-      if (a.shot) return 0;
+    anchorFrame: (a, shotStart = 0) => {
+      if (a.shot) return shotStart + (a.offset ?? 0);
       if (a.frame !== undefined) return a.frame;
       if (a.end) return end + (a.offset ?? 0);
       const hit = words.filter((w) => w.line === a.line && w.w.toLowerCase().replace(/[^a-z']/g, '') === a.word.toLowerCase().replace(/[^a-z']/g, ''))[a.nth ?? 0];

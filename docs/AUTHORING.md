@@ -114,3 +114,48 @@ Camera keys in this commit (F3) are explicit v1 keys through raw:
 ```
 
 The semantic camera solver is added in F4 and documented below when enabled.
+
+## Semantic camera keys (F4 solver)
+
+```jsonc
+{
+  "at": "5.Her",
+  "cut": true,
+  "size": "close",
+  "on": ["kunti"],
+  "angle": "eye",
+  "side": "front",
+  "move": "push",
+  "punch": "5.king",
+  "roll": 4,
+  "glide": 0.8
+}
+```
+
+`size` is `close`, `medium`, `full`, `wide`, `establishing` or `insert`. `on` lists cast/moving ids or one mark.
+`angle` is `eye`, `low`, `high` or `overhead`; `side` is `front`, `left`, `right`, `frontLeft` or `frontRight`
+relative to the set's `front`; `move` is `push`, `hold`, `glide`, `tiltUp`, `tiltDown`, `follow` or `crane`.
+
+Constants as implemented (`cli/src/solver.js`):
+
+| size | default fov | coverage | push rate | DOF |
+|---|---:|---|---:|---:|
+| close | 37 | 2.4 head heights | 0.003 | 13 |
+| medium | 39 | 0.62 standing heights | 0.0025 | 11 |
+| full | 41 | 1.12 standing heights | 0.0022 | 8 |
+| wide | 45 | subject box + 30 % | 0.002 | 0 |
+| establishing | 48 | set bounds | 0.0018 | 0 |
+| insert | 35 | 0.8 m around the mark | 0.0025 | 11 |
+
+- Both frame directions fit: horizontal fov = `2·atan(tan(vfov/2)·9/16)`; distance is the larger of the vertical and
+  horizontal fits.
+- Eye line: close/medium eye height at 40 % from the top (the look point is `span·0.10` below the eyes).
+- Angles: eye = subject eye height; low = 45 % of body height; high = 2.5-4 m above; overhead = 8 m above.
+- `hold` settles at rate 0.0015. `punch` adds 0.006 over 30 frames at that anchor. `glide`/`crane` use a 0.8 s key
+  transition; `tiltUp`/`tiltDown` compile to a v1 tilt key.
+- `follow` requires a moving id and compiles camera `pos`/`look` as Points relative to that id.
+- Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
+  is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
+  camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
+- The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt` and the default DOF entry. `subjects` is added
+  to v1 camera keys in F5.
