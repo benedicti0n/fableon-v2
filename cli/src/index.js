@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
 import { validateCommand } from './validate.js';
+import { diffCommand } from './diff.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -24,6 +25,14 @@ export function main(argv = process.argv) {
     .description('validate a project storyboard (schema, catalog, word anchors, time order)')
     .requiredOption('--project <dir>', 'project folder')
     .action((opts) => validateCommand(opts.project));
+
+  program
+    .command('diff')
+    .description('render one frame in legacy and storyboard mode and write a structural + pixel diff')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--frame <n>', 'frame number')
+    .option('--shot <id>', 'label the report with a shot id')
+    .action((opts) => diffCommand(opts.project, opts.frame, opts.shot));
 
   program
     .command('init <name>')

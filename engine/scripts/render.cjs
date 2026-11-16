@@ -7,6 +7,7 @@
 //   node engine/scripts/render.cjs list     --out <shots.json>
 //   node engine/scripts/render.cjs qa       --out <qa_meta.json>
 //   node engine/scripts/render.cjs cuts     --out <cuts.json>
+//   node engine/scripts/render.cjs state    --out <state.json> --frame <n>
 //
 // --jobs is a JSON array of [from, to, outfile] triples: one browser, many clips (existing clips are skipped).
 // --project <dir> serves that folder under /project/ (words.json + storyboard.json); with no storyboard the engine
@@ -49,7 +50,7 @@ const srv = http.createServer((q, s) => {
 }).listen(port);
 const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
 const framesCsv = mode === 'stills' ? need('frames') : '';
-const out = ['stills', 'video', 'list', 'qa', 'cuts'].includes(mode) ? need('out') : '';
+const out = ['stills', 'video', 'list', 'qa', 'cuts', 'state'].includes(mode) ? need('out') : '';
 const jobsFile = mode === 'segments' ? need('jobs') : '';
 (async () => {
   const b = await chromium.launch(launchOptions());
@@ -83,6 +84,13 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
       fs.renameSync(tmp, file);
       console.log(new Date().toISOString().slice(11, 19), 'seg', file, to - from, 'frames', ((Date.now() - ts) / 1000 / (to - from)).toFixed(2) + ' s/f');
     }
+  }
+  else if (mode === 'state') {
+    const f = +(opt.frame);
+    if (!Number.isFinite(f)) throw new Error('state mode needs --frame <n>');
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, JSON.stringify(await pg.evaluate((f) => window.DEBUG_STATE(f), f)));
+    console.log('state json', out);
   }
   else if (mode === 'qa') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.QA))); console.log('qa json', out); }
   else if (mode === 'cuts') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.camJumps()))); console.log('cuts json', out); }

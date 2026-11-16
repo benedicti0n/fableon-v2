@@ -38,7 +38,19 @@ try {
   }
 } catch (e) {
   (window as unknown as Record<string, unknown>).BUILD_ERROR = e instanceof Error ? e.message : String(e);
-  (window as unknown as Record<string, unknown>).ready = true;
+  // Structural snapshot for `fableon diff`; never called during normal renders. It walks the same layers and
+// world.update path as renderFrame but captures stage/pose state instead of drawing pixels.
+(window as unknown as Record<string, unknown>).DEBUG_STATE = (f: number) => {
+  const layers = RT.layersAt(f);
+  const d = RT.dofAt(f);
+  const states = layers.map((l) => {
+    const shot = RT.SHOTS[l.id - 1];
+    return { id: l.id, alpha: l.alpha, ...world.debugState(shot, f, cam, scene, H, RT.kickCam) };
+  });
+  const last = states[states.length - 1] ?? {};
+  return { frame: f, layers, dof: { cInf: d.cInf, focus: d.focus ? d.focus(f) : null }, states, ...last };
+};
+(window as unknown as Record<string, unknown>).ready = true;
   throw e;
 }
 
@@ -138,5 +150,17 @@ const drawShot = (id: number, f: number) => {
     if (d > 0.25) out.push(f);
   }
   return out;
+};
+// Structural snapshot for `fableon diff`; never called during normal renders. It walks the same layers and
+// world.update path as renderFrame but captures stage/pose state instead of drawing pixels.
+(window as unknown as Record<string, unknown>).DEBUG_STATE = (f: number) => {
+  const layers = RT.layersAt(f);
+  const d = RT.dofAt(f);
+  const states = layers.map((l) => {
+    const shot = RT.SHOTS[l.id - 1];
+    return { id: l.id, alpha: l.alpha, ...world.debugState(shot, f, cam, scene, H, RT.kickCam) };
+  });
+  const last = states[states.length - 1] ?? {};
+  return { frame: f, layers, dof: { cInf: d.cInf, focus: d.focus ? d.focus(f) : null }, states, ...last };
 };
 (window as unknown as Record<string, unknown>).ready = true;
