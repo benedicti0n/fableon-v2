@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/words.schema.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["w", "a", "b", "line"],
+    "properties": {
+      "w": { "type": "string", "minLength": 1 },
+      "a": { "type": "number", "minimum": 0 },
+      "b": { "type": "number", "minimum": 0 },
+      "line": { "type": "integer", "minimum": 0 }
+    }
+  }
+}

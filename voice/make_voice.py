@@ -17,7 +17,21 @@ BEAT_GAP = 0.26
 
 src = open(os.path.join(PROJECT, "SCRIPT.md"), encoding="utf-8").read()
 lines = [l.strip() for l in re.search(r"## Script[^\n]*\n(.*?)\n## ", src, re.S).group(1).splitlines() if l.strip()]
-BEATS = {4, 12, 17, 20, 24, 26, 29, 32, 34, 36}  # line indices that open a new beat (longer pause before)
+BEATS = {4, 12, 17, 20, 24, 26, 29, 32, 34, 36}  # fixture default: line indices that open a new beat
+# New pipeline projects carry script.json; use the actual beat changes (the fixture has no script.json).
+_script_path = os.path.join(PROJECT, "script.json")
+if os.path.exists(_script_path):
+    _script = json.load(open(_script_path, encoding="utf-8"))
+    _lines = _script.get("lines", [])
+    _beats = []
+    _prev = None
+    for _i, _line in enumerate(_lines):
+        _beat = _line.get("beat")
+        if _i and _beat != _prev:
+            _beats.append(_i)
+        _prev = _beat
+    if len(_lines) == len(lines):
+        BEATS = set(_beats)
 
 def marked(line: str) -> str:
     def sub(m):
