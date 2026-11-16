@@ -666,7 +666,7 @@
     },
     {
       "name": "mango",
-      "status": "planned",
+      "status": "implemented",
       "description": "Mango card."
     },
     {
@@ -676,7 +676,7 @@
     },
     {
       "name": "lump",
-      "status": "planned",
+      "status": "implemented",
       "description": "The lump of flesh card."
     }
   ],
@@ -693,7 +693,7 @@
     },
     {
       "name": "jars",
-      "status": "planned",
+      "status": "implemented",
       "description": "101 ghee jars and lids; lids pop, kids climb out."
     },
     {
@@ -708,7 +708,7 @@
     },
     {
       "name": "ladduPlate",
-      "status": "planned",
+      "status": "implemented",
       "description": "The plate of sweets in the palace."
     },
     {

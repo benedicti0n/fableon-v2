@@ -17,7 +17,7 @@ export type PathMotion = {
 };
 export type BallisticMotion = {
   type: "ballistic"; at: Anchor; v: [number, number, number]; a: [number, number, number];
-  floorY?: number; spin?: number;
+  floorY?: number; spin?: number; delay?: number;
 };
 export type Motion = PathMotion | BallisticMotion;
 
@@ -55,13 +55,31 @@ export type Puff = { kind: "puff"; id?: string; motion?: Motion; at: Anchor; pos
 export type Arrow = { kind: "arrow"; id?: string; motion?: Motion; at: Anchor; toAt: Anchor; from: Point; to: Point; size?: [number, number]; rot?: number };
 export type Stars = { kind: "stars"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: [number, number]; period?: number; dur?: number };
 export type Emblem = { kind: "emblem"; id?: string; at: Anchor; pos: Point; variant: "wheel" | "wind" | "bolt" | "horse"; size?: number; pop?: number; bob?: number; until?: Anchor };
-export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals | Puff | Arrow | Stars | Emblem;
+export type Lump = { kind: "lump"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number };
+export type Mango = { kind: "mango"; id?: string; at: Anchor; pos: Point; motion: Motion; size?: number; until?: Anchor; rotOffset?: number };
+export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals | Puff | Arrow | Stars | Emblem | Lump | Mango;
 export type PagesAction = { piece: "pages"; height?: Animated };
 export type BoatAction = { piece: "boat"; id?: string; motion: Motion; yaw?: number; roll?: number; rollBob?: { amp: number; freq: number } };
-export type SetAction = PagesAction | BoatAction;
+export type JarOverride = { index: number; at: Anchor; who?: string; expr?: Expr };
+export type JarsAction = {
+  piece: "jars"; id?: string; grid: { origin: Point; cols: number; dx: number; dz: number; rowShift?: number }; count: number;
+  appear?: { from: Anchor; to: Anchor };
+  lids?: { mode?: "stay" | "pop"; since?: Anchor; windowEnd?: Anchor; hashSalt?: number; overrides?: JarOverride[]; velocity?: [number, number, number]; spin?: number; cullY?: number };
+  kids?: { since?: Anchor; windowEnd?: Anchor; hashSalt?: number; overrides?: JarOverride[]; seedBase?: number; cullDistance?: number; sink?: number; rise?: number; scale?: number; pose?: Pose; expr?: Expr; noBlob?: boolean; generator?: "kaurava" };
+};
+export type LadduAction = { piece: "ladduPlate"; at: Anchor; pos: Point; scale?: [number, number, number] };
+export type SetAction = PagesAction | BoatAction | JarsAction | LadduAction;
+export type Pick<T> = { salt: number; below: number; a: T; b: T };
+export type Crowd = {
+  count: number; seedBase: number; generator?: "kaurava"; cast?: string[];
+  layout: { grid?: { origin: Point; cols: number; dx: number; dz: number; rowShift?: number; xStart?: number }; points?: Point[] };
+  first?: { index: number; who: string };
+  pose?: Pose | Pick<Pose>; expr?: Expr | Pick<Expr>; scale?: number | { salt: number; min: number; span: number };
+  facing?: -1 | 0 | 1; seated?: boolean; noBlob?: boolean;
+};
 export type Shot = {
   id: string; start: Anchor; legacy?: boolean; light: "day" | "golden" | "night" | "deep"; sets: string[];
-  sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; fx?: Effect[]; set?: SetAction[];
+  sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; crowds?: Crowd[]; fx?: Effect[]; set?: SetAction[];
 };
 export type CastEntry = { spec: string | Record<string, unknown>; seed: number };
 export type Storyboard = {

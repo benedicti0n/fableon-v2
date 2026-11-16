@@ -123,7 +123,9 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 { "kind": "arrow", "at": Anchor, "toAt": Anchor, "from": Point, "to": Point, "size": [0.9, 0.45], "rot": -0.2 }
 { "kind": "stars", "at": Anchor, "pos": Point, "size": [1.5, 0.79], "period": 12, "dur": 12 }
 { "kind": "emblem", "at": Anchor, "pos": Point, "variant": "wheel", "size": 1.15, "pop": 0.18, "bob": 0.12, "until": Anchor }
-// 2B adds: splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
+{ "kind": "lump", "at": Anchor, "pos": Point, "size": 0.6, "pop": 0.18 }
+{ "kind": "mango", "at": Anchor, "pos": Point, "motion": { "type": "ballistic", … }, "size": 0.34, "until": Anchor }
+// 2B adds: splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path) ...
 ```
 
 ## SetAction (dynamic set pieces)
@@ -132,7 +134,25 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 { "piece": "boat", "id": "boat",      // moving-target id; Points/cameras can follow it
   "motion": { "type": "path", … },    // path/ballistic (see Motion)
   "yaw": 0.15, "roll": 0, "rollBob": { "amp": 0.02, "freq": 0.318 } }
-// 2B adds: jars(appear window, lid pops), wheel(spin, stopAt), city(rise), ladduPlate, nectar(drink window), bigBow(wobble)
+{ "piece": "jars", "grid": { "origin": Point, "cols": 13, "dx": 1.2, "dz": 1.25, "rowShift": 0.3 }, "count": 101,
+  "appear": { "from": Anchor, "to": Anchor },                 // partial jars while the grid fills
+  "lids": { "mode": "stay" | "pop", "since": Anchor, "windowEnd": Anchor, "hashSalt": 7, "overrides": [{ "index": 3, "at": Anchor }] },
+  "kids": { "since": Anchor, "windowEnd": Anchor, "seedBase": 100, "cullDistance": 22, "sink": 0.95, "rise": 1.45,
+            "scale": 0.78, "pose": "armsUp", "expr": "grin", "generator": "kaurava", "overrides": [{ "index": 3, "at": Anchor, "who": "…", "expr": "smile" }] } }
+{ "piece": "ladduPlate", "at": Anchor, "pos": Point, "scale": [1.6, 1, 1.6] }
+// 2B adds: wheel(spin, stopAt), city(rise), nectar(drink window), bigBow(wobble)
+```
+
+## Crowds (deterministic generators)
+```jsonc
+{ "count": 100, "seedBase": 100, "generator": "kaurava", "cast": ["king1", "king2"],
+  "layout": { "grid": { "origin": Point, "cols": 12, "dx": 0.95, "dz": 1.0, "rowShift": 0.45, "xStart": -4 } }, // or { "points": [Point, …] }
+  "first": { "index": 0, "who": "kidDuryodhana" },
+  "pose": { "salt": 2, "below": 0.3, "a": "fold", "b": "stand" },   // or a fixed pose
+  "expr": { "salt": 3, "below": 0.5, "a": "stern", "b": "grin" },   // or a fixed expression
+  "scale": { "salt": 4, "min": 0.92, "span": 0.12 }, "facing": -1, "seated": false, "noBlob": false }
+```
+Members expand deterministically with the legacy `hh(i, salt)` hash; `seedBase + i` is the identity (blink seed).
 ```
 
 ## Rules the validator enforces (CLI `fableon validate`)

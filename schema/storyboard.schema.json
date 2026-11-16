@@ -140,6 +140,95 @@
         }
       ]
     },
+    "Crowd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "seedBase", "layout"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 1 },
+        "seedBase": { "type": "integer" },
+        "generator": { "enum": ["kaurava"] },
+        "cast": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["grid"],
+              "properties": {
+                "grid": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["origin", "cols", "dx", "dz"],
+                  "properties": {
+                    "origin": { "$ref": "#/$defs/Point" },
+                    "cols": { "type": "integer", "minimum": 1 },
+                    "dx": { "type": "number" },
+                    "dz": { "type": "number" },
+                    "rowShift": { "type": "number" },
+                    "xStart": { "type": "number" }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["points"],
+              "properties": { "points": { "type": "array", "items": { "$ref": "#/$defs/Point" } } }
+            }
+          ]
+        },
+        "first": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["index", "who"],
+          "properties": { "index": { "type": "integer", "minimum": 0 }, "who": { "type": "string", "minLength": 1 } }
+        },
+        "pose": {
+          "oneOf": [
+            { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] },
+            { "$ref": "#/$defs/PosePick" }
+          ]
+        },
+        "expr": {
+          "oneOf": [
+            { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+            { "$ref": "#/$defs/ExprPick" }
+          ]
+        },
+        "scale": { "oneOf": [{ "type": "number" }, { "$ref": "#/$defs/ScaleRange" }] },
+        "facing": { "enum": [-1, 0, 1] },
+        "seated": { "type": "boolean" },
+        "noBlob": { "type": "boolean" }
+      }
+    },
+    "PosePick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["salt", "below", "a", "b"],
+      "properties": {
+        "salt": { "type": "number" }, "below": { "type": "number" },
+        "a": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] },
+        "b": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] }
+      }
+    },
+    "ExprPick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["salt", "below", "a", "b"],
+      "properties": {
+        "salt": { "type": "number" }, "below": { "type": "number" },
+        "a": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+        "b": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] }
+      }
+    },
+    "ScaleRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["salt", "min", "span"],
+      "properties": { "salt": { "type": "number" }, "min": { "type": "number" }, "span": { "type": "number" } }
+    },
     "Motion": {
       "oneOf": [
         {
@@ -183,7 +272,8 @@
             "v": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
             "a": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
             "floorY": { "type": "number" },
-            "spin": { "type": "number" }
+            "spin": { "type": "number" },
+            "delay": { "type": "number" }
           }
         }
       ]
@@ -258,6 +348,7 @@
         "camera": { "type": "array", "items": { "$ref": "#/$defs/CamKey" } },
         "dof": { "type": "array", "items": { "$ref": "#/$defs/Dof" } },
         "actors": { "type": "array", "items": { "$ref": "#/$defs/Actor" } },
+        "crowds": { "type": "array", "items": { "$ref": "#/$defs/Crowd" } },
         "fx": { "type": "array", "items": { "$ref": "#/$defs/Effect" } },
         "set": { "type": "array", "items": { "$ref": "#/$defs/SetAction" } }
       }
@@ -594,6 +685,35 @@
           "additionalProperties": false,
           "required": ["kind", "at", "pos"],
           "properties": {
+            "kind": { "const": "lump" },
+            "id": { "type": "string", "minLength": 1 },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "pop": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos", "motion"],
+          "properties": {
+            "kind": { "const": "mango" },
+            "id": { "type": "string", "minLength": 1 },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "motion": { "$ref": "#/$defs/Motion" },
+            "size": { "type": "number", "exclusiveMinimum": 0 },
+            "until": { "$ref": "#/$defs/Anchor" },
+            "rotOffset": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "at", "pos"],
+          "properties": {
             "kind": { "const": "sweat" },
             "id": { "type": "string", "minLength": 1 },
             "motion": { "$ref": "#/$defs/Motion" },
@@ -649,8 +769,91 @@
               "properties": { "amp": { "type": "number" }, "freq": { "type": "number" } }
             }
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece", "grid", "count"],
+          "properties": {
+            "piece": { "const": "jars" },
+            "id": { "type": "string", "minLength": 1 },
+            "grid": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["origin", "cols", "dx", "dz"],
+              "properties": {
+                "origin": { "$ref": "#/$defs/Point" },
+                "cols": { "type": "integer", "minimum": 1 },
+                "dx": { "type": "number" },
+                "dz": { "type": "number" },
+                "rowShift": { "type": "number" }
+              }
+            },
+            "count": { "type": "integer", "minimum": 1 },
+            "appear": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["from", "to"],
+              "properties": { "from": { "$ref": "#/$defs/Anchor" }, "to": { "$ref": "#/$defs/Anchor" } }
+            },
+            "lids": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "mode": { "enum": ["stay", "pop"] },
+                "since": { "$ref": "#/$defs/Anchor" },
+                "windowEnd": { "$ref": "#/$defs/Anchor" },
+                "hashSalt": { "type": "number" },
+                "overrides": { "type": "array", "items": { "$ref": "#/$defs/JarOverride" } },
+                "velocity": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+                "spin": { "type": "number" },
+                "cullY": { "type": "number" }
+              }
+            },
+            "kids": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "since": { "$ref": "#/$defs/Anchor" },
+                "windowEnd": { "$ref": "#/$defs/Anchor" },
+                "hashSalt": { "type": "number" },
+                "overrides": { "type": "array", "items": { "$ref": "#/$defs/JarOverride" } },
+                "seedBase": { "type": "integer" },
+                "cullDistance": { "type": "number" },
+                "sink": { "type": "number" },
+                "rise": { "type": "number" },
+                "scale": { "type": "number" },
+                "pose": { "enum": ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless", "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop", "carry", "throw", "hips", "think", "grab"] },
+                "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] },
+                "noBlob": { "type": "boolean" },
+                "generator": { "enum": ["kaurava"] }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["piece", "at", "pos"],
+          "properties": {
+            "piece": { "const": "ladduPlate" },
+            "at": { "$ref": "#/$defs/Anchor" },
+            "pos": { "$ref": "#/$defs/Point" },
+            "scale": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } }
+          }
         }
       ]
+    },
+    "JarOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "at"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "at": { "$ref": "#/$defs/Anchor" },
+        "who": { "type": "string", "minLength": 1 },
+        "expr": { "enum": ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed", "pained", "smile", "smile_closed", "lick"] }
+      }
     }
   }
 }

@@ -1,12 +1,13 @@
 // Build ShotDef[] from a storyboard + the project's words. Math comes from core/ (shared with story.ts); the legacy
 // hybrid reuses the hand-written ShotDef and DOF entries for shots marked "legacy": true.
+import * as THREE from "three";
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
-import { who, fx, petals, card } from "../cast";
+import { who, fx, petals, card, hh } from "../cast";
 import type { Sets } from "../sets";
 import type { V3 } from "../places";
 import { PLACES, PlaceName } from "../places";
-import { C, KIDS } from "../castlist";
+import { C, KIDS, KAURAVA } from "../castlist";
 import type { Spec } from "../people";
 import { makeAnchors, Wd } from "../core/anchors";
 import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
@@ -14,11 +15,11 @@ import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../cor
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
-import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
+import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
 import { fxStars, fxPuff } from "../toon";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
-import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Motion, Point, Shot, Storyboard } from "./types";
+import type { Actor, Animated, Anchor, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
 
 export type Runtime = {
   SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
@@ -72,7 +73,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const f0 = anchor(m.at, shotStart);
     let p0: V3 | null = null;
     return {
-      at: (f) => { if (!p0) p0 = base ? point(base, f0) : [0, 0, 0]; return ballisticAt(p0, m.v, m.a, Math.max(0, T(f) - T(f0)), m.floorY); },
+      at: (f) => { if (!p0) p0 = base ? point(base, f0) : [0, 0, 0]; return ballisticAt(p0, m.v, m.a, T(f) - T(f0) - (m.delay ?? 0), m.floorY); },
       spin: (f) => (m.spin ? m.spin * Math.max(0, T(f) - T(f0)) : 0),
       phase: () => undefined,
     };
@@ -182,6 +183,60 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     who(out, cam, e.seed, sp, opts, pos[0], pos[1], pos[2], common);
   };
 
+  const crowd = (out: Stage, cam: CamInfo, c: Crowd, f: number, shotStart: number) => {
+    const origin = c.layout.grid ? point(c.layout.grid.origin, f) : [0, 0, 0];
+    for (let i = 0; i < c.count; i++) {
+      const pos = c.layout.grid
+        ? [origin[0] + (c.layout.grid.xStart ?? 0) + (i % c.layout.grid.cols) * c.layout.grid.dx + (Math.floor(i / c.layout.grid.cols) % 2) * (c.layout.grid.rowShift ?? 0), origin[1], origin[2] + Math.floor(i / c.layout.grid.cols) * c.layout.grid.dz] as V3
+        : point(c.layout.points![i % c.layout.points!.length], f);
+      const first = c.first && c.first.index === i ? c.first.who : null;
+      const sp = first ? spec(first) : c.generator === "kaurava" ? KAURAVA(i) : spec(c.cast![i % c.cast!.length]);
+      const pick = <T,>(v: T | { salt: number; below: number; a: T; b: T }) => typeof v === "object" && v && "salt" in v ? (hh(i, v.salt) < v.below ? v.a : v.b) : v;
+      const pose = c.pose ? pick(c.pose) : "stand", expr = c.expr ? pick(c.expr) : "neutral";
+      const scale = c.scale && typeof c.scale === "object" ? c.scale.min + hh(i, c.scale.salt) * c.scale.span : (c.scale ?? 1);
+      who(out, cam, c.seedBase + i, sp, { pose, expr, facing: c.facing, seated: c.seated, t: T(f) }, pos[0], pos[1], pos[2], { t: T(f), scale, noBlob: c.noBlob });
+    }
+  };
+
+  const jarPositions = (x: JarsAction, f: number): V3[] => {
+    const o = point(x.grid.origin, f);
+    return Array.from({ length: x.count }, (_, i) => [o[0] + (i % x.grid.cols) * x.grid.dx + (Math.floor(i / x.grid.cols) % 2) * (x.grid.rowShift ?? 0), o[1], o[2] + Math.floor(i / x.grid.cols) * x.grid.dz] as V3);
+  };
+  const jarsPose = (x: JarsAction, f: number, sets: Sets, start: number) => {
+    const pos = jarPositions(x, f), count = x.count;
+    const from = x.appear ? anchor(x.appear.from, start) : -Infinity, to = x.appear ? anchor(x.appear.to, start) : Infinity;
+    const n = x.appear ? Math.max(0, Math.min(1, (f - from) / Math.max(1, to - from))) * count : count;
+    const pop = x.lids?.mode === "pop";
+    const since = x.lids?.since ? anchor(x.lids.since, start) : start, end = x.lids?.windowEnd ? anchor(x.lids.windowEnd, start) : start + 1;
+    const overrides = new Map((x.lids?.overrides ?? []).map((o) => [o.index, anchor(o.at, start)]));
+    const M = new THREE.Matrix4(), RZ = new THREE.Matrix4();
+    for (let i = 0; i < count; i++) {
+      const p = pos[i], k = Math.min(1, n - i);
+      M.makeScale(0.9 * k + 1e-4, 1.0 * k + 1e-4, 0.9 * k + 1e-4).setPosition(p[0], p[1], p[2]); sets.dyn.jars.setMatrixAt(i, M);
+      let ly = p[1] + 0.86 * k, lx = p[0], lz = p[2], rot = 0;
+      if (pop) { const a = overrides.get(i) ?? since + Math.round(hh(i, x.lids?.hashSalt ?? 7) * (end - since)); const u = Math.max(0, (f - a) / 30); if (u > 0) { const vel = x.lids?.velocity ?? [0.5, 2.6, 1.6]; ly += vel[1] * u - 4.9 * u * u; lx += vel[0] * u; lz += vel[2] * u; rot = u * (x.lids?.spin ?? 9); } if (ly < p[1] + (x.lids?.cullY ?? -0.2)) ly = -50; }
+      M.makeScale(k + 1e-4, k + 1e-4, k + 1e-4).premultiply(RZ.makeRotationZ(rot)).setPosition(lx, ly, lz); sets.dyn.lids.setMatrixAt(i, M);
+    }
+    sets.dyn.jars.instanceMatrix.needsUpdate = true; sets.dyn.lids.instanceMatrix.needsUpdate = true;
+    sets.dyn.jars.visible = sets.dyn.lids.visible = n > 0;
+  };
+  const jarsKids = (out: Stage, cam: CamInfo, x: JarsAction, f: number, start: number) => {
+    const kd = x.kids; if (!kd) return;
+    const pos = jarPositions(x, f);
+    const since = kd.since ? anchor(kd.since, start) : start, end = kd.windowEnd ? anchor(kd.windowEnd, start) : start + 1;
+    const overrides = new Map((kd.overrides ?? []).map((o) => [o.index, o]));
+    for (let i = 0; i < x.count; i++) {
+      const o = overrides.get(i), a = o ? anchor(o.at, start) : since + Math.round(hh(i, kd.hashSalt ?? 7) * (end - since));
+      if (f < a) continue;
+      const p = pos[i];
+      if (cam.pos.distanceTo(new THREE.Vector3(p[0], p[1], p[2])) > (kd.cullDistance ?? 22)) continue;
+      const k = pop(T(f), T(a), 0.22);
+      const sp = o?.who ? spec(o.who) : kd.generator === "kaurava" ? KAURAVA(i) : KAURAVA(i);
+      who(out, cam, (kd.seedBase ?? 100) + i, sp, { pose: kd.pose ?? "armsUp", expr: o?.expr ?? kd.expr ?? "grin", t: T(f) },
+        p[0], p[1] - (kd.sink ?? 0.95) + (kd.rise ?? 1.45) * k, p[2] + 0.02, { t: T(f), noBlob: kd.noBlob ?? true, scale: kd.scale ?? 0.78 });
+    }
+  };
+
   const effect = (out: Stage, e: Effect, f: number, shotStart: number, cam: CamInfo) => {
     const a = anchor(e.at, shotStart);
     const em = e as Effect & { motion?: Motion; id?: string; pos?: Point };
@@ -232,7 +287,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     } else if (e.kind === "halo") {
       const k = pop(T(f), T(a), e.pop ?? 0.4), size = (e.size ?? 2.8) * k;
       fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0"), pos[0], pos[1], pos[2], size, size, { kind: e.card ?? "soft" });
-    } else {
+    } else if (e.kind === "lump") {
+      const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.6) * k;
+      fx(out, "lump", 256, 256, (p) => fxLump(p), pos[0], pos[1], pos[2], size, size);
+    } else if (e.kind === "mango") {
+      if (f >= a && (!e.until || f < anchor(e.until, shotStart))) {
+        const size = e.size ?? 0.34, rot = (moving ? moving.spin(f) : 0) + (e.rotOffset ?? 0);
+        fx(out, "mango", 128, 128, (p) => fxMango(p), pos[0], pos[1], pos[2], size, size, { rot });
+      }
+    } else if (e.kind === "knot") {
       const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.55) * k;
       fx(out, "knot", 256, 256, (p) => fxKnot(p, 1), pos[0], pos[1] + (e.bob ?? 0.05) * Math.sin(T(f) * 3), pos[2], size, size);
     }
@@ -260,6 +323,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {
         for (const a of s.actors ?? []) actor(out, cam, a, f, start);
+        for (const c of s.crowds ?? []) crowd(out, cam, c, f, start);
+        for (const x of s.set ?? []) if (x.piece === "jars") jarsKids(out, cam, x, f, start);
         for (const e of s.fx ?? []) effect(out, e, f, start, cam);
       },
       pose: (t, f, sets: Sets) => {
@@ -269,6 +334,11 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
             const b = x.id && motionTargets.has(x.id) ? motionTargets.get(x.id)!(f) : motionFn(x.motion, undefined, start).at(f);
             sets.dyn.boat.visible = true; sets.dyn.boat.position.set(b[0], b[1] - 0.05, b[2]);
             sets.dyn.boat.rotation.set(0, x.yaw ?? 0, (x.roll ?? 0) + (x.rollBob ? x.rollBob.amp * Math.sin(2 * Math.PI * x.rollBob.freq * t) : 0));
+          } else if (x.piece === "jars") jarsPose(x, f, sets, start);
+          else if (x.piece === "ladduPlate") {
+            sets.dyn.ladduPlate.visible = f >= anchor(x.at, start);
+            const p = point(x.pos, f); sets.dyn.ladduPlate.position.set(p[0], p[1], p[2]);
+            sets.dyn.ladduPlate.scale.set(...(x.scale ?? [1, 1, 1]));
           }
         }
       },
