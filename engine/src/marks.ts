@@ -2,7 +2,7 @@
 // direction (`front`, degrees, 0 = +z) and its establishing box (`bounds`, world metres).
 import { ARENA, CITY, DEER, G, HERM, LAC, NAGA, PAL, VIL } from "./places";
 
-export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string; view?: number };
+export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string; view?: number; context?: string };
 export type SetInfo = { front: number; bounds: { min: [number, number, number]; max: [number, number, number] }; marks: Mark[] };
 
 const at = (p: readonly [number, number, number], d: [number, number, number]): [number, number, number] => [p[0] + d[0], p[1] + d[1], p[2] + d[2]];
@@ -154,4 +154,9 @@ export const SET_INFO: Record<string, SetInfo> = {
   },
 };
 
-for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) mark.view = MARK_VIEWS[`${set}.${mark.name}`] ?? mark.facing;
+// The first derivation (median camera heading near the mark) put two cameras behind the burning set.
+const MARK_VIEW_OVERRIDES: Record<string, number> = { "city.agni": 172, "lac.house": 180 };
+for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) mark.view = MARK_VIEW_OVERRIDES[`${set}.${mark.name}`] ?? MARK_VIEWS[`${set}.${mark.name}`] ?? mark.facing;
+for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) {
+  if (set === 'palace' && (mark.name === 'tree' || mark.name === 'mango')) mark.context = 'world:palace.mango canopy';
+}

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, SPEAKER_AREA, EYE_MIN, EYE_MAX, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -287,8 +287,9 @@ export function checkFrames(dirArg, opts = {}) {
 function keyForProjection(k, f, start) { return { ...k, pos: k.pos, look: k.look }; }
 
 const normalizeWith = (id, ctx) => {
-  if (String(id).startsWith('mark:')) return String(id);
-  if (ctx.catalog.sets.some((s) => s.marks.some((m) => `${s.name}.${m.name}` === id))) return `mark:${id}`;
+  if (String(id).startsWith('mark:')) id = String(id).slice(5);
+  const hit = ctx.catalog.sets.flatMap((s) => s.marks.map((m) => ({ set: s.name, m }))).find((x) => `${x.set}.${x.m.name}` === id);
+  if (hit) return hit.m.context ?? `mark:${id}`;
   return id;
 };
 const talkAt = (actor, f, start, ctx) => {
@@ -386,7 +387,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           if (!it || it.kind === 'sky' || it.kind === 'ground' || it.kind === 'water') continue;
           if (it.kind === 'effect' && AMBIENT_EFFECTS.has(base)) continue;
           const area = id.pixels / (180 * 320);
-          if (id.distance < nearest - 0.05 && (area > BLOCKER_AREA || (primary && overlap(id.bbox, primaryStat?.bbox) > BLOCKER_OVERLAP))) push('blocker', id.id, `blocker ${id.id}: fills ${(area * 100).toFixed(0)}% in front of ${primary}`, FIX.blocker);
+          if (id.distance < nearest - 0.05 && (area > BLOCKER_AREA || (area > BLOCKER_MIN_AREA && primary && overlap(id.bbox, primaryStat?.bbox) > BLOCKER_OVERLAP))) push('blocker', id.id, `blocker ${id.id}: fills ${(area * 100).toFixed(0)}% in front of ${primary}`, FIX.blocker);
         }
       }
       for (const id of m.with) {

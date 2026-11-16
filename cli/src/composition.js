@@ -1,8 +1,11 @@
 // Composition thresholds for measured coverage checks. Keep every value here with its intent.
 export const BANDS = {
-  close: { metric: 'head', min: 0.40, max: 0.60, floor: 0.40 },       // head box / frame
-  medium: { metric: 'head', min: 0.26, max: 0.42, floor: 0.26 },      // head box / frame
-  full: { metric: 'body', min: 0.50, max: 0.85, floor: 0.50 },        // head-to-feet / frame
+  // Calibrated against the 38 keyed, acted shots of fixtures/adi-parva: the hand-tuned house style
+  // labels many medium shots at 12-29 % head and full shots at 35-72 % body, so the synthetic
+  // starting floors (40/26/50) rejected most of the reference film. Close keeps 60 % as its ceiling.
+  close: { metric: 'head', min: 0.25, max: 0.60, floor: 0.25 },       // head box / frame
+  medium: { metric: 'head', min: 0.12, max: 0.42, floor: 0.12 },      // head box / frame
+  full: { metric: 'body', min: 0.30, max: 0.85, floor: 0.30 },        // head-to-feet / frame
   wide: { metric: 'body', min: 0.15, max: 0.50, floor: 0.10 },        // primary 15-50, other >=10
   establishing: { metric: 'body', min: 0.05, max: 2.00, floor: 0.05 },
   insert: { metric: 'body', min: 0.30, max: 0.85, floor: 0.30 },
@@ -12,6 +15,7 @@ export const CONTEXT_AREA = 0.02;         // `with` item minimum frame area
 export const CONTEXT_VISIBLE = 0.40;      // `with` item minimum visible fraction
 export const BLOCKER_AREA = 0.12;         // non-subject nearer than subject, frame area
 export const BLOCKER_OVERLAP = 0.25;      // non-subject overlap with primary box
+export const BLOCKER_MIN_AREA = 0.01;     // ignore tiny fx (an arrow) when only the overlap test fires
 export const SPEAKER_AREA = 0.04;         // talking actor minimum frame area
 export const SPEAKER_SECONDS = 1;         // talk duration before the warning
 export const EYE_MIN = 0.30, EYE_MAX = 0.50;

@@ -99,8 +99,17 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   if (context.length && primary) {
     const pb0 = subjBox(primary);
     const cx = (pb0.x0 + pb0.x1) / 2, cz = (pb0.z0 + pb0.z1) / 2;
+    const rx = Math.cos((baseAngle * Math.PI) / 180), rz = -Math.sin((baseAngle * Math.PI) / 180);
     let need = distance;
-    for (const c of context) { const cb = subjBox(c); need = Math.max(need, Math.abs((cb.x0 + cb.x1) / 2 - cx) / (Math.tan((vfov * DEG) / 2) * aspect), Math.abs((cb.z0 + cb.z1) / 2 - cz) / (Math.tan((vfov * DEG) / 2) * aspect)); }
+    for (const c of context) {
+      const cb = subjBox(c);
+      // Context behind the subject is already inside the frame; only the lateral (screen-right) offset
+      // needs a wider camera. Treating x/z offsets as lateral made a forest fire 38 m behind its
+      // subject look impossible to frame.
+      const dx = (cb.x0 + cb.x1) / 2 - cx, dz = (cb.z0 + cb.z1) / 2 - cz;
+      const lateral = Math.abs(dx * rx + dz * rz);
+      need = Math.max(need, lateral / (Math.tan((vfov * DEG) / 2) * aspect));
+    }
     if (need > distance) {
       distance = need;
       const metricNow = metricWorld / (2 * distance * Math.tan((vfov * DEG) / 2));
