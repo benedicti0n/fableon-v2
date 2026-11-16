@@ -138,6 +138,8 @@ export const lidAt = (t: number, i: number) => {
   return 0;
 };
 const fkey = (o: object) => JSON.stringify(o, (_k, v) => (typeof v === "number" ? q(v) : v));
+const specKeys = new WeakMap<object, string>();
+const specKey = (o: object) => { let k = specKeys.get(o); if (!k) { k = fkey(o); specKeys.set(o, k); } return k; };
 
 // ---------------- contact shadows ----------------
 const CONTACT: Record<LightName, [number, number, number]> = { day: [0.2, 0.21, 0.33], golden: [0.24, 0.2, 0.33], night: [0.18, 0.18, 0.3], deep: [0.25, 0.4, 0.45] };
@@ -164,7 +166,7 @@ export const who = (out: Stage, cam: CamInfo, i: number, spec: Spec, o: Opts, x:
   const mirror = !!extra.mirror, light = light2D(cam, mirror);
   const blink = o.blink ?? (extra.t !== undefined ? lidAt(extra.t, i) : 0);
   const oo: Opts = { ...o, light, blink, seed: o.seed ?? ((i * 5 + 3) % 7) + 1 };
-  const key = `P|${i}|${fkey(spec)}|${fkey(oo)}`;
+  const key = `P|${i}|${specKey(spec)}|${fkey(oo)}`;
   out.places.push({ key, x, y, z, scale: sc, mirror, size: [w, h, k], draw: (p) => { person(p, spec, oo); }, yaw: extra.yaw, roll: extra.roll });
   if (!extra.noBlob) blob(out, cam, x, y, z, sc * (spec.build === "big" || spec.build === "stout" ? 1.15 : spec.build === "kid" ? 0.8 : 1));
 };

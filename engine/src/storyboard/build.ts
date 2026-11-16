@@ -39,14 +39,23 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const { A, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
   const defaults = (CATALOG as { defaults?: { sunBySet?: Record<string, { az: number; el: number }>; setPieces?: Record<string, { height?: number }> } }).defaults ?? {};
   const anchor = (a: Anchor, shotStart = 0): number => {
-    if ("shot" in a) return shotStart + (a.offset ?? 0);
-    if ("frame" in a) return a.frame + (a.offset ?? 0);
-    if ("end" in a) return END + (a.offset ?? 0);
-    return A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
+    let m = anchorMemo.get(a);
+    if (m?.has(shotStart)) return m.get(shotStart)!;
+    if (!m) { m = new Map(); anchorMemo.set(a, m); }
+    const v = ("shot" in a) ? shotStart + (a.offset ?? 0) : ("frame" in a) ? a.frame + (a.offset ?? 0) : ("end" in a) ? END + (a.offset ?? 0) : A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
+    m.set(shotStart, v);
+    return v;
   };
   const named = sb.points ?? {};
   const motionTargets: Targets = new Map(targets);
   const actorById = new Map<string, { a: Actor; start: number }>();
+  const anchorMemo = new WeakMap<object, Map<number, number>>();
+  const motionMemo = new WeakMap<Motion, Map<number, Moving>>();
+  const beatMemo = new WeakMap<Actor, Map<number, { f: number; b: Beat }[]>>();
+  const animMemo = new WeakMap<object, Map<number, [number, number][]>>();
+  const jarMemo = new WeakMap<JarsAction, Map<number, V3[]>>();
+  const crowdMemo = new WeakMap<Crowd, Spec[]>();
+  const jarSpecMemo = new WeakMap<JarsAction, Spec[]>();
   const point = (p: Point, f: number, cam?: CamInfo, depth = 0): V3 => {
     if (Array.isArray(p)) return [p[0], p[1], p[2]];
     if ("actor" in p) {
@@ -66,18 +75,37 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const fwd: V3 = [right[1] * up[2] - right[2] * up[1], right[2] * up[0] - right[0] * up[2], right[0] * up[1] - right[1] * up[0]];
     return addScreen(out, right, up, fwd, p.screen);
   };
+  const isStaticPoint = (p: Point, depth = 0): boolean => {
+    if (Array.isArray(p)) return true;
+    if (!p || typeof p !== "object") return false;
+    if ("screen" in p || "actor" in p) return false;
+    if (depth > 16) return false;
+    if ("at" in p && named[p.at]) return isStaticPoint(named[p.at], depth + 1);
+    if ("at" in p && motionTargets.has(p.at)) return false;
+    return true;
+  };
   type Moving = { at: (f: number) => V3; spin: (f: number) => number; phase: (f: number) => number | undefined };
-  const motionFn = (m: Motion, base: Point | undefined, shotStart: number): Moving => {
-    if (m.type === "path") return {
+  const buildMotion = (m: Motion, base: Point | undefined, shotStart: number): Moving => {
+    if (m.type === "path") {
+      const keyFrames = m.keys.map(([at]) => anchor(at, shotStart));
+      const keyPoints = m.keys.map(([, p]) => p);
+      const staticKeys = keyPoints.every((p) => isStaticPoint(p));
+      let fixed: V3[] | null = null;
+      const keysAt = (f: number) => {
+        if (staticKeys) { if (!fixed) fixed = keyPoints.map((p) => point(p, f)); return keyFrames.map((kf, i) => ({ f: kf, v: fixed![i] })); }
+        return keyFrames.map((kf, i) => ({ f: kf, v: point(keyPoints[i], f) }));
+      };
+      return {
       at: (f) => {
-        const keys = m.keys.map(([at, p]) => ({ f: anchor(at, shotStart), v: point(p, f) }));
+        const keys = keysAt(f);
         const p = samplePath(keys, f, m.ease);
         p[1] += bobOffset(T(f), m.bob);
         return p;
       },
       spin: () => 0,
       phase: (f) => (m.walk ? walkPhase(T(f), m.walk.rate, m.walk.offset ?? 0) : undefined),
-    };
+      };
+    }
     const f0 = anchor(m.at, shotStart);
     let p0: V3 | null = null;
     return {
@@ -86,9 +114,19 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       phase: () => undefined,
     };
   };
+  const motionFn = (m: Motion, base: Point | undefined, shotStart: number): Moving => {
+    let byShot = motionMemo.get(m);
+    if (!byShot) { byShot = new Map(); motionMemo.set(m, byShot); }
+    let out = byShot.get(shotStart);
+    if (!out) { out = buildMotion(m, base, shotStart); byShot.set(shotStart, out); }
+    return out;
+  };
   const animated = (a: Animated, f: number, shotStart: number): number => {
     if (typeof a === "number") return a;
-    const keys = a.keys.map(([at, v]) => [anchor(at, shotStart), v] as [number, number]).sort((x, y) => x[0] - y[0]);
+    let byShot = animMemo.get(a);
+    if (!byShot) { byShot = new Map(); animMemo.set(a, byShot); }
+    let keys = byShot.get(shotStart);
+    if (!keys) { keys = a.keys.map(([at, v]) => [anchor(at, shotStart), v] as [number, number]).sort((x, y) => x[0] - y[0]); byShot.set(shotStart, keys); }
     if (f <= keys[0][0]) return keys[0][1];
     if (f >= keys[keys.length - 1][0]) return keys[keys.length - 1][1];
     let i = 0; while (i + 1 < keys.length && f >= keys[i + 1][0]) i++;
@@ -133,7 +171,10 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const actorState = (a: Actor, f: number, shotStart: number, ignoreVisible = false): ActorState | null => {
     let st: Partial<Actor> = { ...a };
     let params = { ...(a.params ?? {}) };
-    const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at, shotStart), b })).sort((x, y) => x.f - y.f);
+    let beatsByShot = beatMemo.get(a);
+    if (!beatsByShot) { beatsByShot = new Map(); beatMemo.set(a, beatsByShot); }
+    let beats = beatsByShot.get(shotStart);
+    if (!beats) { beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at, shotStart), b })).sort((x, y) => x.f - y.f); beatsByShot.set(shotStart, beats); }
     for (const { f: bf, b } of beats) if (f >= bf) {
       const { at: _at, params: bp, ...rest } = b;
       st = { ...st, ...rest };
@@ -202,7 +243,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
     if (a.special) throw new Error(`special "${a.special}" is not implemented yet (shot frame ${f})`);
     const e = cast[a.who];
-    const sp = { ...spec(a.who) };
+    const baseSpec = spec(a.who);
+    const sp = a.animate ? { ...baseSpec } : baseSpec;
     for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, shotStart);
     const phase = a.motion?.type === "path" && a.motion.walk ? (moving ? moving.phase(f) : motionFn(a.motion, st.pos, shotStart).phase(f)) : undefined;
     const opts = {
@@ -250,7 +292,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     } else if (a.special === "pot") {
       pt = attach === "crown" ? [300, 560] : attach === "feet" ? [300, 840] : [300, 650];
     } else {
-      const sp = { ...spec(a.who) };
+      const baseSpec = spec(a.who);
+      const sp = a.animate ? { ...baseSpec } : baseSpec;
       for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, start);
       const phase = a.motion?.type === "path" && a.motion.walk ? state.moving?.phase(f) : undefined;
       const r = person(pen, sp, { pose: st.pose, phase, expr: expr as never, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f) });
@@ -274,8 +317,12 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       const pos = c.layout.grid
         ? [origin[0] + (c.layout.grid.xStart ?? 0) + (i % c.layout.grid.cols) * c.layout.grid.dx + (Math.floor(i / c.layout.grid.cols) % 2) * (c.layout.grid.rowShift ?? 0), origin[1], origin[2] + Math.floor(i / c.layout.grid.cols) * c.layout.grid.dz] as V3
         : point(c.layout.points![i % c.layout.points!.length], f);
-      const first = c.first && c.first.index === i ? c.first.who : null;
-      const sp = first ? spec(first) : c.generator === "kaurava" ? KAURAVA(i) : spec(c.cast![i % c.cast!.length]);
+      let specs = crowdMemo.get(c);
+      if (!specs) {
+        specs = Array.from({ length: c.count }, (_, j) => c.first && c.first.index === j ? spec(c.first.who) : c.generator === "kaurava" ? KAURAVA(j) : spec(c.cast![j % c.cast!.length]));
+        crowdMemo.set(c, specs);
+      }
+      const sp = specs[i];
       const pick = <T,>(v: T | { salt: number; below: number; a: T; b: T }) => typeof v === "object" && v && "salt" in v ? (hh(i, v.salt) < v.below ? v.a : v.b) : v;
       const pose = c.pose ? pick(c.pose) : "stand", expr = c.expr ? pick(c.expr) : "neutral";
       const scale = c.scale && typeof c.scale === "object" ? c.scale.min + hh(i, c.scale.salt) * c.scale.span : (c.scale ?? 1);
@@ -283,12 +330,19 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
   };
 
-  const jarPositions = (x: JarsAction, f: number): V3[] => {
-    const o = point(x.grid.origin, f);
-    return Array.from({ length: x.count }, (_, i) => [o[0] + (i % x.grid.cols) * x.grid.dx + (Math.floor(i / x.grid.cols) % 2) * (x.grid.rowShift ?? 0), o[1], o[2] + Math.floor(i / x.grid.cols) * x.grid.dz] as V3);
+  const jarPositions = (x: JarsAction, f: number, shotStart = 0): V3[] => {
+    let byShot = jarMemo.get(x);
+    if (!byShot) { byShot = new Map(); jarMemo.set(x, byShot); }
+    let pos = byShot.get(shotStart);
+    if (!pos) {
+      const o = point(x.grid.origin, f);
+      pos = Array.from({ length: x.count }, (_, i) => [o[0] + (i % x.grid.cols) * x.grid.dx + (Math.floor(i / x.grid.cols) % 2) * (x.grid.rowShift ?? 0), o[1], o[2] + Math.floor(i / x.grid.cols) * x.grid.dz] as V3);
+      byShot.set(shotStart, pos);
+    }
+    return pos;
   };
   const jarsPose = (x: JarsAction, f: number, sets: Sets, start: number) => {
-    const pos = jarPositions(x, f), count = x.count;
+    const pos = jarPositions(x, f, start), count = x.count;
     const from = x.appear ? anchor(x.appear.from, start) : -Infinity, to = x.appear ? anchor(x.appear.to, start) : Infinity;
     const n = x.appear ? Math.max(0, Math.min(1, (f - from) / Math.max(1, to - from))) * count : count;
     const pop = x.lids?.mode === "pop";
@@ -307,7 +361,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   };
   const jarsKids = (out: Stage, cam: CamInfo, x: JarsAction, f: number, start: number) => {
     const kd = x.kids; if (!kd) return;
-    const pos = jarPositions(x, f);
+    const pos = jarPositions(x, f, start);
     const since = kd.since ? anchor(kd.since, start) : start, end = kd.windowEnd ? anchor(kd.windowEnd, start) : start + 1;
     const overrides = new Map((kd.overrides ?? []).map((o) => [o.index, o]));
     for (let i = 0; i < x.count; i++) {
@@ -316,7 +370,9 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       const p = pos[i];
       if (cam.pos.distanceTo(new THREE.Vector3(p[0], p[1], p[2])) > (kd.cullDistance ?? 22)) continue;
       const k = pop(T(f), T(a), 0.22);
-      const sp = o?.who ? spec(o.who) : kd.generator === "kaurava" ? KAURAVA(i) : KAURAVA(i);
+      let specs = jarSpecMemo.get(x);
+      if (!specs) { specs = Array.from({ length: x.count }, (_, j) => { const ov = overrides.get(j); return ov?.who ? spec(ov.who) : KAURAVA(j); }); jarSpecMemo.set(x, specs); }
+      const sp = specs[i];
       who(out, cam, (kd.seedBase ?? 100) + i, sp, { pose: kd.pose ?? "armsUp", expr: o?.expr ?? kd.expr ?? "grin", t: T(f) },
         p[0], p[1] - (kd.sink ?? 0.95) + (kd.rise ?? 1.45) * k, p[2] + 0.02, { t: T(f), noBlob: kd.noBlob ?? true, scale: kd.scale ?? 0.78 });
     }

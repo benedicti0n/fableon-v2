@@ -79,3 +79,22 @@ Both runs are one `fableon all` from a clean workspace; QA reads the planned `ev
 The final run is ~36% slower than the Phase 2A 627 s run; the Phase 2A number was measured with only 10 shots in
 storyboard mode and no planned-event export, and this run shares the machine with other work. Render-quality output
 and the QA summary are unchanged.
+
+## Phase 2C — interpreter profiling and fixture compaction
+
+Profile: three frames per shot (start, middle, end-2) at 1440x2560, reading `world.update` + stage time from
+`render.cjs stills`. The stage stays render-bound: median 1 ms and max 24 ms both before and after; the hot shots are
+S21 (100-crowd) at ~24 ms and S20 (jars) at ~17 ms. Caches for anchors, path key frames, motion closures, beats,
+animated values, crowd specs, jar grids and spec keys remove repeated allocations without changing output.
+
+Fixture compaction replaced 1,691 per-frame path keys in S25/S26/S30 with their minimal time-parameterised key sets;
+every golden frame stayed within 0.1 (S25/S26/S30 now 0.000). `fixtures/adi-parva/storyboard.json` went from
+**680,366 bytes to 260,942 bytes** (−61.7 %).
+
+Final-quality fixture run after the changes:
+
+| Run | Wall | s/frame | Output | QA |
+|---|---:|---:|---|---|
+| final 1440x2560, fresh `work/adi-final` | **619.4 s** | 0.170 | 3639 frames, 121.300 s, 1440x2560 | PASS — 0 unexplained pops |
+
+This is back to the Phase 2A final speed (626.8 s) and 27 % faster than the Phase 2B run (853.8 s).
