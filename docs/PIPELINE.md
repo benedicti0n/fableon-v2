@@ -7,6 +7,8 @@ The CLI is a thin adapter; the Phase 4 server can drive the same `PipelineRunner
 
 ```bash
 fableon new work/savitri --topic "Savitri and Satyavan" --seconds 90 --voice am_michael
+fableon new work/savitri-hi --topic "…" --seconds 90 --language hi
+fableon voice check --provider elevenlabs
 fableon status --project work/savitri
 fableon approve --project work/savitri --stage brief
 fableon run --project work/savitri --to research [--autopilot] [--force] [--no-cache]
@@ -91,9 +93,14 @@ tokens per run.
 
 ## Voice
 
-`fableon voice` remains the fixture-compatible command. The pipeline voice stage runs `voice/make_voice.py` with the
-project's voice/speed; when `script.json` exists the Python script uses actual beat changes for longer line pauses. If
-the natural duration is within ±10 % of `project.seconds`, the stage applies pitch-preserving `ffmpeg atempo` to the
-exact target and scales `words.json`; outside the band it stops with the measured length and a suggested word count.
-`--fit off` keeps the natural length. Kokoro can report a small negative start for the first word; the stage clamps
-timings at zero before validating `words.json`.
+`fableon voice` remains the fixture-compatible Kokoro command. A pipeline project selects a provider with
+`project.voice.provider` (or the legacy `engine`): `kokoro` for English or `elevenlabs` for Hindi. ElevenLabs uses
+`/v1/text-to-speech/{voice_id}/with-timestamps`, synthesizes one request per BEAT block, stitches blocks with
+`previous_text`/`next_text`, inserts 0.26 s beat pauses and maps character alignment to `words.json`. Every take is
+cached by request hash; `voice.maxCharsPerRun` (default 10,000) caps live characters and `logs/calls.jsonl` records
+characters and cost. See `docs/VOICES.md` for the verified API facts and prices.
+
+After synthesis the stage applies the same length fit: if the natural duration is within ±10 % of
+`project.seconds`, pitch-preserving `ffmpeg atempo` goes to the exact target and `words.json` is scaled; outside the
+band it stops with the measured length and a suggested word count. `--fit off` keeps the natural length. Kokoro can
+report a small negative start for the first word; the stage clamps timings at zero before validating `words.json`.

@@ -11,6 +11,7 @@ import { reviewCommand } from './review.js';
 import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
 import { modelsCommand } from './models-command.js';
+import { voiceCheckCommand } from './voice-command.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -166,12 +167,23 @@ export function main(argv = process.argv) {
     .action((opts) => qaCommand(opts.project));
 
   program
-    .command('voice')
-    .description('regenerate narration and word timings with Kokoro (optional for the fixture)')
-    .requiredOption('--project <dir>', 'project folder')
+    .command('voice [mode]')
+    .description('regenerate fixture narration with Kokoro, or check a voice provider (mode: check)')
+    .option('--project <dir>', 'project folder')
     .option('--speed <speed>', 'Kokoro speaking speed', '1.35')
     .option('--voice <voice>', 'Kokoro voice id', 'am_michael')
-    .action((opts) => voiceCommand(opts.project, opts.speed, opts.voice));
+    .option('--provider <name>', 'voice provider', 'elevenlabs')
+    .option('--model <id>', 'provider model id')
+    .option('--voice-id <id>', 'provider voice id')
+    .action(async (mode, opts) => {
+      if (mode === 'check') {
+        try { const r = await voiceCheckCommand(opts); if (!r.ok) process.exitCode = 1; }
+        catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+        return;
+      }
+      if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
+      voiceCommand(opts.project, opts.speed, opts.voice);
+    });
 
   program
     .command('all')

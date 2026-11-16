@@ -30,5 +30,15 @@
       "source": "https://api-docs.deepseek.com/quick_start/pricing",
       "date": "2026-11-16"
     }
+  },
+  "voicePrices": {
+    "elevenlabs": {
+      "eleven_multilingual_v2": 0.08,
+      "eleven_v3": 0.08,
+      "eleven_v4": 0.08,
+      "eleven_flash_v2_5": 0.04,
+      "eleven_v4_turbo": 0.04,
+      "eleven_v3_conversational": 0.04
+    }
   }
 }

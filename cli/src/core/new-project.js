@@ -12,7 +12,13 @@ export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', 
   const title = String(topic).split(/[:.]/)[0].slice(0, 80).trim() || id;
   const project = {
     version: 1, id, title, topic: String(topic), seconds: Number(seconds), language,
-    voice: { engine: 'kokoro', voice, speed: 1.35 },
+    voice: language === 'hi'
+      ? {
+        provider: 'elevenlabs', model: 'eleven_multilingual_v2', voiceId: null, language: 'hi',
+        settings: { stability: 0.5, similarity_boost: 0.75, style: 0, use_speaker_boost: true, speed: 1 },
+        maxCharsPerRun: 10000,
+      }
+      : { engine: 'kokoro', voice, speed: 1.35, language: 'en' },
     research: { web: false, maxSources: 8 },
     models: { default: { provider: 'deepseek', model: null } },
     autopilot: false,

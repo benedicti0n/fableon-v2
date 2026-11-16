@@ -92,7 +92,8 @@ export class PipelineRunner extends EventEmitter {
           throw new Error(`fact-check still failing after 2 revisions:\n${failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
         }
       }
-      const usage = stage.name === 'voice' ? null : this.router.stageUsage(stage.name);
+      const usage = stage.name === 'voice' ? result.usage ?? null : this.router.stageUsage(stage.name);
+      if (result?.warnings?.length) for (const w of result.warnings.slice(0, 20)) this.log(`voice warning: ${w}`);
       recordStage(this.projectDir, this.project, stage.name, { status: 'fresh', usage });
       const ms = Date.now() - t0;
       this.log(`stage ${stage.name} done ${ms}ms`);

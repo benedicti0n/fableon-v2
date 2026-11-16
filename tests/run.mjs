@@ -22,6 +22,7 @@ import { runFixtureMatch } from './fixture.mjs';
 import { runPipelineTests } from './pipeline.mjs';
 import { runCoreTests } from './core.mjs';
 import { runWordTests } from './words.mjs';
+import { runVoiceTests } from './voices.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -109,6 +110,8 @@ try {
   check('pipeline core', core.ok, `${core.checks.filter((c) => c.ok).length}/${core.checks.length} checks`);
   const words = runWordTests();
   check('unicode words + anchors', words.ok, `${words.checks.filter((c) => c.ok).length}/${words.checks.length} checks`);
+  const voices = await runVoiceTests();
+  check('voice providers', voices.ok, `${voices.checks.filter((c) => c.ok).length}/${voices.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

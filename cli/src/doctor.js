@@ -83,7 +83,7 @@ export function keyCheck(name) {
 export function runDoctor() {
   loadDotEnv();
   const py = findPython();
-  const checks = [nodeCheck(), pythonCheck(py), packageCheck(py), toolCheck('ffmpeg'), toolCheck('ffprobe'), webglCheck(), distCheck(), diskCheck(), keyCheck('DEEPSEEK_API_KEY'), keyCheck('TAVILY_API_KEY')];
+  const checks = [nodeCheck(), pythonCheck(py), packageCheck(py), toolCheck('ffmpeg'), toolCheck('ffprobe'), webglCheck(), distCheck(), diskCheck(), keyCheck('DEEPSEEK_API_KEY'), keyCheck('TAVILY_API_KEY'), keyCheck('ELEVENLABS_API_KEY')];
   console.log('fableon doctor\n');
   let bad = 0;
   for (const c of checks) {
