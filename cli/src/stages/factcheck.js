@@ -16,12 +16,13 @@ export async function runFactcheck({ projectDir, project, router }) {
       const errs = validationErrors('review', d);
       if (errs.length) return errs;
       if (d.lines.length !== script.lines.length) errs.push(`review has ${d.lines.length} lines, script has ${script.lines.length}`);
+      if (project.language === 'hi' && d.lines.some((l) => !l.craft)) errs.push('every Hindi line needs a craft verdict (ok|weak)');
       const ns = new Set(d.lines.map((l) => l.n));
       for (const l of script.lines) if (!ns.has(l.n)) errs.push(`review is missing line ${l.n}`);
       return errs;
     },
   });
   writeJsonArtifact(projectDir, 'factcheck', 'script.review.json', data, 'review');
-  const failures = data.lines.filter((l) => l.verdict === 'unsupported' || l.verdict === 'distorted');
+  const failures = data.lines.filter((l) => ['unsupported', 'distorted'].includes(l.verdict) || l.craft === 'weak');
   return { usage, failures, review: data };
 }

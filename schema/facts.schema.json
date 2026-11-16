@@ -30,6 +30,7 @@
             }
           },
           "confidence": { "enum": ["high", "medium", "low"] },
+          "supports": { "enum": ["yes", "partly", "no"] },
           "verified": { "type": "boolean" }
         }
       }

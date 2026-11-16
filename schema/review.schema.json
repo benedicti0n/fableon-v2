@@ -15,6 +15,7 @@
         "properties": {
           "n": { "type": "integer", "minimum": 0 },
           "verdict": { "enum": ["ok", "unsupported", "distorted", "opinion"] },
+        "craft": { "enum": ["ok", "weak"] },
           "facts": { "type": "array", "items": { "type": "string" } },
           "note": { "type": "string" },
           "fix": { "type": "string" }

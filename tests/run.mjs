@@ -23,6 +23,7 @@ import { runPipelineTests } from './pipeline.mjs';
 import { runCoreTests } from './core.mjs';
 import { runWordTests } from './words.mjs';
 import { runVoiceTests } from './voices.mjs';
+import { runHindiTests } from './hindi.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -112,6 +113,8 @@ try {
   check('unicode words + anchors', words.ok, `${words.checks.filter((c) => c.ok).length}/${words.checks.length} checks`);
   const voices = await runVoiceTests();
   check('voice providers', voices.ok, `${voices.checks.filter((c) => c.ok).length}/${voices.checks.length} checks`);
+  const hindi = runHindiTests();
+  check('hindi script craft', hindi.ok, `${hindi.checks.filter((c) => c.ok).length}/${hindi.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

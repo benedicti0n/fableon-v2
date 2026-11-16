@@ -68,7 +68,7 @@ export class PipelineRunner extends EventEmitter {
       if (stage.name === 'factcheck' && result.failures?.length) {
         if (!autopilot) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check needs revision' });
-          throw new Error(`fact-check failed:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note} (${f.fix})`).join('\n')}\nReview ${join(this.projectDir, 'script.review.json')} and revise the script.`);
+          throw new Error(`fact-check failed:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict}${f.craft === 'weak' ? ' / craft weak' : ''} — ${f.note} (${f.fix})`).join('\n')}\nReview ${join(this.projectDir, 'script.review.json')} and revise the script.`);
         }
         let failures = result.failures;
         let previousReview = result.review;
@@ -79,17 +79,17 @@ export class PipelineRunner extends EventEmitter {
           const scriptState = loadState(this.projectDir);
           if (scriptState.stages.script) scriptState.stages.script.usage = this.router.stageUsage('script');
           saveState(this.projectDir, scriptState);
-          if (!rev.changed) throw new Error(`fact-check revision made no change:\n${failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
+          if (!rev.changed) throw new Error(`fact-check revision made no change:\n${failures.map((f) => `  line ${f.n}: ${f.verdict}${f.craft === 'weak' ? ' / craft weak' : ''} — ${f.note}`).join('\n')}`);
           const fcMod = await import('../stages/factcheck.js');
           result = await fcMod.runFactcheck({ projectDir: this.projectDir, project: this.project, router: this.router });
-          const verdicts = (review) => JSON.stringify((review?.lines ?? []).map((l) => [l.n, l.verdict, l.facts ?? [], l.note]));
-          if (verdicts(previousReview) === verdicts(result.review)) throw new Error(`fact-check verdicts did not change after revision:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
+          const verdicts = (review) => JSON.stringify((review?.lines ?? []).map((l) => [l.n, l.verdict, l.craft ?? 'ok', l.facts ?? [], l.note]));
+          if (verdicts(previousReview) === verdicts(result.review)) throw new Error(`fact-check verdicts did not change after revision:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict}${f.craft === 'weak' ? ' / craft weak' : ''} — ${f.note}`).join('\n')}`);
           previousReview = result.review;
           failures = result.failures;
         }
         if (failures.length) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check still failing after 2 revisions' });
-          throw new Error(`fact-check still failing after 2 revisions:\n${failures.map((f) => `  line ${f.n}: ${f.verdict} — ${f.note}`).join('\n')}`);
+          throw new Error(`fact-check still failing after 2 revisions:\n${failures.map((f) => `  line ${f.n}: ${f.verdict}${f.craft === 'weak' ? ' / craft weak' : ''} — ${f.note}`).join('\n')}`);
         }
       }
       const usage = stage.name === 'voice' ? result.usage ?? null : this.router.stageUsage(stage.name);

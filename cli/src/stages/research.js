@@ -124,7 +124,8 @@ export async function runResearch({ projectDir, project, router }) {
       if (d && typeof d === 'object' && d.version === undefined) d.version = 1;
       const errs = validationErrors('facts', d).filter((e) => !/required property 'verified'/.test(e));
       if (!errs.length) for (const f of d.facts ?? []) {
-        let verified = f.sources?.length > 0;
+        if (project.language === 'hi' && !f.supports) errs.push(`/facts/${f.id}/supports is required for Hindi`);
+        let verified = f.sources?.length > 0 && (f.supports ?? 'yes') === 'yes';
         for (const src of f.sources ?? []) {
           const text = texts.get(src.source);
           const q = norm(src.quote);

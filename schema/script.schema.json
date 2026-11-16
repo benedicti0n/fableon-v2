@@ -5,7 +5,7 @@
   "additionalProperties": false,
   "required": ["version", "title", "seconds", "wps", "characters", "names", "lines"],
   "properties": {
-    "version": { "const": 1 },
+    "version": { "enum": [1, 2] },
     "title": { "type": "string", "minLength": 1 },
     "seconds": { "type": "number", "exclusiveMinimum": 5 },
     "wps": { "type": "number", "exclusiveMinimum": 0 },
@@ -46,6 +46,7 @@
         "properties": {
           "n": { "type": "integer", "minimum": 0 },
           "text": { "type": "string", "minLength": 1 },
+          "gloss": { "type": "string", "minLength": 1 },
           "beat": { "enum": ["hook", "setting", "action", "snap", "deadpan", "explain", "consequence", "twist"] },
           "facts": { "type": "array", "items": { "type": "string", "pattern": "^F[0-9]+$" } },
           "look": {
@@ -54,7 +55,11 @@
             "required": ["set", "who", "note"],
             "properties": {
               "set": { "type": "string" },
+              "mark": { "type": ["string", "null"] },
               "who": { "type": "array", "items": { "type": "string" } },
+              "pose": { "type": ["string", "null"] },
+              "expr": { "type": ["string", "null"] },
+              "prop": { "type": ["string", "null"] },
               "note": { "type": "string" }
             }
           },
