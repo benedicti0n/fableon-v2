@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/project.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "title", "topic", "seconds", "language", "voice", "research", "models", "autopilot"],
+  "properties": {
+    "version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "topic": { "type": "string", "minLength": 1 },
+    "seconds": { "type": "number", "exclusiveMinimum": 5, "maximum": 600 },
+    "language": { "const": "en" },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "voice", "speed"],
+      "properties": {
+        "engine": { "const": "kokoro" },
+        "voice": { "type": "string", "minLength": 1 },
+        "speed": { "type": "number", "minimum": 0.5, "maximum": 2 }
+      }
+    },
+    "research": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["web", "maxSources"],
+      "properties": {
+        "web": { "type": "boolean" },
+        "maxSources": { "type": "integer", "minimum": 1, "maximum": 40 }
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default"],
+      "properties": {
+        "default": { "$ref": "#/$defs/model" },
+        "brief": { "$ref": "#/$defs/model" },
+        "research": { "$ref": "#/$defs/model" },
+        "script": { "$ref": "#/$defs/model" },
+        "factcheck": { "$ref": "#/$defs/model" },
+        "voice": { "$ref": "#/$defs/model" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxCallsPerStage": { "type": "integer", "minimum": 1 },
+        "maxTokensPerRun": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "autopilot": { "type": "boolean" }
+  },
+  "$defs": {
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider"],
+      "properties": {
+        "provider": { "enum": ["deepseek", "openai-compatible", "mock"] },
+        "model": { "type": ["string", "null"] },
+        "baseUrl": { "type": "string" },
+        "keyEnv": { "type": "string" },
+        "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
+        "maxTokens": { "type": "integer", "minimum": 64, "maximum": 32768 }
+      }
+    }
+  }
+}

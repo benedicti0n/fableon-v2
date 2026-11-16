@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/state.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "stages"],
+  "properties": {
+    "version": { "const": 1 },
+    "stages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status"],
+        "properties": {
+          "hash": { "type": ["string", "null"] },
+          "outputHash": { "type": ["string", "null"] },
+          "approvedHash": { "type": ["string", "null"] },
+          "status": { "enum": ["missing", "fresh", "stale", "edited", "approved", "failed", "running"] },
+          "lastRun": { "type": ["string", "null"] },
+          "startedAt": { "type": ["string", "null"] },
+          "finishedAt": { "type": ["string", "null"] },
+          "error": { "type": ["string", "null"] },
+          "usage": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "calls": { "type": "integer", "minimum": 0 },
+              "cached": { "type": "integer", "minimum": 0 },
+              "promptTokens": { "type": "integer", "minimum": 0 },
+              "completionTokens": { "type": "integer", "minimum": 0 },
+              "costUsd": { "type": ["number", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

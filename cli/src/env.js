@@ -1,10 +1,21 @@
 // Shared paths, process helpers and Python discovery for the fableon CLI.
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { spawn, spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+// Tiny .env reader for local secrets. Values are never printed or returned by doctor.
+export function loadDotEnv() {
+  const p = join(ROOT, '.env');
+  if (!existsSync(p)) return;
+  for (const line of readFileSync(p, 'utf8').split(/\r?\n/)) {
+    const m = /^\s*([A-Z][A-Z0-9_]*)\s*=\s*(.*)\s*$/.exec(line);
+    if (!m) continue;
+    if (process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^['\"]|['\"]$/g, '');
+  }
+}
 export const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 export const ENGINE = join(ROOT, 'engine');
 export const CLI = join(ROOT, 'cli');
