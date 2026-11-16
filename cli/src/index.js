@@ -1,7 +1,10 @@
-// fableon CLI entry point. Phase 1 commands: doctor + the fixture pipeline (init, shots, stills, render, audio,
-// assemble, qa, voice, all).
+// fableon CLI entry point. Phase 1 commands: doctor + the fixture pipeline (init, voice, shots, stills, render, audio,
+// assemble, qa, all).
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
+import {
+  allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
+} from './pipeline.js';
 
 export function main(argv = process.argv) {
   const program = new Command();
@@ -15,5 +18,68 @@ export function main(argv = process.argv) {
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
 
-  program.parse(argv);
+  program
+    .command('init <name>')
+    .description('create work/<name>/ from a fixture project')
+    .option('--from <dir>', 'source project directory', 'fixtures/adi-parva')
+    .action((name, opts) => initCommand(name, opts.from));
+
+  program
+    .command('shots')
+    .description('write shots.json, qa_meta.json and cuts.json for a project')
+    .requiredOption('--project <dir>', 'project folder (e.g. work/adi)')
+    .action((opts) => shotsCommand(opts.project));
+
+  program
+    .command('stills')
+    .description('render selected frames as JPEG stills')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--frames <list>', 'comma-separated frame numbers, e.g. 60,640')
+    .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
+    .action((opts) => stillsCommand(opts.project, opts.frames, opts.quality));
+
+  program
+    .command('render')
+    .description('render all shots to render/seg_XX.mp4 (resumable)')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
+    .option('--workers <n>', 'parallel segment workers', '2')
+    .option('--detach', 'keep rendering after this process exits')
+    .action((opts) => renderCommand(opts.project, { qualityName: opts.quality, workers: Number(opts.workers), detach: !!opts.detach }));
+
+  program
+    .command('audio')
+    .description('synthesize the score, sound effects and final mix')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => audioCommand(opts.project));
+
+  program
+    .command('assemble')
+    .description('concatenate the shot clips and mux the final mix into final.mp4')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => assembleCommand(opts.project));
+
+  program
+    .command('qa')
+    .description('run frame QA and write qa/summary.md')
+    .requiredOption('--project <dir>', 'project folder')
+    .action((opts) => qaCommand(opts.project));
+
+  program
+    .command('voice')
+    .description('regenerate narration and word timings with Kokoro (optional for the fixture)')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--speed <speed>', 'Kokoro speaking speed', '1.35')
+    .option('--voice <voice>', 'Kokoro voice id', 'am_michael')
+    .action((opts) => voiceCommand(opts.project, opts.speed, opts.voice));
+
+  program
+    .command('all')
+    .description('shots -> render -> audio -> assemble -> qa')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
+    .option('--workers <n>', 'parallel segment workers', '2')
+    .action((opts) => allCommand(opts.project, { qualityName: opts.quality, workers: Number(opts.workers) }));
+
+  return program.parseAsync(argv);
 }
