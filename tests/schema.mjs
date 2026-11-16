@@ -7,8 +7,15 @@ export function runSchemaTests() {
   const checks = [], errors = [];
   const ok = (name, cond, detail = '') => { checks.push({ name, ok: cond, detail }); if (!cond) errors.push(`${name}: ${detail}`); };
   const { schema, board } = specializeSchema('fixtures/adi-parva-authoring');
-  const text = JSON.stringify(schema);
-  ok('no open objects', !text.includes('"additionalProperties":true'), 'additionalProperties:true remains');
+  const open = [];
+  const maps = new Set(['/properties/cast', '/properties/points', '/properties/groups']);
+  const walk = (x, path = '') => {
+    if (!x || typeof x !== 'object') return;
+    if (x.type === 'object' && !maps.has(path) && x.additionalProperties !== false) open.push(path || '/');
+    for (const [k, v] of Object.entries(x)) walk(v, `${path}/${k}`);
+  };
+  walk(schema);
+  ok('no open object schemas', open.length === 0, open.slice(0, 5).join(', '));
   ok('raw closed for board', schema.$defs.Raw === false);
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   let valid = false, detail = '';

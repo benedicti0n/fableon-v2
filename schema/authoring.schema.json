@@ -2453,7 +2453,22 @@
       ],
       "properties": {
         "base": {
-          "type": "string"
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
         },
         "rate": {
           "type": "number"
@@ -2614,10 +2629,57 @@
           "type": "number"
         },
         "pose": {
-          "type": "string"
+          "enum": [
+            "stand",
+            "walk",
+            "run",
+            "sit",
+            "point",
+            "vow",
+            "pray",
+            "shout",
+            "armsUp",
+            "shrug",
+            "fold",
+            "bless",
+            "present",
+            "hold",
+            "belly",
+            "drink",
+            "flex",
+            "aim",
+            "shake",
+            "wave",
+            "talk",
+            "sneak",
+            "stir",
+            "offer",
+            "dust",
+            "chop",
+            "carry",
+            "throw",
+            "hips",
+            "think",
+            "grab"
+          ]
         },
         "expr": {
-          "type": "string"
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
         },
         "mirror": {
           "type": "boolean"
@@ -2658,9 +2720,6 @@
             "flat"
           ]
         },
-        "params": {
-          "type": "object"
-        },
         "variant": {
           "enum": [
             "priest"
@@ -2683,8 +2742,11 @@
         },
         "animate": {
           "type": "object",
-          "additionalProperties": {
-            "$ref": "#/$defs/Animate"
+          "additionalProperties": false,
+          "properties": {
+            "belly": {
+              "$ref": "#/$defs/Animate"
+            }
           }
         },
         "scale": {
@@ -2710,15 +2772,79 @@
           ]
         },
         "pose": {
-          "type": "string"
+          "enum": [
+            "stand",
+            "walk",
+            "run",
+            "sit",
+            "point",
+            "vow",
+            "pray",
+            "shout",
+            "armsUp",
+            "shrug",
+            "fold",
+            "bless",
+            "present",
+            "hold",
+            "belly",
+            "drink",
+            "flex",
+            "aim",
+            "shake",
+            "wave",
+            "talk",
+            "sneak",
+            "stir",
+            "offer",
+            "dust",
+            "chop",
+            "carry",
+            "throw",
+            "hips",
+            "think",
+            "grab"
+          ]
         },
         "expr": {
-          "type": "string"
+          "enum": [
+            "neutral",
+            "stern",
+            "grin",
+            "laugh",
+            "whistle",
+            "nervous",
+            "shock",
+            "relief",
+            "relief_open",
+            "dazed",
+            "pained",
+            "smile",
+            "smile_closed",
+            "lick"
+          ]
         },
         "prop": {
           "oneOf": [
             {
-              "type": "string"
+              "enum": [
+                "bow",
+                "bowDrawn",
+                "mace",
+                "spear",
+                "net",
+                "oar",
+                "laddu",
+                "garland",
+                "crown",
+                "jar",
+                "axe",
+                "torch",
+                "mango",
+                "ladle",
+                "scroll",
+                "bigbow"
+              ]
             },
             {
               "type": "null"
@@ -2801,15 +2927,79 @@
                 "additionalProperties": false,
                 "properties": {
                   "pose": {
-                    "type": "string"
+                    "enum": [
+                      "stand",
+                      "walk",
+                      "run",
+                      "sit",
+                      "point",
+                      "vow",
+                      "pray",
+                      "shout",
+                      "armsUp",
+                      "shrug",
+                      "fold",
+                      "bless",
+                      "present",
+                      "hold",
+                      "belly",
+                      "drink",
+                      "flex",
+                      "aim",
+                      "shake",
+                      "wave",
+                      "talk",
+                      "sneak",
+                      "stir",
+                      "offer",
+                      "dust",
+                      "chop",
+                      "carry",
+                      "throw",
+                      "hips",
+                      "think",
+                      "grab"
+                    ]
                   },
                   "expr": {
-                    "type": "string"
+                    "enum": [
+                      "neutral",
+                      "stern",
+                      "grin",
+                      "laugh",
+                      "whistle",
+                      "nervous",
+                      "shock",
+                      "relief",
+                      "relief_open",
+                      "dazed",
+                      "pained",
+                      "smile",
+                      "smile_closed",
+                      "lick"
+                    ]
                   },
                   "prop": {
                     "oneOf": [
                       {
-                        "type": "string"
+                        "enum": [
+                          "bow",
+                          "bowDrawn",
+                          "mace",
+                          "spear",
+                          "net",
+                          "oar",
+                          "laddu",
+                          "garland",
+                          "crown",
+                          "jar",
+                          "axe",
+                          "torch",
+                          "mango",
+                          "ladle",
+                          "scroll",
+                          "bigbow"
+                        ]
                       },
                       {
                         "type": "null"
@@ -2896,7 +3086,29 @@
                     ]
                   },
                   "params": {
-                    "type": "object"
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/GaneshaParams"
+                      },
+                      {
+                        "$ref": "#/$defs/DeerParams"
+                      },
+                      {
+                        "$ref": "#/$defs/BabyParams"
+                      },
+                      {
+                        "$ref": "#/$defs/NagaParams"
+                      },
+                      {
+                        "$ref": "#/$defs/FlatParams"
+                      },
+                      {
+                        "$ref": "#/$defs/AgniParams"
+                      },
+                      {
+                        "$ref": "#/$defs/PotParams"
+                      }
+                    ]
                   }
                 }
               }
@@ -2909,6 +3121,31 @@
         },
         "raw": {
           "$ref": "#/$defs/Raw"
+        },
+        "params": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/GaneshaParams"
+            },
+            {
+              "$ref": "#/$defs/DeerParams"
+            },
+            {
+              "$ref": "#/$defs/BabyParams"
+            },
+            {
+              "$ref": "#/$defs/NagaParams"
+            },
+            {
+              "$ref": "#/$defs/FlatParams"
+            },
+            {
+              "$ref": "#/$defs/AgniParams"
+            },
+            {
+              "$ref": "#/$defs/PotParams"
+            }
+          ]
         }
       },
       "allOf": [
@@ -3062,6 +3299,405 @@
                 "type": "object",
                 "additionalProperties": false,
                 "maxProperties": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "ganesha"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/GaneshaParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/GaneshaParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "deer"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/DeerParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/DeerParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "baby"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/BabyParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/BabyParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "naga"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/NagaParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/NagaParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "flat"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/FlatParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/FlatParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "agni"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/AgniParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/AgniParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": "pot"
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/PotParams"
+              },
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Anchor"
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/Actor/properties/do/items/prefixItems/1"
+                        },
+                        {
+                          "properties": {
+                            "params": {
+                              "$ref": "#/$defs/PotParams"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "not": {
+              "required": [
+                "special"
+              ]
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "params"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "not": {
+              "required": [
+                "special"
+              ]
+            }
+          },
+          "then": {
+            "properties": {
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "prefixItems": [
+                    {},
+                    {
+                      "not": {
+                        "required": [
+                          "params"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "special": {
+                "const": null
+              }
+            },
+            "required": [
+              "special"
+            ]
+          },
+          "then": {
+            "properties": {
+              "do": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "prefixItems": [
+                    {},
+                    {
+                      "not": {
+                        "required": [
+                          "params"
+                        ]
+                      }
+                    }
+                  ]
+                }
               }
             }
           }
@@ -3308,6 +3944,15 @@
               }
             },
             "scenery": {
+              "type": "boolean"
+            },
+            "with": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reaction": {
               "type": "boolean"
             }
           }
