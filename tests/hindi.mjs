@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../cli/src/env.js';
-import { validateScript } from '../cli/src/stages/script.js';
+import { deliveryErrors, validateScript } from '../cli/src/stages/script.js';
 
 const texts = [
   'मौत को बहस में हराया गया।',
@@ -47,10 +47,10 @@ export function runHindiTests() {
   ok('hindi deadpan pair', validateScript(badDeadpan, { project, facts, catalog, sourceTexts: [] }).some((e) => /deadpan/.test(e)));
 
   const badWord = structuredClone(base); badWord.lines[0].delivery.emphasis = ['नहीं'];
-  ok('hindi delivery word', validateScript(badWord, { project, facts, catalog, sourceTexts: [] }).some((e) => /not a word/.test(e)));
+  ok('hindi delivery word', deliveryErrors(badWord.lines[0]).some((e) => /not a word/.test(e)), JSON.stringify(deliveryErrors(badWord.lines[0])));
 
-  const badLook = structuredClone(base); badLook.lines[1].look.pose = 'counting-fingers';
-  ok('hindi catalog look', validateScript(badLook, { project, facts, catalog, sourceTexts: [] }).some((e) => /look\/pose/.test(e)));
+  const badLook = structuredClone(base); badLook.lines[1].look.set = 'moon';
+  ok('hindi catalog look', validateScript(badLook, { project, facts, catalog, sourceTexts: [] }).some((e) => /look\/set/.test(e)));
 
   const repeated = structuredClone(base);
   repeated.lines[2].facts = ['F1'];

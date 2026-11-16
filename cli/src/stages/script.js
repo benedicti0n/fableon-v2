@@ -27,7 +27,7 @@ function capitalizedNames(text) {
   return names;
 }
 
-export function hindiLineTarget(seconds) { return Math.max(12, Math.round((seconds / 3.2) * 0.85)); }
+export function hindiLineTarget(seconds) { return Math.max(1, Math.round((seconds / 3.2) * 0.85)); }
 
 export function hindiWordBudget(n, targetWords) {
   const hook = Math.min(16, Math.max(6, Math.round(targetWords / n) + 2));
