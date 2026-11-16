@@ -150,7 +150,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
       const dOver = overHead / (2 * 0.24 * tanOver), dPrim = dOver + sep;
       const u = key.side === 'left' ? 0.2 : 0.8;
       const right = [-dz, 0, dx];
-      const shift = -(u - 0.5) * 2 * dOver * tanOver * aspect;
+      const shift = (u - 0.5) * 2 * dOver * tanOver * aspect;
       const baseCam = [(pb.x0 + pb.x1) / 2 + dx * dPrim + right[0] * shift, 0, (pb.z0 + pb.z1) / 2 + dz * dPrim + right[2] * shift];
       const look = lookBase();
       let best = null;
@@ -180,7 +180,9 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     vfov = fov; distance = dist;
     return !insideKeepout(camera, keepout) && checks();
   };
-  const startOk = over ? (!insideKeepout(camera, keepout) && checks()) : trySpot(0, distance, camY, vfov);
+  // The over composition is solved geometrically; do not replace it with the generic fallback just because a
+  // keep-out ray grazes a trunk. The measured blocker check reports real occluders afterwards.
+  const startOk = over ? !insideKeepout(camera, keepout) : trySpot(0, distance, camY, vfov);
   if (!startOk) {
     let ok = false;
     for (const yaw of [15, -15, 30, -30]) if (!ok) { yawOffset = yaw; ok = trySpot(yaw, distance, camY, vfov); }
@@ -193,6 +195,30 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     if (!ok) throw new Error(`no clear view of ${subjects.map((s) => s.id).join('+')} at ${key.at}`);
   }
   const look = lookBase();
+  if (over && primary) {
+    // Two-plane rule: the over actor sits in one lower third; put the primary subject in the upper part of the
+    // opposite side. Shift the look point laterally until the primary lands on that side.
+    const desired = key.side === 'left' ? 0.80 : 0.20;
+    const projectU = (p) => {
+      const f = [look[0] - camera[0], look[1] - camera[1], look[2] - camera[2]];
+      const fl = Math.hypot(...f) || 1; f[0] /= fl; f[1] /= fl; f[2] /= fl;
+      const right = [-f[2], 0, f[0]], rl = Math.hypot(...right) || 1; right[0] /= rl; right[2] /= rl;
+      const v = [p[0] - camera[0], p[1] - camera[1], p[2] - camera[2]];
+      const z = v[0] * f[0] + v[1] * f[1] + v[2] * f[2];
+      if (z <= 0) return 0.5;
+      const x = v[0] * right[0] + v[1] * right[1] + v[2] * right[2];
+      return 0.5 + x / z / (2 * Math.tan((vfov * DEG) / 2) * aspect);
+    };
+    const p = [target[0], pb.eye, target[2]];
+    for (let i = 0; i < 4; i++) {
+      const u = projectU(p); if (Math.abs(u - desired) < 0.01) break;
+      const f = [look[0] - camera[0], 0, look[2] - camera[2]], fl = Math.hypot(f[0], f[2]) || 1;
+      const right = [-f[2] / fl, 0, f[0] / fl];
+      const span = 2 * Math.hypot(p[0] - camera[0], p[2] - camera[2]) * Math.tan((vfov * DEG) / 2) * aspect;
+      const shift = -(desired - u) * span;
+      look[0] += right[0] * shift; look[2] += right[2] * shift;
+    }
+  }
   if (key.third) {
     const f = [look[0] - camera[0], 0, look[2] - camera[2]], fl = Math.hypot(f[0], f[2]) || 1;
     const right = [-f[2] / fl, 0, f[0] / fl], shift = (key.third === 'left' ? 1 : -1) * spanH / 6;

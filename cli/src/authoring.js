@@ -190,6 +190,7 @@ const compileActor = (entry, shot, ctx) => {
   out.who = useId;
   if (a.id) out.id = a.id;
   if (a.special) out.special = a.special;
+  if (a.face) out.face = a.face;
   if (a.params) out.params = compileParams(a.params, ctx.fps);
   out.pos = a.pos ? resolvePoint(a.pos, sets, ctx.catalog) : a.at ? resolvePlaced(a.at, sets, ctx.catalog) : undefined;
   if (typeof a.at === 'string') { const v = markViewOf(a.at, sets, ctx.catalog); if (v !== undefined) out.view = v; }
@@ -412,6 +413,69 @@ const lookPointFor = (id, out, keyStart, keyEnd, ctx, shot) => {
   return p;
 };
 
+const faceTargetAt = (a, f, ctx) => {
+  let face = a.face;
+  for (const b of a.beats ?? []) if (b.face !== undefined && f >= ctx.anchorFrame(b.at)) face = b.face;
+  return face;
+};
+const propAt = (a, f, ctx) => {
+  let prop = a.prop;
+  for (const b of a.beats ?? []) if (b.prop !== undefined && f >= ctx.anchorFrame(b.at)) prop = b.prop;
+  return prop;
+};
+const projectScreenU = (cam, p, f, ctx) => {
+  const c = pointAt(cam.pos, f, ctx), l = pointAt(cam.look, f, ctx);
+  const fx = l[0] - c[0], fz = l[2] - c[2], fl = Math.hypot(fx, fz) || 1;
+  const fwd = [fx / fl, 0, fz / fl], right = [-fwd[2], 0, fwd[0]];
+  const vx = p[0] - c[0], vz = p[2] - c[2], z = vx * fwd[0] + vz * fwd[2];
+  if (z <= 0) return 0.5;
+  const x = vx * right[0] + vz * right[2], tan = Math.tan(((cam.fov ?? 40) * Math.PI) / 360);
+  return 0.5 + x / z / (2 * tan * 9 / 16);
+};
+const addFacingBeat = (a, f, target, cam, ctx) => {
+  const own = actorStateAt(a, f, { start: { frame: 0 } }, ctx);
+  if (!own) return;
+  const tu = projectScreenU(cam, target, f, ctx), au = projectScreenU(cam, own.pos, f, ctx);
+  const dir = tu > au + 0.01 ? 1 : tu < au - 0.01 ? -1 : 0;
+  const prop = propAt(a, f, ctx);
+  let facing = dir, mirror = false;
+  if (prop === 'bow' || prop === 'bowDrawn' || prop === 'bigbow') { facing = dir ? -1 : 0; mirror = dir > 0; }
+  else if (prop === 'spear' || prop === 'net' || prop === 'axe' || prop === 'torch') { facing = dir ? 1 : 0; mirror = dir < 0; }
+  const beat = { at: { frame: f }, facing, mirror, look: dir };
+  const same = (a.beats ?? []).find((b) => !b.at.shot && b.at.frame === f);
+  if (same) Object.assign(same, beat); else (a.beats ??= []).push(beat);
+  a.beats.sort((x, y) => ctx.anchorFrame(x.at) - ctx.anchorFrame(y.at));
+};
+const applyFaces = (out, cameras, ctx) => {
+  if (!out.actors?.length || !cameras.length) return;
+  const start = ctx.anchorFrame(out.start);
+  const targetPoint = (id, f) => {
+    const a = out.actors.find((x) => x.id === id || x.who === id);
+    if (a) { const st = actorStateAt(a, f, out, ctx); return st ? st.pos : null; }
+    const fx = (out.fx ?? []).find((x) => x.id === id);
+    if (fx) return effectStateAt(fx, f, ctx, out).pos;
+    try { return markPos(id, out.sets ?? [], ctx.catalog); } catch { return null; }
+  };
+  for (const a of out.actors) {
+    const ownId = a.id ?? a.who;
+    const faceChanges = [];
+    for (const cam of cameras) {
+      const f = ctx.anchorFrame(cam.at, start);
+      let face = faceTargetAt(a, f, ctx);
+      if (!face && cam.over === ownId && cam.subjects?.length) face = cam.subjects[0];
+      if (face) faceChanges.push({ f, face, cam });
+    }
+    for (const b of a.beats ?? []) if (b.face !== undefined) {
+      const f = ctx.anchorFrame(b.at, start), cam = [...cameras].reverse().find((c) => ctx.anchorFrame(c.at, start) <= f);
+      if (cam) faceChanges.push({ f, face: b.face, cam });
+    }
+    for (const { f, face, cam } of faceChanges) {
+      const p = targetPoint(face, f);
+      if (p) addFacingBeat(a, f, p, cam, ctx);
+    }
+  }
+};
+
 const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
@@ -488,6 +552,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   if (shot.raw) ctx.raw++;
   if (!cameras.length && rawShot.camera) cameras.push(...rawShot.camera.map((k) => ({ ...k, ...(typeof k.at === 'string' ? { at: parseAnchor(k.at, fps) } : {}) })));
   if (cameras.length) out.camera = cameras.sort((a, b) => ctx.anchorFrame(a.at, start) - ctx.anchorFrame(b.at, start));
+  applyFaces(out, cameras, ctx);
   if (shot.dof) out.dof = shot.dof.map((d) => compileDof(d, { ...ctx, sets }));
   else if (dofs.length) out.dof = dofs;
   if (rawShot.camera) delete rawShot.camera;

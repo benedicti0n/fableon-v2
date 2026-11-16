@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, LOOK_AWAY_TOL, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -92,7 +92,7 @@ const actorState = (ctx, shot, actor, f, start) => {
   const spec = castSpec(ctx, actor.who) ?? { build: 'adult' };
   const key = actor.special ?? spec.build ?? 'adult';
   const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
-  return { pos, measure, scale, seated: !!st.seated };
+  return { pos, measure, scale, seated: !!st.seated, facing: st.facing ?? 0, look: st.look ?? 0, mirror: !!st.mirror, prop: st.prop ?? null, face: actor.face };
 };
 
 const effectState = (ctx, shot, fx, f, start) => {
@@ -317,6 +317,37 @@ const overlap = (a, b) => {
   const h = Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
   return (w * h) / Math.max(1e-9, (a.x1 - a.x0) * (a.y1 - a.y0));
 };
+const screenU = (ctx, k, p, f) => {
+  const pos = pointAt(ctx, k.pos, f), look = pointAt(ctx, k.look, f);
+  const b = basis(pos, look, k.roll ?? 0);
+  const v = [p[0] - pos[0], p[1] - pos[1], p[2] - pos[2]];
+  const z = v[0] * b.f[0] + v[1] * b.f[1] + v[2] * b.f[2];
+  if (z <= 0) return 0.5;
+  const x = v[0] * b.r[0] + v[1] * b.r[1] + v[2] * b.r[2];
+  return 0.5 + x / z / (2 * Math.tan(((k.fov ?? 40) * D2R) / 2) * (9 / 16));
+};
+const activeFace = (actor, f, start, ctx) => {
+  let face = actor.face;
+  for (const b of actor.beats ?? []) if (b.face !== undefined && f >= ctx.anchor(b.at, start)) face = b.face;
+  return face;
+};
+const activeProp = (actor, f, start, ctx) => {
+  let prop = actor.prop;
+  for (const b of actor.beats ?? []) if (b.prop !== undefined && f >= ctx.anchor(b.at, start)) prop = b.prop;
+  return prop;
+};
+const targetPoint = (ctx, shot, id, f, start) => {
+  const st = stateFor(ctx, shot, id, f, start);
+  if (st) return [st.pos[0], st.pos[1] + (st.seated ? st.measure.eyeSeated : st.measure.eye) * st.scale, st.pos[2]];
+  return null;
+};
+const overlapArea = (a, b) => {
+  if (!a || !b) return 0;
+  const w = Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0));
+  const h = Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+  return w * h;
+};
+
 export async function checkFramesMeasured(dirArg, opts = {}) {
   const dir = projectDir(dirArg);
   const ctx = makeContext(dir);
@@ -398,6 +429,34 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         if (area >= EDGE_INTRUDER_AREA && cut && vis < EDGE_INTRUDER_VISIBLE) add(warnings, 'edge intruder', id, `edge intruder ${id}: cut by an edge, ${(vis * 100).toFixed(0)}% visible`, FIX.edgeIntruder);
       }
       const primaryStat = primary ? idsById.get(primary) : null;
+      if (k.over && primary) {
+        const oh = peopleById.get(k.over)?.headBox, ph = peopleById.get(primary)?.headBox;
+        const ob = oh ? { x0: Math.min(oh.x0, oh.x1), y0: Math.min(oh.y0, oh.y1), x1: Math.max(oh.x0, oh.x1), y1: Math.max(oh.y0, oh.y1) } : idsById.get(k.over)?.bbox;
+        const pbox = ph ? { x0: Math.min(ph.x0, ph.x1), y0: Math.min(ph.y0, ph.y1), x1: Math.max(ph.x0, ph.x1), y1: Math.max(ph.y0, ph.y1) } : primaryStat?.bbox;
+        if (ob && pbox) {
+          const inter = overlapArea(ob, pbox);
+          const small = Math.min((ob.x1 - ob.x0) * (ob.y1 - ob.y0), (pbox.x1 - pbox.x0) * (pbox.y1 - pbox.y0));
+          if (small > 0 && inter / small > MERGE_OVERLAP) push('merge', `${k.over}/${primary}`, `merge ${k.over}/${primary}: over actor overlaps the subject by ${(100 * inter / small).toFixed(0)}%`, FIX.merge);
+        }
+      }
+      for (const id of [...subjects, ...(k.over ? [k.over] : [])]) {
+        const a = (m.shot.actors ?? []).find((x) => (x.id ?? x.who) === id); if (!a) continue;
+        const face = id === k.over && !activeFace(a, m.f, m.start, ctx) ? primary : activeFace(a, m.f, m.start, ctx);
+        if (!face) continue;
+        const target = targetPoint(ctx, m.shot, face, m.f, m.start); if (!target) continue;
+        const p = peopleById.get(id); if (!p) continue;
+        const own = [p.eye.x, p.eye.y, 0];
+        const au = p.eye.x, tu = screenU(ctx, k, target, m.f);
+        const want = tu > au + LOOK_AWAY_TOL ? 1 : tu < au - LOOK_AWAY_TOL ? -1 : 0;
+        const prop = activeProp(a, m.f, m.start, ctx);
+        let facing = a.facing ?? 0, mirror = !!a.mirror;
+        for (const b of a.beats ?? []) if (m.f >= ctx.anchor(b.at, m.start)) { if (b.facing !== undefined) facing = b.facing; if (b.mirror !== undefined) mirror = b.mirror; }
+        const aim = prop === 'bow' || prop === 'bowDrawn' || prop === 'bigbow' ? (mirror ? 1 : -1)
+          : prop === 'spear' || prop === 'net' || prop === 'axe' || prop === 'torch' ? (mirror ? -1 : 1)
+            : facing * (mirror ? -1 : 1);
+        if (want && aim && want !== aim) push('looks away', id, `looks away ${id}: target is screen-${want > 0 ? 'right' : 'left'} but the actor aims ${aim > 0 ? 'right' : 'left'}`, FIX.looksAway);
+      }
+
       const nearest = primaryStat?.distance ?? (primary ? itemsById.get(primary)?.distance : null);
       if (nearest !== undefined && nearest !== null) {
         for (const id of r.ids ?? []) {

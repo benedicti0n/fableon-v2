@@ -50,6 +50,13 @@ export function runAuthoring() {
   };
   const ride = compileBoard(rideBoard, words, catalog).storyboard.shots[0].actors[0];
   ok('ride compiles', ride.ride === 'boat' && JSON.stringify(ride.rideOffset) === '[0,0.12,0]', JSON.stringify(ride));
+  const faceBoard = (side, over = false) => ({ version: 1, cast: { pandu: { spec: 'C.pandu' }, deer: { spec: { skin: '#b9773f' } } }, shots: [{ id: 'F', start: '13.Pandu', light: 'day', sets: ['deer'], actors: [{ cast: 'pandu', id: 'pandu', at: 'deer.deer', nudge: [0, 0, 2], prop: 'bowDrawn', ...(over ? {} : { face: 'deer' }) }, { cast: 'deer', id: 'deer', special: 'deer', at: 'deer.deer' }], camera: [{ at: '13.Pandu', size: 'wide', on: ['deer'], side, move: 'hold', ...(over ? { over: 'pandu' } : {}) }] }] });
+  const faceBeat = (side, over = false) => compileBoard(faceBoard(side, over), words, catalog).storyboard.shots[0].actors.find((a) => a.id === 'pandu').beats?.find((b) => b.facing !== undefined);
+  const fl = faceBeat('left'), fr = faceBeat('right');
+  ok('face flips across the line', !!fl && !!fr && fl.mirror !== fr.mirror, JSON.stringify([fl, fr]));
+  ok('face aims the prop', !!fl && fl.facing !== 0 && fl.look !== 0, JSON.stringify(fl));
+  const auto = faceBeat('left', true);
+  ok('over auto-face', !!auto && (auto.facing !== 0 || auto.mirror), JSON.stringify(auto));
   const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
   const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
   ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);
