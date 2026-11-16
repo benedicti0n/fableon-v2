@@ -196,7 +196,7 @@ export function normalizeHindiScript(data, catalog) {
   for (const l of data.lines) {
     const prev = merged[merged.length - 1];
     const factKey = (x) => JSON.stringify([...(x.facts ?? [])].sort());
-    if (prev && ['action', 'snap', 'consequence'].includes(l.beat) && prev.beat === l.beat && factKey(prev) === factKey(l) && (l.facts ?? []).length) {
+    if (prev && !/[।.!?]$/.test(prev.text.trim()) && ['action', 'snap', 'consequence'].includes(l.beat) && prev.beat === l.beat && factKey(prev) === factKey(l) && (l.facts ?? []).length) {
       prev.text = `${prev.text.trim().replace(/[।.!?]+$/, '')}। ${l.text.trim()}`;
       prev.gloss = `${prev.gloss.trim()} ${l.gloss.trim()}`;
       logNormalizer(data, 'merge', l.n, `joined into line ${prev.n}`);
