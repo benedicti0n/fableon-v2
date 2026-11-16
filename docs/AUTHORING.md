@@ -153,6 +153,10 @@ Constants as implemented (`cli/src/solver.js`):
 - Angles: eye = subject eye height; low = 45 % of body height; high = 2.5-4 m above; overhead = 8 m above.
 - `hold` settles at rate 0.0015. `punch` adds 0.006 over 30 frames at that anchor. `glide`/`crane` use a 0.8 s key
   transition; `tiltUp`/`tiltDown` compile to a v1 tilt key.
+- Subjects must be visible at the key start. A key frames the union of a moving subject's positions sampled every 6
+  frames over its active span. An invisible subject is a compile error; `"later": ["kunti"]` waits for its first
+  visible frame inside the key (use rarely). Effects with an id (e.g. pigeon) are subjects too and use their catalog
+  `measure` entry.
 - `follow` requires a moving id and compiles camera `pos`/`look` as Points relative to that id.
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A

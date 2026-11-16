@@ -289,31 +289,87 @@ const castSpec = (id, ctx) => {
   return list?.find((x) => x.name === rest.join('.'))?.spec ?? null;
 };
 
-const actorStateAt = (a, f, shot, ctx) => {
-  const start = ctx.anchorFrame(shot.start);
+const actorWindow = (a, f, start, ctx) => {
   let st = { ...a };
   for (const b of a.beats ?? []) if (f >= ctx.anchorFrame(b.at, start)) st = { ...st, ...b };
+  const vis = st.visible, ap = st.appear;
+  const from = vis ? ctx.anchorFrame(vis.from, start) : ap ? ctx.anchorFrame(ap.at, start) : -Infinity;
+  const to = vis ? ctx.anchorFrame(vis.to, start) : Infinity;
+  return { st, vis, ap, from, to };
+};
+const visibleAt = (a, f, start, ctx, effect = false) => {
+  if (effect) {
+    if (a.visible && (f < ctx.anchorFrame(a.visible.from, start) || f >= ctx.anchorFrame(a.visible.to, start))) return false;
+    if (a.at && f < ctx.anchorFrame(a.at, start)) return false;
+    if (a.until && f >= ctx.anchorFrame(a.until, start)) return false;
+    return true;
+  }
+  const w = actorWindow(a, f, start, ctx);
+  return f >= w.from && f < w.to;
+};
+const visibilityMessage = (id, anchor, actor, start, ctx, effect = false) => {
+  if (effect) {
+    const enter = actor.at ? ctx.anchorFrame(actor.at, start) : null;
+    const exit = actor.until ? ctx.anchorFrame(actor.until, start) : null;
+    return `subject ${id} is not visible at ${anchor} (${enter !== null ? `enters at ${enter}` : 'no enter'}, ${exit !== null ? `exited at ${exit}` : 'no exit'})`;
+  }
+  const w = actorWindow(actor, ctx.anchorFrame(actor.at ?? { shot: true, offset: 0 }, start), start, ctx);
+  return `subject ${id} is not visible at ${anchor} (${w.from > -Infinity ? `enters at ${w.from}` : 'no enter'}, ${w.to < Infinity ? `exited at ${w.to}` : 'no exit'})`;
+};
+
+const actorStateAt = (a, f, shot, ctx) => {
+  const start = ctx.anchorFrame(shot.start);
+  const w = actorWindow(a, f, start, ctx);
+  const st = w.st;
   const base = a.pos ? pointAt(a.pos, f, ctx) : [0, 0, 0];
   const pos = a.motion ? motionAt(a.motion, f, base, ctx) : base;
   const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
   const key = a.special ? a.special : (spec.build ?? 'adult');
   const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
-  return { id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who };
+  return { id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, entering: w.from, exiting: w.to };
 };
 
-const subjectFor = (id, compiled, shot, f, ctx) => {
+const effectStateAt = (fx, f, ctx, shot) => {
+  const start = ctx.anchorFrame(shot.start);
+  const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ? pointAt(fx.pos, f, ctx) : [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
+  const measure = ctx.catalog.measure[fx.kind] ?? { standing: 0.9, seated: 0.9, eye: 0.6, eyeSeated: 0.6, head: 0.25, halfWidth: 0.35 };
+  return { id: fx.id ?? fx.kind, moveId: fx.id, pos, measure, scale: 1, seated: false, entering: fx.at ? ctx.anchorFrame(fx.at, start) : -Infinity, exiting: fx.until ? ctx.anchorFrame(fx.until, start) : Infinity };
+};
+
+const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchorLabel) => {
   const a = (compiled.actors ?? []).find((x) => x.id === id || x.who === id);
-  if (a) return actorStateAt(a, f, compiled, ctx);
+  if (a) {
+    if (!visibleAt(a, keyStart, ctx.anchorFrame(shot.start), ctx)) {
+      if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, a, ctx.anchorFrame(shot.start), ctx));
+      let first = null;
+      for (let f = keyStart; f < keyEnd; f++) if (visibleAt(a, f, ctx.anchorFrame(shot.start), ctx)) { first = f; break; }
+      if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      keyStart = first;
+    }
+    const moving = !!a.motion;
+    const frames = moving ? Array.from({ length: Math.max(1, Math.ceil((keyEnd - keyStart) / 6)) }, (_, i) => Math.min(keyEnd - 1, keyStart + i * 6)) : [keyStart];
+    const samples = frames.map((f) => actorStateAt(a, f, compiled, ctx)).filter(Boolean);
+    return { ...samples[0], samples: samples.map((s) => s.pos) };
+  }
   const fx = (compiled.fx ?? []).find((x) => x.id === id);
   if (fx) {
-    const pos = fx.motion ? motionAt(fx.motion, f, fx.pos ? pointAt(fx.pos, f, ctx) : [0, 0, 0], ctx) : pointAt(fx.pos, f, ctx);
-    return { id, moveId: id, pos, measure: { standing: 0.9, seated: 0.9, eye: 0.6, eyeSeated: 0.6, head: 0.25, halfWidth: 0.35 }, scale: 1, seated: false };
+    if (!visibleAt(fx, keyStart, ctx.anchorFrame(shot.start), ctx, true)) {
+      if (!later.includes(id)) throw new Error(visibilityMessage(id, anchorLabel, fx, ctx.anchorFrame(shot.start), ctx, true));
+      let first = null;
+      for (let f = keyStart; f < keyEnd; f++) if (visibleAt(fx, f, ctx.anchorFrame(shot.start), ctx, true)) { first = f; break; }
+      if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
+      keyStart = first;
+    }
+    const moving = !!fx.motion;
+    const frames = moving ? Array.from({ length: Math.max(1, Math.ceil((keyEnd - keyStart) / 6)) }, (_, i) => Math.min(keyEnd - 1, keyStart + i * 6)) : [keyStart];
+    const samples = frames.map((f) => effectStateAt(fx, f, ctx, compiled));
+    return { ...samples[0], samples: samples.map((s) => s.pos) };
   }
   const p = markPos(id, shot.sets ?? [], ctx.catalog);
-  return { id, moveId: null, pos: p, measure: ctx.catalog.measure.adult, scale: 1, seated: false };
+  return { id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false };
 };
 
-const compileShot = (shot, board, words, catalog, fps, ctx) => {
+const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
   const out = { id: shot.id, start, light: shot.light ?? 'day', sets };
@@ -330,16 +386,21 @@ const compileShot = (shot, board, words, catalog, fps, ctx) => {
   if (shot.fx) out.fx = shot.fx.map((e) => compileEffect(e, { ...shot, sets }, ctx));
   if (shot.set) out.set = shot.set.map((x) => convertSetAction(x, { ...shot, sets }, ctx));
   const cameras = [], dofs = [];
-  for (const k of shot.camera ?? []) {
+  const keyFrames = (shot.camera ?? []).map((k) => ctx.anchorFrame(parseAnchor(k.at ?? k.raw?.at, fps), start));
+  for (let ki = 0; ki < (shot.camera ?? []).length; ki++) {
+    const k = shot.camera[ki];
     const semantic = k.size !== undefined || k.on !== undefined;
     if (semantic) {
       const on = k.on === undefined ? (out.actors ?? []).map((a) => a.id ?? a.who) : Array.isArray(k.on) ? k.on : [k.on];
       const f = ctx.anchorFrame(parseAnchor(k.at, fps), start);
-      const subjects = on.map((id) => subjectFor(id, out, shot, f, ctx));
+      const keyEnd = ki + 1 < keyFrames.length ? keyFrames[ki + 1] : shotEnd;
+      let subjects = on.map((id) => subjectSamples(id, out, out, f, keyEnd, k.later ?? [], ctx, k.at));
+      if (k.move === 'follow') subjects = subjects.map((s) => ({ ...s, samples: [s.pos] }));
       const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };
       const keepout = catalog.keepout?.[sets[0]] ?? [];
       const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, setInfo: info, keepout });
-      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id)) };
+      const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)) };
+      if (k.later) key.later = [...k.later];
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {
@@ -397,7 +458,8 @@ export function compileBoard(board, words, catalog) {
     ...(board.points ? { points: Object.fromEntries(Object.entries(board.points).map(([k, v]) => [k, resolvePoint(v, [], catalog)])) } : {}),
   };
   for (const [id, def] of ctx0) ctx.cast[id] = { spec: def.spec, seed: def.seed ?? stableSeed(id) };
-  out.shots = (board.shots ?? []).map((s) => compileShot(s, board, words, catalog, fps, ctx));
+  const starts = (board.shots ?? []).map((s) => ctx.anchorFrame(parseAnchor(s.start, fps)));
+  out.shots = (board.shots ?? []).map((s, i) => compileShot(s, board, words, catalog, fps, ctx, i + 1 < starts.length ? starts[i + 1] : end + (board.tailFrames ?? 36)));
   out.cast = ctx.cast;
   out.kicks = (board.kicks ?? []).map((k) => ({ at: parseAnchor(k.at, fps), amp: k.amp }));
   return { storyboard: out, stats: { raw: ctx.raw, cast: Object.keys(ctx.cast).length } };

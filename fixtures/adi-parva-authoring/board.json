@@ -521,8 +521,7 @@
           "size": "wide",
           "on": [
             "deer",
-            "pandu",
-            "kunti"
+            "pandu"
           ],
           "angle": "eye",
           "side": "front",
@@ -532,7 +531,7 @@
           "at": "13.The",
           "size": "close",
           "on": [
-            "deer"
+            "sage"
           ],
           "angle": "eye",
           "side": "front",
@@ -1436,7 +1435,10 @@
           ],
           "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "later": [
+            "agni"
+          ]
         },
         {
           "at": "35.Too",

@@ -423,6 +423,12 @@
         },
         "glide": {
           "type": "number"
+        },
+        "later": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

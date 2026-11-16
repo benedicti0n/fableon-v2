@@ -36,11 +36,17 @@ export function blocked(from, to, keepout) {
 
 const subjBox = (s) => {
   const m = s.measure, scale = s.scale ?? 1, h = (s.seated ? m.seated : m.standing) * scale, half = m.halfWidth * scale;
-  return { h, half, y: s.pos[1], eye: s.pos[1] + (s.seated ? m.eyeSeated : m.eye) * scale };
+  const ps = s.samples?.length ? s.samples : [s.pos];
+  const y0 = Math.min(...ps.map((p) => p[1])), y1 = Math.max(...ps.map((p) => p[1])) + h;
+  return {
+    h, half, y: y0, eye: ps[0][1] + (s.seated ? m.eyeSeated : m.eye) * scale,
+    x0: Math.min(...ps.map((p) => p[0])) - half, x1: Math.max(...ps.map((p) => p[0])) + half,
+    z0: Math.min(...ps.map((p) => p[2])) - half, z1: Math.max(...ps.map((p) => p[2])) + half, y0, y1,
+  };
 };
 
 const unionBox = (subjects) => {
-  const boxes = subjects.map((s) => { const b = subjBox(s); return { x0: s.pos[0] - b.half, x1: s.pos[0] + b.half, z0: s.pos[2] - b.half, z1: s.pos[2] + b.half, y0: b.y, y1: b.y + b.h }; });
+  const boxes = subjects.map(subjBox);
   return {
     x0: Math.min(...boxes.map((b) => b.x0)), x1: Math.max(...boxes.map((b) => b.x1)),
     y0: Math.min(...boxes.map((b) => b.y0)), y1: Math.max(...boxes.map((b) => b.y1)),
@@ -63,7 +69,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     ? [(setInfo.bounds.min[0] + setInfo.bounds.max[0]) / 2, (setInfo.bounds.min[1] + setInfo.bounds.max[1]) / 2, (setInfo.bounds.min[2] + setInfo.bounds.max[2]) / 2]
     : size === "wide"
       ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, (box.z0 + box.z1) / 2]
-      : [primary.pos[0], pb.eye, primary.pos[2]];
+      : [(pb.x0 + pb.x1) / 2, pb.eye, (pb.z0 + pb.z1) / 2];
   let spanV, spanH;
   if (size === "establishing") { spanV = setInfo.bounds.max[1] - setInfo.bounds.min[1]; spanH = setInfo.bounds.max[0] - setInfo.bounds.min[0]; }
   else if (size === "wide") { spanV = (box.y1 - box.y0) * 1.3; spanH = Math.max(box.x1 - box.x0, box.z1 - box.z0) * 1.3; }
@@ -94,9 +100,11 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const checks = () => {
     if (!subjects.length) return true;
     return subjects.every((s) => {
-      const b = subjBox(s);
-      const head = [s.pos[0], s.pos[1] + b.h, s.pos[2]], chest = [s.pos[0], s.pos[1] + 0.65 * b.h, s.pos[2]];
-      return !blocked(camera, head, keepout) && !blocked(camera, chest, keepout);
+      const b = subjBox(s), ps = s.samples?.length ? s.samples : [s.pos];
+      return ps.every((p) => {
+        const head = [p[0], p[1] + b.h, p[2]], chest = [p[0], p[1] + 0.65 * b.h, p[2]];
+        return !blocked(camera, head, keepout) && !blocked(camera, chest, keepout);
+      });
     });
   };
   let camera = cameraAt(0, distance, camY);

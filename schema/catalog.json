@@ -8467,6 +8467,177 @@
     ]
   },
   "measure": {
+    "sparkle": {
+      "description": "Sparkle card",
+      "standing": 0.5,
+      "seated": 0.5,
+      "eye": 0.25,
+      "eyeSeated": 0.25,
+      "head": 0.2,
+      "halfWidth": 0.25
+    },
+    "halo": {
+      "description": "Soft glow card",
+      "standing": 2.8,
+      "seated": 2.8,
+      "eye": 1.4,
+      "eyeSeated": 1.4,
+      "head": 1,
+      "halfWidth": 1.4
+    },
+    "knot": {
+      "description": "Knot card",
+      "standing": 0.55,
+      "seated": 0.55,
+      "eye": 0.3,
+      "eyeSeated": 0.3,
+      "head": 0.2,
+      "halfWidth": 0.3
+    },
+    "heart": {
+      "description": "Heart card",
+      "standing": 0.8,
+      "seated": 0.8,
+      "eye": 0.4,
+      "eyeSeated": 0.4,
+      "head": 0.3,
+      "halfWidth": 0.4
+    },
+    "emblem": {
+      "description": "God emblem card",
+      "standing": 1.15,
+      "seated": 1.15,
+      "eye": 0.6,
+      "eyeSeated": 0.6,
+      "head": 0.4,
+      "halfWidth": 0.58
+    },
+    "puff": {
+      "description": "Dust puff card",
+      "standing": 2.6,
+      "seated": 2.6,
+      "eye": 1.3,
+      "eyeSeated": 1.3,
+      "head": 1,
+      "halfWidth": 1.3
+    },
+    "stars": {
+      "description": "Circling stars card",
+      "standing": 0.58,
+      "seated": 0.58,
+      "eye": 0.3,
+      "eyeSeated": 0.3,
+      "head": 0.25,
+      "halfWidth": 0.55
+    },
+    "arrow": {
+      "description": "Arrow card",
+      "standing": 0.45,
+      "seated": 0.45,
+      "eye": 0.25,
+      "eyeSeated": 0.25,
+      "head": 0.15,
+      "halfWidth": 0.45
+    },
+    "splash": {
+      "description": "Water splash card",
+      "standing": 3.2,
+      "seated": 3.2,
+      "eye": 1.6,
+      "eyeSeated": 1.6,
+      "head": 1.2,
+      "halfWidth": 1.6
+    },
+    "bubbles": {
+      "description": "Bubble card",
+      "standing": 0.3,
+      "seated": 0.3,
+      "eye": 0.15,
+      "eyeSeated": 0.15,
+      "head": 0.1,
+      "halfWidth": 0.15
+    },
+    "burst": {
+      "description": "Impact burst card",
+      "standing": 3.2,
+      "seated": 3.2,
+      "eye": 1.6,
+      "eyeSeated": 1.6,
+      "head": 1.2,
+      "halfWidth": 1.6
+    },
+    "petals": {
+      "description": "Petal card",
+      "standing": 0.22,
+      "seated": 0.22,
+      "eye": 0.11,
+      "eyeSeated": 0.11,
+      "head": 0.08,
+      "halfWidth": 0.11
+    },
+    "fire": {
+      "description": "Fire card",
+      "standing": 8.5,
+      "seated": 8.5,
+      "eye": 4.25,
+      "eyeSeated": 4.25,
+      "head": 3,
+      "halfWidth": 4.25
+    },
+    "smoke": {
+      "description": "Smoke card",
+      "standing": 8,
+      "seated": 8,
+      "eye": 4,
+      "eyeSeated": 4,
+      "head": 3,
+      "halfWidth": 4
+    },
+    "pigeon": {
+      "description": "Pigeon card",
+      "standing": 0.9,
+      "seated": 0.9,
+      "eye": 0.6,
+      "eyeSeated": 0.6,
+      "head": 0.25,
+      "halfWidth": 0.45
+    },
+    "mango": {
+      "description": "Mango card",
+      "standing": 0.34,
+      "seated": 0.34,
+      "eye": 0.17,
+      "eyeSeated": 0.17,
+      "head": 0.12,
+      "halfWidth": 0.17
+    },
+    "sweat": {
+      "description": "Sweat drop card",
+      "standing": 0.12,
+      "seated": 0.12,
+      "eye": 0.06,
+      "eyeSeated": 0.06,
+      "head": 0.05,
+      "halfWidth": 0.06
+    },
+    "lump": {
+      "description": "Lump card",
+      "standing": 0.6,
+      "seated": 0.6,
+      "eye": 0.3,
+      "eyeSeated": 0.3,
+      "head": 0.2,
+      "halfWidth": 0.3
+    },
+    "dust": {
+      "description": "Dust puff card",
+      "standing": 1,
+      "seated": 1,
+      "eye": 0.5,
+      "eyeSeated": 0.5,
+      "head": 0.35,
+      "halfWidth": 0.5
+    },
     "adult": {
       "description": "adult build standing",
       "standing": 1.6521732219517886,
