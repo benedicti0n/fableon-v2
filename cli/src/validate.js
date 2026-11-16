@@ -73,9 +73,9 @@ export function validateStoryboard(dirArg) {
   // ---- shots, catalog names, anchors in time order ----
   const shots = Array.isArray(sb.shots) ? sb.shots : [];
   const cast = sb.cast && typeof sb.cast === 'object' ? sb.cast : {};
-  const moving = new Set();
+  const moving = new Set(), actorIds = new Set();
   for (const s of shots) {
-    for (const a of s.actors ?? []) if (a?.id) moving.add(a.id);
+    for (const a of s.actors ?? []) if (a?.id) { moving.add(a.id); actorIds.add(a.id); }
     for (const e of s.fx ?? []) if (e?.id) moving.add(e.id);
     for (const x of s.set ?? []) if (x?.id) moving.add(x.id);
   }
@@ -107,7 +107,10 @@ export function validateStoryboard(dirArg) {
       if (a.pose) check(poses, a.pose, `${ap}/pose`, 'pose');
       if (a.expr) check(exprs, a.expr, `${ap}/expr`, 'expression');
       if (a.prop != null) check(props, a.prop, `${ap}/prop`, 'prop');
-      if (a.pos && typeof a.pos === 'object' && !Array.isArray(a.pos) && !points.has(a.pos.at)) err(`${ap}/pos/at`, `unknown point "${a.pos.at}"`);
+      if (a.pos && typeof a.pos === 'object' && !Array.isArray(a.pos)) {
+        if (a.pos.actor !== undefined && !actorIds.has(a.pos.actor)) err(`${ap}/pos/actor`, `unknown actor id "${a.pos.actor}" (give the actor an id)`);
+        else if (a.pos.at !== undefined && !points.has(a.pos.at)) err(`${ap}/pos/at`, `unknown point "${a.pos.at}"`);
+      }
       let prev = -Infinity;
       (a.beats ?? []).forEach((b, k) => {
         const bf = b?.at ? wordFrame(b.at, sf) : null;
@@ -119,7 +122,10 @@ export function validateStoryboard(dirArg) {
     (s.fx ?? []).forEach((e, j) => {
       if (!e || typeof e !== 'object') return;
       if (e.kind) check(effects, e.kind, `${sp}/fx/${j}/kind`, 'effect');
-      if (e.pos && typeof e.pos === 'object' && !Array.isArray(e.pos) && !points.has(e.pos.at)) err(`${sp}/fx/${j}/pos/at`, `unknown point "${e.pos.at}"`);
+      if (e.pos && typeof e.pos === 'object' && !Array.isArray(e.pos)) {
+        if (e.pos.actor !== undefined && !actorIds.has(e.pos.actor)) err(`${sp}/fx/${j}/pos/actor`, `unknown actor id "${e.pos.actor}" (give the actor an id)`);
+        else if (e.pos.at !== undefined && !points.has(e.pos.at)) err(`${sp}/fx/${j}/pos/at`, `unknown point "${e.pos.at}"`);
+      }
     });
     (s.set ?? []).forEach((x, j) => { if (x?.piece) check(pieces, x.piece, `${sp}/set/${j}/piece`, 'set piece'); });
   });

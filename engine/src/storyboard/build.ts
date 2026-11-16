@@ -3,23 +3,25 @@
 import * as THREE from "three";
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
-import { who, fx, petals, card, hh, lidAt } from "../cast";
+import { who, fx, petals, card, hh, lidAt, SU } from "../cast";
 import type { Sets } from "../sets";
 import type { V3 } from "../places";
 import { PLACES, PlaceName } from "../places";
 import { C, KIDS, KAURAVA } from "../castlist";
 import { CITY_TREES } from "../sets";
 import type { Spec } from "../people";
+import type { Expr } from "../toon";
 import { makeAnchors, Wd } from "../core/anchors";
 import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
 import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../core/motion";
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
-import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
+import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person, ganesha } from "../people";
 import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
 import CATALOG from "../../../schema/catalog.json";
-import type { Actor, Animated, Anchor, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
+import type { Actor, Animated, Anchor, Attach, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
+import { drawingPen } from "../measure";
 
 export type Runtime = {
   SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
@@ -44,8 +46,14 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   };
   const named = sb.points ?? {};
   const motionTargets: Targets = new Map(targets);
+  const actorById = new Map<string, { a: Actor; start: number }>();
   const point = (p: Point, f: number, cam?: CamInfo, depth = 0): V3 => {
     if (Array.isArray(p)) return [p[0], p[1], p[2]];
+    if ("actor" in p) {
+      if (!cam) throw new Error(`actor attachment point "${p.actor}" needs a camera`);
+      if (depth > 16) throw new Error(`attachment cycle at "${p.actor}"`);
+      return attachPoint(p.actor, p.attach, p.d, f, cam);
+    }
     if (depth > 16) throw new Error(`point cycle at "${p.at}"`);
     const base = named[p.at] ? point(named[p.at], f, cam, depth + 1)
       : motionTargets.has(p.at) ? motionTargets.get(p.at)!(f)
@@ -121,7 +129,8 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     return s;
   };
 
-  const actor = (out: Stage, cam: CamInfo, a: Actor, f: number, shotStart: number) => {
+  type ActorState = { st: Partial<Actor>; params: Record<string, unknown>; pos: V3; scale: number; expr: Expr; moving: Moving | null };
+  const actorState = (a: Actor, f: number, shotStart: number): ActorState | null => {
     let st: Partial<Actor> = { ...a };
     let params = { ...(a.params ?? {}) };
     const beats = (a.beats ?? []).map((b: Beat) => ({ f: anchor(b.at, shotStart), b })).sort((x, y) => x.f - y.f);
@@ -131,16 +140,23 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       if (bp) params = { ...params, ...bp };
     }
     const vis = st.visible;
-    if (vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return;
+    if (vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return null;
     const p = st.pos;
     const moving = a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
     if (!p && !a.motion) throw new Error(`actor "${a.who}" has no pos or motion`);
-    const pos = a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f, cam);
+    const pos = a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f);
     const ap = st.appear;
     const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at, shotStart)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
-    if (scale === 0) return;
+    if (scale === 0) return null;
     const talkSpec = st.talk;
     const expr = talkSpec ? talk(T(f) * (talkSpec.rate ?? 1), talkSpec.base) : (st.expr ?? "neutral");
+    return { st, params, pos, scale, expr, moving };
+  };
+
+  const actor = (out: Stage, cam: CamInfo, a: Actor, f: number, shotStart: number) => {
+    const state = actorState(a, f, shotStart);
+    if (!state) return;
+    const { st, params, pos, scale, expr, moving } = state;
     const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined };
     if (a.special === "ganesha") {
       const pv = (key: string, d = 0) => {
@@ -181,18 +197,75 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
     if (a.special === "flat") {
       const fpose = (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"];
-      card(out, cam, `flat|${expr}|${fpose}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: fpose, expr, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
+      card(out, cam, `flat|${expr}|${fpose}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: fpose, expr: expr as never, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
       return;
     }
     if (a.special) throw new Error(`special "${a.special}" is not implemented yet (shot frame ${f})`);
     const e = cast[a.who];
     const sp = { ...spec(a.who) };
     for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, shotStart);
-    const phase = a.motion?.type === "path" && a.motion.walk ? (moving ? moving.phase(f) : motionFn(a.motion, p, shotStart).phase(f)) : undefined;
+    const phase = a.motion?.type === "path" && a.motion.walk ? (moving ? moving.phase(f) : motionFn(a.motion, st.pos, shotStart).phase(f)) : undefined;
     const opts = {
-      pose: st.pose, phase, expr, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f),
+      pose: st.pose, phase, expr: expr as never, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f),
     };
     who(out, cam, e.seed, sp, opts, pos[0], pos[1], pos[2], common);
+  };
+
+  const attachPoint = (id: string, attach: Attach, d: [number, number, number], f: number, cam: CamInfo): V3 => {
+    const ref = actorById.get(id);
+    if (!ref) throw new Error(`attachment references unknown actor "${id}" (give the actor an id)`);
+    const a = ref.a, start = ref.start;
+    const state = actorState(a, f, start);
+    if (!state) throw new Error(`attachment actor "${id}" is not drawn at frame ${f}`);
+    const { st, params, pos, scale, expr } = state;
+    const pen = drawingPen();
+    let geo: "body" | "wide" | "baby" = "body";
+    let pt: [number, number], hands: { L: [number, number]; R: [number, number] } | null = null;
+    const body = (r: { L: [number, number]; R: [number, number]; hc: number; chin: number; crown: number; HH: number }) => {
+      const pick = (k: Attach): [number, number] => k === "head" || k === "eyes" ? [300, r.hc] : k === "crown" ? [300, r.crown] :
+        k === "chest" ? [300, r.chin + 0.55 * r.HH] : k === "feet" ? [300, 975] : k === "handL" ? r.L : r.R;
+      return pick(attach);
+    };
+    if (a.special === "flat") {
+      geo = "wide";
+      const r = person(pen, spec(a.who), { pose: (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"], expr: expr as never, t: T(f) });
+      const flat = ([x, y]: [number, number]): [number, number] => [1000 - y, 215 + x];
+      pt = flat(attach === "head" || attach === "eyes" ? [300, r.hc] : attach === "crown" ? [300, r.crown] : attach === "chest" ? [300, r.chin + 0.55 * r.HH] : attach === "handL" ? r.L : r.R);
+    } else if (a.special === "ganesha") {
+      const r = ganesha(pen, { expr, write: 0.25, light: 0 });
+      pt = attach === "handL" ? r.LH : attach === "handR" || attach === "prop" ? r.RH : attach === "crown" ? [300, 320] : attach === "chest" ? [300, 620] : attach === "feet" ? [300, 975] : [300, 468];
+    } else if (a.special === "agni") {
+      const r = agni(pen, { expr: expr as never, t: T(f), light: 0 });
+      pt = body(r);
+    } else if (a.special === "deer") {
+      geo = "wide";
+      const graze = num(params.graze, 0), hx = 760 + graze * 30, hy = 230 + graze * 220;
+      pt = attach === "head" || attach === "eyes" ? [hx + 20, hy] : attach === "crown" ? [hx + 20, hy - 50] : attach === "chest" ? [520, 400] : attach === "feet" ? [500, 660] : [hx + 20, hy];
+    } else if (a.special === "naga") {
+      const sway = Math.sin(T(f) * 2) * 18;
+      pt = attach === "head" || attach === "eyes" ? [300 + sway * 0.5, 380] : attach === "crown" ? [300 + sway * 0.5, 290] : attach === "chest" ? [300, 600] : attach === "feet" ? [300, 930] : [300, 500];
+    } else if (a.special === "baby") {
+      geo = "baby";
+      pt = attach === "head" || attach === "eyes" ? [300, 300] : attach === "crown" ? [300, 170] : attach === "chest" ? [300, 470] : attach === "feet" ? [300, 650] : [300, 470];
+    } else if (a.special === "pot") {
+      pt = attach === "crown" ? [300, 560] : attach === "feet" ? [300, 840] : [300, 650];
+    } else {
+      const sp = { ...spec(a.who) };
+      for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, start);
+      const phase = a.motion?.type === "path" && a.motion.walk ? state.moving?.phase(f) : undefined;
+      const r = person(pen, sp, { pose: st.pose, phase, expr: expr as never, prop: st.prop, facing: st.facing, look: st.look, seated: st.seated, headTilt: st.headTilt, tilt: st.tilt, t: T(f) });
+      const prop = st.prop === "bow" || st.prop === "bowDrawn" || st.prop === "bigbow" ? r.L : r.R;
+      pt = attach === "prop" ? prop : body(r);
+      hands = { L: r.L, R: r.R };
+      void hands;
+    }
+    const base = geo === "wide" ? 640 : geo === "baby" ? 690 : 975, cx = geo === "wide" ? 500 : 300;
+    const mirror = st.mirror ? -1 : 1;
+    const yaw = st.yaw ?? Math.atan2(cam.pos.x - pos[0], cam.pos.z - pos[2]);
+    const right: V3 = st.yaw !== undefined && st.yaw !== null ? [Math.cos(yaw), 0, -Math.sin(yaw)] : [cam.right.x, 0, cam.right.z];
+    const rn = Math.hypot(right[0], right[2]) || 1;
+    const h = (pt[0] - cx) * SU * scale * mirror;
+    return [pos[0] + (right[0] / rn) * h + d[0], pos[1] + (base - pt[1]) * SU * scale + d[1], pos[2] + (right[2] / rn) * h + d[2]];
   };
 
   const crowd = (out: Stage, cam: CamInfo, c: Crowd, f: number, shotStart: number) => {
@@ -360,6 +433,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const shots = [...(sb.shots ?? [])].map((s) => ({ s, start: anchor(s.start) })).sort((x, y) => x.start - y.start);
   // register moving targets before cameras/stages resolve Points that refer to them
   for (const { s, start } of shots) {
+    for (const a of s.actors ?? []) if (a.id) actorById.set(a.id, { a, start });
     for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
     for (const e of s.fx ?? []) if (e.id) { const em = e as Effect & { motion?: Motion; id?: string; pos?: Point }; motionTargets.set(e.id, em.motion ? (() => { const m = motionFn(em.motion!, em.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(em.pos!, f)); }
     for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());

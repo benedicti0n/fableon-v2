@@ -22,7 +22,13 @@ Word matching: lower-case, keep only letters and apostrophes. A strict legacy `f
 { "at": "HERM", "d": [-1.15, 0.33, -0.25] } // relative to a named place (places.ts / catalog) or another named point
 { "at": "boat", "d": [0.8, 1.5, -4.2] }     // relative to a MOVING target (registered by a set action or an actor path)
 { "at": "AR", "d": [0, 1.35, -0.15], "screen": [0.45, 0, 0] } // + right/up/forward metres along the current camera axes
+{ "actor": "arjuna", "attach": "handL", "d": [0.03, 0.26, -0.15] } // actor attachment + world offset
 ```
+
+`screen` right is horizontal-right (the camera's right vector with y = 0), as implemented. An attachment resolves
+from the actor's current state at the frame: pose, beats, motion, scale, mirror and yaw. `attach` is `head`, `eyes`,
+`crown`, `chest`, `feet`, `handL`, `handR` or `prop` (the hand holding the current prop). The referenced actor must
+have an `id`.
 
 Named points can also be declared once per storyboard in "points" (e.g. "VY": {"at": "HERM", "d": [...]}) and reused.
 

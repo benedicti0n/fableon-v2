@@ -75,6 +75,8 @@ const REP: Record<Build, Spec> = {
   baby: { skin: "#f4c9a0", build: "baby", top: null, lower: "#f6efdc", head: null },
 };
 
+export const drawingPen = () => new Pen(new RecCtx() as unknown as CanvasRenderingContext2D);
+
 export function measureSubjects(): Record<string, Measure> {
   const out: Record<string, Measure> = {};
   for (const [name, spec] of Object.entries(REP) as [Build, Spec][]) {

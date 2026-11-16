@@ -8,7 +8,8 @@ export type Anchor =
   | { frame: number; offset?: number }
   | { end: true; offset?: number }
   | { shot: true; offset?: number };
-export type Point = [number, number, number] | { at: string; d: [number, number, number]; screen?: [number, number, number] };
+export type Attach = "head" | "eyes" | "crown" | "chest" | "feet" | "handL" | "handR" | "prop";
+export type Point = [number, number, number] | { at: string; d: [number, number, number]; screen?: [number, number, number] } | { actor: string; attach: Attach; d: [number, number, number] };
 export type Animated = number | { keys: [Anchor, number][]; ease?: "linear" | "smooth" | "glide" | "step" };
 
 export type PathMotion = {

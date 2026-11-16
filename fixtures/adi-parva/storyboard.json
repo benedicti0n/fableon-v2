@@ -24944,7 +24944,8 @@
               "word": "thrown",
               "offset": -2
             }
-          }
+          },
+          "id": "kingFlat"
         },
         {
           "who": "kingShake",
@@ -24971,7 +24972,8 @@
             "to": {
               "end": true
             }
-          }
+          },
+          "id": "kingFlat"
         },
         {
           "who": "kingA0",
@@ -25202,16 +25204,12 @@
             "word": "thrown"
           },
           "pos": {
-            "at": "KF",
+            "actor": "kingFlat",
+            "attach": "head",
             "d": [
-              -1,
-              0.75,
-              0.3
-            ],
-            "screen": [
-              0.45,
-              0,
-              0
+              -0.085,
+              0.48,
+              -0.015
             ]
           },
           "size": [
@@ -25381,7 +25379,8 @@
               "pose": "aim",
               "prop": "bowDrawn"
             }
-          ]
+          ],
+          "id": "arjuna"
         }
       ],
       "fx": [
@@ -25397,16 +25396,12 @@
             "offset": 8
           },
           "pos": {
-            "at": "AR",
+            "actor": "arjuna",
+            "attach": "handL",
             "d": [
-              0,
-              1.35,
+              0.03,
+              0.26,
               -0.15
-            ],
-            "screen": [
-              0.45,
-              0,
-              0
             ]
           },
           "size": 0.5,
