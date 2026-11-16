@@ -7,7 +7,7 @@ import { approve, statusTable } from '../core/state.js';
 
 export async function newCommand(dir, opts) {
   loadDotEnv();
-  const r = newProject(dir, { topic: opts.topic, seconds: Number(opts.seconds ?? 90), voice: opts.voice ?? 'am_michael' });
+  const r = newProject(dir, { topic: opts.topic, seconds: Number(opts.seconds ?? 90), voice: opts.voice ?? 'am_michael', language: opts.language ?? 'en' });
   console.log(`new: ${r.dir}`);
   console.log('  project.json, brief.md, research/sources/, pronunciations.json');
   console.log(`next: put sources in ${join(r.dir, 'research', 'sources')} then: fableon run --project ${r.dir} --to voice --autopilot`);

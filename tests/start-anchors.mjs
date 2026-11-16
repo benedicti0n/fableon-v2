@@ -2,8 +2,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../cli/src/env.js';
+import { normalizeWord } from '../shared/words.mjs';
 
-const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
+const norm = normalizeWord;
 
 export function runStartAnchors() {
   console.log('\n== storyboard shot starts ==');

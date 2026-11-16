@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT } from './env.js';
 import { SIZE, solveCamera } from './solver.js';
+import { normalizeWord } from '../../shared/words.mjs';
 
 const FPS = 30;
 const normAngle = (deg) => (deg * Math.PI) / 180;
@@ -24,8 +25,14 @@ export function parseAnchor(value, fps = FPS) {
     const m = /^end(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
     return { end: true, offset: Math.round(m && m[1] ? (m[1] === '-' ? -1 : 1) * Number(m[2]) * (m[3] === 's' ? fps : 1) : 0) };
   }
+  const wi = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
+  if (wi) {
+    const sign = wi[3] === '-' ? -1 : 1;
+    const offset = wi[4] === undefined ? -2 : sign * Number(wi[4]) * (wi[5] === 's' ? fps : 1);
+    return { line: Number(wi[1]), wordIndex: Number(wi[2]), offset: Math.round(offset) };
+  }
   const m = /^(\d+)\.([^#+\-]+)(?:#(\d+))?(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(s);
-  if (!m) throw new Error(`bad anchor "${s}" (use 13.word, 13.word#1+0.4s, shot+1.2s, end+4f or f90)`);
+  if (!m) throw new Error(`bad anchor "${s}" (use 13.word, 13.word#1+0.4s, 12:4, shot+1.2s, end+4f or f90)`);
   const sign = m[4] === '-' ? -1 : 1;
   const offset = m[5] === undefined ? -2 : sign * Number(m[5]) * (m[6] === 's' ? fps : 1);
   return { line: Number(m[1]), word: m[2], ...(m[3] ? { nth: Number(m[3]) } : {}), offset: Math.round(offset) };
@@ -585,7 +592,12 @@ export function compileBoard(board, words, catalog) {
       if (a.shot) return shotStart + (a.offset ?? 0);
       if (a.frame !== undefined) return a.frame;
       if (a.end) return end + (a.offset ?? 0);
-      const hit = words.filter((w) => w.line === a.line && w.w.toLowerCase().replace(/[^a-z']/g, '') === a.word.toLowerCase().replace(/[^a-z']/g, ''))[a.nth ?? 0];
+      if (a.wordIndex !== undefined) {
+        const hit = words.filter((w) => w.line === a.line)[a.wordIndex];
+        if (!hit) throw new Error(`no word index ${a.line}:${a.wordIndex}`);
+        return Math.round(hit.a * fps) + (a.offset ?? 0);
+      }
+      const hit = words.filter((w) => w.line === a.line && normalizeWord(w.w) === normalizeWord(a.word))[a.nth ?? 0];
       if (!hit) throw new Error(`no word ${a.line}:${a.word}`);
       return Math.round(hit.a * fps) + (a.offset ?? 0);
     },

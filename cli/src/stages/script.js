@@ -6,12 +6,13 @@ import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/
 import { buildCatalogCard } from '../catalog-card.js';
 import { markScriptRevised } from '../core/state.js';
 import { SCRIPT, REVISE } from './prompts.js';
+import { countWords, normalizedText, normalizedTokens, normalizeWord } from '../../../shared/words.mjs';
 
 export const WPS = 3.75; // measured on the fixture: 451 words / 120.1 s
 const BEAT_ORDER = ['hook', 'setting', 'action', 'snap', 'deadpan', 'explain', 'consequence', 'twist'];
 const NOT_NAMES = new Set(['He', 'She', 'It', 'They', 'We', 'You', 'His', 'Her', 'Their', 'The', 'A', 'An', 'And', 'But', 'Then', 'So', 'When', 'While', 'After', 'Before', 'If', 'Because', 'That', 'This', 'These', 'Those', 'Luckily', 'Unluckily']);
-const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
-const normal = (s) => String(s).toLowerCase().replace(/\s+/g, ' ').trim();
+const words = (s) => normalizedTokens(s);
+const normal = (s) => normalizedText(s);
 const factMap = (facts) => new Map((facts.facts ?? []).map((f) => [f.id, f]));
 
 function capitalizedNames(text) {
@@ -29,7 +30,7 @@ function capitalizedNames(text) {
 export function validateScript(data, { project, facts, catalog, sourceTexts = [] }) {
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
-  const target = project.seconds * WPS, total = data.lines.reduce((n, l) => n + words(l.text).length, 0);
+  const target = project.seconds * WPS, total = data.lines.reduce((n, l) => n + countWords(l.text), 0);
   const lo = Math.ceil(target * 0.93), hi = Math.floor(target * 1.07);
   if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (target ${target.toFixed(1)} ±7 %); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
   if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
@@ -48,8 +49,13 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
     const chars = new Set(data.characters.map((c) => c.id));
     for (const who of l.look?.who ?? []) if (!chars.has(who)) errs.push(`/lines/${l.n}/look/who "${who}" is not declared`);
   }
-  const listed = new Set(data.names.map((n) => n.word));
-  for (const l of data.lines) for (const n of capitalizedNames(l.text)) if (!listed.has(n)) errs.push(`/lines/${l.n} name "${n}" is not listed in names`);
+  const listed = new Set(data.names.map((n) => normalizeWord(n.word)));
+  if (project.language === 'hi') {
+    const chars = new Set(data.characters.map((c) => normalizeWord(c.name)));
+    for (const n of data.names) if (!chars.has(normalizeWord(n.word))) errs.push(`/names "${n.word}" is not a declared character name`);
+  } else {
+    for (const l of data.lines) for (const n of capitalizedNames(l.text)) if (!listed.has(normalizeWord(n))) errs.push(`/lines/${l.n} name "${n}" is not listed in names`);
+  }
   const source = normal(sourceTexts.join(' '));
   for (const l of data.lines) {
     const w = words(l.text);
@@ -60,7 +66,7 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
 
 function renderScript(project, data, facts) {
   const verified = (facts.facts ?? []).filter((f) => f.verified);
-  const n = data.lines.reduce((k, l) => k + words(l.text).length, 0);
+  const n = data.lines.reduce((k, l) => k + countWords(l.text), 0);
   const lines = [
     `# "${data.title}" — a Fableon short`,
     `Format: ~${Math.round(data.seconds)} s vertical short, one steady narrator, our own wording.`,

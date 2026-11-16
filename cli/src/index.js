@@ -33,6 +33,7 @@ export function main(argv = process.argv) {
     .requiredOption('--topic <text>', 'story topic')
     .option('--seconds <n>', 'target length in seconds', '90')
     .option('--voice <id>', 'Kokoro voice id', 'am_michael')
+    .option('--language <code>', 'narration language: en or hi', 'en')
     .action((dir, opts) => newCommand(dir, opts));
 
   program

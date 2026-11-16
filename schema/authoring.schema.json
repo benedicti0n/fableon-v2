@@ -2266,7 +2266,7 @@
       "oneOf": [
         {
           "type": "string",
-          "pattern": "^(?:[0-9]+\\.[A-Za-z']+(?:#[0-9]+)?(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|shot(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|end(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|f[0-9]+)$"
+          "pattern": "^(?:[0-9]+\\.[\\p{L}\\p{M}\\p{N}']+(?:#[0-9]+)?(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|[0-9]+:[0-9]+(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|shot(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|end(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|f[0-9]+)$"
         },
         {
           "type": "object",
@@ -2283,6 +2283,25 @@
               "type": "string"
             },
             "nth": {
+              "type": "number"
+            },
+            "offset": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line",
+            "wordIndex"
+          ],
+          "properties": {
+            "line": {
+              "type": "number"
+            },
+            "wordIndex": {
               "type": "number"
             },
             "offset": {

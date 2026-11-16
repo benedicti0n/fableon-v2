@@ -5,6 +5,7 @@ import type { Expr } from "../toon";
 
 export type Anchor =
   | { line: number; word: string; nth?: number; offset?: number }
+  | { line: number; wordIndex: number; offset?: number }
   | { frame: number; offset?: number }
   | { end: true; offset?: number }
   | { shot: true; offset?: number };

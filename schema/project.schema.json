@@ -10,7 +10,7 @@
     "title": { "type": "string", "minLength": 1 },
     "topic": { "type": "string", "minLength": 1 },
     "seconds": { "type": "number", "exclusiveMinimum": 5, "maximum": 600 },
-    "language": { "const": "en" },
+    "language": { "enum": ["en", "hi"] },
     "voice": {
       "type": "object",
       "additionalProperties": false,

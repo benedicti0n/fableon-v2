@@ -87,6 +87,27 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "line",
+            "wordIndex"
+          ],
+          "properties": {
+            "line": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "wordIndex": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "offset": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
             "frame"
           ],
           "properties": {

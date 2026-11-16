@@ -36,13 +36,13 @@ const num = (v: unknown, d = 0) => (typeof v === "number" ? v : d);
 
 export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = new Map()): Runtime {
   const fps = sb.fps ?? 30;
-  const { A, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
+  const { A, AW, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
   const defaults = (CATALOG as { defaults?: { sunBySet?: Record<string, { az: number; el: number }>; setPieces?: Record<string, { height?: number }> } }).defaults ?? {};
   const anchor = (a: Anchor, shotStart = 0): number => {
     let m = anchorMemo.get(a);
     if (m?.has(shotStart)) return m.get(shotStart)!;
     if (!m) { m = new Map(); anchorMemo.set(a, m); }
-    const v = ("shot" in a) ? shotStart + (a.offset ?? 0) : ("frame" in a) ? a.frame + (a.offset ?? 0) : ("end" in a) ? END + (a.offset ?? 0) : A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
+    const v = ("shot" in a) ? shotStart + (a.offset ?? 0) : ("frame" in a) ? a.frame + (a.offset ?? 0) : ("end" in a) ? END + (a.offset ?? 0) : ("wordIndex" in a) ? AW(a.line, a.wordIndex) + (a.offset ?? 0) : A(a.line, a.word, a.nth ?? 0) + (a.offset ?? 0);
     m.set(shotStart, v);
     return v;
   };

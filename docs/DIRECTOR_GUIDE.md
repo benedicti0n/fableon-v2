@@ -12,6 +12,8 @@ Use narration words:
 |---|---|
 | `13.deer` | word `deer` on line 13, 2 frames before the cut |
 | `13.deer#1+0.4s` | second occurrence, 12 frames after it |
+| `12.यम` / `12.यम#1+0.3s` | Unicode word, and its second occurrence 9 frames after |
+| `12:4` / `12:4+0.3s` | 5th word of line 12 (0-based), and 9 frames after |
 | `shot+1.2s` / `shot-10f` | relative to this shot's start |
 | `end+4f` | relative to the last word |
 

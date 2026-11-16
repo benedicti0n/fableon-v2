@@ -21,8 +21,9 @@ export function specializeSchema(dirArg) {
   const effectIds = (board.shots ?? []).flatMap((s) => (s.fx ?? []).map((e) => e.id)).filter(Boolean);
   const subjects = [...new Set([...cast, ...marks, ...effectIds])];
   const anchor = schema.$defs.Anchor.oneOf[0];
-  anchor.pattern = `^(?:(?:${lines.join('|')})\\.[A-Za-z']+(?:#[0-9]+)?(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|shot(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|end(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|f[0-9]+)$`;
+  anchor.pattern = `^(?:(?:${lines.join('|')})\\.[\\p{L}\\p{M}\\p{N}']+(?:#[0-9]+)?(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|(?:${lines.join('|')}):[0-9]+(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|shot(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|end(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?|f[0-9]+)$`;
   schema.$defs.Anchor.oneOf[1].properties.line.enum = lines;
+  schema.$defs.Anchor.oneOf[2].properties.line.enum = lines;
   schema.$defs.Actor.properties.cast.enum = cast;
   schema.$defs.Actor.properties.special.enum = catalog.specials.map((e) => e.name);
   schema.$defs.Actor.properties.pose.enum = catalog.poses.map((e) => e.name);

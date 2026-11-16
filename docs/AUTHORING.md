@@ -39,11 +39,17 @@ Strings, with the legacy default of 2 frames before a spoken word:
 | `13.deer` | `{ line: 13, word: "deer", offset: -2 }` |
 | `13.deer#1+0.4s` | second `deer` on line 13, 12 frames after the word |
 | `13.deer-2f` | 2 frames before the word |
+| `12.यम` | Unicode word `यम` on line 12, 2 frames before |
+| `12.यम#1+0.3s` | second `यम` on line 12, 9 frames after |
+| `12:4` | the 5th word (0-based index 4) of line 12, 2 frames before |
+| `12:4+0.3s` | index 4, 9 frames after |
 | `shot+1.2s` | 36 frames after the shot start |
 | `end+4f` | 4 frames after the last word |
 | `f90` | absolute frame 90 (discouraged) |
 
-An explicit suffix replaces the plain `-2f` default. Durations and rates are seconds; angles are degrees.
+An explicit suffix replaces the plain `-2f` default. Durations and rates are seconds; angles are degrees. Word
+matching uses the shared Unicode normaliser (`shared/words.mjs`): NFC, lowercase, Unicode letters/marks/digits and
+apostrophes; danda and other punctuation are stripped. ASCII boards keep their old anchors.
 
 ## Points and marks
 

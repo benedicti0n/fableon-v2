@@ -13,6 +13,9 @@ export function runAuthoring() {
   const anchors = [
     ['13.deer', { line: 13, word: 'deer', offset: -2 }],
     ['13.deer#1+0.4s', { line: 13, word: 'deer', nth: 1, offset: 12 }],
+    ['12.यम', { line: 12, word: 'यम', offset: -2 }],
+    ['12:4', { line: 12, wordIndex: 4, offset: -2 }],
+    ['12:4+0.3s', { line: 12, wordIndex: 4, offset: 9 }],
     ['shot+1.2s', { shot: true, offset: 36 }],
     ['shot-10f', { shot: true, offset: -10 }],
     ['end+4f', { end: true, offset: 4 }],
