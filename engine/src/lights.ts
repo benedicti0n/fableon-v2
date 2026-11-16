@@ -4,7 +4,8 @@
 // day + golden are the bridge short's final values; night (firelight key + moonlit blue shade) and deep (the snake
 // kingdom under the river) are new, built on the same two-tone model.
 type C3 = [number, number, number];
-export type LightName = "day" | "golden" | "night" | "deep";
+export const LIGHTS_NAMES = ["day", "golden", "night", "deep"] as const;
+export type LightName = (typeof LIGHTS_NAMES)[number];
 export type LightPreset = {
   az: number; el: number;
   lit: C3; shade: C3; lift: C3; lambert: number; sideK: number; term: number;      // world two-tone (shade.ts)

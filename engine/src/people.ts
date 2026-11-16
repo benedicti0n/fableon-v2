@@ -22,11 +22,16 @@ export type Spec = {
   belly?: number;             // 0..1 round belly (pregnancy, Agni, Ganesha)
   earrings?: string | null;
 };
-export type Pose = "stand" | "walk" | "run" | "sit" | "point" | "vow" | "pray" | "shout" | "armsUp" | "shrug" | "fold" | "bless"
-  | "present" | "hold" | "belly" | "drink" | "flex" | "aim" | "shake" | "wave" | "talk" | "sneak" | "stir" | "offer" | "dust" | "chop"
-  | "carry" | "throw" | "hips" | "think" | "grab";
-export type PropK = null | "bow" | "bowDrawn" | "mace" | "spear" | "net" | "oar" | "laddu" | "garland" | "crown" | "jar" | "axe" | "torch"
-  | "mango" | "ladle" | "scroll" | "bigbow";
+export const POSES = ["stand", "walk", "run", "sit", "point", "vow", "pray", "shout", "armsUp", "shrug", "fold", "bless",
+  "present", "hold", "belly", "drink", "flex", "aim", "shake", "wave", "talk", "sneak", "stir", "offer", "dust", "chop",
+  "carry", "throw", "hips", "think", "grab"] as const;
+export type Pose = (typeof POSES)[number];
+export const PROPS = ["bow", "bowDrawn", "mace", "spear", "net", "oar", "laddu", "garland", "crown", "jar", "axe", "torch",
+  "mango", "ladle", "scroll", "bigbow"] as const;
+export type PropK = null | (typeof PROPS)[number];
+/** custom (non-person) card drawings the interpreter can place */
+export const SPECIALS = ["ganesha", "agni", "deer", "naga", "baby", "pot", "flat"] as const;
+export type SpecialK = (typeof SPECIALS)[number];
 export type Opts = {
   expr?: Expr; pose?: Pose; phase?: number; facing?: -1 | 0 | 1; look?: number; blink?: boolean | number; talk?: number;
   seed?: number; light?: number; prop?: PropK; t?: number; tilt?: number; headTilt?: number; seated?: boolean;

@@ -226,8 +226,9 @@ export const thickAngle = (light: number) => Math.atan2(-Math.sin(light) + 0.8, 
 export const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
-export type Expr = "neutral" | "stern" | "grin" | "laugh" | "whistle" | "nervous" | "shock" | "relief" | "relief_open" | "dazed"
-  | "pained" | "smile" | "smile_closed" | "lick";
+export const EXPRS = ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed",
+  "pained", "smile", "smile_closed", "lick"] as const;
+export type Expr = (typeof EXPRS)[number];
 export type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral";
 export type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** eyes [back, front], brows [inner, outer] offsets in u (+ = down), mouth kind */

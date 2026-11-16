@@ -13,3 +13,7 @@ export const LAC: V3 = [-160, G, 70];     // the lacquer house (Varanavata)
 export const ARENA: V3 = [170, G, 70];    // Draupadi's contest (pole at the centre)
 export const CITY: V3 = [40, G, -190];    // the clearing where Indraprastha rises
 export const NAGA: V3 = [0, G, 600];      // the snake kingdom floor
+
+/** Named places for storyboard points (same names the schema/docs use). */
+export const PLACES = { PAL, VIL, HERM, DEER, LAC, ARENA, CITY, NAGA } as const;
+export type PlaceName = keyof typeof PLACES;
