@@ -1,5 +1,8 @@
 # Phase 3A report
 
+> Live acceptance superseded by `docs/reports/phase-3a-live.md` (2026-11-17): the DeepSeek key became available and
+> the Savitri run is committed in `fixtures/savitri/`.
+
 ## Summary
 
 Phase 3A adds the reusable pipeline library: validated atomic artifacts, a stage registry with input hashing and
