@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, wri
 import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
-import { assertFixtureTimeline, assertRenderable, initProject, projectDir, quality, requireFile } from './project.js';
+import { assertProjectInputs, initProject, projectDir, quality, requireFile } from './project.js';
 import { validateStoryboard } from './validate.js';
 import { balance } from './jobs.js';
 
@@ -16,13 +16,11 @@ function readShots(dir) {
   return shots;
 }
 
-/** Validate a storyboard project before touching the engine; legacy-only projects skip the schema and use the old gate. */
+/** Validate the project's storyboard before touching the engine. */
 function prepare(dir) {
-  if (existsSync(join(dir, 'storyboard.json'))) {
-    const r = validateStoryboard(dir);
-    if (!r.ok) throw new Error(`storyboard validation failed (${r.errors.length} error(s)); fix them before rendering`);
-  }
-  assertRenderable(dir);
+  const r = validateStoryboard(dir);
+  if (!r.ok) throw new Error(`storyboard validation failed (${r.errors.length} error(s)); fix them before rendering`);
+  assertProjectInputs(dir);
 }
 
 function segments(dir, shots) {
@@ -131,7 +129,7 @@ export async function renderCommand(dirArg, { qualityName = 'preview', workers: 
 
 export async function audioCommand(dirArg) {
   const dir = projectDir(dirArg);
-  assertRenderable(dir);
+  assertProjectInputs(dir);
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
   await run(py, [join(ROOT, 'audio', 'mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });

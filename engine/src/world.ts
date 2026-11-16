@@ -54,8 +54,6 @@ export class World {
   private clouds: THREE.Mesh[] = [];
   private frustum = new THREE.Frustum();
   private m4 = new THREE.Matrix4(); private v = new THREE.Vector3(); private sph = new THREE.Sphere();
-  /** structural capture for `fableon diff` (set by update, never used by rendering) */
-  captured: { stage: Stage; info: CamInfo; sun: THREE.Vector3; focus: THREE.Vector3 } | null = null;
 
   constructor() {
     const R = this.root;
@@ -135,28 +133,6 @@ export class World {
   private actor(i: number) { while (this.actors.length <= i) this.actors.push(new Actor(this.root)); return this.actors[i]; }
   private fx(i: number) { while (this.fxs.length <= i) this.fxs.push(new Fx(this.root)); return this.fxs[i]; }
 
-  debugState(s: ShotDef, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene, pxH: number, kick: (f: number, c: Cam) => Cam) {
-    this.update(s, f, cam, scene, pxH, kick);
-    const cap = this.captured!, c = kick(f, s.cam(f)), dyn = this.sets.dyn;
-    const mat = (m: THREE.InstancedMesh) => ({ count: m.count, first: Array.from(m.instanceMatrix.array.slice(0, 5 * 16)) });
-    return {
-      camera: { pos: c.pos, look: c.look, fov: c.fov, roll: c.roll },
-      light: s.light, sun: [cap.sun.x, cap.sun.y, cap.sun.z],
-      places: cap.stage.places.map((p) => ({ key: p.key, x: p.x, y: p.y, z: p.z, scale: p.scale ?? 1, mirror: !!p.mirror, yaw: p.yaw ?? null, roll: p.roll ?? null, size: p.size, geo: p.geo ?? "body" })),
-      fx: cap.stage.fx.map((p) => ({ key: p.key, cw: p.cw, ch: p.ch, x: p.x, y: p.y, z: p.z, w: p.w, h: p.h, rot: p.rot ?? 0, kind: p.kind ?? "cut", flat: !!p.flat })),
-      dyn: {
-        pages: dyn.pages.scale.toArray(),
-        jars: mat(dyn.jars), lids: mat(dyn.lids),
-        wheel: dyn.wheel.rotation.z,
-        city: { scale: dyn.city.scale.toArray(), visible: dyn.city.visible },
-        boat: { pos: dyn.boat.position.toArray(), rot: dyn.boat.rotation.toArray().slice(0, 3), visible: dyn.boat.visible },
-        ladduPlate: { pos: dyn.ladduPlate.position.toArray(), scale: dyn.ladduPlate.scale.toArray(), visible: dyn.ladduPlate.visible },
-        nectar: mat(dyn.nectar),
-        bigBow: dyn.bigBow.rotation.z,
-      },
-    };
-  }
-
   update(s: ShotDef, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene, pxH: number, kick: (f: number, c: Cam) => Cam) {
     const t = f / FPS, L = LIGHTS[s.light], K = LOOK[s.light];
     // ---- camera ----
@@ -221,7 +197,6 @@ export class World {
     const info: CamInfo = { pos: cam.position.clone(), right, sun: sunDir, light: s.light, pxH };
     const st: Stage = { places: [], fx: [] };
     s.stage(t, f, st, info);
-    this.captured = { stage: st, info, sun: sunDir.clone(), focus: focus.clone() };
     this.frustum.setFromProjectionMatrix(this.m4.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse));
     let ai = 0;
     const used: Actor[] = [];

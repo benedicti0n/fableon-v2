@@ -4,7 +4,7 @@ import { copyFileSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { NPM, RENDER_CJS, ROOT, capture, findPython, run } from '../cli/src/env.js';
-import { runParity } from './parity.mjs';
+import { runGolden } from './golden.mjs';
 import { runMotionTests } from './motion.test.mjs';
 import { runStartAnchors } from './start-anchors.mjs';
 import { runValidator } from './validator.mjs';
@@ -36,7 +36,7 @@ async function stills() {
   console.log('\n== stills regression ==');
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-stills-'));
   try {
-    await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(tmp, 'f_'), '--frames', frames.join(','), '--size', '540x960', '--msaa', '0'], { cwd: ROOT });
+    await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(tmp, 'f_'), '--frames', frames.join(','), '--project', join(ROOT, 'fixtures', 'adi-parva'), '--size', '540x960', '--msaa', '0'], { cwd: ROOT });
     const r = JSON.parse(capture(py, [join(ROOT, 'tests', 'compare_stills.py'), tmp, refDir]));
     for (const x of r.frames) console.log(`  frame ${x.frame}: mean abs diff ${x.mad.toFixed(3)} (limit ${MAD_LIMIT})`);
     check('stills', r.max <= MAD_LIMIT, `max ${r.max} <= ${MAD_LIMIT} on 0-255 grayscale`);
@@ -73,8 +73,9 @@ try {
   check('shot starts', starts.ok, `${starts.rows.length} anchors resolve to the old frames`);
   const motion = await runMotionTests();
   check('motion math', motion.ok, `${motion.checks.filter((c) => c.ok).length}/${motion.checks.length} checks`);
-  const parity = await runParity();
-  check('storyboard parity', parity.ok, `${parity.frames} frames, max ${parity.worst.toFixed(3)} <= 0.5`);
+  const golden = await runGolden();
+  for (const x of golden.shots) console.log(`  shot ${String(x.shot).padStart(2, '0')} frame ${x.frame}: mean abs diff ${x.mad.toFixed(3)} (limit ${golden.limit})`);
+  check('golden frames', golden.ok, `${golden.frames} shot midpoints, max ${golden.max.toFixed(3)} <= ${golden.limit}`);
 } catch (e) {
   failed++;
   console.error(`\nFAIL suite: ${e.message}`);

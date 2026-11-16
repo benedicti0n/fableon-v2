@@ -971,7 +971,6 @@
       "start": {
         "frame": 0
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
@@ -1131,7 +1130,6 @@
         "word": "Vyasa",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
@@ -1374,7 +1372,6 @@
         "word": "His",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
@@ -1528,7 +1525,6 @@
         "word": "So",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
@@ -2630,7 +2626,6 @@
         "word": "Our",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace",
@@ -2833,7 +2828,6 @@
         "word": "Her",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "village"
@@ -2972,7 +2966,6 @@
         "word": "Problem",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -3103,7 +3096,6 @@
         "word": "Devavrata",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "village"
@@ -3275,7 +3267,6 @@
         "word": "So",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "village"
@@ -3359,7 +3350,6 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "village"
@@ -3524,7 +3514,6 @@
         "word": "Luckily",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "palace"
@@ -3654,7 +3643,6 @@
         "word": "Unluckily",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "palace"
@@ -3766,7 +3754,6 @@
         "word": "A",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -3893,7 +3880,6 @@
         "word": "Pandu",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "deer"
@@ -4291,7 +4277,6 @@
         "word": "Conveniently",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "deer"
@@ -4448,7 +4433,6 @@
         "word": "She",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "deer"
@@ -4898,7 +4882,6 @@
         "word": "Five",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -5073,7 +5056,6 @@
         "word": "Meanwhile",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -5357,7 +5339,6 @@
         "word": "Vyasa",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -5559,7 +5540,6 @@
         "word": "Out",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -5757,7 +5737,6 @@
         "word": "Five",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -5999,7 +5978,6 @@
         "word": "Bhima",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -6847,7 +6825,6 @@
         "word": "So",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "palace"
@@ -7068,7 +7045,6 @@
         "word": "Bhima",
         "offset": -2
       },
-      "legacy": false,
       "light": "deep",
       "sets": [
         "naga"
@@ -7482,7 +7458,6 @@
         "word": "Next",
         "offset": -2
       },
-      "legacy": false,
       "light": "night",
       "sets": [
         "lac"
@@ -14328,7 +14303,6 @@
         "word": "They",
         "offset": -2
       },
-      "legacy": false,
       "light": "night",
       "sets": [
         "lac"
@@ -24187,7 +24161,6 @@
         "word": "In",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
@@ -24863,7 +24836,6 @@
         "word": "Kings",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
@@ -25274,7 +25246,6 @@
         "word": "Arjuna",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
@@ -25558,7 +25529,6 @@
         "word": "They",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29412,7 +29382,6 @@
         "word": "Kunti",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29524,7 +29493,6 @@
         "word": "Her",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29821,7 +29789,6 @@
         "word": "You",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29990,7 +29957,6 @@
         "word": "Bhishma's",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "palace"
@@ -30068,7 +30034,6 @@
         "word": "Kunti's",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -30146,7 +30111,6 @@
         "word": "even",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"
@@ -30261,7 +30225,6 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": false,
       "light": "day",
       "sets": [
         "city"
@@ -30709,7 +30672,6 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": false,
       "light": "night",
       "sets": [
         "city"
@@ -30960,7 +30922,6 @@
         "word": "Oh",
         "offset": -2
       },
-      "legacy": false,
       "light": "golden",
       "sets": [
         "hermitage"

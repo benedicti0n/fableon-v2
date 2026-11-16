@@ -1,6 +1,6 @@
 # Storyboard v1 — the contract between the director (human or model) and the renderer
 
-A project's `storyboard.json` + `words.json` fully describe the film. The engine builds the same `ShotDef[]` objects that `engine/src/story.ts` builds by hand today (`world.ts` / `main.ts` do not change). Phase 2A/2B use explicit numbers (positions, camera points) so the Adi Parva timeline can be ported exactly; Phase 2C adds a semantic layer ("medium shot on X") that a framing solver compiles down to this v1 format.
+A project's `storyboard.json` + `words.json` fully describe the film: they are the engine's only timeline. `world.ts` / `main.ts` consume the `ShotDef[]` built by the storyboard interpreter. Phase 2A/2B use explicit numbers (positions, camera points) so the Adi Parva timeline can be ported exactly; Phase 2C adds a semantic layer ("medium shot on X") that a framing solver compiles down to this v1 format.
 
 The JSON Schema (`schema/storyboard.schema.json`) is the single source of truth: the CLI validates with it, and Phase 3 passes it to models as a structured-output schema. Anything not described here is not allowed (`additionalProperties: false`).
 
@@ -14,7 +14,7 @@ The JSON Schema (`schema/storyboard.schema.json`) is the single source of truth:
 { "end": true, "offset": 4 }                            // END = round(last word end * fps), plus offset
 { "shot": true, "offset": 24 }                          // current shot's start frame + 24 (in-shot only)
 ```
-Word matching: lower-case, keep only letters and apostrophes (same `norm()` as story.ts). `K(line, word)` in story.ts is `{ "line": ..., "word": ..., "offset": -2 }`. A strict `f > A(...)` comparison becomes an inclusive anchor with `"offset": +1`. Prefer word anchors; use `"shot"` for time-based ramps that must move when the narration is re-voiced, and `"frame"` rarely.
+Word matching: lower-case, keep only letters and apostrophes. A strict legacy `f > A(...)` comparison becomes an inclusive anchor with `"offset": +1`. Prefer word anchors; use `"shot"` for time-based ramps that must move when the narration is re-voiced, and `"frame"` rarely.
 
 ### Point (a world position, metres)
 ```jsonc
@@ -50,7 +50,7 @@ ease: linear | smooth (smoothstep) | glide (smootherstep) | step.
   "crossfade": 10,                                          // frames, applied when consecutive shots differ in light
   "points": { "VY": { "at": "HERM", "d": [-1.15, 0.33, -0.25] } },
   "cast": { "vyasa": { "spec": "vyasa", "seed": 1 } },      // spec = castlist key (C.*, KIDS.*) or inline Spec object;
-                                                            // seed = the identity number story.ts passes to who() (blink timing)
+                                                            // seed = the identity number passed to who() (blink timing)
   "kicks": [{ "at": { "line": 8, "word": "vows" }, "amp": 0.6 }],
   "shots": [ /* Shot */ ]
 }
@@ -61,7 +61,6 @@ ease: linear | smooth (smoothstep) | glide (smootherstep) | step.
 {
   "id": "L1",                         // unique; the script line it starts on is a good id
   "start": { "line": 1, "word": "Vyasa", "offset": -2 },    // first shot: { "frame": 0 }
-  "legacy": false,                    // true = use the hand-written ShotDef from story.ts (migration only)
   "light": "golden",                  // day | golden | night | deep
   "sets": ["hermitage"],
   "sun": { "az": 115, "el": 18 },     // optional; default: hermitage shots get az 115 / el 18 (current rule), else the preset
@@ -83,11 +82,11 @@ A shot runs from its `start` to the next shot's `start` (the last one to TOTAL).
   "dur": 24,
   "type": "dolly",                    // dolly | fixed | tilt
   "pos": Point, "look": Point, "fov": 40, "roll": 0,          // roll in radians
-  "push": { "from": Anchor, "rate": 0.0025, "punch": 0.006, "punchAt": Anchor }   // dolly only (story.ts pushK / dolly)
+  "push": { "from": Anchor, "rate": 0.0025, "punch": 0.006, "punchAt": Anchor }   // dolly only (pushK / dolly)
   // tilt only: "lookTo": Point, "tiltDur": 26   (look glides from `look` to `lookTo` over tiltDur frames from `at`)
 }
 ```
-dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK(f, punchAt, 0, punch, 30), exactly as story.ts dolly(). fixed: constant pos/look/fov/roll. Points may follow moving targets (e.g. {"at": "pigeon"}). Impact kicks (`kicks`) are applied on top, as kickCam does today.
+dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK(f, punchAt, 0, punch, 30), exactly as dolly(). fixed: constant pos/look/fov/roll. Points may follow moving targets (e.g. {"at": "pigeon"}). Impact kicks (`kicks`) are applied on top, as kickCam does today.
 
 ## Actor
 ```jsonc
@@ -103,8 +102,8 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "animate": {},                      // numeric Spec fields animated over time, e.g. { "belly": Animated }
   "scale": 1, "mirror": false, "noBlob": false, "blobScale": 1, "yaw": null,
   "pose": "talk", "expr": "smile", "prop": null, "facing": 0, "look": 0, "seated": true, "headTilt": 0, "tilt": 0,
-  "talk": null,                       // { "base": "smile", "rate": 1 } -> expr cycles grin/base/relief_open/base/grin/smile (story.ts talk())
-  "appear": null,                     // { "at": Anchor, "pop": 0.18, "stagger": 0 } -> scale pops in (story.ts pop()); scale 0 before
+  "talk": null,                       // { "base": "smile", "rate": 1 } -> expr cycles grin/base/relief_open/base/grin/smile (talk())
+  "appear": null,                     // { "at": Anchor, "pop": 0.18, "stagger": 0 } -> scale pops in (pop()); scale 0 before
   "visible": null,                    // { "from": Anchor, "to": Anchor }
   "beats": [                          // state changes, in time order; each overrides any field above from its frame on
     { "at": { "line": 1, "word": "never", "offset": -2 }, "talk": { "base": "nervous", "rate": 1.6 } }
@@ -181,4 +180,4 @@ Members expand deterministically with the legacy `hh(i, salt)` hash; `seedBase +
 A shot's content (camera, actors, beats, visibility, effects, set pieces and special params) is evaluated for **every
 frame on which the shot is drawn**, including the crossfade frames after its end (outgoing) and before its start
 (incoming). The interpreter never clamps content to `[start, end)`; beats and visibility follow their anchors only.
-This matches `story.ts`, whose stage functions are plain formulas of the global frame `f`.
+Stage functions are plain formulas of the global frame `f`.

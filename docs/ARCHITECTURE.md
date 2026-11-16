@@ -37,7 +37,7 @@ An **autopilot** runs all stages from a saved preset and stops only at the check
 
 ## Components
 - `engine/` (TypeScript): the renderer page (three.js world, cast cards, post chain) + Playwright frame driver. Becomes a
-  **storyboard interpreter** in Phase 2 (today `src/story.ts` is hand-written).
+  **storyboard interpreter** in Phase 2 (since Phase 2B every shot is storyboard-driven; the hand-written timeline is deleted).
 - `audio/`, `voice/` (Python): narration, score, effects, mix. Driven by `words.json` + storyboard sound tags.
 - `server/` (Node/TypeScript, Phase 4): project store, stage graph, job queue, model router, REST + WebSocket API.
 - `web/` (React + Vite, Phase 5-6): stage screens, shot timeline editor, previews, render queue, QA, autopilot.

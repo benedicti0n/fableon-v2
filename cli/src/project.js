@@ -1,7 +1,7 @@
-// Project folder helpers: quality presets, input validation, and the Phase 1 gate that only the fixture timeline is drawable.
-import { existsSync, readFileSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
+// Project folder helpers: quality presets, input validation and workspace creation.
+import { existsSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { ENGINE, ROOT } from './env.js';
+import { ROOT } from './env.js';
 
 export const QUALITY = {
   preview: { size: '540x960', label: 'preview 540x960' },
@@ -27,23 +27,10 @@ export function requireFile(dir, name, hint) {
   return p;
 }
 
-// The renderer's timeline is compiled in (engine/src/words.json) until Phase 2. Refuse to render a different film
-// instead of silently drawing the fixture under someone else's audio.
-export function assertFixtureTimeline(dir) {
-  const mine = readFileSync(requireFile(dir, 'words.json'), 'utf8');
-  const fixture = readFileSync(join(ENGINE, 'src', 'words.json'), 'utf8');
-  if (mine !== fixture) {
-    throw new Error(`${join(dir, 'words.json')} differs from engine/src/words.json — legacy shots need the compiled timeline (custom projects arrive in Phase 2B)`);
-  }
-}
-
-/** A storyboard with legacy shots depends on the compiled-in timeline; a fully ported one may use its own words. */
-export function assertRenderable(dir) {
-  const sbPath = join(dir, 'storyboard.json');
-  if (!existsSync(sbPath)) { assertFixtureTimeline(dir); return null; }
-  const sb = JSON.parse(readFileSync(sbPath, 'utf8'));
-  if ((sb.shots ?? []).some((s) => s.legacy)) assertFixtureTimeline(dir);
-  return sb;
+/** The storyboard-only engine renders only projects that carry their own storyboard and word timings. */
+export function assertProjectInputs(dir) {
+  requireFile(dir, 'storyboard.json', 'run: fableon init <name> --from fixtures/adi-parva');
+  requireFile(dir, 'words.json', 'run: fableon voice --project <dir>');
 }
 
 // Copy a project's inputs into work/<name>/. Derived folders (reference stills, audio, render, qa) stay out.
@@ -54,7 +41,7 @@ export function initProject(name, from) {
   const dest = join(ROOT, 'work', name);
   if (existsSync(dest) && readdirSync(dest).length) throw new Error(`${dest} already exists and is not empty`);
   mkdirSync(dest, { recursive: true });
-  const skip = new Set(['reference-stills', 'audio', 'render', 'qa', 'stills']);
+  const skip = new Set(['reference-stills', 'audio', 'render', 'qa', 'stills', 'golden', 'diff']);
   const copied = [];
   const walk = (rel) => {
     for (const e of readdirSync(join(src, rel), { withFileTypes: true })) {

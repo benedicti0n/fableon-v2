@@ -1,5 +1,5 @@
 // Shared camera grammar (bridge short motion.md): symmetric smootherstep glides, cuts, dolly push + punch.
-// Moved verbatim from story.ts; the storyboard interpreter uses the same functions.
+// Moved verbatim from the legacy timeline; the storyboard interpreter uses the same functions.
 import type { Cam } from "../world";
 import type { V3 } from "../places";
 import { glide } from "./timing";

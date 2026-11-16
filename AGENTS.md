@@ -30,7 +30,7 @@ before you change anything.
 
 ## Layout (seed)
 - `engine/` — TypeScript renderer (three.js + postprocessing, no React). `src/main.ts` is the page entry that exposes
-  `window.renderFrame(f)` and `window.GLINFO`; `src/story.ts` is (for now) the hand-written Adi Parva timeline;
+  `window.renderFrame(f)` and `window.GLINFO`; `src/storyboard/build.ts` interprets the project's `storyboard.json` + `words.json`;
   `scripts/render.cjs` drives headless Chromium via Playwright and pipes JPEG frames into ffmpeg; `scripts/build.mjs`
   bundles with esbuild; `scripts/assemble.mjs` concatenates clips and muxes the mix.
 - `cli/` — the `fableon` CLI (plain Node ESM): `doctor`, project workspace and the fixture pipeline.

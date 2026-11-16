@@ -89,7 +89,7 @@ export type Crowd = {
   facing?: -1 | 0 | 1; seated?: boolean; noBlob?: boolean;
 };
 export type Shot = {
-  id: string; start: Anchor; legacy?: boolean; light: "day" | "golden" | "night" | "deep"; sets: string[];
+  id: string; start: Anchor; light: "day" | "golden" | "night" | "deep"; sets: string[];
   sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; crowds?: Crowd[]; fx?: Effect[]; set?: SetAction[];
 };
 export type CastEntry = { spec: string | Record<string, unknown>; seed: number };

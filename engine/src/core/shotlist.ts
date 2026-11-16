@@ -1,5 +1,5 @@
 // Shared shot-list assembly: the per-shot dynamic-piece wrapper, crossfade rule, layer lookup and DOF ramp.
-// Both story.ts and the storyboard interpreter build ShotDef[] through this module.
+// The storyboard interpreter builds ShotDef[] through this module.
 import type { ShotDef } from "../world";
 import type { Sets } from "../sets";
 

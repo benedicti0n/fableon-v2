@@ -1,5 +1,5 @@
-// Build ShotDef[] from a storyboard + the project's words. Math comes from core/ (shared with story.ts); the legacy
-// hybrid reuses the hand-written ShotDef and DOF entries for shots marked "legacy": true.
+// Build ShotDef[] from a storyboard + the project's words. Math comes from core/ (shared building blocks); every
+// shot is evaluated from the storyboard data — the legacy hand-written timeline is gone.
 import * as THREE from "three";
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
@@ -18,7 +18,6 @@ import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
 import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
 import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
-import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
 
@@ -366,14 +365,6 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());
   }
   shots.forEach(({ s, start }, i) => {
-    const b = i + 1 < shots.length ? shots[i + 1].start : TOTAL;
-    if (s.legacy) {
-      const legacy = LEGACY_SHOTS.find((x) => x.a === start);
-      if (!legacy) throw new Error(`legacy shot "${s.id}" starts at frame ${start}, no story.ts shot has that start`);
-      defs.push({ from: start, light: legacy.light, sets: legacy.sets, cam: legacy.cam, stage: legacy.stage, pose: legacy.pose, sunAz: legacy.sunAz, sunEl: legacy.sunEl });
-      dofs.push(...LEGACY_DOFS.filter((d) => d.f >= start && d.f < b));
-      return;
-    }
     const def: Def = {
       from: start, light: s.light, sets: s.sets, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {

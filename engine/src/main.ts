@@ -8,13 +8,12 @@ import { World } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur } from "./lensblur";
 import { GradeEffect, GRADES, gradeFor } from "./grade";
-import { SHOTS as STORY_SHOTS, TOTAL as STORY_TOTAL, FLASH_AT as STORY_FLASH, layersAt as storyLayersAt, dofAt as storyDofAt, kickCam as storyKickCam, XFADE as STORY_XFADE, KICKS as STORY_KICKS } from "./story";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
 import type { Wd } from "./core/anchors";
 
-// Project data is fetched before anything is built. render.cjs serves the project under /project/; when no
-// storyboard is present this resolves to {words:null, storyboard:null} and the compiled-in story.ts is used.
+// Project data is fetched before anything is built. render.cjs serves the project under /project/; a project must
+// provide both storyboard.json and words.json — there is no compiled-in timeline any more.
 type ProjectData = { words: unknown | null; storyboard: unknown | null };
 const loadProject = async (): Promise<ProjectData> => {
   const get = async (name: string) => {
@@ -25,32 +24,14 @@ const loadProject = async (): Promise<ProjectData> => {
 };
 const PROJECT = await loadProject();
 
-// Without a storyboard the compiled-in story.ts is used exactly as before. With one, build the runtime ShotDef[]
-// from storyboard + words (legacy:true shots still come from story.ts).
-let RT: Runtime = {
-  SHOTS: STORY_SHOTS, TOTAL: STORY_TOTAL, FLASH_AT: STORY_FLASH, XFADE: STORY_XFADE,
-  layersAt: storyLayersAt, dofAt: storyDofAt, kickCam: storyKickCam, KICKS: STORY_KICKS, JUMP_EVENTS: [],
-};
+let RT: Runtime;
 try {
-  if (PROJECT.storyboard) {
-    if (!PROJECT.words) throw new Error("project has storyboard.json but no words.json");
-    RT = buildStoryboard(PROJECT.storyboard as Storyboard, PROJECT.words as Wd[]);
-  }
+  if (!PROJECT.storyboard) throw new Error("project has no storyboard.json (run: fableon init <name> --from fixtures/adi-parva)");
+  if (!PROJECT.words) throw new Error("project has storyboard.json but no words.json");
+  RT = buildStoryboard(PROJECT.storyboard as Storyboard, PROJECT.words as Wd[]);
 } catch (e) {
   (window as unknown as Record<string, unknown>).BUILD_ERROR = e instanceof Error ? e.message : String(e);
-  // Structural snapshot for `fableon diff`; never called during normal renders. It walks the same layers and
-// world.update path as renderFrame but captures stage/pose state instead of drawing pixels.
-(window as unknown as Record<string, unknown>).DEBUG_STATE = (f: number) => {
-  const layers = RT.layersAt(f);
-  const d = RT.dofAt(f);
-  const states = layers.map((l) => {
-    const shot = RT.SHOTS[l.id - 1];
-    return { id: l.id, alpha: l.alpha, ...world.debugState(shot, f, cam, scene, H, RT.kickCam) };
-  });
-  const last = states[states.length - 1] ?? {};
-  return { frame: f, layers, dof: { cInf: d.cInf, focus: d.focus ? d.focus(f) : null }, states, ...last };
-};
-(window as unknown as Record<string, unknown>).ready = true;
+  (window as unknown as Record<string, unknown>).ready = true;
   throw e;
 }
 
@@ -153,16 +134,4 @@ const camJumps = () => {
 };
 (window as unknown as Record<string, unknown>).camJumps = camJumps;
 (window as unknown as Record<string, unknown>).EVENTS = [...new Set([...camJumps(), ...RT.JUMP_EVENTS])].sort((a, b) => a - b);
-// Structural snapshot for `fableon diff`; never called during normal renders. It walks the same layers and
-// world.update path as renderFrame but captures stage/pose state instead of drawing pixels.
-(window as unknown as Record<string, unknown>).DEBUG_STATE = (f: number) => {
-  const layers = RT.layersAt(f);
-  const d = RT.dofAt(f);
-  const states = layers.map((l) => {
-    const shot = RT.SHOTS[l.id - 1];
-    return { id: l.id, alpha: l.alpha, ...world.debugState(shot, f, cam, scene, H, RT.kickCam) };
-  });
-  const last = states[states.length - 1] ?? {};
-  return { frame: f, layers, dof: { cInf: d.cInf, focus: d.focus ? d.focus(f) : null }, states, ...last };
-};
 (window as unknown as Record<string, unknown>).ready = true;

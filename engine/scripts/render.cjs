@@ -7,12 +7,10 @@
 //   node engine/scripts/render.cjs list     --out <shots.json>
 //   node engine/scripts/render.cjs qa       --out <qa_meta.json>
 //   node engine/scripts/render.cjs cuts     --out <cuts.json>
-//   node engine/scripts/render.cjs state    --out <state.json> --frame <n>
 //   node engine/scripts/render.cjs events   --out <events.json>
 //
 // --jobs is a JSON array of [from, to, outfile] triples: one browser, many clips (existing clips are skipped).
-// --project <dir> serves that folder under /project/ (words.json + storyboard.json); with no storyboard the engine
-// falls back to the compiled-in story.ts, exactly as before.
+// --project <dir> serves that folder under /project/ (words.json + storyboard.json); both files are required.
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path'), { spawn } = require('child_process');
 const root = path.join(__dirname, '..', 'dist');
@@ -33,7 +31,7 @@ const opt = parse(process.argv.slice(2));
 const mode = opt._[0];
 if (!mode || opt.help) { console.log(usage); process.exit(mode ? 0 : 1); }
 const [W, H] = String(opt.size || '1440x2560').split(/[x:]/).map(Number);
-const MS = +(opt.msaa ?? 4), OFF = String(opt.off || '');
+const MS = +(opt.msaa ?? 4), OFF = String(opt.off || ''), JPEG = +(opt.jpeg ?? 0.94);
 const PROJECT = opt.project ? path.resolve(String(opt.project)) : null;
 const need = (k) => { if (opt[k] === undefined || opt[k] === true) { console.error(`render.cjs ${mode}: missing --${k}\n\n${usage}`); process.exit(1); } return String(opt[k]); };
 const port = 8800 + Math.floor(Math.random() * 900);
@@ -51,7 +49,7 @@ const srv = http.createServer((q, s) => {
 }).listen(port);
 const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
 const framesCsv = mode === 'stills' ? need('frames') : '';
-const out = ['stills', 'video', 'list', 'qa', 'cuts', 'state', 'events'].includes(mode) ? need('out') : '';
+const out = ['stills', 'video', 'list', 'qa', 'cuts', 'events'].includes(mode) ? need('out') : '';
 const jobsFile = mode === 'segments' ? need('jobs') : '';
 (async () => {
   const b = await chromium.launch(launchOptions());
@@ -86,13 +84,6 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
       console.log(new Date().toISOString().slice(11, 19), 'seg', file, to - from, 'frames', ((Date.now() - ts) / 1000 / (to - from)).toFixed(2) + ' s/f');
     }
   }
-  else if (mode === 'state') {
-    const f = +(opt.frame);
-    if (!Number.isFinite(f)) throw new Error('state mode needs --frame <n>');
-    fs.mkdirSync(path.dirname(out), { recursive: true });
-    fs.writeFileSync(out, JSON.stringify(await pg.evaluate((f) => window.DEBUG_STATE(f), f)));
-    console.log('state json', out);
-  }
   else if (mode === 'events') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.EVENTS))); console.log('events json', out); }
   else if (mode === 'qa') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.QA))); console.log('qa json', out); }
   else if (mode === 'cuts') { fs.writeFileSync(out, JSON.stringify(await pg.evaluate(() => window.camJumps()))); console.log('cuts json', out); }
@@ -101,7 +92,7 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
     fs.mkdirSync(path.dirname(out), { recursive: true });
     for (const f of framesCsv.split(',').map(Number)) {
       const t = Date.now();
-      const d = await pg.evaluate((f) => window.renderFrame(f), f);
+      const d = await pg.evaluate(([f, q]) => window.renderFrame(f, q), [f, JPEG]);
       fs.writeFileSync(`${out}${f}.jpg`, Buffer.from(d.split(',')[1], 'base64'));
       console.log('still', f, ((Date.now() - t) / 1000).toFixed(1) + 's', JSON.stringify(await pg.evaluate(() => Object.fromEntries(Object.entries(window.PROF).map(([k, v]) => [k, Math.round(v)])))));
     }

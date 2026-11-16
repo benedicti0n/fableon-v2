@@ -1,4 +1,4 @@
-// Special (non-person) cards used by the timeline and the storyboard interpreter. gn() is moved verbatim from story.ts.
+// Special (non-person) cards used by the storyboard interpreter. gn() is moved verbatim from the legacy timeline.
 import type { Stage, CamInfo } from "../cast";
 import { card, lidAt } from "../cast";
 import { ganesha } from "../people";

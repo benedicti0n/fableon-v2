@@ -1,5 +1,5 @@
-// Word anchors on the narration timeline, parameterised by the project's words.json so the interpreter and story.ts
-// cannot drift. Moved verbatim from story.ts.
+// Word anchors on the narration timeline, parameterised by the project's words.json. Moved verbatim from the legacy
+// timeline.
 export type Wd = { w: string; a: number; b: number; line: number };
 export const norm = (s: string) => s.toLowerCase().replace(/[^a-z']/g, "");
 

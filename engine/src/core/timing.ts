@@ -1,4 +1,4 @@
-// Shared timing curves used by the hand-written timeline and the storyboard interpreter. Moved verbatim from story.ts.
+// Shared timing curves used by the storyboard interpreter. Moved verbatim from the legacy timeline.
 import type { Expr } from "../toon";
 
 export const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
