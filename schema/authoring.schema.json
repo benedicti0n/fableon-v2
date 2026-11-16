@@ -443,6 +443,9 @@
             "left",
             "right"
           ]
+        },
+        "scenery": {
+          "type": "boolean"
         }
       }
     },

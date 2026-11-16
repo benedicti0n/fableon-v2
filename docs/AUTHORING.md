@@ -161,6 +161,15 @@ Constants as implemented (`cli/src/solver.js`):
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
   camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
+### Validator contract (F3)
+
+`fableon frames` / `validate --deep` fail on: a listed subject invisible for more than six checked frames; an
+unmarked key with no subjects (`"scenery": true` is the explicit intent for establishing, transition or effect-only
+keys); a subject head not fully in frame or projected height > 3x frame; a visible non-subject actor/special/effect
+card that covers > 30 % of the frame while in front of the primary subject, or is closer than 1.2 m. Deliberate
+over-shoulder foreground (`over`, or a card whose centre is in a lower side corner) is exempt. Full fixture data only
+adds `subjects`, `later`, and `scenery`.
+
 ### Composition grammar (F2)
 
 - `"over": "<id>"` places that actor's head/shoulder large in the lower front corner (left/right per `side`) while

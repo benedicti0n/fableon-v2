@@ -26,6 +26,24 @@ export function runFramesTests() {
     writeFileSync(join(clean, 'storyboard.json'), JSON.stringify(JSON.parse(readFileSync(join(fixture, 'storyboard.json'), 'utf8')), null, 2));
     const blocked = checkFrames(clean, { keepout: [pillar] });
     ok('pillar occlusion errors', !blocked.ok && blocked.errors.some((e) => e.blocked === 'test pillar'), `${blocked.errors.length} errors`);
+    const empty = JSON.parse(readFileSync(join(fixture, 'storyboard.json'), 'utf8'));
+    empty.shots.find((s) => s.id === 'L5').camera[0].subjects = [];
+    delete empty.shots.find((s) => s.id === 'L5').camera[0].scenery;
+    writeFileSync(join(clean, 'storyboard.json'), JSON.stringify(empty, null, 2));
+    const emptyCheck = checkFrames(clean);
+    ok('unmarked empty key errors', emptyCheck.errors.some((e) => e.error === 'empty key (mark scenery:true)'), `${emptyCheck.errors.length} errors`);
+    const blocker = JSON.parse(readFileSync(join(fixture, 'storyboard.json'), 'utf8'));
+    const l12 = blocker.shots.find((s) => s.id === 'L12');
+    l12.actors.push({ who: 'sage', pos: { at: 'DH', d: [0.05, 0, -2.0] }, pose: 'stand', expr: 'smile' });
+    writeFileSync(join(clean, 'storyboard.json'), JSON.stringify(blocker, null, 2));
+    const blockerCheck = checkFrames(clean);
+    ok('foreground blocker errors', blockerCheck.errors.some((e) => e.error.startsWith('foreground blocker sage')), `${blockerCheck.errors.length} errors`);
+    const close = JSON.parse(readFileSync(join(fixture, 'storyboard.json'), 'utf8'));
+    const l5c = close.shots.find((s) => s.id === 'L5');
+    l5c.actors.find((a) => a.who === 'fisher').pos = [0.2, 1.5, -19.5];
+    writeFileSync(join(clean, 'storyboard.json'), JSON.stringify(close, null, 2));
+    const closeCheck = checkFrames(clean);
+    ok('too-close subject errors', closeCheck.errors.some((e) => e.error.startsWith('subject too close fisher')), `${closeCheck.errors.length} errors`);
   } finally { rmSync(clean, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

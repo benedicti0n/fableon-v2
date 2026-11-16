@@ -769,7 +769,8 @@
           ],
           "angle": "eye",
           "side": "front",
-          "move": "hold"
+          "move": "hold",
+          "scenery": true
         }
       ]
     },

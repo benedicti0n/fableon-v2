@@ -400,12 +400,13 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const keyFrames = (shot.camera ?? []).map((k) => ctx.anchorFrame(parseAnchor(k.at ?? k.raw?.at, fps), start));
   for (let ki = 0; ki < (shot.camera ?? []).length; ki++) {
     const k = shot.camera[ki];
-    const semantic = k.size !== undefined || k.on !== undefined;
+    const semantic = k.size !== undefined || k.on !== undefined || k.scenery === true;
     if (semantic) {
       const on = k.on === undefined ? (out.actors ?? []).map((a) => a.id ?? a.who) : Array.isArray(k.on) ? k.on : [k.on];
       const f = ctx.anchorFrame(parseAnchor(k.at, fps), start);
       const keyEnd = ki + 1 < keyFrames.length ? keyFrames[ki + 1] : shotEnd;
       let subjects = on.map((id) => subjectSamples(id, out, out, f, keyEnd, k.later ?? [], ctx, k.at));
+      if (!subjects.length && k.scenery && !k.size) k.size = 'establishing';
       if (k.move === 'follow') subjects = subjects.map((s) => ({ ...s, samples: [s.pos] }));
       const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };
       const keepout = catalog.keepout?.[sets[0]] ?? [];
