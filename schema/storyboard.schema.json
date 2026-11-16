@@ -592,6 +592,8 @@
               "additionalProperties": false,
               "properties": { "stagger": { "type": "number", "minimum": 0 } }
             },
+            "static": { "type": "boolean" },
+            "card": { "enum": ["cut", "soft", "glow", "fire"] },
             "twinkle": {
               "type": "object",
               "additionalProperties": false,
@@ -861,7 +863,8 @@
             "dur": { "type": "number", "exclusiveMinimum": 0 },
             "rise": { "type": "number" },
             "size": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
-            "seed": { "type": "number" }
+            "seed": { "type": "number" },
+            "delay": { "type": "number" }
           }
         },
         {

@@ -7,6 +7,12 @@ import { RENDER_CJS, ROOT, capture, findPython, run } from '../cli/src/env.js';
 
 const FIX = join(ROOT, 'fixtures', 'adi-parva');
 const LIMIT = 0.5;
+// Architect-approved D3 exemption: legacy story.ts freezes the contest wheel to whatever the previous rendered
+// frame left there, so its output depends on render order. Deterministic storyboard frames are exempt only while the
+// wheel is frozen (L28 from A(28,"mark")+2 = 2784 onward) and on the L28/L29 crossfade (2793..2803).
+const D3_REASON = 'legacy wheel freeze depends on render order (architect-approved, Phase 2B)';
+const D3_WHEEL = new Set();
+for (let f = 2784; f <= 2803; f++) D3_WHEEL.add(f);
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 
 export function framePlan(storyboard, words) {
@@ -68,12 +74,16 @@ export async function runParity() {
     console.log('  shot    frames  max MAD');
     let worst = 0;
     const bad = [];
+    let exemptCount = 0;
     for (const p of plan) {
-      const max = Math.max(...p.frames.map((f) => mad.get(f) ?? Infinity));
+      const counted = p.frames.filter((f) => !D3_WHEEL.has(f));
+      exemptCount += p.frames.length - counted.length;
+      const max = counted.length ? Math.max(...counted.map((f) => mad.get(f) ?? Infinity)) : 0;
       worst = Math.max(worst, max);
-      console.log(`  ${p.id.padEnd(6)}  ${String(p.frames.length).padStart(6)}  ${max.toFixed(3)}`);
-      if (max > LIMIT) { bad.push(`${p.id} (${max.toFixed(3)})`); console.log(`    frames ${p.frames.map((f) => `${f}:${(mad.get(f) ?? 0).toFixed(2)}`).join(' ')}`); }
+      console.log(`  ${p.id.padEnd(6)}  ${String(p.frames.length).padStart(6)}  ${max.toFixed(3)}${counted.length < p.frames.length ? '  (D3 wheel exemption)' : ''}`);
+      if (max > LIMIT) { bad.push(`${p.id} (${max.toFixed(3)})`); console.log(`    frames ${counted.map((f) => `${f}:${(mad.get(f) ?? 0).toFixed(2)}`).join(' ')}`); }
     }
+    if (exemptCount) console.log(`  ${exemptCount} frame(s) exempt: ${D3_REASON}`);
     const ok = bad.length === 0;
     console.log(`${ok ? 'PASS' : 'FAIL'} storyboard parity: ${frames.length} frames, max MAD ${worst.toFixed(3)} (limit ${LIMIT})${bad.length ? `; over: ${bad.join(', ')}` : ''}`);
     return { ok, frames: frames.length, worst, bad };

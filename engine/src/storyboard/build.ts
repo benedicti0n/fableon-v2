@@ -55,7 +55,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const out = add(base, p.d);
     if (!p.screen) return out;
     if (!cam) throw new Error(`screen-relative point "${p.at}" needs a camera`);
-    const right: V3 = [cam.right.x, cam.right.y, cam.right.z], up: V3 = [0, 1, 0];
+    const right: V3 = [cam.right.x, 0, cam.right.z], up: V3 = [0, 1, 0];
     const fwd: V3 = [right[1] * up[2] - right[2] * up[1], right[2] * up[0] - right[0] * up[2], right[0] * up[1] - right[1] * up[0]];
     return addScreen(out, right, up, fwd, p.screen);
   };
@@ -256,15 +256,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const moving = em.motion ? (em.id && motionTargets.has(em.id) ? null : motionFn(em.motion, em.pos, shotStart)) : null;
     const pos = em.motion ? (em.id && motionTargets.has(em.id) ? motionTargets.get(em.id)!(f) : moving!.at(f)) : em.pos ? point(em.pos, f, cam) : ([0, 0, 0] as V3);
     if (e.kind === "sparkle") {
-      if (e.until && f >= anchor(e.until, shotStart)) return;
+      if (f < a || (e.until && f >= anchor(e.until, shotStart))) return;
       const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
       const offs = e.offsets ?? [[0, 0, 0]];
       const tw = e.twinkle, stagger = e.pop?.stagger ?? 0;
       for (let i = 0; i < count; i++) {
-        const k = pop(T(f), T(a) + i * stagger, 0.18) * (tw ? 1 - tw.depth + tw.depth * Math.sin(T(f) * tw.freq + i) : 1);
+        const k = (e.static ? 1 : pop(T(f), T(a) + i * stagger, 0.18)) * (tw ? 1 - tw.depth + tw.depth * Math.sin(T(f) * tw.freq + i) : 1);
         if (k === 0) continue;
         const d = offs[i] ?? [0, 0, 0];
-        fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k);
+        fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k, { kind: e.card });
       }
     } else if (e.kind === "puff") {
       const dur = e.dur ?? 12;
@@ -298,14 +298,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     } else if (e.kind === "pigeon") {
       if (f >= a) { const flap = Math.floor(T(f) * 10) % 4, w = e.size ?? 0.9; fx(out, `pigeon|${flap}`, 512, 320, (p) => fxPigeon(p, flap / 4), pos[0], pos[1], pos[2], w, w * 0.6222); }
     } else if (e.kind === "dust") {
-      const dur = e.dur ?? 36;
-      if (f >= a && f < a + dur) { const k = (f - a) / dur, [s0, s1] = e.size ?? [1, 6], size = s0 + k * (s1 - s0); fx(out, `smoke${(e.seed ?? 0) % 3}`, 256, 256, (p) => fxSmoke(p, e.seed ?? 0), pos[0], pos[1] + k * (e.rise ?? 3), pos[2], size, size, { kind: "soft" }); }
+      const dur = (e.dur ?? 36) / 30, k = (T(f) - T(a) - (e.delay ?? 0)) / dur;
+      if (k > 0 && k < 1) { const [s0, s1] = e.size ?? [1, 6], size = s0 + k * (s1 - s0); fx(out, `smoke${(e.seed ?? 0) % 3}`, 256, 256, (p) => fxSmoke(p, e.seed ?? 0), pos[0], pos[1] + k * (e.rise ?? 3), pos[2], size, size, { kind: "soft" }); }
     } else if (e.kind === "sweat") {
       if (f >= a) for (let i = 0, n = e.count ?? 1; i < n; i++) {
         const ph = (((T(f) * (e.rate ?? 1) + i / n) % 1) + 1) % 1, size = e.size ?? 0.12;
         fx(out, "sweat", 128, 128, (p) => p.ell(64, 64, 18, 26, "#9fd4ff", 5), pos[0] + (e.spread ?? 0) * i, pos[1] - (e.drop ?? 0) * ph, pos[2], size, size);
       }
     } else if (e.kind === "halo") {
+      if (f < a) return;
       if (e.visible && (f < anchor(e.visible.from, shotStart) || f >= anchor(e.visible.to, shotStart))) return;
       const k = e.pop === undefined ? 1 : pop(T(f), T(a), e.pop), size = (e.size ?? 2.8) * k, h = (e.height ?? e.size ?? 2.8) * k;
       fx(out, "halo", 256, 256, (p) => fxHalo(p, e.color ?? "#fff0a0", e.peak ?? 1), pos[0], pos[1], pos[2], size, h, { kind: e.card ?? "soft" });
@@ -321,7 +322,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       }
     } else if (e.kind === "burst") {
       const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 3.2) * k;
-      fx(out, "burst", 500, 500, (p) => fxBurst(p, e.phase ?? 0.6, e.color ?? "#fff3b0"), pos[0], pos[1], pos[2], size, size, { kind: "glow" });
+      if (k > 0) fx(out, "burst", 500, 500, (p) => fxBurst(p, e.phase ?? 0.6, e.color ?? "#fff3b0"), pos[0], pos[1], pos[2], size, size, { kind: "glow" });
     } else if (e.kind === "fire") {
       if (e.visible && (f < anchor(e.visible.from, shotStart) || f >= anchor(e.visible.to, shotStart))) return;
       const spots = e.spots ?? (e.source === "cityTreetops"
@@ -399,7 +400,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
           } else if (x.piece === "wheel") {
             const stop = x.stopAt ? anchor(x.stopAt, start) : null;
             if (stop === null || f < stop) sets.dyn.wheel.rotation.z = t * (x.spin ?? 2.2);
-            else sets.dyn.wheel.rotation.z = ((stop - 1) / 30) * (x.spin ?? 2.2);
+            else sets.dyn.wheel.rotation.z = (stop / 30) * (x.spin ?? 2.2);
           } else if (x.piece === "bigBow") {
             const a = anchor(x.at, start), n = f - a;
             sets.dyn.bigBow.rotation.z = n >= 0 && n < (x.dur ?? 10) ? (x.amp ?? 0.15) * Math.sin(n * (x.rate ?? 2)) : 0;

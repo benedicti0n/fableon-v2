@@ -44,7 +44,7 @@ export type Actor = {
 };
 export type Sparkle = {
   kind: "sparkle"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; count?: number; offsets?: [number, number, number][];
-  pop?: { stagger?: number }; twinkle?: { freq: number; depth: number }; until?: Anchor;
+  pop?: { stagger?: number }; twinkle?: { freq: number; depth: number }; until?: Anchor; static?: boolean; card?: "cut" | "soft" | "glow" | "fire";
 };
 export type Halo = { kind: "halo"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; height?: number; pop?: number; color?: string; card?: "soft" | "glow" | "cut" | "fire"; peak?: number; visible?: { from: Anchor; to: Anchor } };
 export type Knot = { kind: "knot"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; pop?: number; bob?: number };
@@ -63,7 +63,7 @@ export type Burst = { kind: "burst"; id?: string; at: Anchor; pos: Point; size?:
 export type Fire = { kind: "fire"; id?: string; at: Anchor; pos: Point; spots?: [number, number, number, number][]; source?: "cityTreetops"; filter?: { zAfter?: number; radius?: number }; yLift?: number; sizeLift?: number; spread?: number; pop?: number; hashSalt?: number; visible?: { from: Anchor; to: Anchor } };
 export type Smoke = { kind: "smoke"; id?: string; at: Anchor; pos: Point; count?: number; area?: [number, number]; offset?: [number, number, number]; rise?: number; rate?: number; size?: [number, number]; saltX?: number; saltZ?: number; saltPhase?: number; saltSize?: number; jitter?: number };
 export type Pigeon = { kind: "pigeon"; id?: string; at: Anchor; pos: Point; motion: Motion; size?: number };
-export type Dust = { kind: "dust"; id?: string; at: Anchor; pos: Point; dur?: number; rise?: number; size?: [number, number]; seed?: number };
+export type Dust = { kind: "dust"; id?: string; at: Anchor; pos: Point; dur?: number; rise?: number; size?: [number, number]; seed?: number; delay?: number };
 export type Effect = Sparkle | Halo | Knot | Sweat | Heart | Petals | Puff | Arrow | Stars | Emblem | Lump | Mango | Splash | Bubbles | Burst | Fire | Smoke | Pigeon | Dust;
 export type PagesAction = { piece: "pages"; height?: Animated };
 export type BoatAction = { piece: "boat"; id?: string; motion: Motion; yaw?: number; roll?: number; rollBob?: { amp: number; freq: number } };

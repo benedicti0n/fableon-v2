@@ -7068,7 +7068,7 @@
         "word": "Bhima",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "deep",
       "sets": [
         "naga"
@@ -7482,7 +7482,7 @@
         "word": "Next",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "night",
       "sets": [
         "lac"
@@ -7608,7 +7608,7 @@
           ]
         },
         {
-          "who": "priestBro0",
+          "who": "adult0",
           "pos": {
             "at": "DO",
             "d": [
@@ -8720,7 +8720,7 @@
           }
         },
         {
-          "who": "priestBro1",
+          "who": "adult1",
           "pos": {
             "at": "DO",
             "d": [
@@ -9832,7 +9832,7 @@
           }
         },
         {
-          "who": "priestBro2",
+          "who": "adult2",
           "pos": {
             "at": "DO",
             "d": [
@@ -10944,7 +10944,7 @@
           }
         },
         {
-          "who": "priestBro3",
+          "who": "adult3",
           "pos": {
             "at": "DO",
             "d": [
@@ -12056,7 +12056,7 @@
           }
         },
         {
-          "who": "priestBro4",
+          "who": "adult4",
           "pos": {
             "at": "DO",
             "d": [
@@ -14285,7 +14285,7 @@
           "kind": "halo",
           "at": {
             "shot": true,
-            "offset": 0
+            "offset": -10
           },
           "pos": {
             "at": "LAC",
@@ -14304,7 +14304,7 @@
           "kind": "halo",
           "at": {
             "shot": true,
-            "offset": 0
+            "offset": -10
           },
           "pos": {
             "at": "LAC",
@@ -25446,7 +25446,9 @@
               0,
               0
             ]
-          ]
+          ],
+          "static": true,
+          "card": "glow"
         },
         {
           "kind": "arrow",
@@ -25540,7 +25542,12 @@
       "set": [
         {
           "piece": "wheel",
-          "spin": 2.2
+          "spin": 2.2,
+          "stopAt": {
+            "line": 28,
+            "word": "mark",
+            "offset": 2
+          }
         }
       ]
     },
@@ -30254,7 +30261,7 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "city"
@@ -30563,8 +30570,7 @@
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 0
+            "word": "city"
           },
           "pos": [
             28,
@@ -30577,14 +30583,14 @@
             1,
             6
           ],
-          "seed": 0
+          "seed": 0,
+          "delay": 0.0
         },
         {
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 1
+            "word": "city"
           },
           "pos": [
             33,
@@ -30597,14 +30603,14 @@
             1,
             6
           ],
-          "seed": 1
+          "seed": 1,
+          "delay": 0.05
         },
         {
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 3
+            "word": "city"
           },
           "pos": [
             38,
@@ -30617,14 +30623,14 @@
             1,
             6
           ],
-          "seed": 2
+          "seed": 2,
+          "delay": 0.1
         },
         {
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 4
+            "word": "city"
           },
           "pos": [
             43,
@@ -30637,14 +30643,14 @@
             1,
             6
           ],
-          "seed": 3
+          "seed": 3,
+          "delay": 0.15000000000000002
         },
         {
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 6
+            "word": "city"
           },
           "pos": [
             48,
@@ -30657,14 +30663,14 @@
             1,
             6
           ],
-          "seed": 4
+          "seed": 4,
+          "delay": 0.2
         },
         {
           "kind": "dust",
           "at": {
             "line": 34,
-            "word": "city",
-            "offset": 7
+            "word": "city"
           },
           "pos": [
             53,
@@ -30677,7 +30683,8 @@
             1,
             6
           ],
-          "seed": 5
+          "seed": 5,
+          "delay": 0.25
         }
       ],
       "set": [
