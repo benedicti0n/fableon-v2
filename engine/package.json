@@ -1,0 +1,22 @@
+{
+  "name": "@fableon/engine",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cartoon 3D short renderer: flat lit character cards in a three.js toon world, ink + lens blur + grade post chain",
+  "scripts": {
+    "build": "bash scripts/build.sh",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "stills": "node scripts/render.cjs stills",
+    "render": "node scripts/render.cjs"
+  },
+  "dependencies": {
+    "postprocessing": "6.37.2",
+    "three": "0.175.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.175.0",
+    "esbuild": "0.25.10",
+    "playwright": "1.56.1",
+    "typescript": "5.8.3"
+  }
+}
