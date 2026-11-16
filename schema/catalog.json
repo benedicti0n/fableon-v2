@@ -564,7 +564,7 @@
     },
     {
       "name": "deer",
-      "status": "planned",
+      "status": "implemented",
       "description": "Stag in side view (wide card); graze, shock and walk phase."
     },
     {
@@ -574,7 +574,7 @@
     },
     {
       "name": "baby",
-      "status": "planned",
+      "status": "implemented",
       "description": "Swaddled baby bundle (baby card)."
     },
     {
@@ -611,22 +611,22 @@
     },
     {
       "name": "emblem",
-      "status": "planned",
+      "status": "implemented",
       "description": "God emblem card: wheel, wind, bolt or horse."
     },
     {
       "name": "puff",
-      "status": "planned",
+      "status": "implemented",
       "description": "Dust puff; also the sage transformation."
     },
     {
       "name": "stars",
-      "status": "planned",
+      "status": "implemented",
       "description": "Four stars circling a point."
     },
     {
       "name": "arrow",
-      "status": "planned",
+      "status": "implemented",
       "description": "Arrow card travelling from one Point to another."
     },
     {

@@ -95,7 +95,8 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "who": "vyasa",                     // cast id
   "id": null,                         // optional moving-target id (Point {"at": id} follows it)
   "special": null,                    // null = person(); or "ganesha" | "agni" | "deer" | "naga" | "baby" | "pot" | "flat"
-  "params": {},                       // typed per special (see Catalog); ganesha: write, writeSpeed, puzzled, down, look, pen, ear, expr
+  "params": {},                       // typed per special: ganesha {write, writeSpeed, puzzled, down, look, pen, ear, expr};
+                                      // deer {graze, phase, expr}; baby {wrap, skin}; others are added with status implemented
   "pos": Point,                       // feet position; ballistic motion starts here
   "motion": null,                     // path or ballistic (see Motion)
   "animate": {},                      // numeric Spec fields animated over time, e.g. { "belly": Animated }
@@ -110,7 +111,7 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 }
 ```
 
-## Effect (unlit cards; implemented kinds are sparkle, halo, knot, sweat, heart and petals)
+## Effect (unlit cards; implemented: sparkle, halo, knot, sweat, heart, petals, puff, arrow, stars, emblem)
 ```jsonc
 { "kind": "sparkle", "id": null, "motion": null, "at": Anchor, "pos": Point, "size": 0.35, "count": 4, "offsets": [[dx, dy, dz]], "pop": { "stagger": 0.12 }, "twinkle": { "freq": 9, "depth": 0.2 } }
 { "kind": "halo", "at": Anchor, "pos": Point, "size": 2.8, "pop": 0.4, "color": "#fff0a0", "card": "soft" }
@@ -118,7 +119,11 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
 { "kind": "sweat", "at": Anchor, "pos": Point, "count": 3, "rate": 0.8, "spread": 0.1, "drop": 0.5, "size": 0.12 }
 { "kind": "heart", "at": Anchor, "pos": Point, "size": 0.8, "pop": 0.18, "bob": { "amp": 0.1, "freq": 0.95 } }
 { "kind": "petals", "at": Anchor, "pos": Point, "count": 70, "spread": 7 }
-// 2B adds: emblem(wheel|wind|bolt|horse), puff, stars, arrow(from,to), splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
+{ "kind": "puff", "at": Anchor, "pos": Point, "size": 2.6, "dur": 12 }
+{ "kind": "arrow", "at": Anchor, "toAt": Anchor, "from": Point, "to": Point, "size": [0.9, 0.45], "rot": -0.2 }
+{ "kind": "stars", "at": Anchor, "pos": Point, "size": [1.5, 0.79], "period": 12, "dur": 12 }
+{ "kind": "emblem", "at": Anchor, "pos": Point, "variant": "wheel", "size": 1.15, "pop": 0.18, "bob": 0.12, "until": Anchor }
+// 2B adds: splash, bubbles, burst, fire(spots|treetops), smoke, pigeon(path), mango, lump ...
 ```
 
 ## SetAction (dynamic set pieces)

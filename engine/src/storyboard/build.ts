@@ -2,7 +2,7 @@
 // hybrid reuses the hand-written ShotDef and DOF entries for shots marked "legacy": true.
 import type { Cam, ShotDef } from "../world";
 import type { Stage, CamInfo } from "../cast";
-import { who, fx, petals } from "../cast";
+import { who, fx, petals, card } from "../cast";
 import type { Sets } from "../sets";
 import type { V3 } from "../places";
 import { PLACES, PlaceName } from "../places";
@@ -14,7 +14,8 @@ import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../cor
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
-import { fxSparkle, fxKnot, fxHalo, fxHeart } from "../people";
+import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person } from "../people";
+import { fxStars, fxPuff } from "../toon";
 import { SHOTS as LEGACY_SHOTS, LEGACY_DOFS } from "../story";
 import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Beat, CamKey, Effect, Motion, Point, Shot, Storyboard } from "./types";
@@ -153,7 +154,24 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
       gnCard(out, cam, o, T(f), pos, scale);
       return;
     }
-    if (a.special) throw new Error(`special "${a.special}" is not implemented in Phase 2A (shot frame ${f})`);
+    if (a.special === "deer") {
+      const graze = num(params.graze, 0), phase = num(params.phase, 0);
+      card(out, cam, `deer|${expr}|${graze}|${phase}`, (p, light) => deer(p, { phase, graze, expr: expr === "shock" ? "shock" : "neutral", light }), pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.6 });
+      return;
+    }
+    if (a.special === "baby") {
+      card(out, cam, `baby|${String(params.wrap ?? "")}|${String(params.skin ?? "")}`, (p, light) => baby(p, { light, wrap: typeof params.wrap === "string" ? params.wrap : undefined, skin: typeof params.skin === "string" ? params.skin : undefined }), pos[0], pos[1], pos[2], { geo: "baby", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 0.6 });
+      return;
+    }
+    if (a.special === "pot") {
+      card(out, cam, "pot", (p) => jarShape(p, 300, 700, 140, 2.4, false), pos[0], pos[1], pos[2], { scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.2 });
+      return;
+    }
+    if (a.special === "flat") {
+      card(out, cam, `flat|${expr}|${st.pose ?? "stand"}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: st.pose ?? "armsUp", expr, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
+      return;
+    }
+    if (a.special) throw new Error(`special "${a.special}" is not implemented yet (shot frame ${f})`);
     const e = cast[a.who];
     const sp = { ...spec(a.who) };
     for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, shotStart);
@@ -166,8 +184,9 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
 
   const effect = (out: Stage, e: Effect, f: number, shotStart: number, cam: CamInfo) => {
     const a = anchor(e.at, shotStart);
-    const moving = e.motion ? (e.id && motionTargets.has(e.id) ? null : motionFn(e.motion, e.pos, shotStart)) : null;
-    const pos = e.motion ? (e.id && motionTargets.has(e.id) ? motionTargets.get(e.id)!(f) : moving!.at(f)) : point(e.pos, f, cam);
+    const em = e as Effect & { motion?: Motion; id?: string; pos?: Point };
+    const moving = em.motion ? (em.id && motionTargets.has(em.id) ? null : motionFn(em.motion, em.pos, shotStart)) : null;
+    const pos = em.motion ? (em.id && motionTargets.has(em.id) ? motionTargets.get(em.id)!(f) : moving!.at(f)) : em.pos ? point(em.pos, f, cam) : ([0, 0, 0] as V3);
     if (e.kind === "sparkle") {
       const count = e.count ?? e.offsets?.length ?? 1, size = e.size ?? 0.35;
       const offs = e.offsets ?? [[0, 0, 0]];
@@ -177,6 +196,27 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         if (k === 0) continue;
         const d = offs[i] ?? [0, 0, 0];
         fx(out, "sparkle", 256, 256, (p) => fxSparkle(p), pos[0] + d[0], pos[1] + d[1], pos[2] + d[2], size * k, size * k);
+      }
+    } else if (e.kind === "puff") {
+      const dur = e.dur ?? 12;
+      if (f >= a && f < a + dur) { const k = (f - a) / dur, size = e.size ?? 2.6; fx(out, `puff|${Math.round(k * 12)}`, 300, 300, (p) => fxPuff(p, k), pos[0], pos[1], pos[2], size, size, { kind: "soft" }); }
+    } else if (e.kind === "arrow") {
+      const to = anchor(e.toAt, shotStart), u = to === a ? 1 : (f - a) / (to - a);
+      if (u > 0 && u < 1) {
+        const p0 = point(e.from, f, cam), p1 = point(e.to, f, cam), [w, h] = e.size ?? [0.9, 0.45];
+        fx(out, "arrow", 256, 128, (p) => fxArrow(p), p0[0] + (p1[0] - p0[0]) * u, p0[1] + (p1[1] - p0[1]) * u, p0[2] + (p1[2] - p0[2]) * u, w, h, { rot: e.rot });
+      }
+    } else if (e.kind === "stars") {
+      const period = e.period ?? 12, dur = e.dur;
+      if (f >= a && (dur === undefined || f < a + dur)) {
+        const ph = ((f - a) / period) % 1, [w, h] = e.size ?? [1.5, 0.79];
+        fx(out, `stars|${Math.round(ph * 20)}`, 420, 220, (p) => fxStars(p, ph), pos[0], pos[1], pos[2], w, h);
+      }
+    } else if (e.kind === "emblem") {
+      const k = e.until && f >= anchor(e.until, shotStart) ? 0 : pop(T(f), T(a), e.pop ?? 0.18);
+      if (k > 0) {
+        const size = (e.size ?? 1.15) * k, draw = e.variant === "wheel" ? (p: Parameters<typeof fxWheel>[0]) => fxWheel(p) : e.variant === "wind" ? (p: Parameters<typeof fxWind>[0]) => fxWind(p, 0) : e.variant === "bolt" ? (p: Parameters<typeof fxBolt>[0]) => fxBolt(p) : (p: Parameters<typeof fxHorse>[0]) => fxHorse(p);
+        fx(out, `emblem|${e.variant}`, 256, 256, draw, pos[0], pos[1] + (e.bob ?? 0) * Math.sin(T(f) * 2.5 + pos[0]), pos[2], size, size, { kind: "glow" });
       }
     } else if (e.kind === "heart") {
       const k = pop(T(f), T(a), e.pop ?? 0.18), size = (e.size ?? 0.8) * k;
@@ -204,7 +244,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   // register moving targets before cameras/stages resolve Points that refer to them
   for (const { s, start } of shots) {
     for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
-    for (const e of s.fx ?? []) if (e.id) motionTargets.set(e.id, e.motion ? (() => { const m = motionFn(e.motion!, e.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(e.pos, f));
+    for (const e of s.fx ?? []) if (e.id) { const em = e as Effect & { motion?: Motion; id?: string; pos?: Point }; motionTargets.set(e.id, em.motion ? (() => { const m = motionFn(em.motion!, em.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(em.pos!, f)); }
     for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());
   }
   shots.forEach(({ s, start }, i) => {

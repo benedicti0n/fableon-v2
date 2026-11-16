@@ -48,7 +48,7 @@ const specials = ${JSON.stringify({
   pot: "Cooking pot drawn with jarShape (body card).",
   flat: "A person drawn lying flat on a wide card (knocked-down kings).",
 })};
-const plannedSpecial = new Set(["agni", "deer", "naga", "baby", "pot", "flat"]);
+const plannedSpecial = new Set(["agni", "naga", "pot", "flat"]);
 const effects = ${JSON.stringify({
   sparkle: "Four-point star card; per-index pop and optional twinkle.",
   halo: "Soft radial glow; card kind soft, glow or fire.",
@@ -69,7 +69,7 @@ const effects = ${JSON.stringify({
   sweat: "Sweat drop.",
   lump: "The lump of flesh card.",
 })};
-const fStatus = new Set(["sparkle", "halo", "knot", "sweat", "heart", "petals"]);
+const fStatus = new Set(["sparkle", "halo", "knot", "sweat", "heart", "petals", "puff", "arrow", "stars", "emblem"]);
 const pieces = ${JSON.stringify({
   pages: "Palm-leaf stack growing at the writing desk.",
   boat: "Satyavati's boat on the river; motion and roll.",
