@@ -60,6 +60,16 @@ const markPos = (name, sets, catalog) => {
   throw new Error(`unknown mark "${name}" (sets: ${sets.join(', ') || 'none'})`);
 };
 
+const markViewOf = (name, sets, catalog) => {
+  const [a, b] = String(name).includes('.') ? String(name).split('.', 2) : [null, String(name)];
+  for (const set of b === null ? sets : [a, ...sets.filter((x) => x !== a)]) {
+    const info = catalog.sets.find((x) => x.name === set);
+    const m = info?.marks?.find((x) => x.name === b);
+    if (m) return m.view ?? m.facing;
+  }
+  return undefined;
+};
+
 export function resolvePoint(v, sets, catalog) {
   if (Array.isArray(v)) return [v[0], v[1], v[2]];
   if (typeof v === 'string') return markPos(v, sets, catalog);
@@ -182,6 +192,9 @@ const compileActor = (entry, shot, ctx) => {
   if (a.special) out.special = a.special;
   if (a.params) out.params = compileParams(a.params, ctx.fps);
   out.pos = a.pos ? resolvePoint(a.pos, sets, ctx.catalog) : a.at ? resolvePlaced(a.at, sets, ctx.catalog) : undefined;
+  if (typeof a.at === 'string') { const v = markViewOf(a.at, sets, ctx.catalog); if (v !== undefined) out.view = v; }
+  else if (a.at && typeof a.at === 'object' && a.at.mark) { const v = markViewOf(a.at.mark, sets, ctx.catalog); if (v !== undefined) out.view = v; }
+  if (a.ride) { out.ride = a.ride; out.rideOffset = a.nudge ?? [0, 0, 0]; delete out.pos; }
   if (a.nudge && out.pos) {
     if (Array.isArray(out.pos)) out.pos = [out.pos[0] + a.nudge[0], out.pos[1] + a.nudge[1], out.pos[2] + a.nudge[2]];
     else out.pos = { ...out.pos, d: [(out.pos.d?.[0] ?? 0) + a.nudge[0], (out.pos.d?.[1] ?? 0) + a.nudge[1], (out.pos.d?.[2] ?? 0) + a.nudge[2]] };
@@ -328,12 +341,17 @@ const actorStateAt = (a, f, shot, ctx) => {
   const start = ctx.anchorFrame(shot.start);
   const w = actorWindow(a, f, start, ctx);
   const st = w.st;
-  const base = a.pos ? pointAt(a.pos, f, ctx) : [0, 0, 0];
-  const pos = a.motion ? motionAt(a.motion, f, base, ctx) : base;
+  let base = a.pos ? pointAt(a.pos, f, ctx) : [0, 0, 0];
+  if (a.ride) {
+    const sp = (shot.set ?? []).find((x) => x.id === a.ride);
+    if (!sp?.motion) throw new Error(`actor ride target "${a.ride}" has no moving set piece`);
+    base = (() => { const b = motionAt(sp.motion, f, sp.pos ? pointAt(sp.pos, f, ctx) : [0, 0, 0], ctx); const d = a.rideOffset ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; })();
+  }
+  const pos = a.motion && !a.ride ? motionAt(a.motion, f, base, ctx) : base;
   const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
   const key = a.special ? a.special : (spec.build ?? 'adult');
   const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
-  return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, entering: w.from, exiting: w.to };
+  return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, view: a.view, entering: w.from, exiting: w.to };
 };
 
 const effectStateAt = (fx, f, ctx, shot) => {
@@ -353,7 +371,7 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
       if (first === null) throw new Error(`subject ${id} is not visible at ${anchorLabel} (no visible frame before ${keyEnd})`);
       keyStart = first;
     }
-    const moving = !!a.motion;
+    const moving = !!a.motion || !!a.ride;
     const frames = moving ? Array.from({ length: Math.max(1, Math.ceil((keyEnd - keyStart) / 6)) }, (_, i) => Math.min(keyEnd - 1, keyStart + i * 6)) : [keyStart];
     const samples = frames.map((f) => actorStateAt(a, f, compiled, ctx)).filter(Boolean);
     return { ...samples[0], samples: samples.map((s) => s.pos) };
@@ -372,8 +390,15 @@ const subjectSamples = (id, compiled, shot, keyStart, keyEnd, later, ctx, anchor
     const samples = frames.map((f) => effectStateAt(fx, f, ctx, compiled));
     return { ...samples[0], samples: samples.map((s) => s.pos) };
   }
+  const setp = (compiled.set ?? []).find((x) => x.id === id);
+  if (setp && setp.motion) {
+    const start = ctx.anchorFrame(compiled.start);
+    const p = motionAt(setp.motion, keyStart, setp.pos ? pointAt(setp.pos, keyStart, ctx) : [0, 0, 0], ctx);
+    const samples = Array.from({ length: Math.max(1, Math.ceil((keyEnd - keyStart) / 6)) }, (_, i) => motionAt(setp.motion, Math.min(keyEnd - 1, keyStart + i * 6), setp.pos ? pointAt(setp.pos, keyStart + i * 6, ctx) : [0, 0, 0], ctx));
+    return { kind: 'setPiece', id, moveId: id, pos: p, samples, measure: { standing: 0.8, seated: 0.8, eye: 0.4, eyeSeated: 0.4, head: 0.3, halfWidth: 0.8 }, scale: 1, seated: false };
+  }
   const p = markPos(id, shot.sets ?? [], ctx.catalog);
-  return { kind: 'mark', id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false };
+  return { kind: 'mark', id, moveId: null, pos: p, samples: [p], measure: ctx.catalog.measure.adult, scale: 1, seated: false, view: markViewOf(id, shot.sets ?? [], ctx.catalog) };
 };
 
 const lookPointFor = (id, out, keyStart, keyEnd, ctx, shot) => {
@@ -420,11 +445,15 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       const keepout = catalog.keepout?.[sets[0]] ?? [];
       const over = k.over ? subjectSamples(k.over, out, out, f, keyEnd, [], ctx, k.at) : null;
       const toLook = k.to ? lookPointFor(k.to, out, f, keyEnd, ctx, out) : null;
-      const solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, over, toLook, setInfo: info, keepout });
+      const context = (k.with ?? []).map((id) => subjectSamples(id, out, out, f, keyEnd, [], ctx, k.at));
+      let solved;
+      try { solved = solveCamera({ key: { ...k, at: ctx.anchorFrame(parseAnchor(k.at, fps)) }, subjects, over, toLook, context, setInfo: info, keepout }); } catch (e) { throw new Error(`shot ${shot.id} key ${ki}: ${e.message}`); }
       const key = { ...solved.key, at: parseAnchor(k.at, fps), pos: solved.key.pos, look: solved.key.look, subjects: solved.key.subjects.filter((id) => (out.actors ?? []).some((a) => a.who === id) || (out.fx ?? []).some((e) => e.id === id)) };
       if (k.later) key.later = [...k.later];
       if (k.scenery) key.scenery = true;
+      if (k.with) key.with = [...k.with];
       if (k.over) key.over = k.over;
+      key.semantic = true; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if ((k.move ?? 'push') === 'follow' && primary) {

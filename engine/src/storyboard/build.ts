@@ -183,9 +183,10 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const vis = st.visible;
     if (!ignoreVisible && vis && (f < anchor(vis.from, shotStart) || f >= anchor(vis.to, shotStart))) return null;
     const p = st.pos;
-    const moving = a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
-    if (!p && !a.motion) throw new Error(`actor "${a.who}" has no pos or motion`);
-    const pos = a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f);
+    const moving = a.ride ? null : a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
+    if (!p && !a.motion && !a.ride) throw new Error(`actor "${a.who}" has no pos or motion`);
+    let pos = a.ride ? (motionTargets.get(a.ride)?.call(null, f) ?? [0, 0, 0]) : a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f);
+    if (a.ride) { const d = a.rideOffset ?? [0, 0, 0]; pos = [pos[0] + d[0], pos[1] + d[1], pos[2] + d[2]]; }
     const ap = st.appear;
     const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at, shotStart)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
     if (scale === 0) return null;
@@ -490,7 +491,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   // register moving targets before cameras/stages resolve Points that refer to them
   for (const { s, start } of shots) {
     for (const a of s.actors ?? []) if (a.id) actorById.set(a.id, { a, start });
-    for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
+    for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.ride ? (f: number) => { const b = motionTargets.get(a.ride!)?.(f) ?? [0, 0, 0]; const d = a.rideOffset ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; } : a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
     for (const e of s.fx ?? []) if (e.id) { const em = e as Effect & { motion?: Motion; id?: string; pos?: Point }; motionTargets.set(e.id, em.motion ? (() => { const m = motionFn(em.motion!, em.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(em.pos!, f)); }
     for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());
   }

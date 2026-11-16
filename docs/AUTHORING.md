@@ -184,7 +184,16 @@ Constants as implemented (`cli/src/solver.js`):
 - Occlusion: rays to every subject's head and chest are sampled against the set's keep-out volumes. The fallback order
   is camera yaw `+15`, `-15`, `+30`, `-30`; then raise 1 m; then move 15 % closer and widen fov to keep coverage. A
   camera inside a volume is treated as blocked. If all fail: `no clear view of <id> at <anchor>`.
-### Validator contract (F3)
+#### Size bands and context (F4)
+
+Sizes are screen targets: close head 40-60 %, medium head 26-42 %, full body 50-85 %, wide primary 15-50 % (others
+>=10 %), establishing listed subjects >=5 %, insert target 30-85 %. The solver centres the primary subject in its band.
+
+`"with": ["palace.tree"]` adds context that must be in frame; `"ride": "boat"` makes an actor's feet follow a moving set
+piece (plus `nudge`), so the boat path is not duplicated. `"reaction": true` marks a deliberate off-screen cutaway.
+Marks carry a derived `view` heading; `side` is relative to it.
+
+## Validator contract (F3)
 
 `fableon frames` / `validate --deep` fail on: a listed subject invisible for more than six checked frames; an
 unmarked key with no subjects (`"scenery": true` is the explicit intent for establishing, transition or effect-only

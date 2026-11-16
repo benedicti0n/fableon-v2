@@ -68,7 +68,8 @@
             42
           ],
           "facing": 180,
-          "description": "Centre of the palace courtyard."
+          "description": "Centre of the palace courtyard.",
+          "view": 177
         },
         {
           "name": "cy",
@@ -78,7 +79,8 @@
             42
           ],
           "facing": 180,
-          "description": "Palace courtyard stage point used by the fixture."
+          "description": "Palace courtyard stage point used by the fixture.",
+          "view": 177
         },
         {
           "name": "ghat",
@@ -88,7 +90,8 @@
             24.6
           ],
           "facing": 180,
-          "description": "Top of the ghat steps down to the river."
+          "description": "Top of the ghat steps down to the river.",
+          "view": 172
         },
         {
           "name": "jars",
@@ -98,7 +101,8 @@
             51
           ],
           "facing": 180,
-          "description": "Origin of the 101-jar grid in the arcade."
+          "description": "Origin of the 101-jar grid in the arcade.",
+          "view": 29
         },
         {
           "name": "mango",
@@ -108,7 +112,8 @@
             46
           ],
           "facing": 180,
-          "description": "The mango tree in the courtyard."
+          "description": "The mango tree in the courtyard.",
+          "view": 178
         },
         {
           "name": "tree",
@@ -118,7 +123,8 @@
             46
           ],
           "facing": 180,
-          "description": "The mango tree in the courtyard."
+          "description": "The mango tree in the courtyard.",
+          "view": 178
         },
         {
           "name": "plate",
@@ -128,7 +134,8 @@
             46.2
           ],
           "facing": 180,
-          "description": "The plate of sweets by the river."
+          "description": "The plate of sweets by the river.",
+          "view": 5
         },
         {
           "name": "boat",
@@ -138,7 +145,8 @@
             9.5
           ],
           "facing": 180,
-          "description": "The boat mooring on the palace river bank."
+          "description": "The boat mooring on the palace river bank.",
+          "view": 180
         }
       ]
     },
@@ -168,7 +176,8 @@
             -24.5
           ],
           "facing": 180,
-          "description": "Village front on the sand, facing the river."
+          "description": "Village front on the sand, facing the river.",
+          "view": -4
         },
         {
           "name": "hut",
@@ -178,7 +187,8 @@
             -40.4
           ],
           "facing": 180,
-          "description": "Kunti's hut doorway."
+          "description": "Kunti's hut doorway.",
+          "view": 2
         },
         {
           "name": "hutDoor",
@@ -188,7 +198,8 @@
             -40.4
           ],
           "facing": 180,
-          "description": "Kunti's hut doorway."
+          "description": "Kunti's hut doorway.",
+          "view": 2
         },
         {
           "name": "door",
@@ -198,7 +209,8 @@
             -37.2
           ],
           "facing": 180,
-          "description": "Standing spot outside Kunti's hut."
+          "description": "Standing spot outside Kunti's hut.",
+          "view": 80
         },
         {
           "name": "boats",
@@ -208,7 +220,8 @@
             -20
           ],
           "facing": 180,
-          "description": "The boats pulled up on the sand."
+          "description": "The boats pulled up on the sand.",
+          "view": 180
         },
         {
           "name": "palms",
@@ -218,7 +231,8 @@
             -35
           ],
           "facing": 180,
-          "description": "Palm cluster at the village centre."
+          "description": "Palm cluster at the village centre.",
+          "view": 180
         }
       ]
     },
@@ -248,7 +262,8 @@
             -70.25
           ],
           "facing": 180,
-          "description": "Vyasa's reed mat under the open hut."
+          "description": "Vyasa's reed mat under the open hut.",
+          "view": 138
         },
         {
           "name": "desk",
@@ -258,7 +273,8 @@
             -69.85
           ],
           "facing": 180,
-          "description": "Ganesha's writing desk and palm leaves."
+          "description": "Ganesha's writing desk and palm leaves.",
+          "view": -148
         },
         {
           "name": "hut",
@@ -268,7 +284,8 @@
             -70
           ],
           "facing": 180,
-          "description": "Centre of the open hermitage hut."
+          "description": "Centre of the open hermitage hut.",
+          "view": 154
         },
         {
           "name": "banyan",
@@ -278,7 +295,8 @@
             -64
           ],
           "facing": 180,
-          "description": "The banyan tree beside the hut."
+          "description": "The banyan tree beside the hut.",
+          "view": 180
         },
         {
           "name": "clearing",
@@ -288,7 +306,8 @@
             -60
           ],
           "facing": 180,
-          "description": "Open forest clearing in front of the hut."
+          "description": "Open forest clearing in front of the hut.",
+          "view": 180
         }
       ]
     },
@@ -318,7 +337,8 @@
             -80
           ],
           "facing": 0,
-          "description": "Centre of Pandu's forest clearing."
+          "description": "Centre of Pandu's forest clearing.",
+          "view": 175
         },
         {
           "name": "pandu",
@@ -328,7 +348,8 @@
             -76.5
           ],
           "facing": 0,
-          "description": "Pandu's aiming spot at the clearing edge."
+          "description": "Pandu's aiming spot at the clearing edge.",
+          "view": 173
         },
         {
           "name": "deer",
@@ -338,7 +359,8 @@
             -84.5
           ],
           "facing": 0,
-          "description": "The stag's grazing mark."
+          "description": "The stag's grazing mark.",
+          "view": -9
         },
         {
           "name": "kunti",
@@ -348,7 +370,8 @@
             -75.6
           ],
           "facing": 0,
-          "description": "Kunti waiting behind Pandu."
+          "description": "Kunti waiting behind Pandu.",
+          "view": 160
         },
         {
           "name": "sage",
@@ -358,7 +381,8 @@
             -84.5
           ],
           "facing": 0,
-          "description": "The sage at the deer mark after the transformation."
+          "description": "The sage at the deer mark after the transformation.",
+          "view": -9
         }
       ]
     },
@@ -388,7 +412,8 @@
             65.4
           ],
           "facing": 180,
-          "description": "The lacquer house door."
+          "description": "The lacquer house door.",
+          "view": 180
         },
         {
           "name": "hall",
@@ -398,7 +423,8 @@
             62.5
           ],
           "facing": 180,
-          "description": "The dark hall inside the house."
+          "description": "The dark hall inside the house.",
+          "view": 172
         },
         {
           "name": "tunnel",
@@ -408,7 +434,8 @@
             57
           ],
           "facing": 180,
-          "description": "The escape tunnel mouth behind the house."
+          "description": "The escape tunnel mouth behind the house.",
+          "view": -174
         },
         {
           "name": "stage",
@@ -418,7 +445,8 @@
             70
           ],
           "facing": 180,
-          "description": "The centre of the lacquer house."
+          "description": "The centre of the lacquer house.",
+          "view": -2
         },
         {
           "name": "house",
@@ -428,7 +456,8 @@
             70
           ],
           "facing": 180,
-          "description": "The lacquer house building."
+          "description": "The lacquer house building.",
+          "view": -2
         }
       ]
     },
@@ -458,7 +487,8 @@
             81
           ],
           "facing": 180,
-          "description": "Draupadi's dais at the back of the arena."
+          "description": "Draupadi's dais at the back of the arena.",
+          "view": 170
         },
         {
           "name": "bow",
@@ -468,7 +498,8 @@
             66
           ],
           "facing": 180,
-          "description": "The giant bow on its stand."
+          "description": "The giant bow on its stand.",
+          "view": 166
         },
         {
           "name": "bowstand",
@@ -478,7 +509,8 @@
             66
           ],
           "facing": 180,
-          "description": "The giant bow and its stand."
+          "description": "The giant bow and its stand.",
+          "view": 166
         },
         {
           "name": "pole",
@@ -488,7 +520,8 @@
             70
           ],
           "facing": 180,
-          "description": "The target pole at the arena centre."
+          "description": "The target pole at the arena centre.",
+          "view": 166
         },
         {
           "name": "target",
@@ -498,7 +531,8 @@
             70
           ],
           "facing": 180,
-          "description": "The target at the top of the contest pole."
+          "description": "The target at the top of the contest pole.",
+          "view": 172
         },
         {
           "name": "seats",
@@ -508,7 +542,8 @@
             70
           ],
           "facing": 180,
-          "description": "The kings' stepped seats under the side canopy."
+          "description": "The kings' stepped seats under the side canopy.",
+          "view": 180
         },
         {
           "name": "kingsLeft",
@@ -518,7 +553,8 @@
             70
           ],
           "facing": 180,
-          "description": "Left bank of seated kings."
+          "description": "Left bank of seated kings.",
+          "view": 180
         },
         {
           "name": "kingsRight",
@@ -528,7 +564,8 @@
             70
           ],
           "facing": 180,
-          "description": "Right bank of seated kings."
+          "description": "Right bank of seated kings.",
+          "view": 180
         },
         {
           "name": "floor",
@@ -538,7 +575,8 @@
             66
           ],
           "facing": 180,
-          "description": "Open arena floor between the bow and the pole."
+          "description": "Open arena floor between the bow and the pole.",
+          "view": 180
         }
       ]
     },
@@ -568,7 +606,8 @@
             -198
           ],
           "facing": 180,
-          "description": "The clearing where the city rises."
+          "description": "The clearing where the city rises.",
+          "view": 176
         },
         {
           "name": "agni",
@@ -578,7 +617,8 @@
             -182
           ],
           "facing": 180,
-          "description": "Agni's mark in front of the rising city."
+          "description": "Agni's mark in front of the rising city.",
+          "view": 0
         },
         {
           "name": "stumps",
@@ -588,7 +628,8 @@
             -196
           ],
           "facing": 180,
-          "description": "The felled stumps in the clearing."
+          "description": "The felled stumps in the clearing.",
+          "view": 177
         },
         {
           "name": "forest",
@@ -598,7 +639,8 @@
             -220
           ],
           "facing": 180,
-          "description": "The edge of the Khandava forest."
+          "description": "The edge of the Khandava forest.",
+          "view": 180
         },
         {
           "name": "palace",
@@ -608,7 +650,8 @@
             -184
           ],
           "facing": 180,
-          "description": "The rising palace of Indraprastha."
+          "description": "The rising palace of Indraprastha.",
+          "view": 9
         }
       ]
     },
@@ -638,7 +681,8 @@
             604
           ],
           "facing": 180,
-          "description": "The naga court floor."
+          "description": "The naga court floor.",
+          "view": 176
         },
         {
           "name": "court",
@@ -648,7 +692,8 @@
             604
           ],
           "facing": 180,
-          "description": "The ring of pale pillars in the naga palace."
+          "description": "The ring of pale pillars in the naga palace.",
+          "view": 176
         },
         {
           "name": "throne",
@@ -658,7 +703,8 @@
             610
           ],
           "facing": 180,
-          "description": "The naga king's end of the court."
+          "description": "The naga king's end of the court.",
+          "view": 180
         }
       ]
     }

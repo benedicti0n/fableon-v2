@@ -25,7 +25,7 @@ export type Motion = PathMotion | BallisticMotion;
 export type Push = { from: Anchor; rate?: number; punch?: number; punchAt?: Anchor };
 export type CamKey = {
   at: Anchor; cut?: boolean; dur?: number; type: "dolly" | "fixed" | "tilt";
-  pos: Point; look: Point; fov: number; roll?: number; push?: Push; lookTo?: Point; tiltDur?: number; subjects?: string[]; later?: string[]; over?: string; scenery?: boolean;
+  pos: Point; look: Point; fov: number; roll?: number; push?: Push; lookTo?: Point; tiltDur?: number; subjects?: string[]; later?: string[]; over?: string; scenery?: boolean; semantic?: boolean; size?: "close" | "medium" | "full" | "wide" | "establishing" | "insert"; with?: string[]; reaction?: boolean;
 };
 export type DofEntry = { at: Anchor; cInf: number; dur?: number; focus?: Point | null };
 export type Talk = { base: Expr; rate?: number };
@@ -37,7 +37,7 @@ export type Beat = {
   headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null; visible?: Visible | null;
 };
 export type Actor = {
-  who: string; id?: string; special?: SpecialK | null; params?: Record<string, unknown>; pos?: Point; motion?: Motion;
+  who: string; id?: string; view?: number; ride?: string; rideOffset?: [number, number, number]; special?: SpecialK | null; params?: Record<string, unknown>; pos?: Point; motion?: Motion;
   animate?: Record<string, Animated>; scale?: number; mirror?: boolean;
   noBlob?: boolean; blobScale?: number; yaw?: number | null; pose?: Pose; expr?: Expr; prop?: PropK; facing?: -1 | 0 | 1;
   look?: number; seated?: boolean; headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null;

@@ -23,9 +23,17 @@ export function runSolver() {
   const r = solveCamera({ key: { at: 'a', size: 'close', move: 'hold' }, subjects: [subject('a')], setInfo, keepout: [box] });
   ok('fallback rotates', r.debug.yawOffset !== 0, JSON.stringify(r.debug));
   ok('fallback clear', !blocked(r.key.pos, head, [box]), JSON.stringify(r.key.pos));
-  const b = { id: 'b', pos: [0, 0, -2.2], measure, scale: 1, seated: false };
-  const over = solveCamera({ key: { at: 'a', size: 'close', move: 'hold', over: 'b', side: 'left' }, subjects: [subject('a')], over: b, setInfo });
+  const wideOne = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], setInfo });
+  ok('wide band centre', wideOne.debug.primaryHeight >= 0.25 && wideOne.debug.primaryHeight <= 0.40, String(wideOne.debug.primaryHeight));
+  const ctx = { kind: 'mark', id: 'ctx', pos: [3, 1.5, 0], measure, scale: 1, seated: false };
+  const withCtx = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], context: [ctx], setInfo });
+  ok('with context widens', withCtx.debug.distance > wideOne.debug.distance, `${withCtx.debug.distance} > ${wideOne.debug.distance}`);
+  let groupMsg = ''; try { solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a', -5), subject('b', 5)], setInfo }); } catch (e) { groupMsg = e.message; }
+  ok('group too wide hint', /group too wide/.test(groupMsg) && /split into keys/.test(groupMsg), groupMsg);
+  const b = { id: 'b', pos: [0, 0, -3], measure, scale: 1, seated: false };
+  const over = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold', over: 'b', side: 'left' }, subjects: [subject('a')], over: b, setInfo });
   ok('over composition', over.key.over === 'b' && over.key.pos[2] < -1.2, JSON.stringify(over.key.pos));
+  ok('over head lower third', !!over.debug.over && over.debug.over.top.x >= 0 && over.debug.over.top.x <= 1 && over.debug.over.center > 0.5, JSON.stringify(over.debug.over));
   const left = solveCamera({ key: { at: 'a', size: 'medium', move: 'hold', third: 'left' }, subjects: [subject('a')], setInfo });
   const centre = solveCamera({ key: { at: 'a', size: 'medium', move: 'hold' }, subjects: [subject('a')], setInfo });
   ok('third shifts look', Math.abs(left.key.look[0] - centre.key.look[0]) > 0.05, `${left.key.look[0]} vs ${centre.key.look[0]}`);

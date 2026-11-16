@@ -3146,6 +3146,9 @@
               "$ref": "#/$defs/PotParams"
             }
           ]
+        },
+        "ride": {
+          "type": "string"
         }
       },
       "allOf": [

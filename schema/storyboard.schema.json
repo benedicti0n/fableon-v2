@@ -1219,6 +1219,28 @@
         },
         "scenery": {
           "type": "boolean"
+        },
+        "semantic": {
+          "type": "boolean"
+        },
+        "size": {
+          "enum": [
+            "close",
+            "medium",
+            "full",
+            "wide",
+            "establishing",
+            "insert"
+          ]
+        },
+        "with": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reaction": {
+          "type": "boolean"
         }
       }
     },
@@ -1497,6 +1519,20 @@
           "items": {
             "$ref": "#/$defs/Beat"
           }
+        },
+        "ride": {
+          "type": "string"
+        },
+        "rideOffset": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "view": {
+          "type": "number"
         }
       },
       "allOf": [

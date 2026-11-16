@@ -2,11 +2,60 @@
 // direction (`front`, degrees, 0 = +z) and its establishing box (`bounds`, world metres).
 import { ARENA, CITY, DEER, G, HERM, LAC, NAGA, PAL, VIL } from "./places";
 
-export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string };
+export type Mark = { name: string; pos: [number, number, number]; facing: number; description: string; view?: number };
 export type SetInfo = { front: number; bounds: { min: [number, number, number]; max: [number, number, number] }; marks: Mark[] };
 
 const at = (p: readonly [number, number, number], d: [number, number, number]): [number, number, number] => [p[0] + d[0], p[1] + d[1], p[2] + d[2]];
 const m = (name: string, pos: [number, number, number], facing: number, description: string): Mark => ({ name, pos, facing, description });
+
+const MARK_VIEWS: Record<string, number> = {
+  "palace.courtyard": 177,
+  "palace.cy": 177,
+  "palace.ghat": 172,
+  "palace.jars": 29,
+  "palace.mango": 178,
+  "palace.tree": 178,
+  "palace.plate": 5,
+  "palace.boat": 180,
+  "village.front": -4,
+  "village.hut": 2,
+  "village.hutDoor": 2,
+  "village.door": 80,
+  "village.boats": 180,
+  "village.palms": 180,
+  "hermitage.mat": 138,
+  "hermitage.desk": -148,
+  "hermitage.hut": 154,
+  "hermitage.banyan": 180,
+  "hermitage.clearing": 180,
+  "deer.clearing": 175,
+  "deer.pandu": 173,
+  "deer.deer": -9,
+  "deer.kunti": 160,
+  "deer.sage": -9,
+  "lac.door": 180,
+  "lac.hall": 172,
+  "lac.tunnel": -174,
+  "lac.stage": -2,
+  "lac.house": -2,
+  "arena.dais": 170,
+  "arena.bow": 166,
+  "arena.bowstand": 166,
+  "arena.pole": 166,
+  "arena.target": 172,
+  "arena.seats": 180,
+  "arena.kingsLeft": 180,
+  "arena.kingsRight": 180,
+  "arena.floor": 180,
+  "city.clearing": 176,
+  "city.agni": 0,
+  "city.stumps": 177,
+  "city.forest": 180,
+  "city.palace": 9,
+  "naga.floor": 176,
+  "naga.court": 176,
+  "naga.throne": 180
+};
 
 export const SET_INFO: Record<string, SetInfo> = {
   palace: {
@@ -104,3 +153,5 @@ export const SET_INFO: Record<string, SetInfo> = {
     ],
   },
 };
+
+for (const [set, info] of Object.entries(SET_INFO)) for (const mark of info.marks) mark.view = MARK_VIEWS[`${set}.${mark.name}`] ?? mark.facing;

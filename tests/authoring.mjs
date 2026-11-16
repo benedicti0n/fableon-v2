@@ -44,6 +44,12 @@ export function runAuthoring() {
   ok('compiled shot', a.storyboard.shots.length === 1 && a.storyboard.shots[0].actors.length === 1);
   ok('compiled talk beats', a.storyboard.shots[0].actors[0].beats?.length === 2);
   ok('compiled cast', a.storyboard.cast.kunti?.spec === 'C.kunti');
+  const rideBoard = {
+    version: 1, cast: { satyavati: { spec: 'C.satyavati' } },
+    shots: [{ id: 'R', start: '5.Her', light: 'day', sets: ['village'], actors: [{ cast: 'satyavati', id: 'satyavati', ride: 'boat', nudge: [0, 0.12, 0] }], set: [{ piece: 'boat', id: 'boat', motion: { type: 'path', keys: [['shot', 'village.front'], ['shot+2s', 'village.front']] } }], camera: [{ at: '5.Her', size: 'wide', on: ['satyavati'], move: 'hold' }] }],
+  };
+  const ride = compileBoard(rideBoard, words, catalog).storyboard.shots[0].actors[0];
+  ok('ride compiles', ride.ride === 'boat' && JSON.stringify(ride.rideOffset) === '[0,0.12,0]', JSON.stringify(ride));
   const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
   const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
   ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);
