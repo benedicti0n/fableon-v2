@@ -86,7 +86,8 @@ Actor sugar:
 - `"do": [["14.chant", { "pose": "pray", "expr": "smile_closed" }]]` adds timed overrides (beats).
 - `"enter": "13.deer"`, `"exit": "14.die"` set visibility.
 - `"appear": "16.Five"` (or `{ "at": "...", "stagger": 0.1 }`) pops the actor in; stagger is seconds.
-- `"facing": "camera" | "left" | "right" | degrees`; degrees become a yaw.
+- `"facing": "camera" | "left" | "right" | degrees`; degrees become a yaw. Prefer `face` (below) for screen direction.
+- `"face": "deer"` (actor id, mark or fx id) resolves per camera key into `facing`/`look`/`mirror` so the body/eyes and aim props point at the target; a cut to the other side flips it. It is also valid inside a `do` beat. `over` uses it automatically on the `on` subject.
 - `"at"`/`"nudge"` place an actor by mark; `"pos"` accepts any point; `"motion"` accepts path/ballistic with the same
   string anchors.
 
@@ -119,13 +120,18 @@ board. Each key lists checked frames, size, primary subject height/visibility/he
 items, errors and warnings; each finding carries a one-line fix hint. Use `--fast` for the old analytic path.
 
 Settle frames are the first safe frame after a cut/glide/tilt; mid and end-2 follow, plus every 12 frames in long keys.
-Checks are `subject hidden` (<60 % visible), `subject too small/large` (screen bands), `head cut`, `blocker` (>12 % of
-frame or >25 % overlap with the primary and at least 1 % area), `context missing` (`with` <2 % area or <40 % visible),
-the speaker-off-screen warning (talking >=1 s at <4 % unless `reaction:true`) and the measured eye-line warning.
-Semantic board keys are errors; hand-written v1 keys are warnings. Ambient effect kinds and mark proxies are exempt
-from blockers; the `over` actor is exempt while it stays in its corner.
+Checks include `subject hidden` (<60 % visible), `subject too small/large` (screen bands), `edge` (4 % side/2 % top
+head margin, silhouette top includes headwear), `head cut`, `blocker` (>12 % frame or >25 % overlap with the primary
+and at least 1 % area), `context missing`, `looks away`, `merge`, `edge intruder`, the editing rules below, the
+speaker-off-screen warning and the measured eye-line warning. Semantic board keys are errors; hand-written v1 keys are
+warnings. Ambient effect kinds and mark proxies are exempt from blockers; the `over` actor is exempt in its corner.
 
-`frames.json` sits beside the board and the v1 storyboard. It contains `coverageMs`, `keys[]` (shot, key, anchor, size,
+Editing rules: `jump cut` (same primary/size and <30 degrees side/angle), `key too short` (<18 frames), `first key late`
+(the first key must be at the shot start; a subject entering within 0.5 s counts as present), `glide with cut` (compile
+error), `action off-screen` (a non-subject beat/enter/exit/appear under 4 %; mark `"offscreen": true`), and `flat wide`
+(a single wall/ground/water/sky >55 % in a wide/establishing frame).
+
+`frames.json` is written once at `<project>/frames.json` (never `qa/`). It contains `coverageMs`, `keys[]` (shot, key, anchor, size,
 primary, checked frames, subject summaries, errors, warnings) and flat `errors`/`warnings`/`rows` arrays. Every finding
 has `code`, `subject`, `message` and a one-line `fix`; this is the Phase 3 repair-loop input.
 
@@ -178,9 +184,9 @@ suppressed). `with` is context that must be in frame but is not a subject:
 { "at": "21.Bhima", "size": "wide", "on": ["kidBhima"], "with": ["palace.tree"] }
 ```
 
-A `with` item may be a mark, set-piece id, effect id or actor id. The solver includes it while keeping the primary in
-its band; if impossible it fails `cannot frame <with> at size <size>`. Mark `palace.tree` maps to the mango-canopy world
-volume for measurement (`context` on the catalog mark); a fire effect must carry an `id` (e.g. `"forestFire"`).
+A `with` item may be a mark, set-piece id, effect id or actor id. The solver frames a mark's world `box` while keeping
+the primary in its band; if impossible it fails `cannot frame <with> at size <size>`. Context coverage uses the mark's
+own `ids` (e.g. mango trunk + canopy), not a proxy alias. A fire effect must carry an `id` (e.g. `"forestFire"`).
 
 ### Screen targets (calibrated)
 
@@ -190,16 +196,16 @@ only need the floor.
 
 | size | metric | band | floor | centre |
 |---|---|---:|---:|---:|
-| close | head | 25–60 % | 25 % | 42.5 % |
-| medium | head | 12–42 % | 12 % | 27 % |
-| full | body | 30–85 % | 30 % | 57.5 % |
-| wide | body, primary | 15–50 % | 15 % | 32.5 % |
+| close | head | 25–60 % | 25 % | 26.2 % |
+| medium | head | 12–42 % | 12 % | 15.8 % |
+| full | body | 30–85 % | 30 % | 33.8 % |
+| wide | body, primary | 15–50 % | 15 % | 23.8 % |
 | wide | body, other subjects | — | 10 % | — |
 | establishing | body, listed subjects | ≥ 5 % | 5 % | set bounds |
-| insert | target box | 30–85 % | 30 % | 57.5 % |
+| insert | fill | 55–90 % | 55 % | 72.5 % |
 
-The floors were calibrated against the 38 acted keys of the hand-tuned full fixture (the original synthetic floors
-rejected all six close and 8/9 medium reference keys). If the key's subjects cannot all reach the floor inside 9:16, compile
+The targets are the reference film's per-class medians; the floors were calibrated against its acted keys (the original
+synthetic floors rejected all six close and 8/9 medium keys). If the key's subjects cannot all reach the floor inside 9:16, compile
 fails with `group too wide for a vertical frame (<width> m)`; split the key, pan, curve the row or reduce spacing. The
 solver never shrinks silently.
 
@@ -212,9 +218,9 @@ solver never shrinks silently.
 - `"to": "<id or mark>"` with `move: "tiltUp" | "tiltDown" | "pan"` becomes a v1 tilt key whose `lookTo` is the target's
   eye (or mark position); `move: "reveal"` compiles to two keys: the start framing at the anchor and the target framing
   at `glide` seconds later.
-- `size: "insert"` on a mark/prop frames the mark. Use `fov` to fit a wide prop (S27 uses `wide` + `fov:75` for the
-  giant bow). New marks: `arena.bowstand`, `arena.target`, `palace.tree`, `lac.house`, `village.hutDoor`,
-  `city.palace`.
+- `size: "insert"` frames a mark's world `box` by fill (55-90 %); a long flat prop like the 5.2 m bow fits without a
+  `fov` override. Mark boxes exist for `palace.tree`, `arena.bow`, `arena.pole`, `lac.house`, `city.forest` and related
+  marks.
 - The solver writes `type`, `pos`, `look`, `fov`, `roll`, `push`/`tilt`, the default DOF entry and `subjects` on the
   v1 camera key.
 
