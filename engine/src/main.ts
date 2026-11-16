@@ -205,7 +205,7 @@ function coverageFrame(f: number, opts: any = {}) {
   renderer.setRenderTarget(null); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace;
   let png = "";
   if (opts.png) { const img = covCtx.createImageData(COV_W, COV_H); for (let y = 0; y < COV_H; y++) for (let x = 0; x < COV_W; x++) { const o = ((COV_H - 1 - y) * COV_W + x) * 4, q = (y * COV_W + x) * 4; img.data[q] = raw[o]; img.data[q + 1] = raw[o + 1]; img.data[q + 2] = raw[o + 2]; img.data[q + 3] = 255; } covCtx.putImageData(img, 0, 0); png = covCanvas.toDataURL("image/png"); }
-  return { frame: f, shot: shot.id, ms: performance.now() - t0, ids, people: items.filter((i) => i.person), subjects: visible, items };
+  return { frame: f, shot: shot.id, ms: performance.now() - t0, ids, people: items.filter((i) => i.person), subjects: visible, items, png };
 }
 (window as unknown as Record<string, unknown>).coverageFrame = coverageFrame;
 

@@ -51,8 +51,10 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--compare <dir>', 'comparison project folder')
     .option('--shots <ids>', 'comma-separated shot ids')
-    .option('--out <file>', 'output sheet path')
-    .action((opts) => reviewCommand(opts.project, opts.compare, opts.shots, opts.out));
+    .option('--out <file>', 'output sheet path or split directory')
+    .option('--coverage', 'include coverage ID images')
+    .option('--split', 'also write one image per shot')
+    .action((opts) => reviewCommand(opts.project, opts.compare, opts.shots, opts.out, { coverage: opts.coverage, split: opts.split }));
 
   program
     .command('frames')
