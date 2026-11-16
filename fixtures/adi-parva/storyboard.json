@@ -24863,7 +24863,7 @@
         "word": "Kings",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
@@ -25274,7 +25274,7 @@
         "word": "Arjuna",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "day",
       "sets": [
         "arena"
@@ -25558,7 +25558,7 @@
         "word": "They",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
