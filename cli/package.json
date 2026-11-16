@@ -1,0 +1,16 @@
+{
+  "name": "@fableon/cli",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fableon command line: environment doctor, project workspace and the fixture pipeline",
+  "type": "module",
+  "bin": {
+    "fableon": "./bin/fableon.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^14.0.0"
+  }
+}
