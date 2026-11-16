@@ -65,3 +65,17 @@ story.ts (parity: 80 frames, max MAD 0.000). Timings on the same M1, 2 workers:
 Final outputs: 1440x2560, 30 fps, 3639 frames, 121.300 s, AAC 48 kHz; `final.mp4` 183 MB; project folder 685 MB
 (render clips 349 MB, audio 133 MB, QA sheets 21 MB). The full final render completed with 2 workers on the 8 GB
 machine; memory did not force a fallback to `--workers 1`.
+
+## Phase 2B — storyboard-only engine (full acceptance)
+
+Fresh `fableon init` from `fixtures/adi-parva` (no legacy shots, no pop allowlist), same M1, 2 workers, Metal path.
+Both runs are one `fableon all` from a clean workspace; QA reads the planned `events.json` (214 intended events).
+
+| Run | Wall | Output | QA |
+|---|---:|---|---|
+| preview 540x960, `work/adi` | 148.3 s | 3639 frames, 121.300 s, 48 MB `final.mp4`, project 316 MB | PASS — black 0, white 0, frozen 0, unexplained pops 0 |
+| **final 1440x2560, `work/adi-final`** | **853.8 s** | 3639 frames, 121.300 s, 175 MB `final.mp4`, project 678 MB | PASS — black 0, white 0, frozen 0, unexplained pops 0 |
+
+The final run is ~36% slower than the Phase 2A 627 s run; the Phase 2A number was measured with only 10 shots in
+storyboard mode and no planned-event export, and this run shares the machine with other work. Render-quality output
+and the QA summary are unchanged.
