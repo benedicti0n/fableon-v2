@@ -550,5 +550,13 @@
         }
       ]
     }
+  ],
+  "research-queries": [
+    {
+      "queries": [
+        "moon made of green cheese legend",
+        "village moon polishing tradition"
+      ]
+    }
   ]
 }

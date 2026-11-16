@@ -55,8 +55,18 @@ path, retrievedAt, sha256 and chars. Facts carry claims, kinds, source quotes an
 quote as a normalised verbatim substring of the named source; quotes shorter than 30 characters or quotes that do not
 occur mark the fact `verified: false`, and the script may not cite it.
 
-Web research is opt-in (`research.web: true`) and requires `TAVILY_API_KEY`; the live Savitri run used a file source.
-The file-source path is the tested one in this phase.
+Web research is opt-in: set `"research": {"web": true, ...}` in `project.json` **and** provide `TAVILY_API_KEY`. The
+model proposes up to five queries; each query calls Tavily and the results are stored in `research/sources.json` with
+`kind: "web"`, `url`, `title`, `retrievedAt`, `content`, `sha256` and `chars` (file sources keep their `path`). Web
+content goes through the same normalised verbatim-quote check as file sources. The total is capped by
+`research.maxSources`; duplicate URLs are dropped. Without the key the stage keeps the file sources and reports that
+web search did not run. The Savitri run used a file source, not Tavily.
+
+Tavily format verified against <https://docs.tavily.com/documentation/api-reference/endpoint/search> on 2026-11-16:
+`POST https://api.tavily.com/search` with `Authorization: Bearer <key>` and JSON
+`{"query": "...", "search_depth": "basic", "max_results": N}`; the response is
+`{"query","results":[{"title","url","content","score",...}],"response_time",...}`. We keep `content` (the snippets the
+docs say are pulled from the source) because the quote check must run against text we actually received.
 
 ## Models, cache and budgets
 

@@ -1,0 +1,45 @@
+{
+  "brief": [
+    {
+      "brief": "# Brief \u2014 The Moon Cheese\n\nAudience: curious adults on a vertical feed.\nTone: deadpan and witty.\nHook options: the moon as a cheese wheel; a village that polishes it.\nMust include: a promise with no unsend button.\nAvoid: on-screen text and unsupported claims.\nTarget: 20 seconds."
+    }
+  ],
+  "research-queries": [
+    {
+      "queries": [
+        "moon made of green cheese legend",
+        "village moon polishing tradition"
+      ]
+    }
+  ],
+  "research": [
+    {
+      "facts": [
+        {
+          "id": "F1",
+          "claim": "The old village said the moon was made of green cheese.",
+          "kind": "tradition",
+          "sources": [
+            {
+              "source": "S2",
+              "quote": "the moon was said to be made of green cheese"
+            }
+          ],
+          "confidence": "high"
+        },
+        {
+          "id": "F2",
+          "claim": "A fox jumped over the lazy dog and the village celebrated for seven days.",
+          "kind": "event",
+          "sources": [
+            {
+              "source": "S1",
+              "quote": "a fox jumped over the lazy dog and the village celebrated"
+            }
+          ],
+          "confidence": "low"
+        }
+      ]
+    }
+  ]
+}

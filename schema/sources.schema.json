@@ -18,13 +18,14 @@
           "kind": { "enum": ["file", "web"] },
           "path": { "type": "string" },
           "url": { "type": "string" },
+          "content": { "type": "string", "minLength": 1 },
           "retrievedAt": { "type": "string" },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
           "chars": { "type": "integer", "minimum": 0 }
         },
         "oneOf": [
           { "required": ["path"], "not": { "required": ["url"] } },
-          { "required": ["url"], "not": { "required": ["path"] } }
+          { "required": ["url", "content"], "not": { "required": ["path"] } }
         ]
       }
     }

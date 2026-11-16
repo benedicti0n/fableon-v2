@@ -21,6 +21,9 @@ export async function runPipelineTests() {
   process.env.DEEPSEEK_API_KEY = 'sk-test-never-log-this';
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-pipeline-'));
   const gateTmp = mkdtempSync(join(tmpdir(), 'fableon-gate-'));
+  const webTmp = mkdtempSync(join(tmpdir(), 'fableon-web-'));
+  const oldTavily = process.env.TAVILY_API_KEY;
+  const oldFetch = globalThis.fetch;
   try {
     const created = newProject(tmp, { topic: 'The Moon Cheese', seconds: 20, voice: 'am_michael' });
     copyFileSync(join(ROOT, 'tests', 'fixtures', 'pipeline', 'mini', 'sources', 'moon.md'), join(tmp, 'research', 'sources', 'moon.md'));
@@ -111,11 +114,42 @@ export async function runPipelineTests() {
     let gateMsg = '';
     try { await new PipelineRunner(gateTmp, gp, { to: 'research' }).run(); } catch (e) { gateMsg = e.message; }
     ok('approval gate', /waiting for brief approval/.test(gateMsg), gateMsg);
+
+    // Optional web research: mock model queries + a mocked Tavily response (same quote check as files).
+    const w = newProject(webTmp, { topic: 'The Moon Cheese', seconds: 20, voice: 'am_michael' });
+    copyFileSync(join(ROOT, 'tests', 'fixtures', 'pipeline', 'mini', 'sources', 'moon.md'), join(webTmp, 'research', 'sources', 'moon.md'));
+    const wp = { ...w.project, research: { web: true, maxSources: 8 }, models: { default: { provider: 'mock', model: 'mock-v1' } }, autopilot: true };
+    writeProject(webTmp, wp);
+    process.env.FABLEON_MOCK_DIR = join(ROOT, 'tests', 'fixtures', 'llm', 'web');
+    process.env.TAVILY_API_KEY = 'tvly-test-never-log-this';
+    const tavilyCalls = [];
+    globalThis.fetch = async (url, init = {}) => {
+      const body = JSON.parse(init.body ?? '{}');
+      tavilyCalls.push({ url: String(url), auth: init.headers?.Authorization, body });
+      const n = tavilyCalls.length;
+      return new Response(JSON.stringify({
+        query: body.query,
+        results: [{ title: `Moon source ${n}`, url: `https://example.org/moon-${n}`, score: 0.9, content: 'In the old village of Vela, the moon was said to be made of green cheese, and the villagers polished it every spring.' }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    };
+    await new PipelineRunner(webTmp, wp, { to: 'research', autopilot: true }).run();
+    globalThis.fetch = oldFetch;
+    const ws = readJson(join(webTmp, 'research', 'sources.json'), 'sources');
+    const wf = readJson(join(webTmp, 'research', 'facts.json'), 'facts');
+    const webSources = ws.sources.filter((s) => s.kind === 'web');
+    ok('web sources saved', webSources.length === 2 && webSources.every((s) => s.url && s.content && s.sha256), JSON.stringify(ws.sources.map((s) => s.kind)));
+    ok('web quote verified', wf.facts.find((f) => f.id === 'F1')?.verified === true);
+    ok('web fake quote unverified', wf.facts.find((f) => f.id === 'F2')?.verified === false);
+    ok('tavily requests', tavilyCalls.length === 2 && tavilyCalls.every((c) => c.url === 'https://api.tavily.com/search' && c.auth === 'Bearer tvly-test-never-log-this' && c.body.search_depth === 'basic' && c.body.max_results >= 1), JSON.stringify(tavilyCalls.map((c) => c.url)));
+    ok('tavily key not logged', !readFileSync(join(webTmp, 'logs', 'calls.jsonl'), 'utf8').includes('tvly-test-never-log-this'));
   } finally {
     if (oldMock === undefined) delete process.env.FABLEON_MOCK_DIR; else process.env.FABLEON_MOCK_DIR = oldMock;
     if (oldKey === undefined) delete process.env.DEEPSEEK_API_KEY; else process.env.DEEPSEEK_API_KEY = oldKey;
+    if (oldTavily === undefined) delete process.env.TAVILY_API_KEY; else process.env.TAVILY_API_KEY = oldTavily;
+    globalThis.fetch = oldFetch;
     rmSync(tmp, { recursive: true, force: true });
     rmSync(gateTmp, { recursive: true, force: true });
+    rmSync(webTmp, { recursive: true, force: true });
   }
   return { ok: errors.length === 0, errors, checks };
 }
