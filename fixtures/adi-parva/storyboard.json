@@ -29405,7 +29405,7 @@
         "word": "Kunti",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29517,7 +29517,7 @@
         "word": "Her",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -29814,7 +29814,7 @@
         "word": "You",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "golden",
       "sets": [
         "village"
@@ -30702,7 +30702,7 @@
         "word": "The",
         "offset": -2
       },
-      "legacy": true,
+      "legacy": false,
       "light": "night",
       "sets": [
         "city"
