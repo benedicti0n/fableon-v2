@@ -72,6 +72,19 @@ Tavily format verified against <https://docs.tavily.com/documentation/api-refere
 `{"query","results":[{"title","url","content","score",...}],"response_time",...}`. We keep `content` (the snippets the
 docs say are pulled from the source) because the quote check must run against text we actually received.
 
+## Hindi script v2
+
+Hindi projects use a separate script prompt: conversational Hindustani in Devanagari with an English `gloss` per line,
+short lines, and a line count scaled from `seconds / 3.2` (the measured rate then sets the word budget). Every line
+carries `delivery` and catalog look fields (set, mark, character ids, pose, expression, prop). The deterministic checks
+enforce the beat order, the two-line good-news/bad-news deadpan pair, exactly one explain analogy, unique facts per
+action/snap/consequence run, catalog look items, and hook/twist delivery. Repeated fact lines and over-long Hindi lines
+are normalised (merged/split) before validation.
+
+Research adds `supports: yes|partly|no` per fact; only `yes` facts are citable. The fact-check prompt compares the
+Hindi line with the English facts through its gloss and adds a craft verdict (`ok`/`weak`); weak or unsupported lines
+go through the same selective revision/no-op guard. The fixture is `fixtures/savitri-hi/`.
+
 ## Models, cache and budgets
 
 `project.json.models.default` selects the provider; per-stage overrides are `brief`, `research`, `script`, `factcheck`,
@@ -96,14 +109,18 @@ tokens per run.
 
 `fableon voice` remains the fixture-compatible Kokoro command. A pipeline project selects a provider with
 `project.voice.provider` (or the legacy `engine`): `kokoro` for English or `elevenlabs` for Hindi. ElevenLabs uses
-`/v1/text-to-speech/{voice_id}/with-timestamps`, synthesizes one request per BEAT block, stitches blocks with
-`previous_text`/`next_text`, inserts 0.26 s beat pauses and maps character alignment to `words.json`. Every take is
+`/v1/text-to-speech/{voice_id}/with-timestamps`. For v3 it sends the whole script in one request when the rendered
+text is within the documented 5,000-character limit, then cuts exact pause silences at word gaps from the alignment;
+per-block requests are the fallback. v3 rejects `previous_text`/`next_text`; v2/flash use that stitching and SSML
+breaks. Beat alignment is mapped to `words.json`. Every take is
 cached by request hash; `voice.maxCharsPerRun` (default 10,000) caps live characters and `logs/calls.jsonl` records
 characters and cost. See `docs/VOICES.md` for the verified API facts and prices.
 
 Script lines can carry `delivery` (`tone`, `pauseBefore`, `pauses`, `emphasis`); every referenced word is validated
 against the line. ElevenLabs renders v3 tone tags/ellipses and v2 SSML breaks/per-tone settings, inserts exact local
 silence for `pauseBefore`, and strips markup before `words.json`. `voice.tones` stores the per-tone stability/style/speed.
+The measured `voice.rate` (words/s, characters/s) sets the script word budget and the provider speed, then the ±10 %
+atempo fit handles the remainder.
 
 After synthesis the stage applies the same length fit: if the natural duration is within ±10 % of
 `project.seconds`, pitch-preserving `ffmpeg atempo` goes to the exact target and `words.json` is scaled; outside the

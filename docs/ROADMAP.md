@@ -23,6 +23,11 @@ Project folder format + stage dependency graph with input hashing and invalidati
 
 Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later phase, so new topics must be stageable in those sets for now. Phase 3A's script catalog card enforces that.
 
+## Voice providers (from Phase 3A-2)
+- Add Sarvam Bulbul as a cheaper India-native provider.
+- Add a local forced aligner for providers that return audio without word timings.
+- Add voice/provider/model selection, audition playback and per-tone delivery controls to the UI.
+
 ## Phase 4 — Backend API
 Node server: projects, artifacts, stages, jobs (REST + WebSocket progress), file serving for audio/video/stills.
 
