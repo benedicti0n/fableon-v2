@@ -10,6 +10,11 @@ import { LightName } from "./lights";
 import { Stage, CamInfo, who, card, fx, petals, hh, lidAt, FPS } from "./cast";
 import { CITY_TREES } from "./sets";
 import { C, KIDS, KAURAVA } from "./castlist";
+import { makeAnchors, Wd } from "./core/anchors";
+import { clamp01, glide, pop, talk, writeT } from "./core/timing";
+import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick } from "./core/camera";
+import { gnCard } from "./core/specials";
+import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof, shotAt } from "./core/shotlist";
 import {
   fxHalo, Spec, Opts, Pose, ganesha, agni, deer, naga, baby, person, fxWheel, fxWind, fxBolt, fxHorse, fxLump, fxBubble, fxSparkle, fxKnot, fxHeart,
   fxFire, fxSmoke, fxPigeon, fxArrow, fxMango, jarShape,
@@ -17,58 +22,13 @@ import {
 import { Pen, Expr, fxStars, fxBurst, fxSplash, fxPuff, fxRing } from "./toon";
 
 // ---------------- words ----------------
-type Wd = { w: string; a: number; b: number; line: number };
 const WS = WORDS as Wd[];
-const norm = (s: string) => s.toLowerCase().replace(/[^a-z']/g, "");
-/** frame where `word` (the nth such word) of script line `line` starts */
-export const A = (line: number, word: string, nth = 0) => {
-  const c = WS.filter((w) => w.line === line && norm(w.w) === norm(word));
-  if (!c[nth]) throw new Error(`no word ${line}:${word}`);
-  return Math.max(0, Math.round(c[nth].a * FPS));
-};
-const END = Math.round(WS[WS.length - 1].b * FPS);
-export const TOTAL = END + 36;
-/** cuts land 2 frames before the word */
-const K = (line: number, word: string, nth = 0) => Math.max(0, A(line, word, nth) - 2);
+const { A, K, END, TOTAL, T } = makeAnchors(WS);
+export { A, TOTAL };
 
 // ---------------- helpers ----------------
-export const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
-export const smooth = (x: number) => { const u = clamp01(x); return u * u * (3 - 2 * u); };
-export const glide = (u: number) => { const x = clamp01(u); return x * x * x * (x * (6 * x - 15) + 10); };
-const ease = (f: number, f0: number, n: number) => smooth((f - f0) / n);
-type Shot = Partial<Cam> & { pos: V3; look: V3 };
-type Key = { f: number; dur?: number; cut?: boolean; s: (f: number) => Shot };
-const full = (c: Shot): Cam => ({ fov: 40, roll: 0, ...c });
-const mixC = (a: Cam, b: Cam, k: number): Cam => ({
-  pos: a.pos.map((v, i) => v + (b.pos[i] - v) * k) as V3, look: a.look.map((v, i) => v + (b.look[i] - v) * k) as V3,
-  fov: a.fov + (b.fov - a.fov) * k, roll: a.roll + (b.roll - a.roll) * k,
-});
-const run = (keys: Key[]) => (f: number) => {
-  let cur = full(keys[0].s(f));
-  for (let i = 1; i < keys.length; i++) {
-    const k = keys[i];
-    if (f < k.f) break;
-    cur = k.cut ? full(k.s(f)) : mixC(cur, full(k.s(f)), glide((f - k.f) / (k.dur ?? 24)));
-  }
-  return cur;
-};
-const pushK = (f: number, f0: number, rate: number, punch = 0, n = 35) => {
-  const x = Math.max(0, f - f0);
-  let s = rate * x;
-  if (punch > rate) for (let i = 0; i < Math.min(x, n); i++) s += (punch - rate) * Math.max(0, Math.min(1, (i + 0.5) / 8, (n - i - 0.5) / 8));
-  return Math.exp(-s);
-};
-/** dolly push toward the look point from frame f0 */
-const dolly = (pos: V3, look: V3, f0: number, rate = 0.0025, rest: Partial<Cam> = {}, punch = 0, pf = -1) => (f: number): Shot => {
-  const k = pushK(f, f0, rate) * (pf >= 0 ? pushK(f, pf, 0, punch, 30) : 1);
-  return { pos: [look[0] + (pos[0] - look[0]) * k, look[1] + (pos[1] - look[1]) * k, look[2] + (pos[2] - look[2]) * k], look, ...rest };
-};
 const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const at = (base: V3, dx: number, dy: number, dz: number): V3 => [base[0] + dx, base[1] + dy, base[2] + dz];
-const T = (f: number) => f / FPS;
-/** talking mouth: cycles open shapes while speaking */
-const talk = (t: number, base: Expr = "neutral"): Expr => (["grin", base, "relief_open", base, "grin", "smile"] as Expr[])[Math.floor(t * 9) % 6];
-const pop = (t: number, t0: number, d = 0.18) => { const u = clamp01((t - t0) / d); return u < 1 ? Math.sin(u * Math.PI * 0.5) * (1 + 0.25 * Math.sin(u * Math.PI)) : 1; };
 
 // ---------------- places of the characters ----------------
 const HFLOOR = G + 0.33;
@@ -88,14 +48,12 @@ const BROS = [C.yudhi, C.bhima, C.arjuna, C.nakula, C.sahadeva];
 const KBROS = [KIDS.yudhi, KIDS.bhima, KIDS.arjuna, KIDS.nakula, KIDS.sahadeva];
 
 // ---------------- shots ----------------
-type Def = Omit<ShotDef, "id" | "a" | "b"> & { from: number; dof?: Dof[] };
-type Dof = { f: number; dur?: number; cInf: number; focus?: (f: number) => V3 };
-const defs: Def[] = [];
-const shot = (from: number, light: LightName, sets: string[], cam: Key[], stage: ShotDef["stage"], extra: Partial<Def> = {}) =>
+type LocalDef = Omit<ShotDef, "id" | "a" | "b"> & { from: number; dof?: Dof[] };
+const defs: LocalDef[] = [];
+const shot = (from: number, light: LightName, sets: string[], cam: Key[], stage: ShotDef["stage"], extra: Partial<LocalDef> = {}) =>
   defs.push({ from, light, sets, cam: run(cam), stage, ...(sets.includes("hermitage") ? { sunAz: 115, sunEl: 18 } : {}), ...extra });
 const gn = (out: Stage, cam: CamInfo, o: Parameters<typeof ganesha>[1], t: number, pos: V3 = GN, sc = 0.85) =>
-  card(out, cam, `gan|${JSON.stringify(o)}|${lidAt(t, 77)}`, (p, light) => { ganesha(p, { ...o, light, blink: lidAt(t, 77) }); }, pos[0], pos[1], pos[2], { scale: sc, blobScale: 1.6, mirror: true });
-const writeT = (t: number, k = 1.6) => (t * k) % 1;
+  gnCard(out, cam, o, t, pos, sc);
 
 // ===== 0: hook — Ganesha writing at speed =====
 const L1 = K(1, "Vyasa");
@@ -662,56 +620,25 @@ function poseNectar(s: import("./sets").Sets, f: number) {
 const hideJars = (s: import("./sets").Sets) => { s.dyn.jars.visible = s.dyn.lids.visible = false; };
 
 // ---------------- assemble ----------------
-defs.sort((a, b) => a.from - b.from);
-export const SHOTS: ShotDef[] = defs.map((d, i) => {
-  const a = i === 0 ? 0 : d.from, b = i + 1 < defs.length ? defs[i + 1].from : TOTAL;
-  const pose = d.pose;
-  return { ...d, id: i + 1, a, b, pose: (t: number, f: number, s: import("./sets").Sets) => {
-    hideJars(s); s.dyn.city.visible = false; s.dyn.ladduPlate.visible = false; s.dyn.pages.scale.set(1, 0.3, 1);
-    pose?.(t, f, s);
-  } };
-});
-/** crossfades at place / time-of-day changes (frames), keyed by the incoming shot id */
-const xf: Record<number, number> = {};
-SHOTS.forEach((s, i) => { if (i && (SHOTS[i - 1].light !== s.light)) xf[s.id] = 10; });
-export const XFADE = xf;
+export const SHOTS: ShotDef[] = assembleShots(defs, TOTAL);
+export const XFADE = crossfades(SHOTS, 10);
 export const FLASH_AT = L1;
-export const shotAt = (f: number) => SHOTS.find((s) => f >= s.a && f < s.b) ?? SHOTS[SHOTS.length - 1];
-export const layersAt = (f: number): { id: number; alpha: number }[] => {
-  for (const s of SHOTS) {
-    const x = XFADE[s.id];
-    if (x && f >= s.a - x / 2 && f < s.a + x / 2) return [{ id: s.id - 1, alpha: 1 }, { id: s.id, alpha: (f - (s.a - x / 2) + 1) / (x + 1) }];
-  }
-  return [{ id: shotAt(f).id, alpha: 1 }];
-};
+export { shotAt };
+export const layersAt = (f: number) => layersAtShots(SHOTS, XFADE, f);
 
 // ---------------- lens ----------------
 const DOFS: Dof[] = defs.flatMap((d) => d.dof ?? [{ f: d.from, cInf: 0 }]).sort((a, b) => a.f - b.f);
-export const dofAt = (f: number) => {
-  let i = 0; while (i + 1 < DOFS.length && f >= DOFS[i + 1].f) i++;
-  const d = DOFS[i], p = DOFS[Math.max(0, i - 1)];
-  const k = d.dur ? Math.min(1, (f - d.f) / d.dur) : 1;
-  return { cInf: p.cInf + (d.cInf - p.cInf) * k, focus: d.focus };
-};
+/** sorted DOF list, exported for the storyboard hybrid (legacy shots reuse their hand-written entries) */
+export const LEGACY_DOFS = DOFS;
+export const dofAt = (f: number) => dofAtList(DOFS, f);
 
 // ---------------- impact kicks ----------------
-export const KICKS: [number, number][] = [
+export const KICKS: Kick[] = [
   [A(8, "vows"), 0.6], [A(13, "deer"), 0.8], [A(13, "die"), 0.7], [A(15, "calls"), 0.4], [A(15, "three"), 0.4], [A(15, "gods"), 0.4], [A(15, "twins"), 0.6],
   [A(17, "lump"), 0.8], [A(19, "Out"), 0.5], [A(19, "sister"), 0.6], [A(21, "shaking"), 0.5], [A(21, "shaking") + 9, 0.5], [A(21, "shaking") + 18, 0.6],
   [A(22, "river") - 3, 1.0], [A(23, "stronger"), 0.8], [A(25, "it"), 0.8], [A(27, "thrown"), 1.2], [A(28, "mark") + 2, 1.0], [A(31, "married"), 0.4],
   [A(35, "ghee"), 0.6], [A(36, "grandfather"), 0.7],
 ];
-export const kickAt = (f: number) => {
-  let a = 0;
-  for (const [f0, g] of KICKS) { const n = f - f0; if (n >= 0 && n < 7) a += g * (n % 2 ? -1 : 1) * (1 - n / 7) ** 1.5; }
-  return a;
-};
-export const kickCam = (f: number, c: Cam): Cam => {
-  const a = kickAt(f);
-  if (!a) return c;
-  const d: V3 = [c.look[0] - c.pos[0], c.look[1] - c.pos[1], c.look[2] - c.pos[2]];
-  const L = Math.hypot(...d), h = Math.hypot(d[0], d[2]) || 1;
-  const m = (3 / 640) * Math.tan((c.fov * Math.PI) / 360) * L * a;
-  return { ...c, look: [c.look[0] - (d[2] / h) * m, c.look[1] + 0.6 * m, c.look[2] + (d[0] / h) * m], roll: c.roll + a * 0.004 };
-};
+export const kickAt = (f: number) => kickAtWith(f, KICKS);
+export const kickCam = (f: number, c: Cam): Cam => kickCamWith(f, c, KICKS);
 export { HFLOOR };
