@@ -24,7 +24,7 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
   const fitMode = voice.fit ?? (provider === 'elevenlabs' && /^eleven_v3/.test(voice.model ?? '') ? 'natural' : 'exact');
   const script = existsSync(join(projectDir, 'script.json')) ? readJson(join(projectDir, 'script.json')) : null;
   const planned = script ? plannedPauseSeconds(script) : 0;
-  const baseSpeed = voice.settings?.speed ?? voice.speed ?? 1;
+  const baseSpeed = Number(voice.pace) || voice.settings?.speed || voice.speed || 1;
   const voiceFor = (speed = baseSpeed) => ({
     ...voice, language,
     settings: { ...(voice.settings ?? {}), ...(provider === 'elevenlabs' ? { speed } : {}) },

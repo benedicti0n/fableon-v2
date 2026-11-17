@@ -176,7 +176,7 @@ function chooseAlignment(blockText, block) {
   return { alignment: original ? block.alignment : block.normalizedAlignment ?? block.alignment, normalized: !original && !!block.normalizedAlignment };
 }
 
-async function decodePcm(audioBase64, projectDir, index) {
+export async function decodePcm(audioBase64, projectDir, index) {
   const dir = join(projectDir, '.fableon', 'voice-tmp');
   mkdirSync(dir, { recursive: true });
   const raw = join(dir, `block-${index}-${randomBytes(3).toString('hex')}.mp3`);

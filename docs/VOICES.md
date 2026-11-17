@@ -164,6 +164,23 @@ timings. The chosen default is Callum (`N2lVS1w4EtoT3dr4eOWO`) × `eleven_v3`, d
 control take (64 words / 25.2 s = 2.54, rounded up for the line-gap budget); the dramatic pauses are added locally and
 are not counted twice.
 
+### Reference pace (Phase 3D)
+
+The first Savitri animatic's delivery had too many dramatic pauses. `fableon voice pace --project <dir>` rebuilds the
+already-cached take locally (no provider request, zero characters): it decodes the cached `eleven_v3` audio and its
+alignment, applies the reference pause policy, then writes pitch-preserving `atempo` variants
+`voice/pace/<pace>.wav` plus `voice/pace/pace.md`. `--choose <pace>` writes the chosen `voice.wav` and scaled,
+monotonic `words.json`, and stores `voice.pace`, `voice.pauses` (`dramatic`, `other`, `beatGap`) and
+`voice.paceApplied: "local"` in `project.json`.
+
+Policy: a dramatic pause of at most **0.35 s** is allowed only at the hook punchline, before the second line of the
+deadpan pair, and before the twist; every other planned pause is at most **0.12 s** and beat gaps at most **0.15 s**.
+The chosen Savitri pace is **1.20** (85.34 s, 2.742 words/s) from the 100.16 s cached base take.
+
+For future takes, `voice.pace` is sent as the provider `speed` at generation when the model honours it; local tempo is
+only the final fit. The script budget uses `voice.rate.delivered.wordsPerSecond`, written by the voice stage and by the
+pace chooser, so a faster delivery gets a proportionally larger word budget.
+
 ### Round-2 delivery auditions (2026-11-17)
 
 A six-line Savitri excerpt with delivery marks was synthesized in two variants with Callum × multilingual v2,

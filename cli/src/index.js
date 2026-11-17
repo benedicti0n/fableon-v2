@@ -15,7 +15,7 @@ import { shotplanCommand } from './shotplan-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { modelsCommand } from './models-command.js';
-import { voiceCheckCommand } from './voice-command.js';
+import { voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
 import { runRound2 } from './voice/round2.js';
 import {
@@ -206,7 +206,7 @@ export function main(argv = process.argv) {
 
   program
     .command('voice [mode]')
-    .description('fixture Kokoro narration, or a voice provider mode: check | audition')
+    .description('fixture Kokoro narration, or a voice provider mode: check | audition | pace')
     .option('--project <dir>', 'project folder')
     .option('--speed <speed>', 'Kokoro speaking speed', '1.35')
     .option('--voice <voice>', 'Kokoro voice id', 'am_michael')
@@ -217,9 +217,17 @@ export function main(argv = process.argv) {
     .option('--voices <n>', 'number of audition voices', '4')
     .option('--models <list>', 'comma-separated audition models')
     .option('--round <n>', 'audition round (1 or 2)', '1')
+    .option('--paces <list>', 'pace variants to rebuild', '1.10,1.15,1.20')
+    .option('--choose <pace>', 'apply one pace to voice.wav and words.json')
     .action(async (mode, opts) => {
       if (mode === 'check') {
         try { const r = await voiceCheckCommand(opts); if (!r.ok) process.exitCode = 1; }
+        catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+        return;
+      }
+      if (mode === 'pace') {
+        if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
+        try { await voicePaceCommand(opts.project, opts); }
         catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
         return;
       }
