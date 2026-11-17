@@ -25,7 +25,7 @@ export type Motion = PathMotion | BallisticMotion;
 
 export type Push = { from: Anchor; rate?: number; punch?: number; punchAt?: Anchor };
 export type CamKey = {
-  at: Anchor; cut?: boolean; dur?: number; type: "dolly" | "fixed" | "tilt";
+  at: Anchor; cut?: boolean; dur?: number; ease?: "glide" | "burst" | "linear"; type: "dolly" | "fixed" | "tilt";
   pos: Point; look: Point; fov: number; roll?: number; push?: Push; lookTo?: Point; tiltDur?: number; subjects?: string[]; later?: string[]; over?: string; scenery?: boolean; semantic?: boolean; size?: "close" | "medium" | "full" | "wide" | "establishing" | "insert"; with?: string[]; reaction?: boolean;
 };
 export type DofEntry = { at: Anchor; cInf: number; dur?: number; focus?: Point | null };
@@ -92,6 +92,7 @@ export type Crowd = {
 };
 export type Shot = {
   id: string; start: Anchor; end?: Anchor; light: "day" | "golden" | "night" | "deep"; sets: string[];
+  transition?: { type: "crossfade" | "flash" | "cut"; frames?: number };
   sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; crowds?: Crowd[]; fx?: Effect[]; set?: SetAction[];
 };
 export type CastEntry = { spec: string | Record<string, unknown>; seed: number };

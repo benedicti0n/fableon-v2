@@ -4,6 +4,8 @@ import type { Expr } from "../toon";
 export const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 export const smooth = (x: number) => { const u = clamp01(x); return u * u * (3 - 2 * u); };
 export const glide = (u: number) => { const x = clamp01(u); return x * x * x * (x * (6 * x - 15) + 10); };
+/** Reference ease-out burst: peak speed on the first frame, decaying over the move. */
+export const burst = (u: number) => { const x = clamp01(u); return 1 - (1 - x) ** 3; };
 export const ease = (f: number, f0: number, n: number) => smooth((f - f0) / n);
 /** talking mouth: cycles open shapes while speaking */
 export const talk = (t: number, base: Expr = "neutral"): Expr => (["grin", base, "relief_open", base, "grin", "smile"] as Expr[])[Math.floor(t * 9) % 6];

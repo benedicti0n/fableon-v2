@@ -1150,6 +1150,27 @@
         },
         "end": {
           "$ref": "#/$defs/Anchor"
+        },
+        "transition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "crossfade",
+                "flash",
+                "cut"
+              ]
+            },
+            "frames": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 24
+            }
+          }
         }
       }
     },
@@ -1291,6 +1312,13 @@
             "low",
             "high",
             "overhead"
+          ]
+        },
+        "ease": {
+          "enum": [
+            "glide",
+            "burst",
+            "linear"
           ]
         }
       }
@@ -1968,9 +1996,6 @@
         },
         "face": {
           "type": "string"
-        },
-        "offscreen": {
-          "type": "boolean"
         }
       }
     },

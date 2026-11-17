@@ -110,6 +110,33 @@
                 },
                 "note": {
                   "type": "string"
+                },
+                "punch": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "impact": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "drama": {
+                  "type": "boolean"
+                },
+                "reveal": {
+                  "type": "boolean"
+                },
+                "foreground": {
+                  "type": "string"
+                },
+                "ease": {
+                  "enum": [
+                    "glide",
+                    "burst",
+                    "linear"
+                  ]
+                },
+                "easeFrames": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 60
                 }
               }
             }
@@ -154,6 +181,9 @@
                 },
                 "offscreen": {
                   "type": "boolean"
+                },
+                "impact": {
+                  "$ref": "#/$defs/Anchor"
                 }
               }
             }
@@ -199,6 +229,68 @@
                 "standIn": {
                   "type": "string",
                   "minLength": 1
+                }
+              }
+            }
+          },
+          "scene": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "crossfade",
+                  "flash",
+                  "cut"
+                ]
+              },
+              "frames": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 24
+              }
+            }
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "who",
+                "from",
+                "to",
+                "at",
+                "until"
+              ],
+              "properties": {
+                "who": {
+                  "type": "string"
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "until": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "gait": {
+                  "enum": [
+                    "walk",
+                    "run"
+                  ]
                 }
               }
             }

@@ -10,6 +10,8 @@ const PLAN_ANCHOR = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/;
 const SIDE_DEG = { front: 0, left: -30, right: 30, frontLeft: -15, frontRight: 15 };
 const ANGLE_DEG = { eye: 0, low: -20, high: 20, overhead: 45 };
 const asArray = (v) => (Array.isArray(v) ? v : v === undefined || v === null ? [] : [v]);
+let planCatalog = null;
+const catalogForPlan = (data) => { if (data.catalog) return data.catalog; if (!planCatalog) planCatalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8')); return planCatalog; };
 
 export function planTime(anchor, words, fps = 30) {
   const m = PLAN_ANCHOR.exec(String(anchor ?? ''));
@@ -138,6 +140,7 @@ export function shotplanErrors(data, { script, words, cast, catalog, assets = []
       if (side < 30 && angle < 30) errs.push(`/shots/${i} is a jump cut from shot ${i - 1}: ${pa} stays ${ka.size} with <30 degrees change`);
     }
   } else errs.push('/shots must not be empty');
+  if (!skeleton && shots.length) errs.push(...directorErrors(data, { script, words, catalog }));
   return errs;
 }
 
@@ -160,6 +163,100 @@ export function renderShotplanMd(data, { script, words, cast }) {
     return `| ${s.id} | ${times[i]} | ${lines} | ${esc(s.action)}<br>${esc((s.mustShow ?? []).join(', '))} | ${keys} |`;
   });
   return `# Shot plan — ${esc(script.title ?? data.title ?? '')}\n\n| shot | time | Hindi / gloss | what we see | keys |\n|---|---|---|---|---|\n${rows.join('\n')}\n`;
+}
+
+
+/** Film-level reference checks for a plan that uses scenes/transitions/direction marks. */
+export function directorErrors(data, { script, words, catalog }, policy = {}) {
+  const errs = [];
+  const shots = data.shots ?? [];
+  const hasDirection = shots.some((s) => s.scene || s.transition || (s.keys ?? []).some((k) => k.punch || k.impact || k.drama || k.reveal || k.foreground || k.ease));
+  if (!hasDirection) return errs;
+  const time = (a) => { try { return planTime(a, words); } catch (e) { errs.push(e.message); return NaN; } };
+  const totalEnd = words.length ? words[words.length - 1].b : 0;
+  const start = (s) => time(s.start);
+  const endAt = (i) => (i + 1 < shots.length ? start(shots[i + 1]) : totalEnd);
+  const hookLine = script.lines.find((l) => l.beat === 'hook');
+  const hookWords = words.filter((w) => w.line === hookLine?.n);
+  const hookEnd = hookWords.length ? Math.max(...hookWords.map((w) => w.b)) : 0;
+  let cuts = 0, flashes = 0, flashAfterHook = false;
+  shots.forEach((s, i) => {
+    if (!s.scene) errs.push(`/shots/${i} needs a scene id`);
+    if (i === 0) return;
+    const prev = shots[i - 1];
+    if (prev.scene === s.scene && (prev.set !== s.set || prev.light !== s.light)) errs.push(`/shots/${i} scene "${s.scene}" changes place/time inside the same scene`);
+    if (prev.set === s.set && prev.light === s.light && prev.scene !== s.scene) errs.push(`/shots/${i} starts a new scene without a place/time change (${s.set}/${s.light})`);
+    const t = s.transition;
+    if (!t) { errs.push(`/shots/${i} needs a transition from ${prev.id}`); return; }
+    if (t.type === 'cut') cuts++;
+    if (t.type === 'flash') {
+      flashes++;
+      if (start(s) >= hookEnd) flashAfterHook = true;
+      if ((t.frames ?? 4) !== 4) errs.push(`/shots/${i} flash must be 4 frames (got ${t.frames})`);
+    }
+    if (t.type === 'crossfade' && ((t.frames ?? 7) < 6 || (t.frames ?? 7) > 8)) errs.push(`/shots/${i} crossfade must be 6-8 frames (got ${t.frames})`);
+    const placeChange = prev.set !== s.set || prev.light !== s.light;
+    if (placeChange && t.type !== 'crossfade') errs.push(`/shots/${i} changes place/time and needs a crossfade (got ${t.type})`);
+  });
+  if (cuts > (policy.maxCuts ?? 2)) errs.push(`/shots has ${cuts} hard cuts; use at most ${policy.maxCuts ?? 2}`);
+  if (flashes > (policy.maxFlashes ?? 3)) errs.push(`/shots has ${flashes} flashes; use at most ${policy.maxFlashes ?? 3}`);
+  if (flashes && !flashAfterHook) errs.push('/shots needs a flash after the hook');
+
+  // Movement paths and follow keys.
+  for (const [i, s] of shots.entries()) {
+    for (const m of s.moves ?? []) {
+      if (!(s.characters ?? []).includes(m.who)) errs.push(`/shots/${i}/moves "${m.who}" is not in characters`);
+      const from = markAny(catalog ?? catalogForPlan(data), m.from);
+      const to = markAny(catalog ?? catalogForPlan(data), m.to);
+      if (!from || !to) errs.push(`/shots/${i}/moves needs catalog marks for from/to (${m.from} -> ${m.to})`);
+      const a = time(m.at), b = time(m.until);
+      if (!(a >= start(s) && a < endAt(i) && b > a && b <= endAt(i))) errs.push(`/shots/${i}/moves ${m.who} must stay inside the shot and end after it starts`);
+    }
+    for (const k of s.keys ?? []) {
+      if (k.move === 'follow') {
+        const who = asArray(k.on)[0];
+        if (!(s.moves ?? []).some((m) => m.who === who)) errs.push(`/shots/${i}/keys follow needs a moves path for "${who}"`);
+      }
+      if (k.foreground) {
+        const c = catalog ?? catalogForPlan(data);
+        if (!catalogItem(c, k.foreground, s.set)) errs.push(`/shots/${i}/keys foreground "${k.foreground}" is not a catalog prop/mark`);
+      }
+    }
+  }
+
+  // Film shares and punch coverage.
+  let hold = 0, dof = 0, keys = 0, fg = 0, low = 0, lowFull = 0;
+  for (let i = 0; i < shots.length; i++) {
+    const ks = shots[i].keys ?? [];
+    const t0 = start(shots[i]), t1 = endAt(i);
+    ks.forEach((k, j) => {
+      const a = Math.max(t0, time(k.at));
+      const b = j + 1 < ks.length ? Math.min(t1, time(ks[j + 1].at)) : t1;
+      const d = Math.max(0, b - a);
+      keys++;
+      if (['push', 'hold'].includes(k.move ?? 'push') && !k.ease) hold += d;
+      if (['close', 'medium', 'insert'].includes(k.size)) dof += d;
+      if (k.foreground) fg++;
+      if (['full', 'wide', 'establishing'].includes(k.size)) { lowFull++; if ((k.angle ?? 'low') === 'low') low++; }
+    });
+  }
+  const total = Math.max(1e-6, totalEnd);
+  const holdShare = hold / total, dofShare = dof / total, fgShare = keys ? fg / keys : 0;
+  if (holdShare < (policy.holdMin ?? 0.70) || holdShare > (policy.holdMax ?? 0.85)) errs.push(`hold share ${(holdShare * 100).toFixed(0)}% is outside ${((policy.holdMin ?? 0.70) * 100).toFixed(0)}-${((policy.holdMax ?? 0.85) * 100).toFixed(0)}%`);
+  if (dofShare < (policy.dofMin ?? 0.25) || dofShare > (policy.dofMax ?? 0.40)) errs.push(`DOF share ${(dofShare * 100).toFixed(0)}% is outside ${((policy.dofMin ?? 0.25) * 100).toFixed(0)}-${((policy.dofMax ?? 0.40) * 100).toFixed(0)}%`);
+  if (fgShare < (policy.fgMin ?? 0.25) || fgShare > (policy.fgMax ?? 0.40)) errs.push(`foreground share ${(fgShare * 100).toFixed(0)}% of keys is outside ${((policy.fgMin ?? 0.25) * 100).toFixed(0)}-${((policy.fgMax ?? 0.40) * 100).toFixed(0)}%`);
+  if (lowFull && low / lowFull < 0.5) errs.push(`low camera height on only ${low}/${lowFull} full/wide/establishing keys; use low by default`);
+  const lineWindow = (n) => {
+    const ws = (words ?? []).filter((w) => w.line === n);
+    return ws.length ? [Math.min(...ws.map((w) => w.a)), Math.max(...ws.map((w) => w.b))] : null;
+  };
+  for (const l of script.lines.filter((x) => ['hook', 'mystery', 'payoff'].includes(x.beat))) {
+    const w = lineWindow(l.n);
+    if (!w) continue;
+    const hit = shots.some((s) => (s.keys ?? []).some((k) => k.punch && time(k.punch) >= w[0] && time(k.punch) <= w[1]));
+    if (!hit) errs.push(`/lines/${l.n} ${l.beat} needs a punch-in`);
+  }
+  return errs;
 }
 
 function normalizeSkeleton(plan, words, totalEnd) {

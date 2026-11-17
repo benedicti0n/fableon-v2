@@ -437,6 +437,15 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       const add = (list, code, id, message, fix = '') => list.push({ shot: m.shotId, key: m.ki, frame: m.f, subject: id, code, message, fix });
       const sev = k.semantic ? 'error' : 'warning';
       const push = (code, id, message, fix) => add(sev === 'error' ? errors : warnings, code, id, message, fix);
+      const overMark = k.over && !peopleById.has(k.over) ? idsById.get(`mark:${k.over}`) ?? idsById.get(k.over) : null;
+      if (overMark) {
+        const b = overMark.bbox;
+        const area = b ? (b.x1 - b.x0) * (b.y1 - b.y0) : 0;
+        if (!b || b.x0 < 0 || b.x1 > 1 || b.y0 < 0 || b.y1 > 1) push('foreground prop', k.over, `foreground prop ${k.over}: mark is cut by the frame edge`, FIX.foregroundProp);
+        else if (overMark.distance != null && overMark.distance < 2) push('foreground prop', k.over, `foreground prop ${k.over}: ${overMark.distance.toFixed(2)} m from the lens (want >=2 m)`, FIX.foregroundProp);
+        else if (area < 0.01) push('foreground prop', k.over, `foreground prop ${k.over}: covers only ${(area * 100).toFixed(1)}% (a blob)`, FIX.foregroundProp);
+        else if (area > 0.55) push('foreground prop', k.over, `foreground prop ${k.over}: covers ${(area * 100).toFixed(0)}% (too much)`, FIX.foregroundProp);
+      }
       const markBox = primary ? findMark(ctx, primary)?.box : null;
       if (primary && size === 'insert' && markBox) {
         const fill = projectBoxFill(ctx, keyForProjection(k, m.f, m.start), markBox, m.f);

@@ -1,5 +1,8 @@
 # Director craft — shot plan
 
+- Reference: 0–1 hard cuts; continuous camera inside a scene; 6–8 f crossfade on a place/time change; a 4-frame flash after the hook (max 3). Group shots into `scene` (place + time); every boundary gets `transition`: crossfade | flash | cut.
+- Keep ~80% of screen time on a creeping push-in (0.15–0.35 %/f; 0.6 %/f on a punch word), never a static hold of 4 f+. Moves are smootherstep glides (18–40 f) or `ease:"burst"` (peak on frame 1, 8–10 f). `drama` rolls 4–5°, `reveal` pulls back, `impact` kicks for 7 f, `foreground` puts a catalog mark near the lens on ~1/3 of keys; `follow` needs a `moves` path.
+- DOF: close 12–14 px, medium 10–12 px at 1080 wide, wides sharp; on 25–40% of screen time. Use low heights by default for full/wide. Light tells time: day → golden → night, crossfade each change.
 - One idea per camera key. A shot may hold one idea across two keys, never two unrelated ideas in one key.
 - Cut on a line or phrase boundary. Keep a shot on one set and one continuous action; split when the place, time or idea changes.
 - Open the film and every new place with a wide or establishing key that shows a landmark of that place. Name that landmark in `mustShow` (`set.mark`, fx id, set-piece id or actor id). Turn `mustShow` into the first key's `with`.

@@ -2,10 +2,10 @@
 // Moved verbatim from the legacy timeline; the storyboard interpreter uses the same functions.
 import type { Cam } from "../world";
 import type { V3 } from "../places";
-import { glide } from "./timing";
+import { glide, burst, clamp01 } from "./timing";
 
 export type Shot = Partial<Cam> & { pos: V3; look: V3 };
-export type Key = { f: number; dur?: number; cut?: boolean; s: (f: number) => Shot };
+export type Key = { f: number; dur?: number; cut?: boolean; ease?: "glide" | "burst" | "linear"; s: (f: number) => Shot };
 
 export const full = (c: Shot): Cam => ({ fov: 40, roll: 0, ...c });
 export const mixC = (a: Cam, b: Cam, k: number): Cam => ({
@@ -17,7 +17,7 @@ export const run = (keys: Key[]) => (f: number) => {
   for (let i = 1; i < keys.length; i++) {
     const k = keys[i];
     if (f < k.f) break;
-    cur = k.cut ? full(k.s(f)) : mixC(cur, full(k.s(f)), glide((f - k.f) / (k.dur ?? 24)));
+    cur = k.cut ? full(k.s(f)) : mixC(cur, full(k.s(f)), k.ease === "burst" ? burst((f - k.f) / (k.dur ?? 10)) : k.ease === "linear" ? clamp01((f - k.f) / (k.dur ?? 24)) : glide((f - k.f) / (k.dur ?? 24)));
   }
   return cur;
 };

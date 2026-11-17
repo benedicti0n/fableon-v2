@@ -54,6 +54,10 @@ cut to the other side flips it. It also works inside a beat. `over` faces the `o
 - `reaction:true` marks a deliberate off-screen cutaway (suppresses the speaker warning).
 - A key with no subjects says `"scenery":true`.
 
+## Reference camera language (Phase 3D)
+
+`scene` groups by place+time; `transition` is crossfade (6-8 f), flash (4 f) or cut (max 2). `punch` 0.6 %/f, `impact` 7 f kick, `drama` 4-5 degree roll, `reveal` pull-back, `foreground` catalog mark, `ease:"burst"` 8-10 f. `moves` gives walk/run paths; `follow` needs one. DOF 25-40 %, foreground 25-40 % of keys, low heights for full/wide.
+
 ## Size bands and insert fill
 
 `head` is head-box height / frame; `body` is head-to-feet / frame; the solver targets the reference medians.
@@ -106,9 +110,7 @@ Sampling: static settle/mid/end-2; moving start/mid/end.
 | `speaker off-screen` | a talker <4 % for ≥1 s | keep the speaker on screen or mark `reaction:true` |
 | `eye line` | close/medium eyes outside 30–50 % from the top | adjust look/angle |
 
-The entrance floor is 3 %, not 4 %: a five-person wide group at the calibrated wide target projects about 3.9 % per
-brother. `frames.json` is written at `<project>/frames.json`; every finding has a one-line fix. Ambient effects and
-mark proxies are exempt from blockers; the over actor is exempt from hidden while in its corner.
+`frames.json` is written at `<project>/frames.json`; every finding has a one-line fix. Ambient effects and mark proxies are exempt from blockers.
 
 ## Shot plan
 

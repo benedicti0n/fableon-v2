@@ -95,12 +95,16 @@ go through the same selective revision/no-op guard. The fixture is `fixtures/sav
 The stage list is now `brief → research → script → factcheck → cast → voice → shotplan → board → animatic`.
 `cast` designs every character/mention, checks mustHave traits and colour distinctness, writes asset gaps and renders
 `cast/cast-sheet.jpg`; `fableon cast --notes` stores notes in `cast.notes.json`. `shotplan` turns the script/words,
-cast and asset gaps into a 29-ish-shot plan with a 2.1 KB director-craft file, a shotplan schema, a skeleton call and a
-keys/beats/fx call; `fableon shotplan --notes` stores `shotplan.notes.json`. `board` writes the authoring shots from
-the approved plan, compiles each shot, measures the full board and repairs edge/head-cut staging with deterministic
-variants; failures are recorded in `board.review.json` as `needsHuman`. `fableon board --shot <id>` reruns and
-re-renders that segment. `animatic` renders preview segments, concatenates them, muxes `voice.wav` only and runs
-short_qa; `animatic-qa.md` carries the verdict. The animatic mp4 stays in `work/`.
+cast and asset gaps into a 20-32-shot plan grouped into scenes (`scene`, one place+time), with per-boundary
+`transition` (crossfade 6-8 f | flash 4 f | cut), direction marks (`punch`, `impact`, `drama`, `reveal`,
+`foreground`, `ease:"burst"`), walk/run `moves` paths and follow keys. The deterministic checks enforce <=2 cuts,
+a flash after the hook (max 3), a crossfade on place/time changes, 70-85 % hold share, 25-40 % DOF and foreground
+shares, low full/wide heights and a punch on every hook/mystery/payoff line; `fableon shotplan --notes` stores
+`shotplan.notes.json`. `board` writes the authoring shots from the approved plan, translates the marks and moves,
+compiles each shot, measures the full board and repairs edge/head-cut staging with deterministic variants; a compiled
+film-level check records cuts/DOF/foreground stats and failures in `board.review.json` as `needsHuman`. `fableon board
+--shot <id>` reruns and re-renders that segment. `animatic` renders preview segments, concatenates them, muxes
+`voice.wav` only and runs short_qa; `animatic-qa.md` carries the verdict. The animatic mp4 stays in `work/`.
 
 | stage | outputs | schema |
 |---|---|---|

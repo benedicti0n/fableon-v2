@@ -31,6 +31,7 @@ import { runUsageTests } from './usage.mjs';
 import { runModelTests } from './models.mjs';
 import { runPaceTests } from './pace.mjs';
 import { runFormulaTests } from './formula.mjs';
+import { runDirectorTests } from './director.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -136,6 +137,8 @@ try {
   check('voice pace rebuild', pace.ok, `${pace.checks.filter((c) => c.ok).length}/${pace.checks.length} checks`);
   const formula = runFormulaTests();
   check('script formula', formula.ok, `${formula.checks.filter((c) => c.ok).length}/${formula.checks.length} checks`);
+  const director = await runDirectorTests();
+  check('director camera', director.ok, `${director.checks.filter((c) => c.ok).length}/${director.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

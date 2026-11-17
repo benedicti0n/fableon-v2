@@ -28,6 +28,28 @@ export const crossfades = (shots: ShotDef[], frames = 10): Record<number, number
   return xf;
 };
 
+export type BoundaryTransition = { type: "crossfade" | "flash" | "cut"; frames?: number };
+export type Boundary = { id: number; a: number; light: string; transition?: BoundaryTransition };
+
+/**
+ * Explicit per-boundary transitions (Phase 3D) or the legacy auto crossfade when no shot has one.
+ * A flash is four white frames; cut means no crossfade. The first shot never transitions.
+ */
+export const transitionMaps = (shots: Boundary[], fallbackFrames = 10): { xfade: Record<number, number>; flashes: number[]; explicit: boolean } => {
+  const explicit = shots.some((s) => !!s.transition);
+  if (!explicit) return { xfade: crossfades(shots as unknown as ShotDef[], fallbackFrames), flashes: [], explicit: false };
+  const xfade: Record<number, number> = {};
+  const flashes: number[] = [];
+  shots.forEach((s, i) => {
+    if (i === 0) return;
+    const t = s.transition;
+    if (!t) return;
+    if (t.type === "crossfade") xfade[s.id] = Math.max(1, Math.round(t.frames ?? 7));
+    if (t.type === "flash") flashes.push(s.a);
+  });
+  return { xfade, flashes, explicit: true };
+};
+
 export const shotAt = (shots: ShotDef[], f: number) => shots.find((s) => f >= s.a && f < s.b) ?? shots[shots.length - 1];
 export const layersAt = (shots: ShotDef[], xfade: Record<number, number>, f: number): { id: number; alpha: number }[] => {
   for (const s of shots) {

@@ -6,6 +6,7 @@ import { ROOT } from '../env.js';
 import { atomicWrite, writeJsonArtifact } from '../core/artifacts.js';
 import { compileBoard } from '../authoring.js';
 import { checkFramesMeasured } from '../frames.js';
+import { compileFilmCheck } from '../film.js';
 
 const DEFAULTS = { palace: 'courtyard', hermitage: 'clearing', village: 'front', deer: 'clearing', arena: 'floor', city: 'clearing', lac: 'stage', naga: 'floor' };
 const seedOf = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) % 1000; };
@@ -26,6 +27,15 @@ export function shotSchema(planShot, cast, catalog) {
       prop: { oneOf: [{ enum: catalog.props.map((x) => x.name) }, { type: 'null' }] },
       face: { enum: [...new Set([...chars, ...marks, ...catalog.effects.map((e) => e.name)])] },
       scale: { type: 'number', exclusiveMinimum: 0 },
+      motion: {
+        type: 'object', additionalProperties: false, required: ['type', 'keys'],
+        properties: {
+          type: { const: 'path' },
+          keys: { type: 'array', minItems: 2, items: { type: 'array', minItems: 2, maxItems: 2, prefixItems: [anchor, { enum: marks }] } },
+          walk: { type: 'object', additionalProperties: false, properties: { rate: { type: 'number', exclusiveMinimum: 0 }, offset: { type: 'number' } } },
+          ease: { enum: ['smooth', 'glide', 'linear'] },
+        },
+      },
     },
   };
   const camera = {
@@ -37,6 +47,8 @@ export function shotSchema(planShot, cast, catalog) {
       angle: { enum: ['eye', 'low', 'high', 'overhead'] }, side: { enum: ['front', 'left', 'right', 'frontLeft', 'frontRight'] },
       move: { enum: ['push', 'hold', 'glide', 'follow', 'crane', 'tiltUp', 'tiltDown', 'pan', 'reveal'] },
       cut: { type: 'boolean' }, scenery: { type: 'boolean' },
+      punch: anchor, impact: anchor, drama: { type: 'boolean' }, reveal: { type: 'boolean' },
+      foreground: { enum: subjects }, ease: { enum: ['glide', 'burst', 'linear'] }, easeFrames: { type: 'number', minimum: 1, maximum: 60 },
     },
   };
   return {
@@ -45,11 +57,14 @@ export function shotSchema(planShot, cast, catalog) {
       id: { const: planShot.id }, start: anchor, end: anchor, light: { enum: catalog.lights.map((x) => x.name) },
       sets: { type: 'array', items: { enum: [planShot.set] }, minItems: 1, maxItems: 1 },
       actors: { type: 'array', items: actor }, camera: { type: 'array', items: camera, minItems: 1 },
+      transition: { type: 'object', additionalProperties: false, required: ['type'], properties: { type: { enum: ['crossfade', 'flash', 'cut'] }, frames: { type: 'number', minimum: 1, maximum: 24 } } },
     },
   };
 }
 
-function baseShot(s, i, plan, cast, catalog) {
+export function baseShot(s, i, plan, cast, catalog) {
+  const hasScenes = (plan.shots ?? []).some((x) => x.scene);
+  const movesFor = (id) => (s.moves ?? []).filter((m) => m.who === id);
   const set = catalog.sets.find((x) => x.name === s.set) ?? catalog.sets[0];
   const mark = `${s.set}.${DEFAULTS[s.set] ?? set.marks[0]?.name ?? 'floor'}`;
   const n = s.characters?.length ?? 0;
@@ -58,20 +73,28 @@ function baseShot(s, i, plan, cast, catalog) {
   const actors = (s.characters ?? []).map((id, j) => {
     const beats = (s.beats ?? []).filter((b) => b.who === id);
     const first = beats[0] ?? {};
+    const moves = movesFor(id);
     return {
       cast: id, id, at: mark, nudge: [(j - (n - 1) / 2) * spacing, 0, 0],
       pose: first.pose ?? 'stand', expr: first.expr ?? 'neutral',
       ...(first.prop ? { prop: first.prop } : {}), ...(first.face ? { face: first.face } : {}),
+      ...(moves.length ? { motion: { type: 'path', keys: moves.flatMap((m) => [[m.at, m.from], [m.until, m.to]]), walk: { rate: moves[0].gait === 'run' ? 3.2 : 1.6 } } } : {}),
       do: beats.map((b) => { const { who, at, ...rest } = b; if (rest.talk === true) rest.talk = { base: rest.expr ?? 'neutral', rate: 1 }; return [at, rest]; }),
     };
   });
   const camera = (s.keys ?? []).map((k, j) => {
     const withIds = (k.with ?? []).filter((id) => { const m = set.marks.find((x) => x.name === id || `${s.set}.${x.name}` === id); return !m || (m.ids?.length ?? 0) > 0; });
     const on = asArray(k.on);
-    return { at: k.at, size: k.size === 'close' && on.length > 1 ? 'medium' : k.size, on, ...(withIds.length ? { with: withIds } : {}), angle: k.angle, side: k.side, move: k.move, ...(j ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}) };
+    return {
+      at: k.at, size: k.size === 'close' && on.length > 1 ? 'medium' : k.size, on, ...(withIds.length ? { with: withIds } : {}),
+      angle: k.angle ?? (hasScenes && ['full', 'wide', 'establishing'].includes(k.size) ? 'low' : 'eye'),
+      side: k.side, move: k.move, ...(j ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
+      ...(k.punch ? { punch: k.punch } : {}), ...(k.impact ? { impact: k.impact } : {}), ...(k.drama ? { drama: true } : {}),
+      ...(k.reveal ? { reveal: true } : {}), ...(k.foreground ? { foreground: k.foreground } : {}), ...(k.ease ? { ease: k.ease } : {}), ...(k.easeFrames ? { easeFrames: k.easeFrames } : {}),
+    };
   });
   const fx = (s.fx ?? []).map((f) => ({ kind: f.kind, at: f.at, pos: { mark, nudge: [0, 2.2, -0.6] }, ...(f.kind === 'puff' ? { size: 2.6, dur: 0.4 } : {}), ...(f.kind === 'sparkle' ? { size: 0.8 } : {}), ...(f.kind === 'stars' ? { size: [1.5, 0.79], period: 0.4, dur: 0.4 } : {}) }));
-  return { id: s.id, start: s.start, end: i + 1 < plan.shots.length ? plan.shots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}) };
+  return { id: s.id, start: s.start, end: i + 1 < plan.shots.length ? plan.shots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}), ...(s.transition ? { transition: s.transition } : {}) };
 }
 
 function variants(shot, s, catalog) {
@@ -117,8 +140,10 @@ export async function runBoard({ projectDir, project, router }) {
   const plan = JSON.parse(readFileSync(join(projectDir, 'shotplan.json'), 'utf8'));
   const cast = JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8'));
   const words = JSON.parse(readFileSync(join(projectDir, 'words.json'), 'utf8'));
+  const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
   const castMap = Object.fromEntries(cast.characters.map((c) => [c.id, { spec: c.spec ?? c.cast, seed: seedOf(c.id) }]));
+  const kicks = (plan.shots ?? []).flatMap((s) => [...(s.keys ?? []).map((k) => k.impact), ...(s.beats ?? []).map((b) => b.impact)].filter(Boolean).map((at) => ({ at, amp: 0.6 })));
   let shots = plan.shots.map((s, i) => baseShot(s, i, plan, cast, catalog));
   const review = { version: 1, model: 'deterministic base + measured variants', shots: [] };
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-board-'));
@@ -135,7 +160,7 @@ export async function runBoard({ projectDir, project, router }) {
       review.shots.push({ id: shots[i].id, rounds, needsHuman: !chosen, findings });
       shots[i] = chosen;
     }
-    const board = { version: 1, cast: castMap, shots };
+    const board = { version: 1, cast: castMap, shots, ...(kicks.length ? { kicks } : {}) };
     let compiled = compileBoard(board, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');
     let measured = await checkFramesMeasured(projectDir);
@@ -162,7 +187,7 @@ export async function runBoard({ projectDir, project, router }) {
       shots[idx] = best;
       if (rec) { rec.rounds += rounds; rec.findings = bestErrors.map((e) => e.message); rec.needsHuman = bestErrors.length > 0; }
     }
-    const finalBoard = { version: 1, cast: castMap, shots };
+    const finalBoard = { version: 1, cast: castMap, shots, ...(kicks.length ? { kicks } : {}) };
 
     compiled = compileBoard(finalBoard, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');
@@ -171,9 +196,12 @@ export async function runBoard({ projectDir, project, router }) {
       const rec = review.shots.find((s) => s.id === id);
       if (rec) { rec.needsHuman = true; rec.findings = measured.errors.filter((e) => e.shot === id).map((e) => e.message); }
     }
+    const film = compileFilmCheck(projectDir, words, script);
+    review.film = { stats: film.stats, errors: film.errors, skipped: film.skipped };
+    if (film.errors.length) review.shots.push({ id: 'FILM', rounds: 0, needsHuman: true, findings: film.errors });
     writeJsonArtifact(projectDir, 'board', 'board.review.json', review, null);
     writeJsonArtifact(projectDir, 'board', 'board.json', finalBoard, 'authoring');
     const needsHuman = review.shots.filter((s) => s.needsHuman).map((s) => s.id);
-    return { shots: finalBoard.shots.length, needsHuman, errors: measured.errors.length, warnings: measured.warnings.length, usage: router.stageUsage('board') };
+    return { shots: finalBoard.shots.length, needsHuman, errors: measured.errors.length, warnings: measured.warnings.length, filmErrors: review.film?.errors?.length ?? 0, usage: router.stageUsage('board') };
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 }

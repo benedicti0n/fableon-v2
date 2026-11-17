@@ -539,8 +539,13 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       if (k.scenery) key.scenery = true;
       if (k.with) key.with = [...k.with];
       if (k.over) key.over = k.over;
+      if (k.foreground) key.over = k.foreground;
       key.semantic = true; key.move = k.move ?? 'push'; if (k.side) key.side = k.side; if (k.angle) key.angle = k.angle; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
+      if (k.punch) key.push = { ...(key.push ?? { from: parseAnchor(k.at, fps) }), punch: Math.max(key.push?.punch ?? 0, 0.006), punchAt: parseAnchor(k.punch, fps) };
+      if (k.drama) key.roll = (4.5 * Math.PI) / 180;
+      if (k.reveal) key.push = { ...(key.push ?? { from: parseAnchor(k.at, fps) }), rate: -0.004 };
+      if (k.ease) { key.ease = k.ease; key.dur = k.easeFrames ?? (k.ease === 'burst' ? 10 : 24); }
       const primary = subjects[0];
       if (over && primary) {
         const ob = solved.debug.over;
@@ -583,6 +588,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   if (!cameras.length && rawShot.camera) cameras.push(...rawShot.camera.map((k) => ({ ...k, ...(typeof k.at === 'string' ? { at: parseAnchor(k.at, fps) } : {}) })));
   if (cameras.length) out.camera = cameras.sort((a, b) => ctx.anchorFrame(a.at, start) - ctx.anchorFrame(b.at, start));
   applyFaces(out, cameras, ctx);
+  if (shot.transition) out.transition = shot.transition;
   if (shot.dof) out.dof = shot.dof.map((d) => compileDof(d, { ...ctx, sets }));
   else if (dofs.length) out.dof = dofs;
   if (rawShot.camera) delete rawShot.camera;

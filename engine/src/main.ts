@@ -293,7 +293,8 @@ const drawShot = (id: number, f: number) => {
     g2.drawImage(renderer.domElement, 0, 0);
     PROF.blit = performance.now() - t2;
   });
-  const flash = f >= RT.FLASH_AT && f < RT.FLASH_AT + 4 ? [1, 0.75, 0.45, 0.2][f - RT.FLASH_AT] : 0;
+  let flash = 0;
+  for (const f0 of RT.FLASHES) if (f >= f0 && f < f0 + 4) flash = Math.max(flash, [1, 0.75, 0.45, 0.2][f - f0]);
   if (flash > 0) { g2.globalAlpha = flash; g2.fillStyle = "#ffffff"; g2.fillRect(0, 0, W, H); }
   g2.globalAlpha = 1;
   const t1 = performance.now();
@@ -304,7 +305,7 @@ const drawShot = (id: number, f: number) => {
 (window as unknown as Record<string, unknown>).shotOf = (f: number) => RT.layersAt(f).map((l) => l.id);
 (window as unknown as Record<string, unknown>).SHOTLIST = RT.SHOTS.map((s) => [s.id, s.a, s.b, s.light, s.sets.join("+")]);
 (window as unknown as Record<string, unknown>).QA = {
-  shots: RT.SHOTS.map((s) => ({ id: s.id, a: s.a, b: s.b })), flash: [RT.FLASH_AT, RT.FLASH_AT + 4],
+  shots: RT.SHOTS.map((s) => ({ id: s.id, a: s.a, b: s.b })), flash: [RT.FLASH_AT, RT.FLASH_AT + 4], flashes: RT.FLASHES.map((f) => [f, f + 4]),
   xfade: RT.SHOTS.filter((s) => RT.XFADE[s.id]).map((s) => [s.a - RT.XFADE[s.id] / 2, s.a + RT.XFADE[s.id] / 2]),
   planned: RT.KICKS.map(([f]) => [f, f + 8]),
 };

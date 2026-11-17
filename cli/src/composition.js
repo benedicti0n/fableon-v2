@@ -63,6 +63,7 @@ export const FIX = {
   merge: 'move the over actor and subject to opposite thirds',
   cutSubject: 'widen the size or move the subject inside the 4 % side margins',
   overForeground: 'put the over head at 18-30 % of frame and at least 1.8x the on subject head',
+  foregroundProp: 'move the foreground mark 2-3 m from the lens, keep it inside the frame and large enough to read',
   floating: 'lower the camera or aim it up so the lowest feet reach about 78 % of the frame',
   tangent: 'move the world object or the actor so the silhouette does not touch the head',
   faceSmall: 'move closer or use a larger size so the face is at least 6 % of the frame',

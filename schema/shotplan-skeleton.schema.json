@@ -77,6 +77,68 @@
           },
           "lightChange": {
             "type": "boolean"
+          },
+          "scene": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "crossfade",
+                  "flash",
+                  "cut"
+                ]
+              },
+              "frames": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 24
+              }
+            }
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "who",
+                "from",
+                "to",
+                "at",
+                "until"
+              ],
+              "properties": {
+                "who": {
+                  "type": "string"
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "until": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "gait": {
+                  "enum": [
+                    "walk",
+                    "run"
+                  ]
+                }
+              }
+            }
           }
         }
       }

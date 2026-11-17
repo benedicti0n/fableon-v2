@@ -16,7 +16,7 @@ import { clamp01, glide, pop, smooth, talk, writeT } from "../core/timing";
 import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../core/motion";
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
-import { assembleShots, crossfades, layersAt as layersAtShots, dofAt as dofAtList, Def, Dof } from "../core/shotlist";
+import { assembleShots, layersAt as layersAtShots, dofAt as dofAtList, transitionMaps, Def, Dof } from "../core/shotlist";
 import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person, ganesha } from "../people";
 import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
 import CATALOG from "../../../schema/catalog.json";
@@ -24,7 +24,7 @@ import type { Actor, Animated, Anchor, Attach, Beat, CamKey, Crowd, Effect, Jars
 import { drawingPen } from "../measure";
 
 export type Runtime = {
-  SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; XFADE: Record<number, number>;
+  SHOTS: ShotDef[]; TOTAL: number; FLASH_AT: number; FLASHES: number[]; XFADE: Record<number, number>;
   layersAt: (f: number) => { id: number; alpha: number }[];
   dofAt: (f: number) => { cInf: number; focus?: (f: number) => V3 };
   kickCam: (f: number, c: Cam) => Cam; KICKS: Kick[]; JUMP_EVENTS: number[];
@@ -557,13 +557,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     for (const x of s.set ?? []) if (x.piece === "bigBow") jumps.push(anchor(x.at, start) + (x.dur ?? 10));
   }
   const SHOTS = assembleShots(defs, TOTAL, defaults.setPieces?.pages?.height ?? 0.3);
-  const XFADE = crossfades(SHOTS, sb.crossfade ?? 10);
+  const transitionByStart = new Map((sb.shots ?? []).map((s) => [anchor(s.start), s.transition]));
+  const maps = transitionMaps(SHOTS.map((s) => ({ id: s.id, a: s.a, light: s.light, transition: transitionByStart.get(s.a) })), sb.crossfade ?? 10);
+  const FLASHES = maps.explicit ? maps.flashes : sb.flash ? [anchor(sb.flash)] : [];
   const KICKS: Kick[] = (sb.kicks ?? []).map((k) => [anchor(k.at), k.amp] as Kick).sort((a, b) => a[0] - b[0]);
   const sortedDofs = dofs.sort((a, b) => a.f - b.f);
   return {
-    SHOTS, TOTAL, KICKS, XFADE, JUMP_EVENTS: [...new Set(jumps)].filter((f) => f >= 0).sort((a, b) => a - b),
-    FLASH_AT: sb.flash ? anchor(sb.flash) : -1000,
-    layersAt: (f: number) => layersAtShots(SHOTS, XFADE, f),
+    SHOTS, TOTAL, KICKS, XFADE: maps.xfade, FLASHES, JUMP_EVENTS: [...new Set(jumps)].filter((f) => f >= 0).sort((a, b) => a - b),
+    FLASH_AT: FLASHES[0] ?? -1000,
+    layersAt: (f: number) => layersAtShots(SHOTS, maps.xfade, f),
     dofAt: (f: number) => dofAtList(sortedDofs, f),
     kickCam: (f: number, c: Cam) => kickCamWith(f, c, KICKS),
   };
