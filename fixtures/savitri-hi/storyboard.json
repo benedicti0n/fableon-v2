@@ -1,0 +1,3368 @@
+{
+  "version": 1,
+  "fps": 30,
+  "tailFrames": 36,
+  "crossfade": 10,
+  "shots": [
+    {
+      "id": "S1",
+      "start": {
+        "line": 0,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "end": {
+        "line": 0,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            0,
+            1.62,
+            42
+          ],
+          "view": 177,
+          "pose": "stand",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "stern"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            0.43419482373926205,
+            2.9754896498218315,
+            33.71506921912708
+          ],
+          "look": [
+            0,
+            3.5238127402648103,
+            42
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 0,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 0,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "start": {
+        "line": 0,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "end": {
+        "line": 1,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            0,
+            1.62,
+            42
+          ],
+          "view": 177,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 4,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            0.21550392187819714,
+            2.9754896498218315,
+            37.88794020990062
+          ],
+          "look": [
+            0,
+            2.69235273838309,
+            42
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 0,
+              "wordIndex": 4,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 0,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 0,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            0,
+            2.9754896498218315,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "start": {
+        "line": 1,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 2,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            -150.5,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "stand",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 1,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "stern"
+            }
+          ]
+        },
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "pos": [
+            -149.5,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 1,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -150.01222259861186,
+            2.8554896498218314,
+            -68.2963005724731
+          ],
+          "look": [
+            -150.01222259861186,
+            3.403828644488747,
+            -60
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 1,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "savitri",
+            "satyavan"
+          ],
+          "at": {
+            "line": 1,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "start": {
+        "line": 2,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 2,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "narada",
+          "pos": [
+            -150.5,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "narada"
+            },
+            {
+              "at": {
+                "frame": 357
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "narada",
+          "id": "narada",
+          "face": "savitri",
+          "pos": [
+            -149.5,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "talk",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "stern",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 357
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -145.86643731399477,
+            2.8554896498218314,
+            -67.18480705319308
+          ],
+          "look": [
+            -150.01458760023132,
+            3.4420702234037366,
+            -60
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 2,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "savitri",
+            "narada"
+          ],
+          "at": {
+            "line": 2,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "start": {
+        "line": 2,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 3,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            -150,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "stand",
+          "expr": "nervous",
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "wordIndex": 4,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "nervous"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -150,
+            2.8554896498218314,
+            -62.628086488539175
+          ],
+          "look": [
+            -150,
+            2.6847429627709873,
+            -60
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 2,
+              "wordIndex": 4,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 2,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 2,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            -150,
+            2.8554896498218314,
+            -60
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "start": {
+        "line": 3,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 4,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            -150,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "stand",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 3,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "stern"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -150,
+            2.8554896498218314,
+            -64.11770295889553
+          ],
+          "look": [
+            -150,
+            2.5723527383830898,
+            -60
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 3,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 3,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 3,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -150,
+            2.8554896498218314,
+            -60
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "start": {
+        "line": 4,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "line": 5,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            -0.45,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "stand",
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "smile"
+            },
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 3,
+                "offset": -2
+              },
+              "pose": "hold",
+              "expr": "smile",
+              "prop": null
+            }
+          ]
+        },
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "pos": [
+            0.45,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "stand",
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "smile"
+            },
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 3,
+                "offset": -2
+              },
+              "pose": "hold",
+              "expr": "smile",
+              "prop": null
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": {
+            "line": 4,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ],
+          "size": 0.8
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -0.5909432716689706,
+            2.8554896498218314,
+            -16.223908798750834
+          ],
+          "look": [
+            -0.012222598611878854,
+            3.3988896651194613,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "savitri",
+            "satyavan"
+          ],
+          "at": {
+            "line": 4,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.3140819339770984,
+            2.8554896498218314,
+            -20.183210388469114
+          ],
+          "look": [
+            -0.012222598611878854,
+            2.5723527383830898,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "wordIndex": 3,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri",
+            "satyavan"
+          ],
+          "cut": true,
+          "at": {
+            "line": 4,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 4,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -0.45,
+            2.8554896498218314,
+            -24.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "start": {
+        "line": 5,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "line": 5,
+        "wordIndex": 2,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            0,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 5,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -0.5787206730570919,
+            2.8554896498218314,
+            -16.223908798750834
+          ],
+          "look": [
+            0,
+            3.40381274026481,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 5,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 5,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "start": {
+        "line": 5,
+        "wordIndex": 2,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "line": 6,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            0,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "stand",
+          "expr": "nervous",
+          "beats": [
+            {
+              "at": {
+                "line": 5,
+                "wordIndex": 2,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "nervous"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -0.18332604613507358,
+            2.8554896498218314,
+            -21.87831539805974
+          ],
+          "look": [
+            0,
+            2.6847429627709873,
+            -24.5
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 5,
+              "wordIndex": 2,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 5,
+            "wordIndex": 2,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 5,
+            "wordIndex": 2,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            0,
+            2.8554896498218314,
+            -24.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "start": {
+        "line": 6,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "line": 7,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            0,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "stand",
+          "expr": "nervous",
+          "beats": [
+            {
+              "at": {
+                "line": 6,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "nervous"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -0.2872364383383037,
+            2.8554896498218314,
+            -20.392327558557305
+          ],
+          "look": [
+            0,
+            2.5723527383830898,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 6,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 6,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 6,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            0,
+            2.8554896498218314,
+            -24.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "start": {
+        "line": 7,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 7,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "walk",
+          "expr": "neutral",
+          "prop": "axe",
+          "beats": [
+            {
+              "at": {
+                "line": 7,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "walk",
+              "expr": "neutral",
+              "prop": "axe"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.75224194253036,
+            2.88915909917471,
+            -88.59816474745269
+          ],
+          "look": [
+            150,
+            3.480168378028596,
+            -80
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 7,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "satyavan"
+          ],
+          "at": {
+            "line": 7,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "start": {
+        "line": 7,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 8,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "chop",
+          "expr": "pained",
+          "prop": "axe",
+          "beats": [
+            {
+              "at": {
+                "line": 7,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "chop",
+              "expr": "pained",
+              "prop": "axe"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.37147379171947,
+            2.88915909917471,
+            -84.24596486845854
+          ],
+          "look": [
+            150,
+            2.5960875592644337,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 7,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "satyavan"
+          ],
+          "at": {
+            "line": 7,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 7,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            150,
+            2.88915909917471,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "start": {
+        "line": 8,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 8,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "stern",
+          "prop": "net",
+          "beats": [
+            {
+              "at": {
+                "line": 8,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "stern",
+              "prop": "net"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "puff",
+          "at": {
+            "line": 8,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "pos": [
+            150,
+            3.7,
+            -80.6
+          ],
+          "size": 2.6,
+          "dur": 12
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.78428194917603,
+            2.969526269658038,
+            -88.96438369919353
+          ],
+          "look": [
+            150,
+            3.564964829598057,
+            -80
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 8,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "yama"
+          ],
+          "at": {
+            "line": 8,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "start": {
+        "line": 8,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 9,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 8,
+                "wordIndex": 4,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "stern"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.24914518341492,
+            2.969526269658038,
+            -82.8477424774136
+          ],
+          "look": [
+            150,
+            2.7838018030413303,
+            -80
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 8,
+              "wordIndex": 4,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "yama"
+          ],
+          "at": {
+            "line": 8,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 8,
+            "wordIndex": 4,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            150,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "start": {
+        "line": 9,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 9,
+        "wordIndex": 3,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "satyavan",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 9,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "stern",
+              "face": "satyavan"
+            },
+            {
+              "at": {
+                "frame": 1192
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "face": "yama",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "nervous",
+          "beats": [
+            {
+              "at": {
+                "line": 9,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "nervous",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 1192
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.36512454438895,
+            2.969526269658038,
+            -84.46186138719372
+          ],
+          "look": [
+            149.97476225478545,
+            2.6615527870404594,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 9,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "yama",
+            "satyavan"
+          ],
+          "at": {
+            "line": 9,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 9,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "start": {
+        "line": 9,
+        "wordIndex": 3,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 10,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 9,
+                "wordIndex": 3,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "stern"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.24914518341492,
+            2.969526269658038,
+            -82.8477424774136
+          ],
+          "look": [
+            150,
+            2.7838018030413303,
+            -80
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 9,
+              "wordIndex": 3,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "yama"
+          ],
+          "at": {
+            "line": 9,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 9,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            150,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "start": {
+        "line": 10,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 10,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "grab",
+          "expr": "stern",
+          "prop": "net",
+          "beats": [
+            {
+              "at": {
+                "line": 10,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "grab",
+              "expr": "stern",
+              "prop": "net"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.3903622896035,
+            2.969526269658038,
+            -84.46186138719372
+          ],
+          "look": [
+            150,
+            2.6615527870404594,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 10,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "yama"
+          ],
+          "at": {
+            "line": 10,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 10,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            150,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "start": {
+        "line": 10,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 11,
+        "wordIndex": 3,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            149.5,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "walk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 10,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "walk",
+              "expr": "neutral"
+            }
+          ]
+        },
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            150.5,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "walk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 10,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "walk",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 1409
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": {
+            "at": "yama",
+            "d": [
+              0,
+              1.6695262696580377,
+              8.99862618860068
+            ]
+          },
+          "look": {
+            "at": "yama",
+            "d": [
+              0,
+              1.322573642692234,
+              0
+            ]
+          },
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 10,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "yama",
+            "savitri"
+          ],
+          "at": {
+            "line": 10,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "follow",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "start": {
+        "line": 11,
+        "wordIndex": 3,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 12,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 11,
+                "wordIndex": 3,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.2290528299137,
+            2.8554896498218314,
+            -82.61808582600928
+          ],
+          "look": [
+            150,
+            2.6847429627709873,
+            -80
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 11,
+              "wordIndex": 3,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 11,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 11,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            150,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S23",
+      "start": {
+        "line": 12,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 13,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            149.65,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "bless",
+          "expr": "grin",
+          "beats": [
+            {
+              "at": {
+                "line": 12,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "bless",
+              "expr": "grin",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 1651
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            150.35,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 12,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 1651
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.37734714300083,
+            2.969526269658038,
+            -84.46186138719372
+          ],
+          "look": [
+            149.98698485339733,
+            2.6615527870404594,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 12,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "yama",
+            "savitri"
+          ],
+          "at": {
+            "line": 12,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 12,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.65,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S24",
+      "start": {
+        "line": 13,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 14,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 13,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "stern",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 1767
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 13,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 1767
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            152.55597920647028,
+            2.969526269658038,
+            -83.6689041646729
+          ],
+          "look": [
+            149.98698485339733,
+            2.6615527870404594,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 13,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "yama",
+            "savitri"
+          ],
+          "at": {
+            "line": 13,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 13,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.969526269658038,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S25",
+      "start": {
+        "line": 14,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 15,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            150,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "think",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 14,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "think",
+              "expr": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.2290528299137,
+            2.8554896498218314,
+            -82.61808582600928
+          ],
+          "look": [
+            150,
+            2.6847429627709873,
+            -80
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 14,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "savitri"
+          ],
+          "at": {
+            "line": 14,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "eye",
+          "size": "close"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 14,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            150,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "start": {
+        "line": 15,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 15,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 15,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 2085
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 15,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 2085
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.4030072245847,
+            2.8554896498218314,
+            -84.45762984899726
+          ],
+          "look": [
+            150.01301514660267,
+            2.5723527383830898,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 15,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri",
+            "yama"
+          ],
+          "at": {
+            "line": 15,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 15,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S27",
+      "start": {
+        "line": 15,
+        "wordIndex": 6,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 16,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 15,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 2169
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 15,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 2169
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            152.5795731179084,
+            2.8554896498218314,
+            -83.66542465090839
+          ],
+          "look": [
+            150.01301514660267,
+            2.5723527383830898,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 15,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri",
+            "yama"
+          ],
+          "at": {
+            "line": 15,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 15,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S28",
+      "start": {
+        "line": 16,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 17,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 16,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 2308
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 16,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "neutral",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 2308
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.4030072245847,
+            2.8554896498218314,
+            -84.45762984899726
+          ],
+          "look": [
+            150.01301514660267,
+            2.5723527383830898,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 16,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri",
+            "yama"
+          ],
+          "at": {
+            "line": 16,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 16,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S29",
+      "start": {
+        "line": 17,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 18,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            147.25,
+            1.5,
+            -76.5
+          ],
+          "view": 173,
+          "pose": "talk",
+          "expr": "neutral",
+          "beats": [
+            {
+              "at": {
+                "line": 17,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "neutral",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 2416
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            147.95,
+            1.5,
+            -76.5
+          ],
+          "view": 173,
+          "pose": "bless",
+          "expr": "grin",
+          "beats": [
+            {
+              "at": {
+                "line": 17,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "bless",
+              "expr": "grin",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 2416
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.09111064814363,
+            2.8554896498218314,
+            -79.78854380280079
+          ],
+          "look": [
+            147.61301514660266,
+            2.5723527383830898,
+            -76.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 17,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri",
+            "yama"
+          ],
+          "at": {
+            "line": 17,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 17,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            147.25,
+            2.8554896498218314,
+            -76.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S30",
+      "start": {
+        "line": 18,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 19,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "face": "yama",
+          "pos": [
+            149.55,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "talk",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 18,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "talk",
+              "expr": "stern",
+              "face": "yama"
+            },
+            {
+              "at": {
+                "frame": 2609
+              },
+              "facing": -1,
+              "mirror": false,
+              "look": -1
+            }
+          ]
+        },
+        {
+          "who": "yama",
+          "id": "yama",
+          "face": "savitri",
+          "pos": [
+            150.45,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "shock",
+          "beats": [
+            {
+              "at": {
+                "line": 18,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "shock",
+              "face": "savitri"
+            },
+            {
+              "at": {
+                "frame": 2609
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.4030072245847,
+            2.2146461106566244,
+            -84.45762984899726
+          ],
+          "look": [
+            150.01301514660267,
+            2.5723527383830898,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 18,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "savitri",
+            "yama"
+          ],
+          "at": {
+            "line": 18,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "low",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 18,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.55,
+            2.8554896498218314,
+            -80
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S31",
+      "start": {
+        "line": 19,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "line": 20,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "yama",
+          "id": "yama",
+          "pos": [
+            149.5,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "present",
+          "expr": "relief",
+          "prop": "net",
+          "beats": [
+            {
+              "at": {
+                "line": 19,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "present",
+              "expr": "relief",
+              "prop": "net"
+            }
+          ]
+        },
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            150.5,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "stand",
+          "expr": "relief",
+          "beats": [
+            {
+              "at": {
+                "line": 19,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "stand",
+              "expr": "relief"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": {
+            "line": 19,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "pos": [
+            150,
+            3.7,
+            -80.6
+          ],
+          "size": 0.8
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.77126680257336,
+            2.969526269658038,
+            -88.96438369919353
+          ],
+          "look": [
+            149.98698485339733,
+            3.5717932990788213,
+            -80
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 19,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "yama",
+            "savitri"
+          ],
+          "at": {
+            "line": 19,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        }
+      ]
+    },
+    {
+      "id": "S32",
+      "start": {
+        "line": 20,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "end": {
+        "end": true,
+        "offset": 0
+      },
+      "actors": [
+        {
+          "who": "satyavan",
+          "id": "satyavan",
+          "pos": [
+            149.65,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "sit",
+          "expr": "dazed",
+          "beats": [
+            {
+              "at": {
+                "line": 20,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "sit",
+              "expr": "dazed"
+            }
+          ]
+        },
+        {
+          "who": "savitri",
+          "id": "savitri",
+          "pos": [
+            150.35,
+            1.5,
+            -80
+          ],
+          "view": 175,
+          "pose": "sit",
+          "expr": "relief",
+          "beats": [
+            {
+              "at": {
+                "line": 20,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "sit",
+              "expr": "relief"
+            }
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            150.38369639033132,
+            2.88915909917471,
+            -84.24596486845854
+          ],
+          "look": [
+            150.01222259861186,
+            2.5960875592644337,
+            -80
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 20,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "satyavan",
+            "savitri"
+          ],
+          "at": {
+            "line": 20,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 20,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            149.65,
+            2.88915909917471,
+            -80
+          ]
+        }
+      ]
+    }
+  ],
+  "cast": {
+    "savitri": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "slim",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "flower": "#fff2c8",
+        "earrings": "#e8b53a"
+      },
+      "seed": 341
+    },
+    "satyavan": {
+      "spec": {
+        "skin": "#7f4b2e",
+        "build": "adult",
+        "top": null,
+        "lower": "#6b4a2e",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 830
+    },
+    "yama": {
+      "spec": {
+        "skin": "#3a3f9e",
+        "build": "big",
+        "top": "#c62828",
+        "lower": "#c62828",
+        "drape": "#c62828",
+        "head": "crown",
+        "crownCol": "#e8b53a",
+        "necklace": "#e8b53a",
+        "earrings": "#e8b53a"
+      },
+      "seed": 645
+    },
+    "narada": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "elder",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "bun",
+        "hairCol": "#6a6a72",
+        "beard": "#8a8a92",
+        "beardLong": true,
+        "tilak": "#f4f1ea"
+      },
+      "seed": 830
+    }
+  },
+  "kicks": []
+}

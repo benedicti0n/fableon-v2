@@ -46,7 +46,7 @@
       "id": "yama",
       "name": "यम",
       "spec": {
-        "skin": "#2b1a1a",
+        "skin": "#3a3f9e",
         "build": "big",
         "top": "#c62828",
         "lower": "#c62828",
@@ -57,12 +57,12 @@
         "earrings": "#e8b53a"
       },
       "mustHave": [
-        "dark-skin",
+        "indigo-skin",
         "red-attire",
         "crown",
         "god"
       ],
-      "notes": "काला शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश",
+      "notes": "गहरी नीली-इंडिगो देह, लाल आँखें, लाल वस्त्र, हाथ में पाश",
       "scale": 1
     },
     {

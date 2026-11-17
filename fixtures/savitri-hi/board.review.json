@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "model": "deterministic base + measured variants",
+  "shots": [
+    {
+      "id": "S1",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S2",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S4",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S5",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S6",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S7",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S8",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S10",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S11",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S12",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S13",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S14",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S15",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S16",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S17",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S18",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S19",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S20",
+      "rounds": 1,
+      "needsHuman": true,
+      "findings": [
+        "face too small savitri: head 6.0% while expressing",
+        "blocker world:deer.forest canopy: fills 33% in front of yama"
+      ]
+    },
+    {
+      "id": "S22",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S23",
+      "rounds": 5,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S24",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S25",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S26",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S27",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S28",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S29",
+      "rounds": 12,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S30",
+      "rounds": 4,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S31",
+      "rounds": 1,
+      "needsHuman": false,
+      "findings": []
+    },
+    {
+      "id": "S32",
+      "rounds": 5,
+      "needsHuman": false,
+      "findings": []
+    }
+  ]
+}

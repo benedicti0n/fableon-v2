@@ -1,0 +1,1766 @@
+{
+  "version": 1,
+  "cast": {
+    "savitri": {
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "slim",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "flower": "#fff2c8",
+        "earrings": "#e8b53a"
+      },
+      "seed": 341
+    },
+    "satyavan": {
+      "spec": {
+        "skin": "#7f4b2e",
+        "build": "adult",
+        "top": null,
+        "lower": "#6b4a2e",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "seed": 830
+    },
+    "yama": {
+      "spec": {
+        "skin": "#3a3f9e",
+        "build": "big",
+        "top": "#c62828",
+        "lower": "#c62828",
+        "drape": "#c62828",
+        "head": "crown",
+        "crownCol": "#e8b53a",
+        "necklace": "#e8b53a",
+        "earrings": "#e8b53a"
+      },
+      "seed": 645
+    },
+    "narada": {
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "elder",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "bun",
+        "hairCol": "#6a6a72",
+        "beard": "#8a8a92",
+        "beardLong": true,
+        "tilak": "#f4f1ea"
+      },
+      "seed": 830
+    }
+  },
+  "shots": [
+    {
+      "id": "S1",
+      "start": "0:0",
+      "end": "0:4",
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "palace.courtyard",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "stern",
+          "do": [
+            [
+              "0:0",
+              {
+                "pose": "stand",
+                "expr": "stern"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "0:0",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "start": "0:4",
+      "end": "1:0",
+      "light": "day",
+      "sets": [
+        "palace"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "palace.courtyard",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "do": [
+            [
+              "0:4",
+              {
+                "pose": "stand",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "0:4",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "start": "1:0",
+      "end": "2:0",
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "hermitage.clearing",
+          "nudge": [
+            -0.5,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "stern",
+          "do": [
+            [
+              "1:0",
+              {
+                "pose": "stand",
+                "expr": "stern"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "hermitage.clearing",
+          "nudge": [
+            0.5,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "do": [
+            [
+              "1:0",
+              {
+                "pose": "stand",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "1:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "start": "2:0",
+      "end": "2:4",
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "hermitage.clearing",
+          "nudge": [
+            -0.5,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "narada",
+          "do": [
+            [
+              "2:0",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "narada"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "narada",
+          "id": "narada",
+          "at": "hermitage.clearing",
+          "nudge": [
+            0.5,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "stern",
+          "face": "savitri",
+          "do": [
+            [
+              "2:0",
+              {
+                "pose": "talk",
+                "expr": "stern",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "2:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "narada"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "start": "2:4",
+      "end": "3:0",
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "hermitage.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "nervous",
+          "do": [
+            [
+              "2:4",
+              {
+                "pose": "stand",
+                "expr": "nervous"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "2:4",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "start": "3:0",
+      "end": "4:0",
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "hermitage.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "stern",
+          "do": [
+            [
+              "3:0",
+              {
+                "pose": "stand",
+                "expr": "stern"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "3:0",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "start": "4:0",
+      "end": "5:0",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "village.front",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "do": [
+            [
+              "4:0",
+              {
+                "pose": "stand",
+                "expr": "smile"
+              }
+            ],
+            [
+              "4:3",
+              {
+                "pose": "hold",
+                "expr": "smile",
+                "prop": null
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "village.front",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "smile",
+          "do": [
+            [
+              "4:0",
+              {
+                "pose": "stand",
+                "expr": "smile"
+              }
+            ],
+            [
+              "4:3",
+              {
+                "pose": "hold",
+                "expr": "smile",
+                "prop": null
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "4:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "4:3",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "cut": true
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "4:3",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          },
+          "size": 0.8
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "start": "5:0",
+      "end": "5:2",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "village.front",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "do": [
+            [
+              "5:0",
+              {
+                "pose": "stand",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "5:0",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "start": "5:2",
+      "end": "6:0",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "village.front",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "nervous",
+          "do": [
+            [
+              "5:2",
+              {
+                "pose": "stand",
+                "expr": "nervous"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "5:2",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "start": "6:0",
+      "end": "7:0",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "village.front",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "nervous",
+          "do": [
+            [
+              "6:0",
+              {
+                "pose": "stand",
+                "expr": "nervous"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "6:0",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "start": "7:0",
+      "end": "7:6",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "walk",
+          "expr": "neutral",
+          "prop": "axe",
+          "do": [
+            [
+              "7:0",
+              {
+                "pose": "walk",
+                "expr": "neutral",
+                "prop": "axe"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "7:0",
+          "size": "wide",
+          "on": [
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "start": "7:6",
+      "end": "8:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "chop",
+          "expr": "pained",
+          "prop": "axe",
+          "do": [
+            [
+              "7:6",
+              {
+                "pose": "chop",
+                "expr": "pained",
+                "prop": "axe"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "7:6",
+          "size": "medium",
+          "on": [
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "start": "8:0",
+      "end": "8:4",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "stern",
+          "prop": "net",
+          "do": [
+            [
+              "8:0",
+              {
+                "pose": "stand",
+                "expr": "stern",
+                "prop": "net"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "8:0",
+          "size": "wide",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "puff",
+          "at": "8:0",
+          "pos": {
+            "mark": "deer.clearing",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          },
+          "size": 2.6,
+          "dur": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "start": "8:4",
+      "end": "9:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "stern",
+          "do": [
+            [
+              "8:4",
+              {
+                "pose": "stand",
+                "expr": "stern"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "8:4",
+          "size": "close",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "start": "9:0",
+      "end": "9:3",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "stern",
+          "face": "satyavan",
+          "do": [
+            [
+              "9:0",
+              {
+                "pose": "talk",
+                "expr": "stern",
+                "face": "satyavan"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "nervous",
+          "face": "yama",
+          "do": [
+            [
+              "9:0",
+              {
+                "pose": "stand",
+                "expr": "nervous",
+                "face": "yama"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "9:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "start": "9:3",
+      "end": "10:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "stern",
+          "do": [
+            [
+              "9:3",
+              {
+                "pose": "talk",
+                "expr": "stern"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "9:3",
+          "size": "close",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "start": "10:0",
+      "end": "10:6",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "grab",
+          "expr": "stern",
+          "prop": "net",
+          "do": [
+            [
+              "10:0",
+              {
+                "pose": "grab",
+                "expr": "stern",
+                "prop": "net"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "10:0",
+          "size": "medium",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "start": "10:6",
+      "end": "11:3",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.5,
+            0,
+            0
+          ],
+          "pose": "walk",
+          "expr": "neutral",
+          "do": [
+            [
+              "10:6",
+              {
+                "pose": "walk",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0.5,
+            0,
+            0
+          ],
+          "pose": "walk",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "10:6",
+              {
+                "pose": "walk",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "10:6",
+          "size": "wide",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "follow"
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "start": "11:3",
+      "end": "12:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "neutral",
+          "do": [
+            [
+              "11:3",
+              {
+                "pose": "talk",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "11:3",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S23",
+      "start": "12:0",
+      "end": "13:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.35,
+            0,
+            0
+          ],
+          "pose": "bless",
+          "expr": "grin",
+          "face": "savitri",
+          "do": [
+            [
+              "12:0",
+              {
+                "pose": "bless",
+                "expr": "grin",
+                "face": "savitri"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0.35,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "12:0",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "12:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S24",
+      "start": "13:0",
+      "end": "14:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "stern",
+          "face": "savitri",
+          "do": [
+            [
+              "13:0",
+              {
+                "pose": "talk",
+                "expr": "stern",
+                "face": "savitri"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "13:0",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "13:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S25",
+      "start": "14:0",
+      "end": "15:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "think",
+          "expr": "neutral",
+          "do": [
+            [
+              "14:0",
+              {
+                "pose": "think",
+                "expr": "neutral"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "14:0",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold"
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "start": "15:0",
+      "end": "15:6",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "15:0",
+              {
+                "pose": "talk",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri",
+          "do": [
+            [
+              "15:0",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "15:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S27",
+      "start": "15:6",
+      "end": "16:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "15:6",
+              {
+                "pose": "talk",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri",
+          "do": [
+            [
+              "15:6",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "15:6",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S28",
+      "start": "16:0",
+      "end": "17:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "16:0",
+              {
+                "pose": "talk",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri",
+          "do": [
+            [
+              "16:0",
+              {
+                "pose": "stand",
+                "expr": "neutral",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "16:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S29",
+      "start": "17:0",
+      "end": "18:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.pandu",
+          "nudge": [
+            -0.35,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama",
+          "do": [
+            [
+              "17:0",
+              {
+                "pose": "talk",
+                "expr": "neutral",
+                "face": "yama"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.pandu",
+          "nudge": [
+            0.35,
+            0,
+            0
+          ],
+          "pose": "bless",
+          "expr": "grin",
+          "face": "savitri",
+          "do": [
+            [
+              "17:0",
+              {
+                "pose": "bless",
+                "expr": "grin",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "17:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S30",
+      "start": "18:0",
+      "end": "19:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "talk",
+          "expr": "stern",
+          "face": "yama",
+          "do": [
+            [
+              "18:0",
+              {
+                "pose": "talk",
+                "expr": "stern",
+                "face": "yama"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "shock",
+          "face": "savitri",
+          "do": [
+            [
+              "18:0",
+              {
+                "pose": "stand",
+                "expr": "shock",
+                "face": "savitri"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "18:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    },
+    {
+      "id": "S31",
+      "start": "19:0",
+      "end": "20:0",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "yama",
+          "id": "yama",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.5,
+            0,
+            0
+          ],
+          "pose": "present",
+          "expr": "relief",
+          "prop": "net",
+          "do": [
+            [
+              "19:0",
+              {
+                "pose": "present",
+                "expr": "relief",
+                "prop": "net"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0.5,
+            0,
+            0
+          ],
+          "pose": "stand",
+          "expr": "relief",
+          "do": [
+            [
+              "19:0",
+              {
+                "pose": "stand",
+                "expr": "relief"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "19:0",
+          "size": "wide",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "19:0",
+          "pos": {
+            "mark": "deer.clearing",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          },
+          "size": 0.8
+        }
+      ]
+    },
+    {
+      "id": "S32",
+      "start": "20:0",
+      "end": "end",
+      "light": "day",
+      "sets": [
+        "deer"
+      ],
+      "actors": [
+        {
+          "cast": "satyavan",
+          "id": "satyavan",
+          "at": "deer.clearing",
+          "nudge": [
+            -0.35,
+            0,
+            0
+          ],
+          "pose": "sit",
+          "expr": "dazed",
+          "do": [
+            [
+              "20:0",
+              {
+                "pose": "sit",
+                "expr": "dazed"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "savitri",
+          "id": "savitri",
+          "at": "deer.clearing",
+          "nudge": [
+            0.35,
+            0,
+            0
+          ],
+          "pose": "sit",
+          "expr": "relief",
+          "do": [
+            [
+              "20:0",
+              {
+                "pose": "sit",
+                "expr": "relief"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "20:0",
+          "size": "medium",
+          "on": [
+            "satyavan",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        }
+      ]
+    }
+  ]
+}

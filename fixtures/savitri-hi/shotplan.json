@@ -1,0 +1,1391 @@
+{
+  "version": 1,
+  "shots": [
+    {
+      "id": "S1",
+      "lines": [
+        0
+      ],
+      "start": "0:0",
+      "set": "palace",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [
+        "palace.courtyard"
+      ],
+      "action": "सावित्री महल के आँगन में खड़ी है, निर्णायक भाव से।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "0:0",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "with": [
+            "palace.courtyard"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Establishing shot of Savitri in the palace courtyard, decisive stance."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "0:0",
+          "pose": "stand",
+          "expr": "stern"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S2",
+      "lines": [
+        0
+      ],
+      "start": "0:4",
+      "set": "palace",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री का मध्यम शॉट, दर्शक की ओर देखती हुई।",
+      "hold": true,
+      "why": "Close-up on Savitri for emphasis",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "0:4",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Medium shot of Savitri looking toward the viewer."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "0:4",
+          "pose": "stand",
+          "expr": "neutral"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S4",
+      "lines": [
+        1
+      ],
+      "start": "1:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "satyavan"
+      ],
+      "mustShow": [
+        "hermitage.clearing"
+      ],
+      "action": "सावित्री का क्लोज़-अप, निर्णय की मुद्रा में। सावित्री और सत्यवान वन में आमने-सामने खड़े हैं।",
+      "hold": false,
+      "why": "Emphasize her choice",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "1:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "with": [
+            "hermitage.clearing"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Wide shot of Savitri and Satyavan facing each other in the forest clearing."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "1:0",
+          "pose": "stand",
+          "expr": "stern"
+        },
+        {
+          "who": "satyavan",
+          "at": "1:0",
+          "pose": "stand",
+          "expr": "neutral"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S5",
+      "lines": [
+        2
+      ],
+      "start": "2:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "narada"
+      ],
+      "mustShow": [
+        "hermitage.hut"
+      ],
+      "action": "नारद सावित्री को चेतावनी दे रहे हैं।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "2:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "narada"
+          ],
+          "with": [
+            "hermitage.hut"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "note": "Narada warning Savitri near the hermitage hut. (turn to avoid a jump cut)"
+        }
+      ],
+      "beats": [
+        {
+          "who": "narada",
+          "at": "2:0",
+          "pose": "talk",
+          "expr": "stern",
+          "face": "savitri"
+        },
+        {
+          "who": "savitri",
+          "at": "2:0",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "narada"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S6",
+      "lines": [
+        2
+      ],
+      "start": "2:4",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री की प्रतिक्रिया, चिंतित भाव।",
+      "hold": false,
+      "why": "Reaction to warning",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "2:4",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of Savitri's worried reaction."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "2:4",
+          "pose": "stand",
+          "expr": "nervous"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S7",
+      "lines": [
+        3
+      ],
+      "start": "3:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री की आँखों में दृढ़ता, मध्यम शॉट।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "3:0",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Medium shot of Savitri with determination in her eyes."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "3:0",
+          "pose": "stand",
+          "expr": "stern"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S8",
+      "lines": [
+        4
+      ],
+      "start": "4:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "satyavan"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "गाँव में विवाह का दृश्य, दोनों खड़े हैं। दोनों का क्लोज़-अप, हाथ पकड़े हुए।",
+      "hold": false,
+      "why": "Intimate moment",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "4:0",
+          "size": "wide",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "with": [
+            "village.front"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Wide shot of the wedding scene in the village."
+        },
+        {
+          "at": "4:3",
+          "size": "close",
+          "on": [
+            "savitri",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of the couple holding hands."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "4:0",
+          "pose": "stand",
+          "expr": "smile"
+        },
+        {
+          "who": "satyavan",
+          "at": "4:0",
+          "pose": "stand",
+          "expr": "smile"
+        },
+        {
+          "who": "savitri",
+          "at": "4:3",
+          "pose": "hold",
+          "expr": "smile",
+          "prop": null
+        },
+        {
+          "who": "satyavan",
+          "at": "4:3",
+          "pose": "hold",
+          "expr": "smile",
+          "prop": null
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "4:3",
+          "note": "Subtle sparkle to highlight the wedding moment."
+        }
+      ],
+      "standIns": []
+    },
+    {
+      "id": "S10",
+      "lines": [
+        5
+      ],
+      "start": "5:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [
+        "village.hut"
+      ],
+      "action": "सावित्री झोपड़ी के बाहर खड़ी है, सोच में।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "5:0",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "with": [
+            "village.hut"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Savitri standing outside the hut, lost in thought."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "5:0",
+          "pose": "stand",
+          "expr": "neutral"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S11",
+      "lines": [
+        5
+      ],
+      "start": "5:2",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री का क्लोज़-अप, दिन गिनती हुई।",
+      "hold": false,
+      "why": "Show her counting",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "5:2",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of Savitri counting the days."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "5:2",
+          "pose": "stand",
+          "expr": "nervous"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S12",
+      "lines": [
+        6
+      ],
+      "start": "6:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री चिंतित दिख रही है, मध्यम शॉट।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "6:0",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Medium shot of Savitri looking worried."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "6:0",
+          "pose": "stand",
+          "expr": "nervous"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S13",
+      "lines": [
+        7
+      ],
+      "start": "7:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "satyavan"
+      ],
+      "mustShow": [
+        "deer.clearing"
+      ],
+      "action": "सत्यवान कुल्हाड़ी लेकर जंगल की ओर जा रहा है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "7:0",
+          "size": "wide",
+          "on": [
+            "satyavan"
+          ],
+          "with": [
+            "deer.clearing"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Satyavan heading into the forest with an axe."
+        }
+      ],
+      "beats": [
+        {
+          "who": "satyavan",
+          "at": "7:0",
+          "pose": "walk",
+          "expr": "neutral",
+          "prop": "axe"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S14",
+      "lines": [
+        7
+      ],
+      "start": "7:6",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "satyavan"
+      ],
+      "mustShow": [],
+      "action": "सत्यवान लकड़ी काट रहा है, सिर में दर्द।",
+      "hold": false,
+      "why": "Show the pain",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "7:6",
+          "size": "medium",
+          "on": [
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Satyavan chopping wood, headache."
+        }
+      ],
+      "beats": [
+        {
+          "who": "satyavan",
+          "at": "7:6",
+          "pose": "chop",
+          "expr": "pained",
+          "prop": "axe"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S15",
+      "lines": [
+        8
+      ],
+      "start": "8:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "यम अचानक प्रकट होते हैं, हाथ में पाश।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "8:0",
+          "size": "wide",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Yama appears suddenly with a noose in hand."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "8:0",
+          "pose": "stand",
+          "expr": "stern",
+          "prop": "net"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "puff",
+          "at": "8:0",
+          "note": "Smoke puff for Yama's sudden appearance."
+        }
+      ],
+      "standIns": [
+        {
+          "asset": "noose",
+          "standIn": "net"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "lines": [
+        8
+      ],
+      "start": "8:4",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "यम का क्लोज़-अप, लाल आँखें और वस्त्र।",
+      "hold": false,
+      "why": "Describe Yama",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "8:4",
+          "size": "close",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of Yama with red eyes and garments."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "8:4",
+          "pose": "stand",
+          "expr": "stern"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S17",
+      "lines": [
+        9
+      ],
+      "start": "9:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama",
+        "satyavan"
+      ],
+      "mustShow": [],
+      "action": "यम सत्यवान से बात कर रहे हैं।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "9:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "satyavan"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Yama speaking to Satyavan."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "9:0",
+          "pose": "talk",
+          "expr": "stern",
+          "face": "satyavan"
+        },
+        {
+          "who": "satyavan",
+          "at": "9:0",
+          "pose": "stand",
+          "expr": "nervous",
+          "face": "yama"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S18",
+      "lines": [
+        9
+      ],
+      "start": "9:3",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "यम का क्लोज़-अप, बोलते हुए।",
+      "hold": false,
+      "why": "Emphasize his words",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "9:3",
+          "size": "close",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of Yama speaking."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "9:3",
+          "pose": "talk",
+          "expr": "stern"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S19",
+      "lines": [
+        10
+      ],
+      "start": "10:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "यम प्राण निकालकर बाँधते हैं और दक्षिण की ओर चलते हैं।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "10:0",
+          "size": "medium",
+          "on": [
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Yama extracting and binding the life force, then walking south."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "10:0",
+          "pose": "grab",
+          "expr": "stern",
+          "prop": "net"
+        }
+      ],
+      "fx": [],
+      "standIns": [
+        {
+          "asset": "noose",
+          "standIn": "net"
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "lines": [
+        10,
+        11
+      ],
+      "start": "10:6",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama",
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री पीछे-पीछे चलती है। सावित्री यम से बात कर रही है, शांत भाव से।",
+      "hold": true,
+      "why": "Show Savitri following",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "10:6",
+          "size": "wide",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "follow",
+          "note": "Savitri follows Yama, talking calmly."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "10:6",
+          "pose": "walk",
+          "expr": "neutral"
+        },
+        {
+          "who": "savitri",
+          "at": "10:6",
+          "pose": "walk",
+          "expr": "neutral",
+          "face": "yama"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S22",
+      "lines": [
+        11
+      ],
+      "start": "11:3",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री का क्लोज़-अप, बातें करती हुई।",
+      "hold": false,
+      "why": "Focus on her words",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "11:3",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Close-up of Savitri talking."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "11:3",
+          "pose": "talk",
+          "expr": "neutral"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S23",
+      "lines": [
+        12
+      ],
+      "start": "12:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama",
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "यम प्रसन्न मुद्रा में वरदान देने की बात कर रहे हैं।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "12:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Yama pleased, offering boons."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "12:0",
+          "pose": "bless",
+          "expr": "grin",
+          "face": "savitri"
+        },
+        {
+          "who": "savitri",
+          "at": "12:0",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "yama"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S24",
+      "lines": [
+        13
+      ],
+      "start": "13:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama",
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "यम शर्त स्पष्ट कर रहे हैं।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "13:0",
+          "size": "medium",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "note": "Yama clarifying the condition. (turn to avoid a jump cut)"
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "13:0",
+          "pose": "talk",
+          "expr": "stern",
+          "face": "savitri"
+        },
+        {
+          "who": "savitri",
+          "at": "13:0",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "yama"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S25",
+      "lines": [
+        14
+      ],
+      "start": "14:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सावित्री सोच में पड़ गई है, दर्शक को समझाने वाला भाव।",
+      "hold": true,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "14:0",
+          "size": "close",
+          "on": [
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "hold",
+          "note": "Savitri thinking, explaining to the viewer."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "14:0",
+          "pose": "think",
+          "expr": "neutral"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S26",
+      "lines": [
+        15
+      ],
+      "start": "15:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "सावित्री पहला वर माँग रही है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "15:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Savitri asking for the first boon."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "15:0",
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama"
+        },
+        {
+          "who": "yama",
+          "at": "15:0",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S27",
+      "lines": [
+        15
+      ],
+      "start": "15:6",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "सावित्री दूसरा वर माँग रही है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "15:6",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "note": "Savitri asking for the second boon. (turn to avoid a jump cut)"
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "15:6",
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama"
+        },
+        {
+          "who": "yama",
+          "at": "15:6",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S28",
+      "lines": [
+        16
+      ],
+      "start": "16:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "सावित्री तीसरा वर माँग रही है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "16:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Savitri asking for the third boon."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "16:0",
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama"
+        },
+        {
+          "who": "yama",
+          "at": "16:0",
+          "pose": "stand",
+          "expr": "neutral",
+          "face": "savitri"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S29",
+      "lines": [
+        17
+      ],
+      "start": "17:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "सावित्री चौथा वर माँग रही है, यम बिना सोचे दे रहे हैं।",
+      "hold": true,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "17:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "note": "Savitri asking for the fourth boon, Yama granting without thought. (turn to avoid a jump cut)"
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "17:0",
+          "pose": "talk",
+          "expr": "neutral",
+          "face": "yama"
+        },
+        {
+          "who": "yama",
+          "at": "17:0",
+          "pose": "bless",
+          "expr": "grin",
+          "face": "savitri"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S30",
+      "lines": [
+        18
+      ],
+      "start": "18:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "savitri",
+        "yama"
+      ],
+      "mustShow": [],
+      "action": "सावित्री यम को तर्क से घेर रही है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "18:0",
+          "size": "medium",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Savitri cornering Yama with logic."
+        }
+      ],
+      "beats": [
+        {
+          "who": "savitri",
+          "at": "18:0",
+          "pose": "talk",
+          "expr": "stern",
+          "face": "yama"
+        },
+        {
+          "who": "yama",
+          "at": "18:0",
+          "pose": "stand",
+          "expr": "shock",
+          "face": "savitri"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    },
+    {
+      "id": "S31",
+      "lines": [
+        19
+      ],
+      "start": "19:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "yama",
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "यम ने पाश खोल दिया, सत्यवान को जीवनदान दिया।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "19:0",
+          "size": "wide",
+          "on": [
+            "yama",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Yama releases the noose, granting Satyavan life."
+        }
+      ],
+      "beats": [
+        {
+          "who": "yama",
+          "at": "19:0",
+          "pose": "present",
+          "expr": "relief",
+          "prop": "net"
+        },
+        {
+          "who": "savitri",
+          "at": "19:0",
+          "pose": "stand",
+          "expr": "relief"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "19:0",
+          "note": "Sparkle as the noose is released."
+        }
+      ],
+      "standIns": [
+        {
+          "asset": "noose",
+          "standIn": "net"
+        }
+      ]
+    },
+    {
+      "id": "S32",
+      "lines": [
+        20
+      ],
+      "start": "20:0",
+      "set": "deer",
+      "light": "day",
+      "characters": [
+        "satyavan",
+        "savitri"
+      ],
+      "mustShow": [],
+      "action": "सत्यवान सावित्री की गोद में जागा, भ्रमित है।",
+      "hold": false,
+      "why": "",
+      "lightChange": false,
+      "keys": [
+        {
+          "at": "20:0",
+          "size": "medium",
+          "on": [
+            "satyavan",
+            "savitri"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Satyavan waking in Savitri's lap, confused."
+        }
+      ],
+      "beats": [
+        {
+          "who": "satyavan",
+          "at": "20:0",
+          "pose": "sit",
+          "expr": "dazed"
+        },
+        {
+          "who": "savitri",
+          "at": "20:0",
+          "pose": "sit",
+          "expr": "relief"
+        }
+      ],
+      "fx": [],
+      "standIns": []
+    }
+  ]
+}
