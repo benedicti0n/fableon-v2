@@ -13,6 +13,7 @@ import { runCommand } from './run-command.js';
 import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
 import { boardCommand } from './board-command.js';
+import { usageCommand } from './usage.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -90,6 +91,13 @@ export function main(argv = process.argv) {
     .option('--shot <id>', 're-render only this shot segment after the board run')
     .option('--notes <text>', 'director notes; reruns the board stage')
     .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('usage')
+    .description('aggregate Fableon provider usage from every calls.jsonl and read the provider balances')
+    .option('--since <date>', 'only calls on or after YYYY-MM-DD')
+    .option('--json', 'print machine-readable json instead of tables')
+    .action(async (opts) => { try { await usageCommand(opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('models')
