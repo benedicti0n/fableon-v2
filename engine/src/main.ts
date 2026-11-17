@@ -306,7 +306,7 @@ const drawShot = (id: number, f: number) => {
 (window as unknown as Record<string, unknown>).SHOTLIST = RT.SHOTS.map((s) => [s.id, s.a, s.b, s.light, s.sets.join("+")]);
 (window as unknown as Record<string, unknown>).QA = {
   shots: RT.SHOTS.map((s) => ({ id: s.id, a: s.a, b: s.b })), flash: [RT.FLASH_AT, RT.FLASH_AT + 4], flashes: RT.FLASHES.map((f) => [f, f + 4]),
-  xfade: RT.SHOTS.filter((s) => RT.XFADE[s.id]).map((s) => [s.a - RT.XFADE[s.id] / 2, s.a + RT.XFADE[s.id] / 2]),
+  xfade: RT.SHOTS.filter((s) => RT.XFADE[s.id]).map((s) => [Math.round(s.a - RT.XFADE[s.id] / 2), Math.round(s.a + RT.XFADE[s.id] / 2)]),
   planned: RT.KICKS.map(([f]) => [f, f + 8]),
 };
 const camJumps = () => {

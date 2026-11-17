@@ -29,10 +29,11 @@
           "with": [
             "palace.courtyard"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Establishing shot of Savitri in the palace courtyard, decisive stance."
+          "note": "Establishing shot of Savitri in the palace courtyard, decisive stance.",
+          "foreground": "palace.courtyard"
         }
       ],
       "beats": [
@@ -44,7 +45,8 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "palace-day"
     },
     {
       "id": "S2",
@@ -65,14 +67,26 @@
       "keys": [
         {
           "at": "0:4",
-          "size": "medium",
+          "size": "full",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "note": "Medium shot of Savitri looking toward the viewer.",
+          "punch": "0:4"
+        },
+        {
+          "at": "0:8",
+          "size": "close",
           "on": [
             "savitri"
           ],
           "angle": "eye",
-          "side": "front",
-          "move": "hold",
-          "note": "Medium shot of Savitri looking toward the viewer."
+          "side": "left",
+          "move": "push",
+          "note": "Push in from the full figure to Savitri as the sentence lands."
         }
       ],
       "beats": [
@@ -84,7 +98,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "palace-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S4",
@@ -137,7 +156,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S5",
@@ -169,10 +193,11 @@
           "with": [
             "hermitage.hut"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
           "move": "push",
-          "note": "Narada warning Savitri near the hermitage hut. (turn to avoid a jump cut)"
+          "note": "Narada warning Savitri near the hermitage hut. (turn to avoid a jump cut)",
+          "foreground": "hermitage.banyan"
         }
       ],
       "beats": [
@@ -192,7 +217,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "flash",
+        "frames": 4
+      }
     },
     {
       "id": "S6",
@@ -232,7 +262,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S7",
@@ -272,7 +307,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S8",
@@ -304,10 +344,11 @@
           "with": [
             "village.front"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Wide shot of the wedding scene in the village."
+          "note": "Wide shot of the wedding scene in the village.",
+          "foreground": "village.front"
         },
         {
           "at": "4:3",
@@ -357,7 +398,12 @@
           "note": "Subtle sparkle to highlight the wedding moment."
         }
       ],
-      "standIns": []
+      "standIns": [],
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S10",
@@ -387,7 +433,7 @@
           "with": [
             "village.hut"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
           "note": "Savitri standing outside the hut, lost in thought."
@@ -402,47 +448,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
-    },
-    {
-      "id": "S11",
-      "lines": [
-        5
-      ],
-      "start": "5:2",
-      "set": "village",
-      "light": "day",
-      "characters": [
-        "savitri"
-      ],
-      "mustShow": [],
-      "action": "सावित्री का क्लोज़-अप, दिन गिनती हुई।",
-      "hold": false,
-      "why": "Show her counting",
-      "lightChange": false,
-      "keys": [
-        {
-          "at": "5:2",
-          "size": "close",
-          "on": [
-            "savitri"
-          ],
-          "angle": "eye",
-          "side": "front",
-          "move": "hold",
-          "note": "Close-up of Savitri counting the days."
-        }
-      ],
-      "beats": [
-        {
-          "who": "savitri",
-          "at": "5:2",
-          "pose": "stand",
-          "expr": "nervous"
-        }
-      ],
-      "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S12",
@@ -463,14 +474,15 @@
       "keys": [
         {
           "at": "6:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Medium shot of Savitri looking worried."
+          "note": "Medium shot of Savitri looking worried.",
+          "foreground": "village.door"
         }
       ],
       "beats": [
@@ -482,7 +494,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S13",
@@ -491,7 +508,7 @@
       ],
       "start": "7:0",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "satyavan"
       ],
@@ -501,7 +518,7 @@
       "action": "सत्यवान कुल्हाड़ी लेकर जंगल की ओर जा रहा है।",
       "hold": false,
       "why": "",
-      "lightChange": false,
+      "lightChange": true,
       "keys": [
         {
           "at": "7:0",
@@ -512,10 +529,24 @@
           "with": [
             "deer.clearing"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Satyavan heading into the forest with an axe."
+          "note": "Satyavan heading into the forest with an axe.",
+          "reveal": true,
+          "punch": "7:0"
+        },
+        {
+          "at": "7:3",
+          "size": "medium",
+          "on": [
+            "satyavan"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "note": "Push from the wide forest into Satyavan at work.",
+          "ease": "glide"
         }
       ],
       "beats": [
@@ -528,7 +559,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S14",
@@ -537,7 +573,7 @@
       ],
       "start": "7:6",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "satyavan"
       ],
@@ -553,7 +589,7 @@
           "on": [
             "satyavan"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "hold",
           "note": "Satyavan chopping wood, headache."
@@ -569,7 +605,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S15",
@@ -578,7 +619,7 @@
       ],
       "start": "8:0",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "yama"
       ],
@@ -594,10 +635,15 @@
           "on": [
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Yama appears suddenly with a noose in hand."
+          "note": "Yama appears suddenly with a noose in hand.",
+          "punch": "8:0",
+          "impact": "8:0",
+          "drama": true,
+          "reveal": true,
+          "foreground": "deer.deer"
         }
       ],
       "beats": [
@@ -621,7 +667,12 @@
           "asset": "noose",
           "standIn": "net"
         }
-      ]
+      ],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S16",
@@ -630,7 +681,7 @@
       ],
       "start": "8:4",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "yama"
       ],
@@ -642,11 +693,11 @@
       "keys": [
         {
           "at": "8:4",
-          "size": "close",
+          "size": "full",
           "on": [
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "hold",
           "note": "Close-up of Yama with red eyes and garments."
@@ -661,7 +712,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S17",
@@ -670,7 +726,7 @@
       ],
       "start": "9:0",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "yama",
         "satyavan"
@@ -711,7 +767,11 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "cut"
+      }
     },
     {
       "id": "S18",
@@ -720,7 +780,7 @@
       ],
       "start": "9:3",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "yama"
       ],
@@ -739,7 +799,8 @@
           "angle": "eye",
           "side": "front",
           "move": "hold",
-          "note": "Close-up of Yama speaking."
+          "note": "Close-up of Yama speaking.",
+          "foreground": "deer.clearing"
         }
       ],
       "beats": [
@@ -751,7 +812,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S19",
@@ -760,7 +826,7 @@
       ],
       "start": "10:0",
       "set": "deer",
-      "light": "day",
+      "light": "golden",
       "characters": [
         "yama"
       ],
@@ -797,7 +863,12 @@
           "asset": "noose",
           "standIn": "net"
         }
-      ]
+      ],
+      "scene": "deer-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S20",
@@ -806,26 +877,26 @@
         11
       ],
       "start": "10:6",
-      "set": "deer",
-      "light": "day",
+      "set": "village",
+      "light": "golden",
       "characters": [
-        "yama",
-        "savitri"
+        "yama"
       ],
-      "mustShow": [],
+      "mustShow": [
+        "village.palms"
+      ],
       "action": "सावित्री पीछे-पीछे चलती है। सावित्री यम से बात कर रही है, शांत भाव से।",
       "hold": true,
-      "why": "Show Savitri following",
+      "why": "Savitri follows out of frame after Yama; she speaks in the next key.",
       "lightChange": false,
       "keys": [
         {
           "at": "10:6",
           "size": "wide",
           "on": [
-            "yama",
-            "savitri"
+            "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "follow",
           "note": "Savitri follows Yama, talking calmly."
@@ -837,17 +908,25 @@
           "at": "10:6",
           "pose": "walk",
           "expr": "neutral"
-        },
-        {
-          "who": "savitri",
-          "at": "10:6",
-          "pose": "walk",
-          "expr": "neutral",
-          "face": "yama"
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "village-golden",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "moves": [
+        {
+          "who": "yama",
+          "from": "village.front",
+          "to": "village.palms",
+          "at": "10:6",
+          "until": "11:3",
+          "gait": "walk"
+        }
+      ]
     },
     {
       "id": "S22",
@@ -856,18 +935,31 @@
       ],
       "start": "11:3",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri"
       ],
-      "mustShow": [],
+      "mustShow": [
+        "deer.sage"
+      ],
       "action": "सावित्री का क्लोज़-अप, बातें करती हुई।",
       "hold": false,
       "why": "Focus on her words",
-      "lightChange": false,
+      "lightChange": true,
       "keys": [
         {
           "at": "11:3",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "note": "Wide night shot: Savitri follows Yama into the dark forest."
+        },
+        {
+          "at": "11:5",
           "size": "close",
           "on": [
             "savitri"
@@ -875,7 +967,8 @@
           "angle": "eye",
           "side": "front",
           "move": "hold",
-          "note": "Close-up of Savitri talking."
+          "note": "Close-up of Savitri talking.",
+          "foreground": "deer.kunti"
         }
       ],
       "beats": [
@@ -887,7 +980,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S23",
@@ -896,7 +994,7 @@
       ],
       "start": "12:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "yama",
         "savitri"
@@ -909,12 +1007,12 @@
       "keys": [
         {
           "at": "12:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "yama",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
           "note": "Yama pleased, offering boons."
@@ -937,7 +1035,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S24",
@@ -946,7 +1049,7 @@
       ],
       "start": "13:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "yama",
         "savitri"
@@ -959,12 +1062,12 @@
       "keys": [
         {
           "at": "13:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "yama",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
           "move": "push",
           "note": "Yama clarifying the condition. (turn to avoid a jump cut)"
@@ -987,7 +1090,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S25",
@@ -996,7 +1104,7 @@
       ],
       "start": "14:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri"
       ],
@@ -1008,14 +1116,28 @@
       "keys": [
         {
           "at": "14:0",
-          "size": "close",
+          "size": "full",
           "on": [
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "hold",
-          "note": "Savitri thinking, explaining to the viewer."
+          "move": "push",
+          "note": "Savitri thinking, explaining to the viewer.",
+          "foreground": "deer.pandu",
+          "punch": "14:0"
+        },
+        {
+          "at": "14:4",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "note": "Push from the full figure to Savitri during the analogy.",
+          "ease": "glide"
         }
       ],
       "beats": [
@@ -1027,7 +1149,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S26",
@@ -1036,7 +1163,7 @@
       ],
       "start": "15:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri",
         "yama"
@@ -1049,12 +1176,12 @@
       "keys": [
         {
           "at": "15:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
           "note": "Savitri asking for the first boon."
@@ -1077,7 +1204,11 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "cut"
+      }
     },
     {
       "id": "S27",
@@ -1086,7 +1217,7 @@
       ],
       "start": "15:6",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri",
         "yama"
@@ -1099,12 +1230,12 @@
       "keys": [
         {
           "at": "15:6",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
           "move": "push",
           "note": "Savitri asking for the second boon. (turn to avoid a jump cut)"
@@ -1127,7 +1258,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S28",
@@ -1136,7 +1272,7 @@
       ],
       "start": "16:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri",
         "yama"
@@ -1149,15 +1285,16 @@
       "keys": [
         {
           "at": "16:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Savitri asking for the third boon."
+          "note": "Savitri asking for the third boon.",
+          "foreground": "deer.sage"
         }
       ],
       "beats": [
@@ -1177,7 +1314,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S29",
@@ -1186,7 +1328,7 @@
       ],
       "start": "17:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri",
         "yama"
@@ -1199,6 +1341,21 @@
       "keys": [
         {
           "at": "17:0",
+          "size": "full",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "note": "Savitri asking for the fourth boon, Yama granting without thought. (turn to avoid a jump cut)",
+          "punch": "17:0",
+          "impact": "17:0",
+          "drama": true
+        },
+        {
+          "at": "17:4",
           "size": "medium",
           "on": [
             "savitri",
@@ -1207,7 +1364,8 @@
           "angle": "eye",
           "side": "left",
           "move": "push",
-          "note": "Savitri asking for the fourth boon, Yama granting without thought. (turn to avoid a jump cut)"
+          "ease": "glide",
+          "note": "Push from the full two-shot to the exchange."
         }
       ],
       "beats": [
@@ -1227,7 +1385,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S30",
@@ -1236,7 +1399,7 @@
       ],
       "start": "18:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "savitri",
         "yama"
@@ -1249,12 +1412,12 @@
       "keys": [
         {
           "at": "18:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
           "note": "Savitri cornering Yama with logic."
@@ -1277,7 +1440,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S31",
@@ -1286,7 +1454,7 @@
       ],
       "start": "19:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "yama",
         "savitri"
@@ -1307,7 +1475,9 @@
           "angle": "eye",
           "side": "front",
           "move": "push",
-          "note": "Yama releases the noose, granting Satyavan life."
+          "note": "Yama releases the noose, granting Satyavan life.",
+          "punch": "19:0",
+          "impact": "19:0"
         }
       ],
       "beats": [
@@ -1337,7 +1507,12 @@
           "asset": "noose",
           "standIn": "net"
         }
-      ]
+      ],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S32",
@@ -1346,7 +1521,7 @@
       ],
       "start": "20:0",
       "set": "deer",
-      "light": "day",
+      "light": "night",
       "characters": [
         "satyavan",
         "savitri"
@@ -1364,10 +1539,13 @@
             "satyavan",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Satyavan waking in Savitri's lap, confused."
+          "note": "Satyavan waking in Savitri's lap, confused.",
+          "punch": "20:0",
+          "impact": "20:0",
+          "drama": true
         }
       ],
       "beats": [
@@ -1385,7 +1563,12 @@
         }
       ],
       "fx": [],
-      "standIns": []
+      "standIns": [],
+      "scene": "deer-night",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     }
   ]
 }

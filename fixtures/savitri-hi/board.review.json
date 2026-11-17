@@ -40,18 +40,12 @@
     },
     {
       "id": "S8",
-      "rounds": 1,
+      "rounds": 15,
       "needsHuman": false,
       "findings": []
     },
     {
       "id": "S10",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S11",
       "rounds": 1,
       "needsHuman": false,
       "findings": []
@@ -94,7 +88,7 @@
     },
     {
       "id": "S18",
-      "rounds": 1,
+      "rounds": 12,
       "needsHuman": false,
       "findings": []
     },
@@ -107,11 +101,8 @@
     {
       "id": "S20",
       "rounds": 1,
-      "needsHuman": true,
-      "findings": [
-        "face too small savitri: head 6.0% while expressing",
-        "blocker world:deer.forest canopy: fills 33% in front of yama"
-      ]
+      "needsHuman": false,
+      "findings": []
     },
     {
       "id": "S22",
@@ -121,7 +112,7 @@
     },
     {
       "id": "S23",
-      "rounds": 5,
+      "rounds": 1,
       "needsHuman": false,
       "findings": []
     },
@@ -133,7 +124,7 @@
     },
     {
       "id": "S25",
-      "rounds": 1,
+      "rounds": 9,
       "needsHuman": false,
       "findings": []
     },
@@ -157,13 +148,13 @@
     },
     {
       "id": "S29",
-      "rounds": 12,
+      "rounds": 1,
       "needsHuman": false,
       "findings": []
     },
     {
       "id": "S30",
-      "rounds": 4,
+      "rounds": 1,
       "needsHuman": false,
       "findings": []
     },
@@ -175,9 +166,28 @@
     },
     {
       "id": "S32",
-      "rounds": 5,
+      "rounds": 6,
       "needsHuman": false,
       "findings": []
     }
-  ]
+  ],
+  "film": {
+    "stats": {
+      "shots": 28,
+      "cuts": 2,
+      "flashes": 1,
+      "crossfades": 24,
+      "holdShare": 0.837,
+      "dofShare": 0.389,
+      "foregroundShare": 0.265,
+      "lowHeightShare": 0.905,
+      "punches": 7,
+      "rolls": 3,
+      "kicks": 4,
+      "keys": 34,
+      "seconds": 85.33
+    },
+    "errors": [],
+    "skipped": false
+  }
 }

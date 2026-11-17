@@ -37,16 +37,18 @@ export async function runAnimatic({ projectDir }) {
     if (start > 10) xfade.push([start - 10, start]);
   }
   const meta = join(projectDir, 'animatic-qa-meta.json');
-  writeFile(meta, JSON.stringify({ ...metaRaw, planned, xfade }, null, 2) + '\n');
+  const ints = (list) => list.map(([a, b]) => [Math.round(a), Math.round(b)]);
+  writeFile(meta, JSON.stringify({ ...metaRaw, planned: ints(planned), xfade: ints(xfade) }, null, 2) + '\n');
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), video, qaDir, meta], { cwd: ROOT });
   const report = readFileSync(join(qaDir, 'report.md'), 'utf8');
   const lines = report.split('\n');
   const get = (p) => lines.find((l) => l.startsWith(p)) ?? '';
   const framesLine = get('FRAMES '), popsLine = get('POPS ');
   const framesList = (t) => { const i = t.indexOf('['); if (i < 0) return []; try { return JSON.parse(t.slice(i)); } catch { return []; } };
+  const spanList = (t) => { const out = []; const re = /\((\d+)\s*,\s*(\d+)\)/g; let m; while ((m = re.exec(t))) out.push([Number(m[1]), Number(m[2])]); return out; };
   const black = framesList((/black (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const white = framesList((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
-  const frozen = framesList((/frozen spans >=12f (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
+  const frozen = spanList(framesLine);
   const pops = framesList(popsLine);
   const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 1));
   const ok = !black.length && !white.length && !frozen.length && !unexplained.length;

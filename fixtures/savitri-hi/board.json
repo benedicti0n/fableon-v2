@@ -94,9 +94,10 @@
           "on": [
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "foreground": "palace.courtyard"
         }
       ]
     },
@@ -134,15 +135,31 @@
       "camera": [
         {
           "at": "0:4",
-          "size": "medium",
+          "size": "full",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "punch": "0:4"
+        },
+        {
+          "at": "0:8",
+          "size": "close",
           "on": [
             "savitri"
           ],
           "angle": "eye",
-          "side": "front",
-          "move": "hold"
+          "side": "left",
+          "move": "push",
+          "cut": true
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S4",
@@ -208,7 +225,11 @@
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S5",
@@ -274,11 +295,16 @@
             "savitri",
             "narada"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
-          "move": "push"
+          "move": "push",
+          "foreground": "hermitage.banyan"
         }
-      ]
+      ],
+      "transition": {
+        "type": "flash",
+        "frames": 4
+      }
     },
     {
       "id": "S6",
@@ -322,7 +348,11 @@
           "side": "front",
           "move": "hold"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S7",
@@ -366,7 +396,11 @@
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S8",
@@ -380,9 +414,9 @@
         {
           "cast": "savitri",
           "id": "savitri",
-          "at": "village.front",
+          "at": "village.boats",
           "nudge": [
-            -0.45,
+            -0.35,
             0,
             0
           ],
@@ -409,9 +443,9 @@
         {
           "cast": "satyavan",
           "id": "satyavan",
-          "at": "village.front",
+          "at": "village.boats",
           "nudge": [
-            0.45,
+            0.35,
             0,
             0
           ],
@@ -444,9 +478,10 @@
             "savitri",
             "satyavan"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "foreground": "village.front"
         },
         {
           "at": "4:3",
@@ -466,7 +501,7 @@
           "kind": "sparkle",
           "at": "4:3",
           "pos": {
-            "mark": "village.front",
+            "mark": "village.boats",
             "nudge": [
               0,
               2.2,
@@ -475,12 +510,16 @@
           },
           "size": 0.8
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S10",
       "start": "5:0",
-      "end": "5:2",
+      "end": "6:0",
       "light": "day",
       "sets": [
         "village"
@@ -515,55 +554,15 @@
           "on": [
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push"
         }
-      ]
-    },
-    {
-      "id": "S11",
-      "start": "5:2",
-      "end": "6:0",
-      "light": "day",
-      "sets": [
-        "village"
       ],
-      "actors": [
-        {
-          "cast": "savitri",
-          "id": "savitri",
-          "at": "village.front",
-          "nudge": [
-            0,
-            0,
-            0
-          ],
-          "pose": "stand",
-          "expr": "nervous",
-          "do": [
-            [
-              "5:2",
-              {
-                "pose": "stand",
-                "expr": "nervous"
-              }
-            ]
-          ]
-        }
-      ],
-      "camera": [
-        {
-          "at": "5:2",
-          "size": "close",
-          "on": [
-            "savitri"
-          ],
-          "angle": "eye",
-          "side": "front",
-          "move": "hold"
-        }
-      ]
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S12",
@@ -599,21 +598,26 @@
       "camera": [
         {
           "at": "6:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "foreground": "village.door"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S13",
       "start": "7:0",
       "end": "7:6",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -649,17 +653,35 @@
           "on": [
             "satyavan"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "punch": "7:0",
+          "reveal": true
+        },
+        {
+          "at": "7:3",
+          "size": "medium",
+          "on": [
+            "satyavan"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "cut": true,
+          "ease": "glide"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S14",
       "start": "7:6",
       "end": "8:0",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -695,17 +717,21 @@
           "on": [
             "satyavan"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "hold"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S15",
       "start": "8:0",
       "end": "8:4",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -741,9 +767,14 @@
           "on": [
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "punch": "8:0",
+          "impact": "8:0",
+          "drama": true,
+          "reveal": true,
+          "foreground": "deer.deer"
         }
       ],
       "fx": [
@@ -761,13 +792,17 @@
           "size": 2.6,
           "dur": 0.4
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S16",
       "start": "8:4",
       "end": "9:0",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -797,21 +832,25 @@
       "camera": [
         {
           "at": "8:4",
-          "size": "close",
+          "size": "full",
           "on": [
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "hold"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S17",
       "start": "9:0",
       "end": "9:3",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -875,13 +914,16 @@
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "cut"
+      }
     },
     {
       "id": "S18",
       "start": "9:3",
       "end": "10:0",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -889,7 +931,7 @@
         {
           "cast": "yama",
           "id": "yama",
-          "at": "deer.clearing",
+          "at": "deer.pandu",
           "nudge": [
             0,
             0,
@@ -917,15 +959,20 @@
           ],
           "angle": "eye",
           "side": "front",
-          "move": "hold"
+          "move": "hold",
+          "foreground": "deer.clearing"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S19",
       "start": "10:0",
       "end": "10:6",
-      "light": "day",
+      "light": "golden",
       "sets": [
         "deer"
       ],
@@ -965,57 +1012,54 @@
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S20",
       "start": "10:6",
       "end": "11:3",
-      "light": "day",
+      "light": "golden",
       "sets": [
-        "deer"
+        "village"
       ],
       "actors": [
         {
           "cast": "yama",
           "id": "yama",
-          "at": "deer.clearing",
+          "at": "village.front",
           "nudge": [
-            -0.5,
+            0,
             0,
             0
           ],
           "pose": "walk",
           "expr": "neutral",
+          "motion": {
+            "type": "path",
+            "keys": [
+              [
+                "10:6",
+                "village.front"
+              ],
+              [
+                "11:3",
+                "village.palms"
+              ]
+            ],
+            "walk": {
+              "rate": 1.6
+            }
+          },
           "do": [
             [
               "10:6",
               {
                 "pose": "walk",
                 "expr": "neutral"
-              }
-            ]
-          ]
-        },
-        {
-          "cast": "savitri",
-          "id": "savitri",
-          "at": "deer.clearing",
-          "nudge": [
-            0.5,
-            0,
-            0
-          ],
-          "pose": "walk",
-          "expr": "neutral",
-          "face": "yama",
-          "do": [
-            [
-              "10:6",
-              {
-                "pose": "walk",
-                "expr": "neutral",
-                "face": "yama"
               }
             ]
           ]
@@ -1026,20 +1070,23 @@
           "at": "10:6",
           "size": "wide",
           "on": [
-            "yama",
-            "savitri"
+            "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "follow"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S22",
       "start": "11:3",
       "end": "12:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1069,21 +1116,37 @@
       "camera": [
         {
           "at": "11:3",
+          "size": "wide",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "11:5",
           "size": "close",
           "on": [
             "savitri"
           ],
           "angle": "eye",
           "side": "front",
-          "move": "hold"
+          "move": "hold",
+          "cut": true,
+          "foreground": "deer.kunti"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S23",
       "start": "12:0",
       "end": "13:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1093,7 +1156,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            -0.35,
+            -0.5,
             0,
             0
           ],
@@ -1116,7 +1179,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            0.35,
+            0.5,
             0,
             0
           ],
@@ -1138,22 +1201,26 @@
       "camera": [
         {
           "at": "12:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "yama",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S24",
       "start": "13:0",
       "end": "14:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1163,7 +1230,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            -0.45,
+            -0.5,
             0,
             0
           ],
@@ -1186,7 +1253,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            0.45,
+            0.5,
             0,
             0
           ],
@@ -1208,22 +1275,26 @@
       "camera": [
         {
           "at": "13:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "yama",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S25",
       "start": "14:0",
       "end": "15:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1253,21 +1324,39 @@
       "camera": [
         {
           "at": "14:0",
-          "size": "close",
+          "size": "full",
           "on": [
             "savitri"
           ],
-          "angle": "eye",
-          "side": "front",
-          "move": "hold"
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "punch": "14:0",
+          "foreground": "deer.pandu"
+        },
+        {
+          "at": "14:4",
+          "size": "medium",
+          "on": [
+            "savitri"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "cut": true,
+          "ease": "glide"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S26",
       "start": "15:0",
       "end": "15:6",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1277,7 +1366,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            -0.45,
+            -0.5,
             0,
             0
           ],
@@ -1300,7 +1389,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            0.45,
+            0.5,
             0,
             0
           ],
@@ -1322,22 +1411,25 @@
       "camera": [
         {
           "at": "15:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "cut"
+      }
     },
     {
       "id": "S27",
       "start": "15:6",
       "end": "16:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1347,7 +1439,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            -0.45,
+            -0.5,
             0,
             0
           ],
@@ -1370,7 +1462,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            0.45,
+            0.5,
             0,
             0
           ],
@@ -1392,22 +1484,26 @@
       "camera": [
         {
           "at": "15:6",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "left",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S28",
       "start": "16:0",
       "end": "17:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1417,7 +1513,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            -0.45,
+            -0.5,
             0,
             0
           ],
@@ -1440,7 +1536,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            0.45,
+            0.5,
             0,
             0
           ],
@@ -1462,22 +1558,27 @@
       "camera": [
         {
           "at": "16:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "foreground": "deer.sage"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S29",
       "start": "17:0",
       "end": "18:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1485,9 +1586,9 @@
         {
           "cast": "savitri",
           "id": "savitri",
-          "at": "deer.pandu",
+          "at": "deer.clearing",
           "nudge": [
-            -0.35,
+            -0.45,
             0,
             0
           ],
@@ -1508,9 +1609,9 @@
         {
           "cast": "yama",
           "id": "yama",
-          "at": "deer.pandu",
+          "at": "deer.clearing",
           "nudge": [
-            0.35,
+            0.45,
             0,
             0
           ],
@@ -1532,6 +1633,20 @@
       "camera": [
         {
           "at": "17:0",
+          "size": "full",
+          "on": [
+            "savitri",
+            "yama"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "punch": "17:0",
+          "impact": "17:0",
+          "drama": true
+        },
+        {
+          "at": "17:4",
           "size": "medium",
           "on": [
             "savitri",
@@ -1539,15 +1654,21 @@
           ],
           "angle": "eye",
           "side": "left",
-          "move": "push"
+          "move": "push",
+          "cut": true,
+          "ease": "glide"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S30",
       "start": "18:0",
       "end": "19:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1557,7 +1678,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            -0.45,
+            -0.5,
             0,
             0
           ],
@@ -1580,7 +1701,7 @@
           "id": "yama",
           "at": "deer.clearing",
           "nudge": [
-            0.45,
+            0.5,
             0,
             0
           ],
@@ -1602,7 +1723,7 @@
       "camera": [
         {
           "at": "18:0",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri",
             "yama"
@@ -1611,13 +1732,17 @@
           "side": "front",
           "move": "push"
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S31",
       "start": "19:0",
       "end": "20:0",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1677,7 +1802,9 @@
           ],
           "angle": "eye",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "punch": "19:0",
+          "impact": "19:0"
         }
       ],
       "fx": [
@@ -1694,13 +1821,17 @@
           },
           "size": 0.8
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
     },
     {
       "id": "S32",
       "start": "20:0",
       "end": "end",
-      "light": "day",
+      "light": "night",
       "sets": [
         "deer"
       ],
@@ -1710,7 +1841,7 @@
           "id": "satyavan",
           "at": "deer.clearing",
           "nudge": [
-            -0.35,
+            -0.25,
             0,
             0
           ],
@@ -1731,7 +1862,7 @@
           "id": "savitri",
           "at": "deer.clearing",
           "nudge": [
-            0.35,
+            0.25,
             0,
             0
           ],
@@ -1756,11 +1887,36 @@
             "satyavan",
             "savitri"
           ],
-          "angle": "eye",
+          "angle": "low",
           "side": "front",
-          "move": "push"
+          "move": "push",
+          "punch": "20:0",
+          "impact": "20:0",
+          "drama": true
         }
-      ]
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
+    }
+  ],
+  "kicks": [
+    {
+      "at": "8:0",
+      "amp": 0.6
+    },
+    {
+      "at": "17:0",
+      "amp": 0.6
+    },
+    {
+      "at": "19:0",
+      "amp": 0.6
+    },
+    {
+      "at": "20:0",
+      "amp": 0.6
     }
   ]
 }

@@ -191,20 +191,27 @@ export async function qaCommand(dirArg) {
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
   requireFile(dir, 'final.mp4', 'run: fableon assemble --project <dir>');
-  const meta = requireFile(dir, 'qa_meta.json', 'run: fableon shots --project <dir>');
+  const metaPath = requireFile(dir, 'qa_meta.json', 'run: fableon shots --project <dir>');
   const out = join(dir, 'qa');
   mkdirSync(out, { recursive: true });
-  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, meta], { cwd: ROOT });
+  const rawMeta = JSON.parse(readFileSync(metaPath, 'utf8'));
+  const off = rawMeta.shots?.[0]?.a ?? 0;
+  const shiftPair = (p) => [Math.max(0, Math.round(p[0] - off)), Math.max(0, Math.round(p[1] - off))];
+  const meta = { ...rawMeta, shots: (rawMeta.shots ?? []).map((s) => ({ ...s, a: Math.max(0, s.a - off), b: s.b - off })), ...(rawMeta.flash ? { flash: shiftPair(rawMeta.flash) } : {}), xfade: (rawMeta.xfade ?? []).map(shiftPair), planned: (rawMeta.planned ?? []).map(shiftPair) };
+  const metaVideo = join(out, 'qa_meta.video.json');
+  writeFileSync(metaVideo, JSON.stringify(meta, null, 2) + '\n');
+  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT });
   const report = readFileSync(join(out, 'report.md'), 'utf8').split('\n');
   const line = (p) => report.find((l) => l.startsWith(p)) || '';
   const specs = line('SPECS '), loudness = line('LOUDNESS '), framesLine = line('FRAMES '), popsLine = line('POPS ');
   const eventsPath = existsSync(join(dir, 'events.json')) ? join(dir, 'events.json') : join(dir, 'cuts.json');
-  const events = existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : [];
+  const events = (existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : []).map((f) => Math.max(0, f - off));
   const pops = listOf(popsLine);
-  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 1));
+  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 3));
   const black = listOf((/black (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const white = listOf((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
-  const frozen = listOf((/frozen spans >=12f (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
+  const spanList = (t) => { const out = []; const re = /\((\d+)\s*,\s*(\d+)\)/g; let m; while ((m = re.exec(t))) out.push([Number(m[1]), Number(m[2])]); return out; };
+  const frozen = spanList(framesLine);
   const ok = !black.length && !white.length && !frozen.length && !unexplained.length;
   const md = [
     '# QA summary',
@@ -212,7 +219,7 @@ export async function qaCommand(dirArg) {
     `- ${specs}`,
     `- ${loudness}`,
     `- ${framesLine}`,
-    `- planned events ignored (±1 frame): ${events.length} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'}`,
+    `- planned events ignored (±3 frames; concat/encode has a 2-frame start offset): ${events.length} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'}`,
     `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`,
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
     '',

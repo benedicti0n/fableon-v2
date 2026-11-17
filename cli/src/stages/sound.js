@@ -5,6 +5,7 @@ import { findPython, ROOT, run } from '../env.js';
 import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/artifacts.js';
 import { SOUND } from './prompts.js';
 import { planTime } from './shotplan.js';
+import { formulaBeat } from './script.js';
 
 const FPS = 30;
 const MIN_GAP = 1.2;
@@ -58,7 +59,27 @@ export function defaultSfx(board, { words, punchTimes = [] }) {
   return kept.map(({ t, ...c }) => c);
 }
 
-export function validateCues(d, { scenes, words, punchTimes, script }) {
+export function mergeSfx(defaults, additions, { words, punchTimes }) {
+  const timed = [...defaults, ...(additions ?? [])].map((c) => ({ ...c, t: cueSeconds(c.at, words) })).filter((c) => c.t !== null);
+  timed.sort((a, b) => a.t - b.t || (KIND_PRIORITY[b.kind] ?? 0) - (KIND_PRIORITY[a.kind] ?? 0));
+  const kept = [];
+  for (const c of timed) {
+    if (kept.length && c.t - kept[kept.length - 1].t < MIN_GAP) continue;
+    if (punchTimes.some((p) => c.t >= p && c.t < p + 0.2) && c.kind !== 'thud') continue;
+    kept.push(c);
+  }
+  return kept.map(({ t, ...c }) => c);
+}
+
+export function stingerTargets(script) {
+  const pick = (kind) => script.lines.find((l) => formulaBeat(l.beat) === kind);
+  const hook = pick('hook');
+  const mystery = pick('mystery') ?? pick('analogy') ?? script.lines.find((l) => l.beat === 'snap');
+  const payoff = pick('payoff');
+  return [hook && { kind: 'hook', n: hook.n, at: `${hook.n}:0` }, mystery && { kind: 'mystery', n: mystery.n, at: `${mystery.n}:0` }, payoff && { kind: 'payoff', n: payoff.n, at: `${payoff.n}:0` }].filter(Boolean);
+}
+
+export function validateCues(d, { scenes, words, punchTimes, script, targets = null }) {
   const errs = validationErrors('cues', d);
   if (errs.length) return errs;
   const musicScenes = (d.music ?? []).map((m) => m.scene);
@@ -66,14 +87,15 @@ export function validateCues(d, { scenes, words, punchTimes, script }) {
   for (const s of musicScenes) if (!scenes.includes(s)) errs.push(`/music scene "${s}" is not in the shot plan`);
   if (new Set(musicScenes).size !== musicScenes.length) errs.push('/music repeats a scene');
   const kinds = new Set((d.stingers ?? []).map((s) => s.kind));
-  for (const k of ['hook', 'mystery', 'payoff']) if (!kinds.has(k)) errs.push(`/stingers is missing the ${k} stinger`);
+  const required = targets?.length ? targets.map((t) => t.kind) : ['hook', 'mystery', 'payoff'];
+  for (const k of required) if (!kinds.has(k)) errs.push(`/stingers is missing the ${k} stinger`);
   for (const s of d.stingers ?? []) {
     if (!ANCHOR.test(s.at)) { errs.push(`/stingers/${s.kind}/at is not a valid anchor`); continue; }
-    const candidates = script.lines.filter((l) => l.beat === s.kind);
-    if (!candidates.length) { errs.push(`/stingers/${s.kind}: script has no ${s.kind} line`); continue; }
-    const t = cueSeconds(s.at, words);
-    const ok = candidates.some((line) => { const w = lineWindow(line.n, words); return w && t !== null && t >= w[0] - 0.01 && t <= w[1] + 0.01; });
-    if (!ok) errs.push(`/stingers/${s.kind}/at must fall on a ${s.kind} line`);
+    const target = targets?.find((t) => t.kind === s.kind);
+    const line = target ?? script.lines.find((l) => formulaBeat(l.beat) === s.kind);
+    if (!line) { errs.push(`/stingers/${s.kind}: script has no ${s.kind} line`); continue; }
+    const t = cueSeconds(s.at, words), w = lineWindow(line.n, words);
+    if (t === null || !w || t < w[0] - 0.01 || t > w[1] + 0.01) errs.push(`/stingers/${s.kind}/at must fall on line ${line.n}`);
   }
   const timed = (d.sfx ?? []).map((s) => ({ ...s, t: cueSeconds(s.at, words) }));
   for (const s of timed) if (s.t === null) errs.push(`/sfx ${s.kind} has an unknown anchor ${s.at}`);
@@ -97,6 +119,7 @@ export async function runSound({ projectDir, project, router }) {
   if (!scenes.length) throw new Error('sound needs scene ids in the shot plan');
   const punches = (shotplan.shots ?? []).flatMap((s) => (s.keys ?? []).map((k) => k.punch).filter(Boolean)).map((a) => cueSeconds(a, words)).filter((t) => t !== null);
   const defaults = defaultSfx(board, { words, punchTimes: punches });
+  const targets = stingerTargets(script);
   const duration = +(words[words.length - 1].b + (storyboard.tailFrames ?? 36) / FPS).toFixed(3);
   const sceneData = scenes.map((id) => {
     const shots = shotplan.shots.filter((s) => s.scene === id);
@@ -111,17 +134,18 @@ export async function runSound({ projectDir, project, router }) {
     script: script.lines.map((l) => ({ n: l.n, beat: l.beat, text: l.text, gloss: l.gloss })),
     boardEvents: { fx: board.shots?.flatMap((s) => (s.fx ?? []).map((f) => ({ kind: f.kind, at: f.at }))), kicks: board.kicks?.length ?? 0, flashes: board.shots?.filter((s) => s.transition?.type === 'flash').length ?? 0 },
     defaultSfx: defaults,
+    stingerTargets: targets,
     punchAnchors: (shotplan.shots ?? []).flatMap((s) => (s.keys ?? []).map((k) => k.punch).filter(Boolean)),
   };
   const { data: out } = await router.callJson('sound', [
     { role: 'system', content: SOUND },
     { role: 'user', content: `DATA:\n${JSON.stringify(data, null, 2)}\nReturn music, stingers and only the extra SFX the default map cannot know, as one json object. Use the scene ids exactly.` },
   ], {
-    validate: (d) => validateCues({ ...d, sfx: [...defaults, ...(d.sfx ?? [])] }, { scenes, words, punchTimes: punches, script }),
+    validate: (d) => validateCues({ ...d, sfx: mergeSfx(defaults, d.sfx, { words, punchTimes: punches }) }, { scenes, words, punchTimes: punches, script, targets }),
     repairHint: `Return one music section per scene (${scenes.join(', ')}), a hook/mystery/payoff stinger on each beat line, and at most one SFX per 1.2 s. SFX anchors are n:k or f<frame>; no non-impact SFX in the first 0.2 s after a punch.`,
   });
   // Model SFX are additions on top of the deterministic board map.
-  const sfx = [...defaults, ...(out.sfx ?? [])].map((s) => ({ ...s })).sort((a, b) => (cueSeconds(a.at, words) ?? 0) - (cueSeconds(b.at, words) ?? 0));
+  const sfx = mergeSfx(defaults, out.sfx, { words, punchTimes: punches });
   const cues = { version: 1, duration, music: out.music, stingers: out.stingers, sfx };
   writeJsonArtifact(projectDir, 'sound', 'cues.json', cues, 'cues');
   const md = [

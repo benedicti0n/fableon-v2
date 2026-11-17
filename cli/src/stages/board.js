@@ -88,7 +88,7 @@ export function baseShot(s, i, plan, cast, catalog) {
     return {
       at: k.at, size: k.size === 'close' && on.length > 1 ? 'medium' : k.size, on, ...(withIds.length ? { with: withIds } : {}),
       angle: k.angle ?? (hasScenes && ['full', 'wide', 'establishing'].includes(k.size) ? 'low' : 'eye'),
-      side: k.side, move: k.move, ...(j ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
+      side: k.side, move: k.move, ...(j && !['glide', 'burst', 'crane'].includes(k.move) ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
       ...(k.punch ? { punch: k.punch } : {}), ...(k.impact ? { impact: k.impact } : {}), ...(k.drama ? { drama: true } : {}),
       ...(k.reveal ? { reveal: true } : {}), ...(k.foreground ? { foreground: k.foreground } : {}), ...(k.ease ? { ease: k.ease } : {}), ...(k.easeFrames ? { easeFrames: k.easeFrames } : {}),
     };

@@ -64,11 +64,18 @@
       "wordsPerSecond": 2.56,
       "charactersPerSecond": 11.51,
       "delivered": {
-        "wordsPerSecond": 2.321,
-        "charactersPerSecond": 11.121
+        "wordsPerSecond": 2.742,
+        "charactersPerSecond": 13.135
       }
     },
-    "fit": "natural"
+    "fit": "natural",
+    "pace": 1.2,
+    "pauses": {
+      "dramatic": 0.35,
+      "other": 0.12,
+      "beatGap": 0.15
+    },
+    "paceApplied": "local"
   },
   "research": {
     "web": false,
