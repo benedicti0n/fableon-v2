@@ -41,6 +41,10 @@ export function runHindiTests() {
   const errs = validateScript(base, { project, facts, catalog, sourceTexts: [] });
   ok('hindi script valid', errs.length === 0, errs.join('; '));
 
+  const delivered = { ...project, voice: { rate: { wordsPerSecond: 2.7, delivered: { wordsPerSecond: 1.0, charactersPerSecond: 5 } } } };
+  const deliveredErrs = validateScript(base, { project: delivered, facts, catalog, sourceTexts: [] });
+  ok('hindi delivered rate budget', deliveredErrs.some((e) => /delivered rate target 20\.0 = 20 s × 1 words\/s/.test(e)), deliveredErrs.join('; '));
+
   const withName = structuredClone(base); withName.names.push({ word: 'नारद', phonemes: null, suggested: true });
   ok('hindi name needs mention', validateScript(withName, { project, facts, catalog, sourceTexts: [] }).some((e) => /characters or mentions/.test(e)));
   withName.mentions = [{ id: 'narada', name: 'नारद', role: 'the sage who warns' }];

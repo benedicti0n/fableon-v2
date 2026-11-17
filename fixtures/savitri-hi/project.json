@@ -62,7 +62,11 @@
     },
     "rate": {
       "wordsPerSecond": 2.56,
-      "charactersPerSecond": 11.51
+      "charactersPerSecond": 11.51,
+      "delivered": {
+        "wordsPerSecond": 2.321,
+        "charactersPerSecond": 11.121
+      }
     },
     "fit": "natural"
   },

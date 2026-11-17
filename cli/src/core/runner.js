@@ -48,13 +48,13 @@ export class PipelineRunner extends EventEmitter {
           if (!ds.approved) throw new Error(`${stage.name} is waiting for ${dep} approval (${ds.status}); review ${this.projectDir} and run: fableon approve --project ${this.projectDir} --stage ${dep}`);
         }
       }
-      await this.runStage(stage, { autopilot, fit: this.opts.fit !== false, status });
+      await this.runStage(stage, { autopilot, fit: this.opts.fit !== false, cachedOnly: !!this.opts.cachedOnly, status });
     }
     this.emit('done', { projectDir: this.projectDir, log: this.logFile });
     return { ok: true, log: this.logFile };
   }
 
-  async runStage(stage, { autopilot, fit, status }) {
+  async runStage(stage, { autopilot, fit, cachedOnly, status }) {
     const t0 = Date.now();
     this.log(`stage ${stage.name} start (${status.status})`);
     this.emit('progress', { stage: stage.name, status: 'running', progress: 0, message: `running ${stage.name}` });
@@ -63,7 +63,7 @@ export class PipelineRunner extends EventEmitter {
       let result;
       const mod = await import(`../stages/${STAGE_MODULE[stage.name]}`);
       const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`];
-      if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit });
+      if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly });
       else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot });
       if (stage.name === 'factcheck') this.log(`factcheck reviewed ${result.reviewed ?? 0} line(s); factual flags ${result.failures?.length ?? 0}; craft weak ${result.craft?.length ?? 0}`);
       if (stage.name === 'factcheck' && result.failures?.length) {

@@ -63,6 +63,7 @@ export function main(argv = process.argv) {
     .option('--autopilot', 'do not stop for approvals')
     .option('--no-cache', 'bypass the model response cache')
     .option('--fit <mode>', 'voice fit on|off', 'on')
+    .option('--cached-only', 'fit the voice from the cached base take without a new provider call')
     .action(async (opts) => { try { await runCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program

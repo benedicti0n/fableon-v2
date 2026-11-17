@@ -10,7 +10,7 @@ export async function runCommand(dir, opts) {
   const ctrl = new AbortController();
   const runner = new PipelineRunner(dir, project, {
     to: opts.to ?? 'voice', only: opts.only ?? null, force: !!opts.force,
-    autopilot: opts.autopilot ? true : undefined, fit: opts.fit !== 'off', noCache: opts.cache === false,
+    autopilot: opts.autopilot ? true : undefined, fit: opts.fit !== 'off', noCache: opts.cache === false, cachedOnly: !!opts.cachedOnly,
     signal: ctrl.signal,
   });
   const onInt = () => { ctrl.abort(); };

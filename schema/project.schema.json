@@ -42,7 +42,15 @@
           "additionalProperties": false,
           "properties": {
             "wordsPerSecond": { "type": "number", "exclusiveMinimum": 0 },
-            "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 }
+            "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 },
+            "delivered": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "wordsPerSecond": { "type": "number", "exclusiveMinimum": 0 },
+                "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            }
           }
         },
         "tones": {
