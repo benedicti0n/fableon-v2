@@ -101,9 +101,9 @@ export function main(argv = process.argv) {
 
   program
     .command('models')
-    .description('list or check provider models')
-    .argument('<mode>', 'list or check')
-    .requiredOption('--provider <name>', 'deepseek, openai-compatible or mock')
+    .description('list, check or catalog provider models')
+    .argument('<mode>', 'list, check or catalog')
+    .requiredOption('--provider <name>', 'deepseek, openrouter, sarvam, openai-compatible or mock')
     .option('--model <id>', 'model id')
     .option('--base-url <url>', 'OpenAI-compatible base URL')
     .option('--key-env <name>', 'API key environment variable')

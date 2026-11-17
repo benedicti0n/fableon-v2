@@ -102,6 +102,18 @@ fallback. Every fallback attempt is written to `logs/calls.jsonl` as `"fallback"
 stage usage records a `fallbacks` count. An explicit project model choice is honoured without a fallback unless the
 project also sets `models.<stage>.fallback`; mock projects never fall back.
 
+## Provider registry (Phase 3E)
+
+`cli/src/models/providers.js` registers `deepseek` (direct), `openrouter` (OpenAI-compatible at
+`https://openrouter.ai/api/v1`, `OPENROUTER_API_KEY`), `sarvam` (chat at `https://api.sarvam.ai/v1/chat/completions`,
+`sarvam-105b` / `sarvam-105b-conversations`, `api-subscription-key` header), `openai-compatible` and `mock`.
+OpenRouter requests send `HTTP-Referer: https://fableon.local`, `X-Title: Fableon` and
+`provider: {data_collection: "deny"}` so routing only uses providers that do not store the request. The live catalog is
+`models.catalog.json` (dated 2026-11-17): 439 models with context, max output, supported parameters and prices per 1M
+tokens. `fableon models catalog --provider openrouter` refreshes it. JSON mode is requested only when the catalog says
+the model supports `response_format`/`structured_outputs`; otherwise the prompt is JSON-only and ajv+repairs still gate
+every output. Costs for OpenRouter come from this catalog; DeepSeek costs come from `models.json` prices.
+
 ## Provider contract
 
 - `deepseek`: OpenAI-compatible chat completions at `DEEPSEEK_BASE_URL` (default `https://api.deepseek.com`).

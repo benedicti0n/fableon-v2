@@ -4,7 +4,8 @@ import { dirname, join } from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { ROOT, loadDotEnv } from '../env.js';
 import { atomicWrite, readJson, writeJsonArtifact } from '../core/artifacts.js';
-import { fallbackForStage, modelForStage, modelId, repoModels } from '../core/model-config.js';
+import { catalogModel, catalogPrice, fallbackConfigsForStage, fallbackForStage, modelForStage, modelId, repoModels } from '../core/model-config.js';
+import { PROVIDERS } from './providers.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const jitter = () => Math.floor(Math.random() * 120);
@@ -45,22 +46,26 @@ export class ModelRouter {
   baseUrl(stage, config = null) {
     const c = config ?? this.config(stage);
     if (c.baseUrl) return c.baseUrl.replace(/\/$/, '');
-    if (c.provider === 'deepseek') return (process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, '');
-    return '';
+    if (c.provider === 'deepseek') return (process.env.DEEPSEEK_BASE_URL || PROVIDERS.deepseek.baseUrl).replace(/\/$/, '');
+    return (PROVIDERS[c.provider]?.baseUrl ?? '').replace(/\/$/, '');
   }
 
   key(stage, config = null) {
     const c = config ?? this.config(stage);
-    const name = c.keyEnv ?? (c.provider === 'deepseek' ? 'DEEPSEEK_API_KEY' : '');
+    const name = c.keyEnv ?? PROVIDERS[c.provider]?.keyEnv ?? '';
     return name ? process.env[name] ?? '' : '';
   }
 
   async models(stage = 'brief') {
     const c = this.config(stage), base = this.baseUrl(stage), key = this.key(stage);
     if (c.provider === 'mock') return ['mock-v1'];
+    if (PROVIDERS[c.provider]?.models) return [...PROVIDERS[c.provider].models];
+    if (!PROVIDERS[c.provider]?.modelsPath) return [];
     if (!key) throw new Error(`${c.provider}: ${c.keyEnv ?? 'API key'} is missing`);
-    const res = await fetch(`${base}/models`, { headers: { Authorization: `Bearer ${key}` }, signal: this.signal ?? undefined });
-    if (!res.ok) throw new Error(`${c.provider} GET /models failed: HTTP ${res.status}`);
+    const headers = { ...(PROVIDERS[c.provider]?.headers ?? {}) };
+    if (c.provider === 'sarvam') headers['api-subscription-key'] = key; else headers.Authorization = `Bearer ${key}`;
+    const res = await fetch(`${base}${PROVIDERS[c.provider].modelsPath}`, { headers, signal: this.signal ?? undefined });
+    if (!res.ok) throw new Error(`${c.provider} GET ${PROVIDERS[c.provider].modelsPath} failed: HTTP ${res.status}`);
     const j = await res.json();
     return (j.data ?? j.models ?? []).map((m) => m.id ?? m.name).filter(Boolean);
   }
@@ -100,10 +105,12 @@ export class ModelRouter {
       const abort = () => ctrl.abort(new Error('cancelled'));
       this.signal?.addEventListener('abort', abort, { once: true });
       try {
-        const res = await fetch(`${base}/chat/completions`, {
+        const headers = { 'content-type': 'application/json', ...(PROVIDERS[c.provider]?.headers ?? {}) };
+        if (c.provider === 'sarvam') headers['api-subscription-key'] = key; else headers.Authorization = `Bearer ${key}`;
+        const res = await fetch(`${base}${PROVIDERS[c.provider]?.chatPath ?? '/chat/completions'}`, {
           method: 'POST',
-          headers: { 'content-type': 'application/json', Authorization: `Bearer ${key}` },
-          body: JSON.stringify({ model, messages, temperature: params.temperature, max_tokens: params.maxTokens, ...(params.thinking ? { thinking: { type: params.thinking } } : {}), ...(params.reasoningEffort ? { reasoning_effort: params.reasoningEffort } : {}), ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
+          headers,
+          body: JSON.stringify({ model, messages, temperature: params.temperature, max_tokens: params.maxTokens, ...(c.provider === 'openrouter' && PROVIDERS.openrouter.providerPreferences ? { provider: PROVIDERS.openrouter.providerPreferences } : {}), ...(params.thinking ? { thinking: { type: params.thinking } } : {}), ...(params.reasoningEffort ? { reasoning_effort: params.reasoningEffort } : {}), ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
           signal: ctrl.signal,
         });
         if (res.status === 429 || res.status >= 500) throw new Error(`HTTP ${res.status}`);
@@ -141,7 +148,7 @@ export class ModelRouter {
   }
 
   cost(model, usage) {
-    const price = this.repo.prices?.[model];
+    const price = this.repo.prices?.[model] ?? catalogPrice(model);
     if (!price || !usage) return null;
     const hit = usage.prompt_cache_hit_tokens ?? usage.prompt_tokens_details?.cached_tokens ?? 0;
     const miss = usage.prompt_cache_miss_tokens ?? Math.max(0, (usage.prompt_tokens ?? 0) - hit);
@@ -154,12 +161,23 @@ export class ModelRouter {
     if (b.maxTokensPerRun && this.tokensRun >= b.maxTokensPerRun) throw new Error(`budget: maxTokensPerRun ${b.maxTokensPerRun} reached`);
   }
 
+  supportsJson(c, model) {
+    if (c.jsonMode !== null && c.jsonMode !== undefined) return !!c.jsonMode;
+    if (c.provider === 'sarvam') return false; // Bulbul's chat API documents prompt-based JSON, not response_format
+    if (c.provider === 'openrouter') {
+      const m = catalogModel(model);
+      return m ? (m.supported_parameters ?? []).some((x) => x === 'response_format' || x === 'structured_outputs') : true;
+    }
+    return true;
+  }
+
   async chat(stage, messages, params = {}) {
     this.budgetCheck(stage);
     const c = params.config ?? this.config(stage);
     const model = await this.resolveModel(stage, c);
     const base = this.baseUrl(stage, c);
-    const p = { temperature: params.temperature ?? c.temperature, maxTokens: c.maxTokens, jsonMode: params.jsonMode ?? true, thinking: c.thinking, reasoningEffort: c.reasoningEffort, mockKey: params.mockKey ?? null };
+    const jsonMode = params.jsonMode === undefined || params.jsonMode === null ? this.supportsJson(c, model) : params.jsonMode !== false;
+    const p = { temperature: params.temperature ?? c.temperature, maxTokens: c.maxTokens, jsonMode, thinking: c.thinking, reasoningEffort: c.reasoningEffort, mockKey: params.mockKey ?? null };
     const hash = this.requestHash(c.provider, base, model, messages, p);
     const cacheFile = this.cachePath(hash);
     const t0 = Date.now();
@@ -185,19 +203,17 @@ export class ModelRouter {
 
   async callJson(stage, messages, { validate = null, mockKey = null, repairHint = null, temperature = null } = {}) {
     const primary = this.config(stage);
-    const fb = this.fallback(stage);
-    const useFallback = !!fb && modelId(fb) !== modelId(primary);
+    const fbs = fallbackConfigsForStage(this.project, stage, this.repo).filter((f) => modelId(f) !== modelId(primary));
     const msgs = messages.map((m) => ({ ...m }));
     if (!msgs.some((m) => m.role === 'system' && /json/i.test(m.content))) msgs.unshift({ role: 'system', content: 'Return one valid json object only.' });
     let lastErrors = [], lastFailure = null;
-    const passes = [{ config: primary, fallback: false }];
-    if (useFallback) passes.push({ config: fb, fallback: true });
+    const passes = [{ config: primary, fallback: false }, ...fbs.map((config) => ({ config, fallback: true }))];
     for (const pass of passes) {
-      if (pass.fallback) this.recordFallback(stage, primary, fb, lastFailure?.message ?? lastErrors[0] ?? 'validation failed');
+      if (pass.fallback) this.recordFallback(stage, primary, pass.config, lastFailure?.message ?? lastErrors[0] ?? 'validation failed');
       for (let repair = 0; repair <= (pass.config.maxRepairs ?? 2); repair++) {
         let r;
         try {
-          r = await this.chat(stage, msgs, { jsonMode: true, mockKey, temperature, config: pass.config, fallback: pass.fallback, fallbackFrom: pass.fallback ? primary.model : null });
+          r = await this.chat(stage, msgs, { mockKey, temperature, config: pass.config, fallback: pass.fallback, fallbackFrom: pass.fallback ? primary.model : null });
         } catch (e) {
           lastFailure = e;
           lastErrors = [e.message];
@@ -212,12 +228,12 @@ export class ModelRouter {
           continue;
         }
         const errors = validate ? await validate(data) : [];
-        if (!errors.length) return { data, usage: r.usage ?? {}, cached: r.cached };
+        if (!errors.length) return { data, usage: r.usage ?? {}, cached: r.cached, model: pass.config.model, fallback: pass.fallback };
         lastErrors = errors.slice(0, 20);
         msgs.push({ role: 'assistant', content: r.content.slice(0, 6000) }, { role: 'user', content: `Fix every validation error and return the complete corrected json object only. Keep the lines that are already valid. Count words before returning.\n- ${lastErrors.join('\n- ')}${repairHint ? `\n${repairHint}` : ''}` });
       }
     }
-    throw new Error(`${stage}: model output failed validation after repairs${useFallback ? ' on the primary model and its fallback' : ''}:\n${lastErrors.join('\n')}`);
+    throw new Error(`${stage}: model output failed validation after repairs${fbs.length ? ' on the primary model and its fallbacks' : ''}:\n${lastErrors.join('\n')}`);
   }
 }
 
