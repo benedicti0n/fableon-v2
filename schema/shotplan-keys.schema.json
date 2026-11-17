@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/shotplan-keys.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "shots"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "keys"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keys": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at",
+                "size",
+                "on",
+                "angle",
+                "side",
+                "move",
+                "note"
+              ],
+              "properties": {
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "size": {
+                  "enum": [
+                    "close",
+                    "medium",
+                    "full",
+                    "wide",
+                    "establishing",
+                    "insert"
+                  ]
+                },
+                "on": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  ]
+                },
+                "with": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "angle": {
+                  "enum": [
+                    "eye",
+                    "low",
+                    "high",
+                    "overhead"
+                  ]
+                },
+                "side": {
+                  "enum": [
+                    "front",
+                    "left",
+                    "right",
+                    "frontLeft",
+                    "frontRight"
+                  ]
+                },
+                "move": {
+                  "enum": [
+                    "push",
+                    "hold",
+                    "glide",
+                    "follow",
+                    "crane",
+                    "tiltUp",
+                    "tiltDown",
+                    "pan",
+                    "reveal"
+                  ]
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "beats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "who",
+                "at"
+              ],
+              "properties": {
+                "who": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "pose": {
+                  "type": "string"
+                },
+                "expr": {
+                  "type": "string"
+                },
+                "prop": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "face": {
+                  "type": "string"
+                },
+                "talk": {
+                  "type": [
+                    "boolean",
+                    "object"
+                  ]
+                },
+                "offscreen": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "fx": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "at",
+                "note"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "at": {
+                  "$ref": "#/$defs/Anchor"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "standIns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "asset",
+                "standIn"
+              ],
+              "properties": {
+                "asset": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "standIn": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Anchor": {
+      "type": "string",
+      "pattern": "^(?:[0-9]+:[0-9]+)(?:[+-][0-9]+(?:\\.[0-9]+)?[fs])?$"
+    }
+  }
+}

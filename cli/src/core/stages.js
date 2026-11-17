@@ -1,5 +1,5 @@
 // Stage dependency graph for Phase 3A. The GUI/server can reuse this registry.
-import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, CAST } from '../stages/prompts.js';
+import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, CAST, SHOTPLAN } from '../stages/prompts.js';
 
 export const STAGES = [
   {
@@ -31,6 +31,13 @@ export const STAGES = [
     name: 'voice', version: 1, deps: ['factcheck'], prompt: '',
     inputs: ['SCRIPT.md', 'script.json', 'pronunciations.json', 'research/facts.json'], projectKeys: ['seconds', 'voice'],
     outputs: ['voice.wav', 'words.json'],
+  },
+  {
+    name: 'shotplan', version: 1, deps: ['voice', 'cast'], prompt: SHOTPLAN,
+    inputs: ['script.json', 'words.json', 'cast.json', 'assets.todo.json', 'shotplan.notes.json'],
+    extraInputs: ['schema/catalog.json', 'schema/shotplan.schema.json', 'docs/DIRECTOR_GUIDE.md', 'prompts/director-craft.md'],
+    projectKeys: ['language', 'seconds'],
+    outputs: ['shotplan.json', 'shotplan.md'],
   },
 ];
 

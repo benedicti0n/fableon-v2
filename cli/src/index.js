@@ -11,6 +11,7 @@ import { reviewCommand } from './review.js';
 import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
 import { castCommand } from './cast-command.js';
+import { shotplanCommand } from './shotplan-command.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -73,6 +74,13 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--notes <text>', 'director notes; reruns the cast stage with them')
     .action(async (opts) => { try { await castCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('shotplan')
+    .description('turn the script, words, cast and asset gaps into a deterministic shot plan')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--notes <text>', 'director notes; reruns the shot-plan stage with them')
+    .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('models')

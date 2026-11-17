@@ -90,7 +90,8 @@
         "script": { "$ref": "#/$defs/model" },
         "factcheck": { "$ref": "#/$defs/model" },
         "cast": { "$ref": "#/$defs/model" },
-        "voice": { "$ref": "#/$defs/model" }
+        "voice": { "$ref": "#/$defs/model" },
+        "shotplan": { "$ref": "#/$defs/model" }
       }
     },
     "budget": {
