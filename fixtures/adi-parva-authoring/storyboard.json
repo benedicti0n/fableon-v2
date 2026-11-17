@@ -411,9 +411,9 @@
         {
           "who": "satyavati",
           "pos": [
+            0.9,
             1.5,
-            1.5,
-            -25
+            -24.7
           ],
           "view": -4,
           "pose": "stand",
@@ -637,7 +637,7 @@
       ],
       "end": {
         "line": 14,
-        "word": "Conveniently",
+        "word": "Kunti",
         "offset": -2
       },
       "actors": [
@@ -654,7 +654,7 @@
             -84.5
           ],
           "view": -9,
-          "scale": 1.3,
+          "scale": 1.2,
           "mirror": true,
           "blobScale": 1.6,
           "visible": {
@@ -665,7 +665,7 @@
             },
             "to": {
               "line": 13,
-              "word": "secretly",
+              "word": "The",
               "offset": -2
             }
           },
@@ -674,7 +674,7 @@
               "at": {
                 "line": 13,
                 "word": "deer",
-                "offset": -2
+                "offset": 6
               },
               "expr": "shock",
               "params": {
@@ -698,7 +698,7 @@
           "visible": {
             "from": {
               "line": 13,
-              "word": "secretly",
+              "word": "The",
               "offset": -2
             },
             "to": {
@@ -721,11 +721,11 @@
           "who": "pandu",
           "face": "deer",
           "pos": [
-            151.1,
+            150.7,
             1.5,
-            -82.5
+            -84.5
           ],
-          "view": 173,
+          "view": -9,
           "mirror": true,
           "pose": "aim",
           "expr": "stern",
@@ -737,14 +737,14 @@
                 "frame": 1220
               },
               "facing": -1,
-              "mirror": false,
-              "look": -1
+              "mirror": true,
+              "look": 1
             },
             {
               "at": {
                 "line": 13,
                 "word": "deer",
-                "offset": 4
+                "offset": -2
               },
               "pose": "stand",
               "prop": "bow",
@@ -753,7 +753,7 @@
             },
             {
               "at": {
-                "frame": 1247
+                "frame": 1241
               },
               "facing": -1,
               "mirror": true,
@@ -764,8 +764,8 @@
                 "frame": 1277
               },
               "facing": -1,
-              "mirror": false,
-              "look": -1
+              "mirror": true,
+              "look": 1
             },
             {
               "at": {
@@ -775,8 +775,38 @@
               },
               "pose": "armsUp",
               "expr": "shock"
+            },
+            {
+              "at": {
+                "frame": 1323
+              },
+              "facing": -1,
+              "mirror": true,
+              "look": 1
             }
           ]
+        },
+        {
+          "who": "kunti",
+          "pos": [
+            149.89999999999998,
+            1.5,
+            -84.5
+          ],
+          "view": -9,
+          "pose": "stand",
+          "expr": "shock",
+          "facing": -1,
+          "visible": {
+            "from": {
+              "line": 13,
+              "word": "and",
+              "offset": -2
+            },
+            "to": {
+              "end": true
+            }
+          }
         }
       ],
       "fx": [
@@ -784,7 +814,7 @@
           "kind": "puff",
           "at": {
             "line": 13,
-            "word": "secretly",
+            "word": "The",
             "offset": -2
           },
           "pos": [
@@ -852,16 +882,16 @@
         {
           "type": "dolly",
           "pos": [
-            149.7085527729907,
-            5.55217322195179,
-            -80.64569565317196
+            149.34981282758073,
+            2.88915909917471,
+            -75.97525369504321
           ],
           "look": [
-            152.81778346539622,
-            1.9579146,
-            -84.08492561048371
+            150.7,
+            2.3260866109758944,
+            -84.5
           ],
-          "fov": 45.59251699595653,
+          "fov": 45,
           "roll": 0,
           "push": {
             "from": {
@@ -872,18 +902,57 @@
             "rate": 0.002
           },
           "subjects": [
-            "deer"
+            "pandu"
           ],
-          "over": "pandu",
           "at": {
             "line": 13,
             "word": "Pandu",
             "offset": -2
           },
+          "with": [
+            "deer"
+          ],
           "semantic": true,
           "move": "push",
-          "side": "right",
+          "side": "front",
           "angle": "eye",
+          "size": "wide"
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            151.47941702082858,
+            1.8804213600000002,
+            -79.95041812380747
+          ],
+          "look": [
+            151.87109791510386,
+            1.9226904,
+            -84.55209297263785
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 13,
+              "word": "deer",
+              "offset": 3
+            },
+            "rate": 0.0015
+          },
+          "subjects": [
+            "deer"
+          ],
+          "cut": true,
+          "at": {
+            "line": 13,
+            "word": "deer",
+            "offset": 3
+          },
+          "semantic": true,
+          "move": "hold",
+          "side": "front",
+          "angle": "low",
           "size": "wide"
         },
         {
@@ -903,7 +972,7 @@
           "push": {
             "from": {
               "line": 13,
-              "word": "secretly",
+              "word": "The",
               "offset": -2
             },
             "rate": 0.0015
@@ -914,7 +983,7 @@
           "cut": true,
           "at": {
             "line": 13,
-            "word": "secretly",
+            "word": "The",
             "offset": -2
           },
           "semantic": true,
@@ -926,46 +995,47 @@
         {
           "type": "dolly",
           "pos": [
-            151.61942953684814,
+            149.6467271746592,
             2.88915909917471,
-            -86.73041409301364
+            -77.84989710363847
           ],
           "look": [
-            151.1,
-            2.5960875592644337,
-            -82.5
+            150.7,
+            2.3260866109758944,
+            -84.5
           ],
-          "fov": 39,
+          "fov": 41,
           "roll": 0,
           "push": {
             "from": {
               "line": 13,
-              "word": "The",
+              "word": "and",
               "offset": -2
             },
-            "rate": 0.0025
+            "rate": 0.0022
           },
           "subjects": [
-            "pandu"
+            "pandu",
+            "kunti"
           ],
           "cut": true,
           "at": {
             "line": 13,
-            "word": "The",
+            "word": "and",
             "offset": -2
           },
           "semantic": true,
           "move": "push",
           "side": "front",
           "angle": "eye",
-          "size": "medium"
+          "size": "full"
         }
       ],
       "dof": [
         {
           "at": {
             "line": 13,
-            "word": "secretly",
+            "word": "The",
             "offset": -2
           },
           "cInf": 13,
@@ -979,15 +1049,15 @@
         {
           "at": {
             "line": 13,
-            "word": "The",
+            "word": "and",
             "offset": -2
           },
-          "cInf": 11,
+          "cInf": 8,
           "dur": 0,
           "focus": [
-            151.1,
+            150.7,
             2.88915909917471,
-            -82.5
+            -84.5
           ]
         }
       ]
@@ -1012,26 +1082,44 @@
         {
           "who": "bro0",
           "pos": [
-            -1.6,
+            -1.1,
             1.62,
-            42.3
+            42.5
           ],
           "view": 177,
           "scale": 1,
           "pose": "stand",
-          "expr": "grin"
+          "expr": "grin",
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five",
+              "offset": -2
+            },
+            "pop": 0.18,
+            "stagger": 0
+          }
         },
         {
           "who": "bro1",
           "pos": [
-            -0.8,
+            -0.55,
             1.62,
-            42.15
+            42.25
           ],
           "view": 177,
           "scale": 1,
           "pose": "flex",
-          "expr": "grin"
+          "expr": "grin",
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five",
+              "offset": -2
+            },
+            "pop": 0.18,
+            "stagger": 0.08
+          }
         },
         {
           "who": "bro2",
@@ -1043,45 +1131,72 @@
           "view": 177,
           "scale": 1,
           "pose": "hips",
-          "expr": "grin"
+          "expr": "grin",
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five",
+              "offset": -2
+            },
+            "pop": 0.18,
+            "stagger": 0.16
+          }
         },
         {
           "who": "bro3",
           "pos": [
-            0.8,
+            0.55,
             1.62,
-            42.15
+            42.25
           ],
           "view": 177,
           "scale": 1,
           "pose": "stand",
-          "expr": "grin"
+          "expr": "grin",
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five",
+              "offset": -2
+            },
+            "pop": 0.18,
+            "stagger": 0.24
+          }
         },
         {
           "who": "bro4",
           "pos": [
-            1.6,
+            1.1,
             1.62,
-            42.3
+            42.5
           ],
           "view": 177,
           "scale": 1,
           "pose": "stand",
-          "expr": "grin"
+          "expr": "grin",
+          "appear": {
+            "at": {
+              "line": 16,
+              "word": "Five",
+              "offset": -2
+            },
+            "pop": 0.18,
+            "stagger": 0.32
+          }
         }
       ],
       "camera": [
         {
           "type": "dolly",
           "pos": [
-            0.4870861766312879,
+            0.35649168013363436,
             2.652843714414643,
-            32.855842084995466
+            35.44773352333224
           ],
           "look": [
             0,
             2.250687803040866,
-            42.15
+            42.25
           ],
           "fov": 45,
           "roll": 0,
@@ -1926,7 +2041,7 @@
         {
           "who": "priestBro0",
           "pos": [
-            171.7,
+            171.4,
             1.65,
             66
           ],
@@ -1937,7 +2052,7 @@
         {
           "who": "priestBro1",
           "pos": [
-            170.85,
+            170.7,
             1.65,
             66
           ],
@@ -1959,7 +2074,7 @@
         {
           "who": "priestBro3",
           "pos": [
-            169.15,
+            169.3,
             1.65,
             66
           ],
@@ -1970,7 +2085,7 @@
         {
           "who": "priestBro4",
           "pos": [
-            168.3,
+            168.6,
             1.65,
             66
           ],
@@ -2109,14 +2224,14 @@
         {
           "type": "dolly",
           "pos": [
-            170,
-            1.65,
-            57.36899166004111
+            173.45240333598355,
+            4.15,
+            60.0202620138562
           ],
           "look": [
-            170,
+            169.43638761226524,
             2.4760866109758943,
-            66
+            65.67459823622274
           ],
           "fov": 45,
           "roll": 0,
@@ -2137,8 +2252,8 @@
           "scenery": true,
           "semantic": true,
           "move": "push",
-          "side": "front",
-          "angle": "eye",
+          "side": "left",
+          "angle": "high",
           "size": "wide"
         },
         {
@@ -2219,14 +2334,14 @@
         {
           "type": "tilt",
           "pos": [
-            170,
-            1.65,
-            57.36899166004111
+            173.45240333598355,
+            4.15,
+            60.0202620138562
           ],
           "look": [
-            170,
+            169.43638761226524,
             2.4760866109758943,
-            66
+            65.67459823622274
           ],
           "fov": 45,
           "roll": 0,
@@ -2254,8 +2369,8 @@
           "scenery": true,
           "semantic": true,
           "move": "tiltUp",
-          "side": "front",
-          "angle": "eye",
+          "side": "left",
+          "angle": "high",
           "size": "wide"
         }
       ],
@@ -2669,16 +2784,16 @@
         {
           "type": "dolly",
           "pos": [
-            47.86289254464458,
+            44.23335131293851,
             2.9412590656674524,
-            -228.1548277666412
+            -221.86827794516017
           ],
           "look": [
             42,
-            2.5819535110672076,
+            2.634124627260716,
             -218
           ],
-          "fov": 45,
+          "fov": 39,
           "roll": 0,
           "push": {
             "from": {
@@ -2686,7 +2801,7 @@
               "word": "Too",
               "offset": -2
             },
-            "rate": 0.002
+            "rate": 0.0025
           },
           "subjects": [
             "agni"
@@ -2697,14 +2812,27 @@
             "word": "Too",
             "offset": -2
           },
-          "with": [
-            "forestFire"
-          ],
           "semantic": true,
           "move": "push",
           "side": "left",
           "angle": "eye",
-          "size": "wide"
+          "size": "medium"
+        }
+      ],
+      "dof": [
+        {
+          "at": {
+            "line": 35,
+            "word": "Too",
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            42,
+            2.9412590656674524,
+            -218
+          ]
         }
       ]
     }

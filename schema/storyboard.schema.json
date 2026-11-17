@@ -1479,6 +1479,9 @@
         "tilt": {
           "type": "number"
         },
+        "offscreen": {
+          "type": "boolean"
+        },
         "talk": {
           "oneOf": [
             {
@@ -1873,6 +1876,9 @@
         },
         "tilt": {
           "type": "number"
+        },
+        "offscreen": {
+          "type": "boolean"
         },
         "talk": {
           "oneOf": [

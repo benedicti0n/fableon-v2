@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, LOOK_AWAY_TOL, MIN_KEY_FRAMES, ENTRY_GRACE, ACTION_AREA, FLAT_WIDE_AREA, JUMP_CUT_DEG, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, CUT_SIDE_MARGIN, OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_DIST_RATIO, TANGENT_RATIO, FACE_MIN, EXPR_GRACE, ENTRANCE_AREA, LOOK_AWAY_TOL, MIN_KEY_FRAMES, ENTRY_GRACE, ACTION_AREA, FLAT_WIDE_AREA, JUMP_CUT_DEG, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -313,7 +313,11 @@ const normalizeWith = (id, ctx) => {
   const mark = findMark(ctx, id); if (mark?.ids?.length) return mark.ids;
   return mark ? `mark:${mark.set}.${mark.name}` : id;
 };
-const withGroups = (id, ctx) => {
+const withGroups = (id, ctx, shot = null) => {
+  const actor = (shot?.actors ?? []).find((a) => a.id === id || a.who === id);
+  if (actor) return { id, ids: [actor.id ?? actor.who], box: null };
+  const fx = (shot?.fx ?? []).find((e) => e.id === id);
+  if (fx) return { id, ids: [fx.id ?? fx.kind], box: null };
   const mark = findMark(ctx, id); if (mark?.ids?.length) return { id, ids: mark.ids, box: mark.box };
   return { id, ids: [normalizeWith(id, ctx)], box: mark?.box };
 };
@@ -388,7 +392,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
       if (k.cut && (k.move === 'glide' || k.move === 'crane' || k.glide !== undefined)) { const code = k.semantic ? preErrors : preWarnings; code.push({ shot: shot.id, key: ki, frame: kf, subject: k.subjects?.[0] ?? '-', code: 'glide with cut', message: 'glide/crane cannot be combined with cut', fix: FIX.glideCut }); }
       const xf = si && ki === 0 && shots[si - 1].light !== shot.light ? crossfade / 2 : 0;
       const frames = sampleKeyFrames(k, kf, end, xf);
-      const withSpecs = (k.with ?? []).map((id) => withGroups(id, ctx));
+      const withSpecs = (k.with ?? []).map((id) => withGroups(id, ctx, shot));
       const withIds = [...new Set(withSpecs.flatMap((x) => x.ids))];
       const edgeIds = (shot.actors ?? []).map((a) => a.id ?? a.who).filter((id) => !(k.subjects ?? []).includes(id) && id !== k.over);
       for (const f of frames) {
@@ -404,7 +408,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
     writeFileSync(jobsFile, JSON.stringify(jobs));
     await run(process.execPath, [RENDER_CJS, 'coverage', '--jobs', jobsFile, '--out', outFile, '--project', dir, '--size', '180x320', '--msaa', '0'], { cwd: ROOT });
     const cov = JSON.parse(readFileSync(outFile, 'utf8'));
-    const errors = [...preErrors], warnings = [...preWarnings], rows = [], actionSeen = new Set();
+    const errors = [...preErrors], warnings = [...preWarnings], rows = [], actionSeen = new Set(), tangentSeen = new Set(), faceSeen = new Set(), entranceSeen = new Set();
     const byKey = new Map();
     for (const m of keyMeta) {
       const keyId = `${m.si}/${m.ki}`;
@@ -452,12 +456,46 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         if (x0 < EDGE_X || x1 > 1 - EDGE_X || y0 < EDGE_TOP) push('edge', id, `edge ${id}: head crosses the ${(y0 < EDGE_TOP ? 'top' : x0 < EDGE_X ? 'left' : 'right')} safe margin`, FIX.edge);
         if (id !== k.over && (r.subjects?.[id] ?? 0) < HIDDEN_FRACTION) push('subject hidden', id, `subject hidden ${id}: ${((r.subjects?.[id] ?? 0) * 100).toFixed(0)}% visible`, FIX.hidden);
       }
+      if (['full', 'wide', 'establishing'].includes(size)) {
+        for (const id of subjects) {
+          if (!peopleById.has(id)) continue;
+          const stat = idsById.get(id);
+          if (!stat?.bbox) continue;
+          if (stat.bbox.x0 < CUT_SIDE_MARGIN || stat.bbox.x1 > 1 - CUT_SIDE_MARGIN) {
+            const side = stat.bbox.x0 < CUT_SIDE_MARGIN ? 'left' : 'right';
+            push('cut subject', id, `cut subject ${id}: silhouette crosses the ${side} side margin`, FIX.cutSubject);
+          }
+        }
+      }
       for (const id of m.edge ?? []) {
         const stat = idsById.get(id); if (!stat) continue;
         const area = stat.pixels / (180 * 320);
         const cut = stat.bbox.x0 < 0.005 || stat.bbox.x1 > 0.995 || stat.bbox.y0 < 0.005;
-        const vis = r.subjects?.[id] ?? 1;
-        if (area >= EDGE_INTRUDER_AREA && cut && vis < EDGE_INTRUDER_VISIBLE) add(warnings, 'edge intruder', id, `edge intruder ${id}: cut by an edge, ${(vis * 100).toFixed(0)}% visible`, FIX.edgeIntruder);
+        if (!cut) continue;
+        const actor = (m.shot.actors ?? []).find((a) => (a.id ?? a.who) === id);
+        const spec = actor ? castSpec(ctx, actor.who) : null;
+        const measure = ctx.catalog.measure[actor?.special ?? spec?.build ?? 'adult'] ?? ctx.catalog.measure.adult;
+        const expected = stat.distance ? (2 * measure.halfWidth * (actor?.scale ?? 1)) / (2 * stat.distance * Math.tan(((k.fov ?? 40) * D2R) / 2) * (9 / 16)) : 0;
+        const vis = expected > 0 ? Math.min(1, (stat.bbox.x1 - stat.bbox.x0) / expected) : (r.subjects?.[id] ?? 1);
+        if (area >= EDGE_INTRUDER_AREA && vis < EDGE_INTRUDER_VISIBLE) add(warnings, 'edge intruder', id, `edge intruder ${id}: cut by an edge, ${(vis * 100).toFixed(0)}% visible`, FIX.edgeIntruder);
+      }
+      for (const obj of r.ids ?? []) {
+        if (peopleById.has(obj.id) || obj.id.startsWith('mark:') || obj.id.startsWith('blob')) continue;
+        if (['sky', 'ground', 'water'].includes(obj.id)) continue;
+        const kind = itemsById.get(obj.id)?.kind;
+        if (kind === 'effect') continue;
+        const bb = obj.bbox; if (!bb) continue;
+        const w = bb.x1 - bb.x0, h = bb.y1 - bb.y0;
+        if (w <= 0 || h / w < TANGENT_RATIO) continue;
+        for (const [pid, person] of peopleById) {
+          const hb = person.headBox; if (!hb) continue;
+          const touch = bb.x0 < hb.x1 + 0.005 && bb.x1 > hb.x0 - 0.005 && bb.y0 < hb.y1 + 0.005 && bb.y1 > hb.y0 - 0.005;
+          if (!touch) continue;
+          const keyId = `${m.shotId}/${m.ki}/${obj.id}/${pid}`;
+          if (tangentSeen.has(keyId)) continue;
+          tangentSeen.add(keyId);
+          push('tangent', `${obj.id}/${pid}`, `tangent ${obj.id}/${pid}: thin world silhouette touches the head`, FIX.tangent);
+        }
       }
       const primaryStat = primary ? idsById.get(primary) : null;
       if (k.over && primary) {
@@ -468,6 +506,52 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           const inter = overlapArea(ob, pbox);
           const small = Math.min((ob.x1 - ob.x0) * (ob.y1 - ob.y0), (pbox.x1 - pbox.x0) * (pbox.y1 - pbox.y0));
           if (small > 0 && inter / small > MERGE_OVERLAP) push('merge', `${k.over}/${primary}`, `merge ${k.over}/${primary}: over actor overlaps the subject by ${(100 * inter / small).toFixed(0)}%`, FIX.merge);
+        }
+        const overHead = oh ? Math.max(0, oh.y1 - oh.y0) : null;
+        const overDist = idsById.get(k.over)?.distance;
+        const primaryDist = primaryStat?.distance;
+        const ratio = overDist && primaryDist ? overDist / primaryDist : Infinity;
+        if (overHead !== null && (overHead < OVER_HEAD_MIN || overHead > OVER_HEAD_MAX || ratio > OVER_DIST_RATIO)) {
+          push('over not foreground', k.over, `over not foreground ${k.over}: head ${(overHead * 100).toFixed(0)}% (want 18-30%), distance ratio ${Number.isFinite(ratio) ? ratio.toFixed(2) : '?'} (want <= 0.60)`, FIX.overForeground);
+        }
+      }
+      for (const a of m.shot.actors ?? []) {
+        const id = a.id ?? a.who;
+        if (id === k.over || a.offscreen) continue;
+        const p = peopleById.get(id); if (!p?.headBox) continue;
+        const head = Math.max(0, p.headBox.y1 - p.headBox.y0);
+        let exprBeat = false;
+        for (const b of a.beats ?? []) {
+          if (b.expr === undefined) continue;
+          const ef = ctx.anchor(b.at, m.start);
+          if (ef >= m.kf && ef < m.end && m.f >= ef && m.f <= ef + EXPR_GRACE) exprBeat = true;
+        }
+        const talking = talkAt(a, m.f, m.start, ctx);
+        if (head < FACE_MIN && (exprBeat || talking)) {
+          const keyId = `${m.shotId}/${m.ki}/${id}`;
+          if (!faceSeen.has(keyId)) { faceSeen.add(keyId); push('face too small', id, `face too small ${id}: head ${(head * 100).toFixed(1)}% while ${talking ? 'talking' : 'expressing'}`, FIX.faceSmall); }
+        }
+      }
+      for (const a of m.shot.actors ?? []) {
+        const id = a.id ?? a.who;
+        if (a.offscreen) continue;
+        const events = [
+          { at: a.visible?.from, kind: 'enter' },
+          { at: a.visible?.to, kind: 'exit' },
+          { at: a.appear?.at, kind: 'appear' },
+        ];
+        for (const ev of events) {
+          if (!ev.at) continue;
+          const ef = ctx.anchor(ev.at, m.start);
+          if (ef < m.kf || ef >= m.end) continue;
+          const check = ev.kind === 'exit' ? Math.max(m.kf, ef - 1) : Math.min(m.end - 1, ef + ENTRY_GRACE);
+          const st = stateFor(ctx, m.shot, id, check, m.start); if (!st) continue;
+          const rr = projectState(ctx, keyForProjection(k, check, m.start), st, check);
+          const area = rr.box ? rr.area : 0;
+          if (area < ENTRANCE_AREA) {
+            const keyId = `${m.shotId}/${m.ki}/${id}/${ev.kind}`;
+            if (!entranceSeen.has(keyId)) { entranceSeen.add(keyId); push('entrance off-screen', id, `entrance off-screen ${id}: ${ev.kind} covers ${(area * 100).toFixed(1)}% of the frame`, FIX.entranceOff); }
+          }
         }
       }
       for (const id of [...subjects, ...(k.over ? [k.over] : [])]) {
@@ -482,7 +566,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         const prop = activeProp(a, m.f, m.start, ctx);
         let facing = a.facing ?? 0, mirror = !!a.mirror;
         for (const b of a.beats ?? []) if (m.f >= ctx.anchor(b.at, m.start)) { if (b.facing !== undefined) facing = b.facing; if (b.mirror !== undefined) mirror = b.mirror; }
-        const aim = prop === 'bow' || prop === 'bowDrawn' || prop === 'bigbow' ? (mirror ? 1 : -1)
+        const aim = prop === 'bowDrawn' || prop === 'bigbow' ? (mirror ? 1 : -1)
           : prop === 'spear' || prop === 'net' || prop === 'axe' || prop === 'torch' ? (mirror ? -1 : 1)
             : facing * (mirror ? -1 : 1);
         if (want && aim && want !== aim) push('looks away', id, `looks away ${id}: target is screen-${want > 0 ? 'right' : 'left'} but the actor aims ${aim > 0 ? 'right' : 'left'}`, FIX.looksAway);

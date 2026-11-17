@@ -61,8 +61,9 @@ export function runAuthoring() {
   const fl = faceBeat('left'), fr = faceBeat('right');
   ok('face flips across the line', !!fl && !!fr && fl.mirror !== fr.mirror, JSON.stringify([fl, fr]));
   ok('face aims the prop', !!fl && fl.facing !== 0 && fl.look !== 0, JSON.stringify(fl));
-  const auto = faceBeat('left', true);
-  ok('over auto-face', !!auto && (auto.facing !== 0 || auto.mirror), JSON.stringify(auto));
+  let overMsg = '';
+  try { faceBeat('left', true); } catch (e) { overMsg = e.message; }
+  ok('over must be foreground', /over cannot be foreground: pandu is [\d.]+ m from camera vs [\d.]+ m for deer; move pandu toward the camera or use with/.test(overMsg), overMsg);
   const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
   const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
   ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);

@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT } from './env.js';
 import { SIZE, solveCamera } from './solver.js';
+import { OVER_DIST_RATIO } from './composition.js';
 import { normalizeWord } from '../../shared/words.mjs';
 
 const FPS = 30;
@@ -215,7 +216,7 @@ const compileActor = (entry, shot, ctx) => {
   const motion = compileMotion(a.motion, sets, ctx.catalog, ctx.fps);
   if (motion) out.motion = motion;
   if (a.animate) out.animate = Object.fromEntries(Object.entries(a.animate).map(([k, v]) => [k, compileAnimated(v, ctx.fps)]));
-  for (const k of ['scale', 'mirror', 'noBlob', 'blobScale', 'pose', 'expr', 'prop', 'look', 'seated', 'headTilt', 'tilt']) if (a[k] !== undefined) out[k] = a[k];
+  for (const k of ['scale', 'mirror', 'noBlob', 'blobScale', 'pose', 'expr', 'prop', 'look', 'seated', 'headTilt', 'tilt', 'offscreen']) if (a[k] !== undefined) out[k] = a[k];
   if (a.talk !== undefined) out.talk = a.talk;
   Object.assign(out, compileFacing(a.facing));
   if (a.yaw !== undefined) out.yaw = typeof a.yaw === 'number' ? normAngle(a.yaw) : a.yaw;
@@ -541,6 +542,14 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       key.semantic = true; key.move = k.move ?? 'push'; if (k.side) key.side = k.side; if (k.angle) key.angle = k.angle; if (k.size) key.size = k.size; if (k.with) key.with = [...k.with]; if (k.reaction) key.reaction = true;
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
+      if (over && primary) {
+        const cam = solved.key.pos;
+        const dist = (p) => Math.hypot(cam[0] - p[0], cam[1] - p[1], cam[2] - p[2]);
+        const dOver = dist(over.pos), dPrim = dist(primary.pos);
+        if (!solved.debug.over || dOver > dPrim * OVER_DIST_RATIO) {
+          throw new Error(`shot ${shot.id} key ${ki}: over cannot be foreground: ${over.id} is ${dOver.toFixed(1)} m from camera vs ${dPrim.toFixed(1)} m for ${primary.id}; move ${over.id} toward the camera or use with`);
+        }
+      }
       if ((k.move ?? 'push') === 'follow' && primary) {
         if (!primary.moveId) throw new Error(`shot ${shot.id}: follow camera needs a moving id on "${primary.id}"`);
         const a0 = (baseAngleFor(k, info) * Math.PI) / 180;

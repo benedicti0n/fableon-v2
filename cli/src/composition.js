@@ -27,6 +27,14 @@ export const EDGE_TOP = 0.02;             // top margin for a head region (2 %)
 export const EDGE_INTRUDER_AREA = 0.01;   // non-subject cut by an edge, minimum frame area
 export const EDGE_INTRUDER_VISIBLE = 0.50; // ... and less than half of its solo silhouette visible
 export const MERGE_OVERLAP = 0.10;        // over actor box overlap / smaller box
+export const CUT_SIDE_MARGIN = 0.04;       // full/wide/establishing actor silhouette side margin
+export const OVER_HEAD_MIN = 0.18;         // over actor head / frame, lower bound
+export const OVER_HEAD_MAX = 0.30;         // over actor head / frame, upper bound
+export const OVER_DIST_RATIO = 0.6;        // over actor distance / subject distance, must be foreground
+export const TANGENT_RATIO = 4;             // thin world silhouette height / width
+export const FACE_MIN = 0.06;               // readable face head / frame while talking or expressing
+export const EXPR_GRACE = 15;              // frames after an expression beat that still count as expressing
+export const ENTRANCE_AREA = 0.03;         // entrance/exit/appear below this is effectively off-screen
 export const LOOK_AWAY_TOL = 0.02;        // screen-u difference before a gaze counts as sideways
 export const MIN_KEY_FRAMES = 18;          // a camera key shorter than 0.6 s is an editing error
 export const ENTRY_GRACE = 15;             // frames (0.5 s) where an entering/appearing subject still counts as present
@@ -51,6 +59,11 @@ export const FIX = {
   edgeIntruder: 'keep the background actor out of the frame edge or hide it',
   looksAway: 'set `face` so the actor/prop points at its target',
   merge: 'move the over actor and subject to opposite thirds',
+  cutSubject: 'widen the size or move the subject inside the 4 % side margins',
+  overForeground: 'move the over actor closer or resize its head to 18-30 % and keep it nearer than the subject',
+  tangent: 'move the world object or the actor so the silhouette does not touch the head',
+  faceSmall: 'move closer or use a larger size so the face is at least 6 % of the frame',
+  entranceOff: 'keep the entrance on screen or mark the actor offscreen: true',
   jumpCut: 'merge the keys, change size by a step, or move the camera >= 30 degrees',
   keyShort: 'merge the key into a neighbour or hold it for at least 18 frames',
   firstKey: 'start the shot on its first camera key',
