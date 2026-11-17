@@ -161,7 +161,8 @@ export async function audioCommand(dirArg) {
   assertProjectInputs(dir);
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
-  await run(py, [join(ROOT, 'audio', 'mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+  const script = existsSync(join(dir, 'cues.json')) ? 'cues_mix.py' : 'mix.py';
+  await run(py, [join(ROOT, 'audio', script)], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
   if (!existsSync(join(dir, 'audio', 'mix.wav'))) throw new Error(`audio: ${join(dir, 'audio', 'mix.wav')} was not written`);
   console.log(`audio: wrote ${join(dir, 'audio', 'mix.wav')}`);
 }

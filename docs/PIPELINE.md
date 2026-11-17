@@ -92,7 +92,7 @@ go through the same selective revision/no-op guard. The fixture is `fixtures/sav
 
 ## Director stages (Phase 3C)
 
-The stage list is now `brief → research → script → factcheck → cast → voice → shotplan → board → animatic`.
+The stage list is now `brief → research → script → factcheck → cast → voice → shotplan → board → sound → animatic`.
 `cast` designs every character/mention, checks mustHave traits and colour distinctness, writes asset gaps and renders
 `cast/cast-sheet.jpg`; `fableon cast --notes` stores notes in `cast.notes.json`. `shotplan` turns the script/words,
 cast and asset gaps into a 20-32-shot plan grouped into scenes (`scene`, one place+time), with per-boundary

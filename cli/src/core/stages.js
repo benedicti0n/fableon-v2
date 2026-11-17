@@ -1,5 +1,5 @@
 // Stage dependency graph for Phase 3A. The GUI/server can reuse this registry.
-import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, CAST, SHOTPLAN } from '../stages/prompts.js';
+import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, CAST, SHOTPLAN, SOUND } from '../stages/prompts.js';
 
 export const STAGES = [
   {
@@ -47,8 +47,15 @@ export const STAGES = [
     outputs: ['board.json', 'board.review.json', 'storyboard.json'],
   },
   {
-    name: 'animatic', version: 1, deps: ['board', 'voice'], prompt: '',
-    inputs: ['storyboard.json', 'words.json', 'voice.wav', 'board.json'],
+    name: 'sound', version: 1, deps: ['board', 'voice'], prompt: SOUND,
+    inputs: ['script.json', 'shotplan.json', 'board.json', 'words.json', 'voice.wav'],
+    extraInputs: ['schema/cues.schema.json'],
+    projectKeys: ['seconds', 'voice'],
+    outputs: ['cues.json', 'cues.md', 'audio/mix.wav', 'audio/stem_music.wav', 'audio/stem_sfx.wav', 'audio/stem_voice.wav'],
+  },
+  {
+    name: 'animatic', version: 1, deps: ['sound', 'board', 'voice'], prompt: '',
+    inputs: ['storyboard.json', 'words.json', 'voice.wav', 'audio/mix.wav', 'board.json'],
     projectKeys: ['seconds', 'voice'],
     outputs: ['animatic-qa.md'],
   },

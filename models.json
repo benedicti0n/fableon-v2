@@ -8,6 +8,7 @@
     "cast": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000 } },
     "shotplan": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000 } },
     "board": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 16000, "unused": "deterministic board writer; Phase 3E bake-off" },
+    "sound": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000 } },
     "boardEscalate": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.2, "maxTokens": 24000, "unused": "deterministic board writer; Phase 3E bake-off" }
   },
   "timeoutMs": 120000,

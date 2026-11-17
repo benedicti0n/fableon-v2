@@ -18,7 +18,8 @@ export async function runAnimatic({ projectDir }) {
   const noaudio = join(render, 'animatic_noaudio.mp4');
   await run('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', noaudio], { cwd: ROOT });
   const video = join(projectDir, 'animatic.mp4');
-  await run('ffmpeg', ['-y', '-v', 'error', '-i', noaudio, '-i', join(projectDir, 'voice.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', '-shortest', video], { cwd: ROOT });
+  const mix = join(projectDir, 'audio', 'mix.wav');
+  await run('ffmpeg', ['-y', '-v', 'error', '-i', noaudio, '-i', existsSync(mix) ? mix : join(projectDir, 'voice.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', '-shortest', video], { cwd: ROOT });
   const py = findPython();
   if (!py) throw new Error('animatic QA needs Python/Pillow (set FABLEON_PYTHON or create .venv)');
   const qaDir = join(projectDir, 'animatic-qa');
