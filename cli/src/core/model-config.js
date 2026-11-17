@@ -30,4 +30,33 @@ export function modelForStage(project, stage, repo = repoModels()) {
   };
 }
 
+/** The explicit per-stage fallback (models.json or project.models.<stage>.fallback), or null. */
+export function fallbackForStage(project, stage, repo = repoModels()) {
+  const sd = repo.stageDefaults?.[stage] ?? {};
+  const s = project.models?.[stage] ?? {};
+  const fb = s.fallback ?? sd.fallback;
+  if (!fb) return null;
+  const base = modelForStage(project, stage, repo);
+  if (base.provider === 'mock') return null;
+  // An explicit model choice is the user's call; only an explicit fallback may override it.
+  const explicitModel = !!(s.model || project.models?.default?.model);
+  if (explicitModel && !s.fallback) return null;
+  const p = project.models?.default ?? repo.default ?? {};
+  const provider = fb.provider ?? base.provider;
+  const model = fb.model ?? base.model ?? null;
+  return {
+    provider,
+    model,
+    baseUrl: fb.baseUrl ?? p.baseUrl ?? repo.providers?.[provider]?.baseUrl ?? base.baseUrl,
+    keyEnv: fb.keyEnv ?? p.keyEnv ?? repo.providers?.[provider]?.keyEnv ?? base.keyEnv,
+    temperature: fb.temperature ?? base.temperature,
+    maxTokens: fb.maxTokens ?? base.maxTokens,
+    thinking: fb.thinking ?? null,
+    reasoningEffort: fb.reasoningEffort ?? null,
+    timeoutMs: base.timeoutMs,
+    maxRepairs: base.maxRepairs,
+    prices: repo.prices?.[model] ?? null,
+  };
+}
+
 export const modelId = (m) => `${m.provider}:${m.model ?? ''}:${m.thinking ?? ''}:${m.reasoningEffort ?? ''}:${m.temperature ?? ''}:${m.maxTokens ?? ''}`;

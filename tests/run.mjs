@@ -28,6 +28,7 @@ import { runCastTests } from './cast.mjs';
 import { runShotplanTests } from './shotplan.mjs';
 import { runBoardTests } from './board.mjs';
 import { runUsageTests } from './usage.mjs';
+import { runModelTests } from './models.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -127,6 +128,8 @@ try {
   check('board writer', board.ok, `${board.checks.filter((c) => c.ok).length}/${board.checks.length} checks`);
   const usage = runUsageTests();
   check('usage aggregation', usage.ok, `${usage.checks.filter((c) => c.ok).length}/${usage.checks.length} checks`);
+  const models = await runModelTests();
+  check('model fallback', models.ok, `${models.checks.filter((c) => c.ok).length}/${models.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

@@ -23,12 +23,12 @@ strict tool call (beta): OK (returned a tool call)
 
 | id | name | role in this phase |
 |---|---|---|
-| `deepseek-flash` | DeepSeek-V4.1-Flash-1017 | fast chat model; brief, research and script (thinking disabled) |
-| `deepseek-v4-pro` | DeepSeek-V4-Pro-0813 | reasoning model; fact-check (thinking enabled, effort `high`) |
+| `deepseek-flash` | DeepSeek-V4.1-Flash-1017 | default for every stage; fact-check runs thinking-enabled at effort `low` |
+| `deepseek-v4-pro` | DeepSeek-V4-Pro-0813 | explicit per-stage fallback only, after the flash repairs fail |
 
 Both models support both non-thinking and thinking modes; thinking is the default. The router sends
-`thinking: {type: "disabled"}` for brief/research/script and `thinking: {type: "enabled"}` plus
-`reasoning_effort: "high"` for fact-check. The effort levels reported by `GET /models` are `low`, `high`, `max`
+`thinking: {type: "disabled"}` for brief/research/script/cast/shotplan, and `thinking: {type: "enabled"}` plus
+`reasoning_effort: "low"` for fact-check. The effort levels reported by `GET /models` are `low`, `high`, `max`
 (default `high`).
 
 ### Limits (from `GET /models` and the pricing page)
@@ -89,9 +89,18 @@ Cost is computed only when `models.json` has a price for the resolved model:
 
 ### Stage defaults
 
-`models.json` `stageDefaults`: `deepseek-flash` with thinking disabled and temperature 0.7 / 0.4 / 0.8 for
-brief / research / script; `deepseek-v4-pro` with thinking enabled, effort `high` and temperature 0.2 for factcheck.
-A project-level `models.default.model` or `models.<stage>.model` overrides these.
+`models.json` `stageDefaults`: `deepseek-flash` for brief, research, script, factcheck, cast and shotplan
+(thinking disabled except factcheck: enabled, effort `low`, temperature 0.2). A project-level
+`models.default.model` or `models.<stage>.model` overrides these. `models.board` / `models.boardEscalate` are kept
+but unused (the board writer is deterministic; Phase 3E bake-off).
+
+### Fallback
+
+Each stage has an explicit `fallback` entry (`deepseek-v4-pro`; factcheck uses thinking enabled, effort `high`).
+The router tries the primary model with its normal repair rounds, then runs the same validation loop once with the
+fallback. Every fallback attempt is written to `logs/calls.jsonl` as `"fallback": true` with `fallbackFrom`, and the
+stage usage records a `fallbacks` count. An explicit project model choice is honoured without a fallback unless the
+project also sets `models.<stage>.fallback`; mock projects never fall back.
 
 ## Provider contract
 
