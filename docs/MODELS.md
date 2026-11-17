@@ -89,7 +89,7 @@ Cost is computed only when `models.json` has a price for the resolved model:
 
 ### Stage defaults
 
-`models.json` `stageDefaults`: `deepseek-flash` for brief, research, script, factcheck, cast and shotplan
+`models.json` `stageDefaults`: `deepseek-flash` for brief, research, script, factcheck, cast, shotplan and sound
 (thinking disabled except factcheck: enabled, effort `low`, temperature 0.2). A project-level
 `models.default.model` or `models.<stage>.model` overrides these. `models.board` / `models.boardEscalate` are kept
 but unused (the board writer is deterministic; Phase 3E bake-off).

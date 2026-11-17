@@ -26,14 +26,20 @@ Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later p
 
 ### Phase 3C carry-over (from the AI director)
 - Semantic fx placement: put fire on a mark's box top (the S38 flames float above the trees), smoke from a set piece, and reveal effects from a landmark, instead of hand-picked world offsets.
-- Music/SFX for new projects: the animatic is voice-only; the score/SFX stage still assumes the Adi mix.
-- Final-quality render of new projects: the director path stops at a 540×960 animatic; final 1440×2560 render and the full audio mix are still Phase 1 fixture commands.
 - UI for the shot plan, board review and animatic checkpoints (the CLI already exposes the artifacts and approvals).
 
 ## Voice providers (from Phase 3A-2)
-- Add Sarvam Bulbul as a cheaper India-native provider.
 - Add a local forced aligner for providers that return audio without word timings.
 - Add voice/provider/model selection, audition playback and per-tone delivery controls to the UI.
+
+## Phase 3D — Reference direction, pace and sound (done)
+Scenes and per-boundary transitions (crossfade/flash/cut), burst easing, punch/impact/drama/reveal/foreground marks, walking and follow paths, low full/wide heights, DOF per size, a cue-driven original score + SFX mix, the 1.20 Savitri pace, the reference script formula and the first complete 1440×2560 AI-made film. The board/animatic checkpoints are in `docs/reports/phase-3d.md`.
+
+## Phase 3E — Model bake-off and voice depth
+- Per-stage model bake-off across OpenRouter models and direct providers (DeepSeek, others), with the flash defaults kept as the baseline and every fallback measured.
+- Sarvam Bulbul + a local forced aligner; draft/final voice and a credit meter. The user's Sarvam Nachiket request from the Savitri v2 review is the first target.
+- Keep the deterministic board writer; use `models.board` / `models.boardEscalate` only in the bake-off.
+- Later: whip pans with motion blur, new set kits, semantic fx placement, UI for the shot plan/board/animatic checkpoints.
 
 ## Phase 4 — Backend API
 Node server: projects, artifacts, stages, jobs (REST + WebSocket progress), file serving for audio/video/stills.
