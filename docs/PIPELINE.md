@@ -85,6 +85,32 @@ Research adds `supports: yes|partly|no` per fact; only `yes` facts are citable. 
 Hindi line with the English facts through its gloss and adds a craft verdict (`ok`/`weak`); weak or unsupported lines
 go through the same selective revision/no-op guard. The fixture is `fixtures/savitri-hi/`.
 
+## Director stages (Phase 3C)
+
+The stage list is now `brief → research → script → factcheck → cast → voice → shotplan → board → animatic`.
+`cast` designs every character/mention, checks mustHave traits and colour distinctness, writes asset gaps and renders
+`cast/cast-sheet.jpg`; `fableon cast --notes` stores notes in `cast.notes.json`. `shotplan` turns the script/words,
+cast and asset gaps into a 29-ish-shot plan with a 2.1 KB director-craft file, a shotplan schema, a skeleton call and a
+keys/beats/fx call; `fableon shotplan --notes` stores `shotplan.notes.json`. `board` writes the authoring shots from
+the approved plan, compiles each shot, measures the full board and repairs edge/head-cut staging with deterministic
+variants; failures are recorded in `board.review.json` as `needsHuman`. `fableon board --shot <id>` reruns and
+re-renders that segment. `animatic` renders preview segments, concatenates them, muxes `voice.wav` only and runs
+short_qa; `animatic-qa.md` carries the verdict. The animatic mp4 stays in `work/`.
+
+| stage | outputs | schema |
+|---|---|---|
+| cast | `cast.json`, `assets.todo.json`, `cast/cast-sheet.jpg` | `schema/cast.schema.json`, `schema/assets.schema.json` |
+| shotplan | `shotplan.json`, `shotplan.md` | `schema/shotplan.schema.json` |
+| board | `board.json`, `board.review.json`, `storyboard.json` | `schema/authoring.schema.json` |
+| animatic | `animatic-qa.md` (+ `animatic.mp4` in the project) | Markdown; QA meta |
+
+`fableon schema --project P --shot <id>` writes the slim per-shot board schema (about 7.5 KB for Savitri, target
+<=20 KB). The board prompt uses the guide, craft file, catalog card, three authoring examples and that schema; the
+shot plan and previous shot are variable. The current board writer's deterministic base + measured variants keeps
+`needsHuman` honest rather than pretending a bad shot passed; a model staging patch is a Phase 3C follow-up.
+Model defaults: `cast` and `board` are DeepSeek flash at 0.4, `shotplan` and `boardEscalate` are DeepSeek v4-pro
+(thinking disabled); every call is cached and logged.
+
 ## Models, cache and budgets
 
 `project.json.models.default` selects the provider; per-stage overrides are `brief`, `research`, `script`, `factcheck`,

@@ -42,10 +42,12 @@ cut to the other side flips it. It also works inside a beat. `over` faces the `o
   the subject mark's `view`.
 - `move`: `push` (default), `hold` (slow creep), `glide`, `follow` (moving id), `crane`, `tiltUp`, `tiltDown`, `pan`,
   `reveal`.
-- `over:"pandu"` puts Pandu in the lower third while `on` is framed opposite. It is **not** in `on`, faces the subject
-  automatically, and must be a real foreground plane: compile fails with
-  `over cannot be foreground: X is N m from camera vs M m for Y; move X toward the camera or use with` unless its
-  distance is <=0.60 of the subject's. Prefer `with` for a two-shot when the marks cannot make that depth split.
+- `full`/`wide`/`establishing` keys ground the lowest actor's feet at about 78 % from the top; measured frames warn
+  `floating subjects` when feet are above 65 %.
+- `over:"pandu"` puts Pandu in the lower third while `on` is upper. Compile requires the over head to be 18–30 % of
+  frame and at least 1.8× the `on` subject's head. The solver moves the camera on the over→subject line to the lens and
+  distance that achieve it; it never moves the actors. Prefer `with` for a two-shot when the marks cannot make that
+  split.
 - `with:["deer"]` names context that must be in frame (mark, set piece, fx or actor). An actor id wins over a
   same-named mark, so this follows the stag, not `deer.deer`. The solver includes it or fails `cannot frame`.
 - `to:"arena.target"` with `tiltUp`/`tiltDown`/`pan` starts on `on` and moves the look to the target.
@@ -108,6 +110,13 @@ The entrance floor is 3 %, not 4 %: a five-person wide group at the calibrated w
 brother. `frames.json` is written at `<project>/frames.json`; every finding has a one-line fix. Ambient effects and
 mark proxies are exempt from blockers; the over actor is exempt from hidden while in its corner.
 
+## Shot plan
+
+`shotplan.json` covers every line in order; a long line may split into two shots with the same line and different
+starts. Starts strictly increase, shots are 1.2–6 s (8 s only with `hold`), average 2.5–4 s, and keys last >=0.6 s.
+The first shot and every new place open on a wide/establishing key with a landmark in `mustShow`; the board writer
+turns `mustShow` into the first key's `with`.
+
 ## Workflow and examples
 
 ```bash
@@ -117,13 +126,3 @@ npx fableon frames --project P                       # measured; --fast is the o
 npx fableon review --project P --compare fixtures/adi-parva --coverage --split --out review/
 ```
 
-`review` samples the same frames, one row per key, and writes compiled / comparison / coverage images plus `review.json`.
-
-Two-shot with context, closer deer, sage close, shock two-shot:
-
-```jsonc
-{ "at":"13.Pandu",  "size":"wide",  "on":["pandu"], "with":["deer"], "move":"push" },
-{ "at":"13.deer+0.1s", "size":"wide", "on":["deer"], "angle":"low", "third":"right", "move":"hold", "cut":true },
-{ "at":"13.The",    "size":"close", "on":["sage"], "move":"hold", "cut":true },
-{ "at":"13.and",    "size":"full",  "on":["pandu","kunti"], "move":"push", "cut":true }
-```

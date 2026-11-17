@@ -24,6 +24,12 @@ Project folder format + stage dependency graph with input hashing and invalidati
 
 Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later phase, so new topics must be stageable in those sets for now. Phase 3A's script catalog card enforces that.
 
+### Phase 3C carry-over (from the AI director)
+- Semantic fx placement: put fire on a mark's box top (the S38 flames float above the trees), smoke from a set piece, and reveal effects from a landmark, instead of hand-picked world offsets.
+- Music/SFX for new projects: the animatic is voice-only; the score/SFX stage still assumes the Adi mix.
+- Final-quality render of new projects: the director path stops at a 540×960 animatic; final 1440×2560 render and the full audio mix are still Phase 1 fixture commands.
+- UI for the shot plan, board review and animatic checkpoints (the CLI already exposes the artifacts and approvals).
+
 ## Voice providers (from Phase 3A-2)
 - Add Sarvam Bulbul as a cheaper India-native provider.
 - Add a local forced aligner for providers that return audio without word timings.
