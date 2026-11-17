@@ -46,6 +46,12 @@ export const STAGES = [
     projectKeys: ['language', 'seconds'],
     outputs: ['board.json', 'board.review.json', 'storyboard.json'],
   },
+  {
+    name: 'animatic', version: 1, deps: ['board', 'voice'], prompt: '',
+    inputs: ['storyboard.json', 'words.json', 'voice.wav', 'board.json'],
+    projectKeys: ['seconds', 'voice'],
+    outputs: ['animatic-qa.md'],
+  },
 ];
 
 export const stageByName = (name) => STAGES.find((s) => s.name === name);

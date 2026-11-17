@@ -4,7 +4,7 @@ import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { allStatuses, approve, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
-const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js' };
+const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', animatic: 'animatic.js' };
 
 export class PipelineRunner extends EventEmitter {
   constructor(projectDir, project, opts = {}) {
@@ -69,6 +69,7 @@ export class PipelineRunner extends EventEmitter {
       if (stage.name === 'cast') this.log(`cast ${result.characters ?? 0} character(s), ${result.assets ?? 0} asset gap(s); sheet ${result.sheet}`);
       if (stage.name === 'shotplan') this.log(`shotplan ${result.shots ?? 0} shot(s), average ${result.average ?? '?'} s, span ${result.span ?? '?'}`);
       if (stage.name === 'board') this.log(`board ${result.shots ?? 0} shot(s), ${result.errors ?? 0} error(s), ${result.warnings ?? 0} warning(s); needs human ${result.needsHuman?.join(',') || '-'}`);
+      if (stage.name === 'animatic') this.log(`animatic ${result.video}; ${result.specs}`);
       if (stage.name === 'factcheck' && result.failures?.length) {
         if (!autopilot) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check needs revision' });
