@@ -95,7 +95,7 @@ export class PipelineRunner extends EventEmitter {
         }
       }
       const usage = stage.name === 'voice' ? result.usage ?? null : this.router.stageUsage(stage.name);
-      if (result?.warnings?.length) for (const w of result.warnings.slice(0, 20)) this.log(`voice warning: ${w}`);
+      if (result?.warnings?.length) for (const w of result.warnings.slice(0, 20)) this.log(`${stage.name} warning: ${w}`);
       if (result?.normalizer?.count) this.log(`normalizer: ${result.normalizer.count} intervention(s): ${result.normalizer.lines.join('; ')}`);
       if (result?.fit?.steps?.length) this.log(`voice fit: ${result.fit.steps.map((s) => s.step).join(' -> ')}`);
       recordStage(this.projectDir, this.project, stage.name, { status: 'fresh', usage });

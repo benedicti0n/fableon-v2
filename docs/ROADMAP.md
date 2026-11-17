@@ -20,6 +20,7 @@ Project folder format + stage dependency graph with input hashing and invalidati
 4. Expression/talk beats need a readable face (S38 Agni at ~22 % body: pained → relief and burp unreadable).
 5. Kunti's entrance in S14 happens off-screen unflagged; the L16 pop-in was removed instead of using the 0.5 s rule.
 6. The director guide must describe each size by what it shows in this house style (close ≈ head to knees, medium ≈ whole figure), not by film-school names.
+7. Feature ink adapts to dark skin tones (light rim on eyes/mouth) so every skin tone keeps readable expressions.
 
 Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later phase, so new topics must be stageable in those sets for now. Phase 3A's script catalog card enforces that.
 

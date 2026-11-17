@@ -14,7 +14,7 @@ export async function castCommand(dirArg, opts = {}) {
     const p = join(dir, 'cast.notes.json');
     const data = existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : { version: 1, notes: [] };
     data.notes.push({ ts: new Date().toISOString(), text: opts.notes });
-    writeJsonArtifact(dir, 'cast', 'cast.notes.json', data, 'castNotes');
+    writeJsonArtifact(dir, 'cast', 'cast.notes.json', data, 'cast-notes');
   }
   const runner = new PipelineRunner(dir, project, { to: 'cast', only: 'cast', force: !!opts.notes, autopilot: true });
   runner.on('log', ({ message }) => { if (/^(stage .* (start|done|failed)|cast )/.test(message)) console.log(message.replace(/^\S+ /, '')); });

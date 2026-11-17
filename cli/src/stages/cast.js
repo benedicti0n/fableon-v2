@@ -12,6 +12,7 @@ const HEX = /^#[0-9a-f]{6}$/i;
 const simpleClothes = (s) => !!s.lower && !s.top && !s.drape;
 const TRAITS = {
   'dark-skin': { field: 'skin', ok: (s) => HEX.test(s.skin ?? '') && luminance(s.skin) < 0.12, hint: 'skin must be a dark hex colour' },
+  'indigo-skin': { field: 'skin', ok: isIndigoSkin, hint: 'skin must be indigo/blue (hue 220-280, saturation >= 0.25) and contrast >= 2.2 against ink' },
   'red-attire': { field: 'top/sari/drape', ok: hasRedGarment, hint: 'top, sari or drape must be red' },
   crown: { field: 'head', ok: (s) => s.head === 'crown' || s.head === 'crownSmall', hint: 'head must be crown or crownSmall' },
   woman: { field: 'sari', ok: (s) => !!s.sari, hint: 'sari must be set' },
@@ -23,7 +24,7 @@ const TRAITS = {
   'simple-clothes': { field: 'lower/top/drape', ok: simpleClothes, hint: 'lower must be set and top/drape null' },
   sage: { field: 'build', ok: (s) => s.build === 'elder', hint: 'build must be elder' },
   topknot: { field: 'head', ok: (s) => s.head === 'topknot', hint: 'head must be topknot' },
-  beard: { field: 'beard/beardLong', ok: (s) => !!s.beard && s.beardLong === true, hint: 'beard must be set and beardLong true' },
+  beard: { field: 'beard', ok: (s) => !!s.beard, hint: 'beard must be set' },
   princess: { field: 'sari', ok: (s) => !!s.sari, hint: 'sari must be set' },
   god: { field: 'head', ok: (s) => s.head === 'crown' || s.head === 'crownSmall', hint: 'head must be crown or crownSmall' },
 };
@@ -32,6 +33,20 @@ const normTrait = (t) => String(t).trim().toLowerCase().replace(/[\s_]+/g, '-');
 const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 const lin = (c) => { const v = c / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
 function luminance(hex) { const [r, g, b] = rgb(hex); return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b); }
+export const contrastRatio = (hex) => { const l = luminance(hex); return (Math.max(l, 0) + 0.05) / 0.05; };
+function isIndigoSkin(s) {
+  if (!HEX.test(s.skin ?? '') || contrastRatio(s.skin) < 2.2) return false;
+  const [r, g, b] = rgb(s.skin).map((c) => c / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (d < 0.05) return false;
+  let h = 0;
+  if (max === r) h = 60 * (((g - b) / d) % 6);
+  else if (max === g) h = 60 * ((b - r) / d + 2);
+  else h = 60 * ((r - g) / d + 4);
+  if (h < 0) h += 360;
+  return h >= 220 && h <= 280 && d / max >= 0.25;
+}
+
 function hasRedGarment(s) {
   return [s.top, s.sari, s.drape].some((c) => HEX.test(c ?? '') && (() => { const [r, g, b] = rgb(c); return r > 100 && r > g * 1.4 && r > b * 1.4; })());
 }
@@ -97,6 +112,17 @@ export function castErrors(data, script, catalog) {
     if (new Set(specs.map((s) => s.head)).size < 2) errs.push('/characters main characters all share one head');
   }
   return errs;
+}
+
+export function castWarnings(data, script, catalog) {
+  const out = [];
+  for (const c of data.characters ?? []) {
+    const spec = specOf(c, catalog);
+    if (!spec?.skin || !HEX.test(spec.skin)) continue;
+    const ratio = contrastRatio(spec.skin);
+    if (ratio < 2.2) out.push({ code: 'low face contrast', id: c.id, message: `low face contrast ${c.id}: skin ${spec.skin} is ${ratio.toFixed(2)}:1 against black ink (want >= 2.2:1)` });
+  }
+  return out;
 }
 
 const gapRules = [
@@ -253,6 +279,7 @@ export async function runCast({ projectDir, project, router }) {
     facts: verified.map((f) => ({ id: f.id, claim: f.claim })),
     sceneLooks: (script.lines ?? []).map((l) => ({ n: l.n, who: l.look?.who ?? [], note: l.look?.note ?? '' })),
     castlist: examples,
+    currentCast: existsSync(join(projectDir, 'cast.json')) ? JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8')).characters ?? null : null,
     notes,
   };
   const { data: draft, usage } = await router.callJson('cast', [
@@ -268,9 +295,10 @@ export async function runCast({ projectDir, project, router }) {
   });
   const characters = draft.characters.map((c) => ({ ...c, scale: c.scale ?? 1, notes: c.notes ?? '' }));
   const assets = assetGaps(script, catalog);
+  const warnings = castWarnings({ version: 1, characters }, script, catalog);
   backupBeforeWrite(projectDir, 'cast', 'cast/cast-sheet.jpg', Buffer.from([0]));
   const sheet = await castSheet(projectDir, characters, catalog);
   writeJsonArtifact(projectDir, 'cast', 'cast.json', { version: 1, characters }, 'cast');
   writeJsonArtifact(projectDir, 'cast', 'assets.todo.json', { version: 1, assets }, 'assets');
-  return { characters: characters.length, assets: assets.length, sheet, usage: router.stageUsage('cast') };
+  return { characters: characters.length, assets: assets.length, warnings: warnings.map((w) => `${w.code} ${w.id}: ${w.message}`), sheet, usage: router.stageUsage('cast') };
 }

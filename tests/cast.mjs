@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../cli/src/env.js';
-import { assetGaps, castErrors, deltaE } from '../cli/src/stages/cast.js';
+import { assetGaps, castErrors, castWarnings, contrastRatio, deltaE } from '../cli/src/stages/cast.js';
 
 export function runCastTests() {
   const checks = [], errors = [];
@@ -34,5 +34,12 @@ export function runCastTests() {
   ok('noose asset gap', gaps.some((g) => g.object === 'noose' && g.standIn === 'net' && g.lines.includes(8) && g.lines.includes(19)), JSON.stringify(gaps));
 
   ok('deltaE separates colours', deltaE('#000000', '#ffffff') > 90 && deltaE('#a8693f', '#a8693f') === 0, JSON.stringify([deltaE('#000000', '#ffffff'), deltaE('#a8693f', '#a8693f')]));
+  ok('dark skin contrast warns', contrastRatio('#2b1a1a') < 2.2 && castWarnings(base, script, catalog).some((w) => w.code === 'low face contrast' && w.id === 'yama'), JSON.stringify(castWarnings(base, script, catalog)));
+  const indigo = structuredClone(base); indigo.characters[2].spec.skin = '#3a3f8f'; indigo.characters[2].mustHave = ['indigo-skin', 'red-attire', 'crown'];
+  ok('indigo skin passes contrast', contrastRatio('#3a3f8f') >= 2.2 && !castWarnings(indigo, script, catalog).some((w) => w.id === 'yama'), JSON.stringify(castWarnings(indigo, script, catalog)));
+  ok('indigo trait enforced', castErrors(indigo, script, catalog).length === 0, castErrors(indigo, script, catalog).join('; '));
+  const notIndigo = structuredClone(indigo); notIndigo.characters[2].spec.skin = '#c8342e';
+  ok('indigo trait rejects red', castErrors(notIndigo, script, catalog).some((e) => /indigo-skin/.test(e)), castErrors(notIndigo, script, catalog).join('; '));
+
   return { ok: errors.length === 0, errors, checks };
 }
