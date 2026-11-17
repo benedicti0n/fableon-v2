@@ -30,7 +30,9 @@ export const MERGE_OVERLAP = 0.10;        // over actor box overlap / smaller bo
 export const CUT_SIDE_MARGIN = 0.04;       // full/wide/establishing actor silhouette side margin
 export const OVER_HEAD_MIN = 0.18;         // over actor head / frame, lower bound
 export const OVER_HEAD_MAX = 0.30;         // over actor head / frame, upper bound
-export const OVER_DIST_RATIO = 0.6;        // over actor distance / subject distance, must be foreground
+export const OVER_HEAD_RATIO = 1.8;       // over head / on-subject head, minimum
+export const GROUND_FEET = 0.78;          // grounded full/wide/establishing: lowest feet / frame
+export const FLOATING_FEET = 0.65;        // warn when the lowest feet are above this
 export const TANGENT_RATIO = 4;             // thin world silhouette height / width
 export const FACE_MIN = 0.06;               // readable face head / frame while talking or expressing
 export const EXPR_GRACE = 15;              // frames after an expression beat that still count as expressing
@@ -60,7 +62,8 @@ export const FIX = {
   looksAway: 'set `face` so the actor/prop points at its target',
   merge: 'move the over actor and subject to opposite thirds',
   cutSubject: 'widen the size or move the subject inside the 4 % side margins',
-  overForeground: 'move the over actor closer or resize its head to 18-30 % and keep it nearer than the subject',
+  overForeground: 'put the over head at 18-30 % of frame and at least 1.8x the on subject head',
+  floating: 'lower the camera or aim it up so the lowest feet reach about 78 % of the frame',
   tangent: 'move the world object or the actor so the silhouette does not touch the head',
   faceSmall: 'move closer or use a larger size so the face is at least 6 % of the frame',
   entranceOff: 'keep the entrance on screen or mark the actor offscreen: true',

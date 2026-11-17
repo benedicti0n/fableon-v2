@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { blocked } from './solver.js';
-import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, CUT_SIDE_MARGIN, OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_DIST_RATIO, TANGENT_RATIO, FACE_MIN, EXPR_GRACE, ENTRANCE_AREA, LOOK_AWAY_TOL, MIN_KEY_FRAMES, ENTRY_GRACE, ACTION_AREA, FLAT_WIDE_AREA, JUMP_CUT_DEG, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
+import { BANDS, HIDDEN_FRACTION, CONTEXT_AREA, CONTEXT_VISIBLE, BLOCKER_AREA, BLOCKER_OVERLAP, BLOCKER_MIN_AREA, SPEAKER_AREA, EYE_MIN, EYE_MAX, EDGE_X, EDGE_TOP, EDGE_INTRUDER_AREA, EDGE_INTRUDER_VISIBLE, MERGE_OVERLAP, CUT_SIDE_MARGIN, OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_HEAD_RATIO, FLOATING_FEET, TANGENT_RATIO, FACE_MIN, EXPR_GRACE, ENTRANCE_AREA, LOOK_AWAY_TOL, MIN_KEY_FRAMES, ENTRY_GRACE, ACTION_AREA, FLAT_WIDE_AREA, JUMP_CUT_DEG, SETTLE_CUT, SAMPLE_EVERY, AMBIENT_EFFECTS, FIX, inferSize, isMovingKey } from './composition.js';
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z']/g, '');
 const D2R = Math.PI / 180;
@@ -185,8 +185,10 @@ export function projectState(ctx, key, s, f) {
   const headOutside = !head || head.u < 0 || head.u > 1 || head.v < 0 || head.v > 1;
   const headFullyInside = headCorners.length === 4 && headCorners.every((c) => c.u >= 0 && c.u <= 1 && c.v >= 0 && c.v <= 1);
   const dist = Math.hypot(s.pos[0] - pos[0], s.pos[1] - pos[1], s.pos[2] - pos[2]);
+  const foot = project([s.pos[0], s.pos[1], s.pos[2]], b, pos, key.fov);
   return {
     kind: s.kind, frame: f, box: { u0: minU, v0: minV, u1: maxU, v1: maxV }, outside, area: Math.max(0, Math.min(1, frameArea)),
+    footV: foot?.v ?? null,
     headOutside, headFullyInside, height: Math.max(0, maxV - minV), eye: eye?.v ?? 0.5, eyeU: eye?.u ?? 0, dist,
     head: head ? { u: head.u, v: head.v } : null,
     blocked: blocked(pos, headCenter, [] )?.name ?? null,
@@ -408,7 +410,7 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
     writeFileSync(jobsFile, JSON.stringify(jobs));
     await run(process.execPath, [RENDER_CJS, 'coverage', '--jobs', jobsFile, '--out', outFile, '--project', dir, '--size', '180x320', '--msaa', '0'], { cwd: ROOT });
     const cov = JSON.parse(readFileSync(outFile, 'utf8'));
-    const errors = [...preErrors], warnings = [...preWarnings], rows = [], actionSeen = new Set(), tangentSeen = new Set(), faceSeen = new Set(), entranceSeen = new Set();
+    const errors = [...preErrors], warnings = [...preWarnings], rows = [], actionSeen = new Set(), tangentSeen = new Set(), faceSeen = new Set(), entranceSeen = new Set(), floatingSeen = new Set();
     const byKey = new Map();
     for (const m of keyMeta) {
       const keyId = `${m.si}/${m.ki}`;
@@ -467,6 +469,23 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           }
         }
       }
+      if (['full', 'wide', 'establishing'].includes(size)) {
+        const feet = [];
+        for (const id of subjects) {
+          const st = stateFor(ctx, m.shot, id, m.f, m.start);
+          if (!st || st.kind !== 'actor') continue;
+          const pr = projectState(ctx, keyForProjection(k, m.f, m.start), st, m.f);
+          if (pr.footV !== null) feet.push([id, pr.footV]);
+        }
+        if (feet.length) {
+          const [lowId, lowV] = feet.reduce((a, b) => (b[1] > a[1] ? b : a));
+          const keyId = `${m.shotId}/${m.ki}/floating`;
+          if (lowV < FLOATING_FEET && !floatingSeen.has(keyId)) {
+            floatingSeen.add(keyId);
+            add(warnings, 'floating subjects', lowId, `floating subjects ${lowId}: lowest feet at ${(lowV * 100).toFixed(0)}% (want ~78%, above 65%)`, FIX.floating);
+          }
+        }
+      }
       for (const id of m.edge ?? []) {
         const stat = idsById.get(id); if (!stat) continue;
         const area = stat.pixels / (180 * 320);
@@ -508,11 +527,10 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
           if (small > 0 && inter / small > MERGE_OVERLAP) push('merge', `${k.over}/${primary}`, `merge ${k.over}/${primary}: over actor overlaps the subject by ${(100 * inter / small).toFixed(0)}%`, FIX.merge);
         }
         const overHead = oh ? Math.max(0, oh.y1 - oh.y0) : null;
-        const overDist = idsById.get(k.over)?.distance;
-        const primaryDist = primaryStat?.distance;
-        const ratio = overDist && primaryDist ? overDist / primaryDist : Infinity;
-        if (overHead !== null && (overHead < OVER_HEAD_MIN || overHead > OVER_HEAD_MAX || ratio > OVER_DIST_RATIO)) {
-          push('over not foreground', k.over, `over not foreground ${k.over}: head ${(overHead * 100).toFixed(0)}% (want 18-30%), distance ratio ${Number.isFinite(ratio) ? ratio.toFixed(2) : '?'} (want <= 0.60)`, FIX.overForeground);
+        const primaryHead = ph ? Math.max(0, ph.y1 - ph.y0) : null;
+        const ratio = overHead && primaryHead ? overHead / primaryHead : 0;
+        if (overHead !== null && (overHead < OVER_HEAD_MIN || overHead > OVER_HEAD_MAX || ratio < OVER_HEAD_RATIO)) {
+          push('over not foreground', k.over, `over not foreground ${k.over}: head ${(overHead * 100).toFixed(0)}% (want 18-30%), ${ratio.toFixed(2)}x ${primary} (want >= 1.8x)`, FIX.overForeground);
         }
       }
       for (const a of m.shot.actors ?? []) {

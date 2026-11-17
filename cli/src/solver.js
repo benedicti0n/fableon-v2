@@ -1,7 +1,7 @@
 // Deterministic framing solver: semantic camera key + measured subjects + keep-out volumes -> v1 camera key.
 // Rules and constants are documented in docs/AUTHORING.md.
 const DEG = Math.PI / 180;
-import { BANDS, TARGETS, GROUP_SAFE } from './composition.js';
+import { BANDS, TARGETS, GROUP_SAFE, GROUND_FEET, OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_HEAD_RATIO } from './composition.js';
 export const ASPECT = 9 / 16;
 
 export const SIZE = {
@@ -14,6 +14,18 @@ export const SIZE = {
 };
 
 export const fovH = (vfov, aspect = ASPECT) => (2 * Math.atan(Math.tan((vfov * DEG) / 2) * aspect)) / DEG;
+const projectFrom = (camera, look, vfov, p, aspect = ASPECT) => {
+  const f = [look[0] - camera[0], look[1] - camera[1], look[2] - camera[2]];
+  const fl = Math.hypot(...f) || 1; f[0] /= fl; f[1] /= fl; f[2] /= fl;
+  const r = [-f[2], 0, f[0]]; const rl = Math.hypot(...r) || 1; r[0] /= rl; r[2] /= rl;
+  const u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+  const v = [p[0] - camera[0], p[1] - camera[1], p[2] - camera[2]];
+  const z = v[0] * f[0] + v[1] * f[1] + v[2] * f[2];
+  if (z <= 0) return null;
+  const tan = Math.tan((vfov * DEG) / 2);
+  return { u: ((v[0] * r[0] + v[1] * r[1] + v[2] * r[2]) / z / (tan * aspect) + 1) / 2, v: (1 - (v[0] * u[0] + v[1] * u[1] + v[2] * u[2]) / z / tan) / 2, z };
+};
+
 export const fitDistance = (spanV, spanH, vfov, aspect = ASPECT) => Math.max(
   spanV / (2 * Math.tan((vfov * DEG) / 2)),
   spanH / (2 * Math.tan((fovH(vfov, aspect) * DEG) / 2)),
@@ -141,41 +153,42 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     });
   };
   let camera = cameraAt(0, distance, camY);
-  let overBox = null;
+  let overBox = null, overLook = null;
   if (over && primary) {
-    let dx = over.pos[0] - primary.pos[0], dz = over.pos[2] - primary.pos[2];
+    const hOver = (over.measure.head ?? 0.4) * (over.scale ?? 1);
+    const hPrim = (primary.measure.head ?? 0.4) * (primary.scale ?? 1);
+    let dx = primary.pos[0] - over.pos[0], dz = primary.pos[2] - over.pos[2];
     let sep = Math.hypot(dx, dz);
     if (sep < 0.01) { const a = baseAngle * DEG; dx = Math.sin(a); dz = Math.cos(a); sep = 1; }
     dx /= sep; dz /= sep;
-    const overHead = (over.measure.head ?? 0.4) * (over.scale ?? 1);
-    const tanOver = (metricWorld / targetMetric - overHead / 0.24) / (2 * sep);
-    if (tanOver > 0.02) {
-      vfov = (2 * Math.atan(tanOver)) / DEG;
-      const dOver = overHead / (2 * 0.24 * tanOver), dPrim = dOver + sep;
-      const u = key.side === 'left' ? 0.2 : 0.8;
-      const right = [-dz, 0, dx];
-      const shift = (u - 0.5) * 2 * dOver * tanOver * aspect;
-      const baseCam = [(pb.x0 + pb.x1) / 2 + dx * dPrim + right[0] * shift, 0, (pb.z0 + pb.z1) / 2 + dz * dPrim + right[2] * shift];
-      const look = lookBase();
-      let best = null;
-      for (let y = -0.3; y <= 2.5; y += 0.1) {
-        const cc = [baseCam[0], over.pos[1] + ob.h + y, baseCam[2]];
-        const f = [look[0] - cc[0], look[1] - cc[1], look[2] - cc[2]]; const fl = Math.hypot(...f) || 1; f[0] /= fl; f[1] /= fl; f[2] /= fl;
-        const rr = [-f[2], 0, f[0]]; const rl = Math.hypot(...rr) || 1; rr[0] /= rl; rr[2] /= rl;
-        const up2 = [rr[1] * f[2] - rr[2] * f[1], rr[2] * f[0] - rr[0] * f[2], rr[0] * f[1] - rr[1] * f[0]];
-        const project = (pnt) => { const v = [pnt[0] - cc[0], pnt[1] - cc[1], pnt[2] - cc[2]]; const zc = v[0] * f[0] + v[1] * f[1] + v[2] * f[2]; if (zc <= 0) return null; const x = v[0] * rr[0] + v[1] * rr[1] + v[2] * rr[2], yv = v[0] * up2[0] + v[1] * up2[1] + v[2] * up2[2]; return { x: (x / zc / (tanOver * aspect) + 1) / 2, y: (1 - yv / zc / tanOver) / 2 }; };
-        const top = project([over.pos[0], over.pos[1] + (over.seated ? over.measure.seated : over.measure.standing) * (over.scale ?? 1), over.pos[2]]);
-        const chin = project([over.pos[0], over.pos[1] + (over.seated ? over.measure.seated : over.measure.standing) * (over.scale ?? 1) - overHead, over.pos[2]]);
-        if (!top || !chin) continue;
-        const center = (top.y + chin.y) / 2, bad = Math.abs(center - 0.74) + (top.x < 0 || top.x > 1 ? 1 : 0);
-        if (!best || bad < best.bad) best = { bad, cc, top, chin, center };
-      }
-      camera = best?.cc ?? [baseCam[0], over.pos[1] + ob.h + 0.4, baseCam[2]];
-      overBox = best ? { top: best.top, chin: best.chin, center: best.center } : null;
-    } else {
-      const camDist = Math.max(distance, sep + 0.9);
-      camera = [(pb.x0 + pb.x1) / 2 + dx * camDist, over.pos[1] + ob.h + 0.2, (pb.z0 + pb.z1) / 2 + dz * camDist];
+    let best = null;
+    for (let fov = 12; fov <= 85; fov += 0.5) {
+      const tan = Math.tan((fov * DEG) / 2);
+      const dPrim = metricWorld / (2 * targetMetric * tan);
+      const dOver = dPrim - sep;
+      if (dOver < 0.7) continue;
+      const fOver = hOver / (2 * dOver * tan), fPrim = hPrim / (2 * dPrim * tan), ratio = fOver / fPrim;
+      if (fOver < OVER_HEAD_MIN || fOver > OVER_HEAD_MAX || ratio < OVER_HEAD_RATIO) continue;
+      const score = Math.abs(fOver - 0.24) + 0.001 * Math.abs(fov - vfov0);
+      if (!best || score < best.score) best = { score, fov, dOver, dPrim, fOver, fPrim, ratio };
     }
+    if (!best) throw new Error(`over cannot be foreground: ${over.id} cannot reach an 18-30 % head at 1.8x ${primary.id} from the marks; use with or move the actors`);
+    vfov = best.fov;
+    const headY = over.pos[1] + (over.seated ? over.measure.seated : over.measure.standing) * (over.scale ?? 1) - hOver / 2;
+    const primHeadY = primary.pos[1] + (primary.seated ? primary.measure.seated : primary.measure.standing) * (primary.scale ?? 1) - hPrim / 2;
+    const camX = over.pos[0] - dx * best.dOver, camZ = over.pos[2] - dz * best.dOver;
+    const lookTarget = [primary.pos[0], primHeadY, primary.pos[2]];
+    let camY = headY + 0.48 * best.dOver * Math.tan((vfov * DEG) / 2);
+    for (let i = 0; i < 4; i++) {
+      const topP = projectFrom([camX, camY, camZ], lookTarget, vfov, [over.pos[0], headY + hOver / 2, over.pos[2]], aspect);
+      const chinP = projectFrom([camX, camY, camZ], lookTarget, vfov, [over.pos[0], headY - hOver / 2, over.pos[2]], aspect);
+      if (!topP || !chinP) break;
+      camY += (0.74 - (topP.v + chinP.v) / 2) * 2 * best.dOver * Math.tan((vfov * DEG) / 2);
+    }
+    camera = [camX, camY, camZ]; overLook = lookTarget;
+    const topP = projectFrom(camera, lookTarget, vfov, [over.pos[0], headY + hOver / 2, over.pos[2]], aspect);
+    const chinP = projectFrom(camera, lookTarget, vfov, [over.pos[0], headY - hOver / 2, over.pos[2]], aspect);
+    overBox = topP && chinP ? { top: { ...topP, x: topP.u, y: topP.v }, chin: { ...chinP, x: chinP.u, y: chinP.v }, center: (topP.v + chinP.v) / 2, head: Math.abs(chinP.v - topP.v), primaryHead: best.fPrim, ratio: best.ratio } : null;
   }
   let attempts = 0;
   const trySpot = (yaw, dist, y, fov) => {
@@ -198,35 +211,25 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     }
     if (!ok) throw new Error(`no clear view of ${subjects.map((s) => s.id).join('+')} at ${key.at}`);
   }
-  const look = lookBase();
-  if (over && primary) {
-    // Two-plane rule: the over actor sits in one lower third; put the primary subject in the upper part of the
-    // opposite side. Shift the look point laterally until the primary lands on that side.
-    const desired = key.side === 'left' ? 0.80 : 0.20;
-    const projectU = (p) => {
-      const f = [look[0] - camera[0], look[1] - camera[1], look[2] - camera[2]];
-      const fl = Math.hypot(...f) || 1; f[0] /= fl; f[1] /= fl; f[2] /= fl;
-      const right = [-f[2], 0, f[0]], rl = Math.hypot(...right) || 1; right[0] /= rl; right[2] /= rl;
-      const v = [p[0] - camera[0], p[1] - camera[1], p[2] - camera[2]];
-      const z = v[0] * f[0] + v[1] * f[1] + v[2] * f[2];
-      if (z <= 0) return 0.5;
-      const x = v[0] * right[0] + v[1] * right[1] + v[2] * right[2];
-      return 0.5 + x / z / (2 * Math.tan((vfov * DEG) / 2) * aspect);
-    };
-    const p = [target[0], pb.eye, target[2]];
-    for (let i = 0; i < 4; i++) {
-      const u = projectU(p); if (Math.abs(u - desired) < 0.01) break;
-      const f = [look[0] - camera[0], 0, look[2] - camera[2]], fl = Math.hypot(f[0], f[2]) || 1;
-      const right = [-f[2] / fl, 0, f[0] / fl];
-      const span = 2 * Math.hypot(p[0] - camera[0], p[2] - camera[2]) * Math.tan((vfov * DEG) / 2) * aspect;
-      const shift = -(desired - u) * span;
-      look[0] += right[0] * shift; look[2] += right[2] * shift;
-    }
-  }
+  const look = overLook ?? lookBase();
   if (key.third) {
     const f = [look[0] - camera[0], 0, look[2] - camera[2]], fl = Math.hypot(f[0], f[2]) || 1;
     const right = [-f[2] / fl, 0, f[0] / fl], shift = (key.third === 'left' ? 1 : -1) * spanH / 6;
     look[0] += right[0] * shift; look[2] += right[2] * shift;
+  }
+  let footV = null;
+  if (!over && ['full', 'wide', 'establishing'].includes(size)) {
+    const actors = subjects.filter((s) => s.kind === 'actor');
+    if (actors.length) {
+      const low = actors.reduce((a, s) => (s.pos[1] < a.pos[1] ? s : a));
+      for (let i = 0; i < 3; i++) {
+        const p = projectFrom(camera, look, vfov, [low.pos[0], low.pos[1], low.pos[2]], aspect);
+        if (!p) break;
+        const d = Math.hypot(low.pos[0] - camera[0], low.pos[1] - camera[1], low.pos[2] - camera[2]);
+        look[1] += (GROUND_FEET - p.v) * (2 * d * Math.tan((vfov * DEG) / 2));
+      }
+      footV = projectFrom(camera, look, vfov, [low.pos[0], low.pos[1], low.pos[2]], aspect)?.v ?? null;
+    }
   }
   // projected eye-line fraction, useful in tests and reports
   const fwd = [look[0] - camera[0], look[1] - camera[1], look[2] - camera[2]];
@@ -251,5 +254,5 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
     ...(move === "glide" || move === "crane" ? { dur: Math.round((key.glide ?? 0.8) * 30) } : {}),
     ...(type === "tilt" ? { lookTo: toLook ?? [look[0], look[1] + (move === "tiltUp" ? spanV : -spanV), look[2]], tiltDur: Math.round((key.glide ?? 1.2) * 30) } : {}),
   };
-  return { key: out, debug: { attempts, yawOffset, raised, closer, eyeLine, distance, spanV, spanH, vfov, fovH: fovH(vfov, aspect), dof: cfg.dof, primary: primary?.id, primaryHeight: primary ? metricWorld / (2 * distance * Math.tan((vfov * DEG) / 2)) : null, over: overBox } };
+  return { key: out, debug: { attempts, yawOffset, raised, closer, eyeLine, distance, spanV, spanH, vfov, fovH: fovH(vfov, aspect), dof: cfg.dof, primary: primary?.id, primaryHeight: primary ? metricWorld / (2 * distance * Math.tan((vfov * DEG) / 2)) : null, over: overBox, footV } };
 }

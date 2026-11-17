@@ -3,7 +3,7 @@ import { fitDistance, fovH, solveCamera, blocked } from '../cli/src/solver.js';
 
 const measure = { standing: 1.65, seated: 1.13, eye: 1.39, eyeSeated: 0.87, head: 0.46, halfWidth: 0.28 };
 const setInfo = { front: 180, bounds: { min: [-5, 0, -5], max: [5, 8, 5] } };
-const subject = (id, x = 0) => ({ id, pos: [x, 0, 0], measure, scale: 1, seated: false });
+const subject = (id, x = 0) => ({ id, kind: 'actor', pos: [x, 0, 0], measure, scale: 1, seated: false });
 
 export function runSolver() {
   const checks = [], errors = [];
@@ -25,6 +25,7 @@ export function runSolver() {
   ok('fallback clear', !blocked(r.key.pos, head, [box]), JSON.stringify(r.key.pos));
   const wideOne = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], setInfo });
   ok('wide band centre', wideOne.debug.primaryHeight >= 0.18 && wideOne.debug.primaryHeight <= 0.30, String(wideOne.debug.primaryHeight));
+  ok('wide feet grounded', wideOne.debug.footV >= 0.74 && wideOne.debug.footV <= 0.82, String(wideOne.debug.footV));
   const ctx = { kind: 'mark', id: 'ctx', pos: [3, 1.5, 0], measure, scale: 1, seated: false };
   const withCtx = solveCamera({ key: { at: 'a', size: 'wide', move: 'hold' }, subjects: [subject('a')], context: [ctx], setInfo });
   const boxCtx = { kind: 'mark', id: 'tree', pos: [3, 1.5, 0], box: [2, 1.5, -1, 4, 9, 1], measure: { standing: 1.65, seated: 1.13, eye: 1.39, eyeSeated: 0.87, head: 0.46, halfWidth: 0.28 }, scale: 1, seated: false };

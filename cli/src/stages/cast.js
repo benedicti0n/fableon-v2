@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { RENDER_CJS, ROOT, findPython, run } from '../env.js';
 import { atomicWrite, backupBeforeWrite, validationErrors, writeJsonArtifact } from '../core/artifacts.js';
 import { compileBoard } from '../authoring.js';
+import { checkFramesMeasured } from '../frames.js';
 import { CAST } from './prompts.js';
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -114,42 +115,111 @@ export function assetGaps(script, catalog) {
 
 const compactSpec = (s) => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== undefined));
 
-function sheetBoard(characters, catalog) {
-  const specs = Object.fromEntries(characters.map((c) => [c.id, specOf(c, catalog)]));
-  const cast = Object.fromEntries(characters.map((c) => [c.id, { spec: compactSpec(specs[c.id]), seed: seedOf(c.id) }]));
-  const actors = (spacing) => characters.map((c, i) => ({ cast: c.id, at: 'hermitage.clearing', nudge: [(i - (characters.length - 1) / 2) * spacing, 0, 0], pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 }));
-  const shots = [{
+function castDefs(characters, catalog) {
+  return Object.fromEntries(characters.map((c) => [c.id, { spec: compactSpec(specOf(c, catalog)), seed: seedOf(c.id) }]));
+}
+function boardFromShots(characters, catalog, shots) {
+  return { version: 1, fps: 30, tailFrames: 0, cast: castDefs(characters, catalog), shots };
+}
+function groupShot(characters, catalog, { spacing = 1.0, side = 'front', third = null } = {}) {
+  return {
     id: 'cast', start: 'f0', end: 'f90', light: 'day', sets: ['hermitage'],
-    actors: actors(1.1),
-    camera: [{ at: 'f0', size: 'wide', on: characters.map((c) => c.id), move: 'hold' }],
-  }];
-  characters.forEach((c, i) => {
-    const start = 90 * (i + 1), end = start + 90;
-    shots.push({
-      id: c.id, start: `f${start}`, end: `f${end}`, light: 'day', sets: ['hermitage'],
-      actors: [{ cast: c.id, at: 'hermitage.clearing', pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 }],
-      camera: [{ at: `f${start}`, size: 'full', on: [c.id], move: 'hold' }],
-    });
-  });
-  return { version: 1, fps: 30, tailFrames: 0, cast, shots };
+    actors: characters.map((c, i) => ({ cast: c.id, at: 'hermitage.clearing', nudge: [(i - (characters.length - 1) / 2) * spacing, 0, 0], pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 })),
+    camera: [{ at: 'f0', size: 'wide', on: characters.map((c) => c.id), move: 'hold', side, ...(third ? { third } : {}) }],
+  };
+}
+function soloShot(c, catalog, { mark = 'hermitage.clearing', nudge = [0, 0, 0], side = 'front', angle = 'eye' } = {}) {
+  return {
+    id: c.id, start: 'f0', end: 'f90', light: 'day', sets: ['hermitage'],
+    actors: [{ cast: c.id, at: mark, nudge, pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 }],
+    camera: [{ at: 'f0', size: 'medium', on: [c.id], move: 'hold', side, angle }],
+  };
+}
+async function measureBoard(tmp, board, words, catalog) {
+  const storyboard = compileBoard(board, words, catalog).storyboard;
+  atomicWrite(join(tmp, 'storyboard.json'), JSON.stringify(storyboard));
+  atomicWrite(join(tmp, 'words.json'), JSON.stringify(words));
+  const result = await checkFramesMeasured(tmp);
+  return { storyboard, result };
+}
+const cleanSheet = (r) => r.errors.length === 0 && !r.warnings.some((w) => ['edge intruder', 'blocker', 'cut subject', 'floating subjects'].includes(w.code));
+
+async function groupBlockers(tmp, characters) {
+  const jobs = characters.map((c) => ({ frame: 45, subjects: [c.id], over: null, with: [], edge: characters.filter((x) => x.id !== c.id).map((x) => x.id) }));
+  atomicWrite(join(tmp, 'cast-jobs.json'), JSON.stringify(jobs));
+  const out = join(tmp, 'cast-cov.json');
+  await run(process.execPath, [RENDER_CJS, 'coverage', '--jobs', join(tmp, 'cast-jobs.json'), '--out', out, '--project', tmp, '--size', '180x320', '--msaa', '0'], { cwd: ROOT });
+  const cov = JSON.parse(readFileSync(out, 'utf8'));
+  const overlap = (a, b) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+  for (const row of cov) {
+    const cid = row.subjects?.[0];
+    const p = row.ids?.find((x) => x.id === cid);
+    if (!p?.bbox) continue;
+    if ((row.subjects?.[cid] ?? 1) < 0.6) return `${cid} is hidden`;
+    for (const obj of row.ids ?? []) {
+      if (obj.id === cid || characters.some((c) => c.id === obj.id)) continue;
+      if (['sky', 'ground', 'water'].includes(obj.id) || obj.id.startsWith('mark:') || obj.id.startsWith('blob')) continue;
+      if ((obj.distance ?? Infinity) >= (p.distance ?? 0) - 0.05) continue;
+      const area = (obj.pixels ?? 0) / (180 * 320);
+      const ov = overlap(obj.bbox, p.bbox);
+      if (area > 0.12 || (area > 0.01 && ov > 0.25)) return `${cid} blocked by ${obj.id}`;
+    }
+  }
+  return null;
 }
 
 async function castSheet(projectDir, characters, catalog) {
   const words = [{ w: 'cast', a: 0, b: 10, line: 0 }];
-  let storyboard = null, last = null;
-  for (const spacing of [1.1, 1.0, 0.9, 0.8]) {
-    try {
-      const board = sheetBoard(characters, catalog);
-      for (const a of board.shots[0].actors) a.nudge[0] = (a.nudge[0] / 1.1) * spacing;
-      storyboard = compileBoard(board, words, catalog).storyboard;
-      break;
-    } catch (e) { last = e; }
-  }
-  if (!storyboard) throw new Error(`cast sheet board: ${last?.message ?? 'cannot frame the group'}`);
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cast-'));
   try {
-    atomicWrite(join(tmp, 'storyboard.json'), JSON.stringify(storyboard));
-    atomicWrite(join(tmp, 'words.json'), JSON.stringify(words));
+    let group = null, last = null;
+    for (const side of ['front', 'left', 'right']) for (const spacing of [1.0, 0.9, 0.8]) for (const third of [null, 'left', 'right']) {
+      if (third && side !== 'front') continue;
+      try {
+        const shot = groupShot(characters, catalog, { spacing, side, third });
+        const { result } = await measureBoard(tmp, boardFromShots(characters, catalog, [shot]), words, catalog);
+        if (cleanSheet(result)) {
+          const blocked = await groupBlockers(tmp, characters);
+          if (!blocked) { group = shot; break; }
+          last = blocked;
+        } else last = result.errors[0]?.message ?? result.warnings.find((w) => w.code === 'edge intruder' || w.code === 'floating subjects')?.message ?? 'finding';
+      } catch (e) { last = e.message; }
+      if (group) break;
+    }
+    if (!group) throw new Error(`cast sheet group has no clean measured variant: ${last ?? 'no variant'}`);
+
+    const solos = [];
+    for (const c of characters) {
+      const options = [
+        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'front', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [1.4, 0, 0], side: 'front', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [-1.4, 0, 0], side: 'front', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [0, 0, 1.2], side: 'front', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [0, 0, -1.2], side: 'front', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'front', angle: 'low' },
+        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'left', angle: 'eye' },
+        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'right', angle: 'eye' },
+      ];
+      let solo = null;
+      for (const o of options) {
+        try {
+          const shot = soloShot(c, catalog, o);
+          const { result } = await measureBoard(tmp, boardFromShots(characters, catalog, [shot]), words, catalog);
+          if (cleanSheet(result)) { solo = shot; break; }
+          last = result.errors[0]?.message ?? result.warnings.find((w) => w.code === 'edge intruder' || w.code === 'floating subjects')?.message ?? 'finding';
+        } catch (e) { last = e.message; }
+      }
+      if (!solo) throw new Error(`cast sheet solo ${c.id} has no clean measured variant: ${last ?? 'no variant'}`);
+      solos.push(solo);
+    }
+
+    const shots = [group, ...solos.map((shot, i) => {
+      const start = 90 * (i + 1);
+      return { ...shot, start: `f${start}`, end: `f${start + 90}`, camera: shot.camera.map((k) => ({ ...k, at: `f${start}` })) };
+    })];
+    const finalBoard = boardFromShots(characters, catalog, shots);
+    const { storyboard, result } = await measureBoard(tmp, finalBoard, words, catalog);
+    if (!cleanSheet(result)) throw new Error(`cast sheet combined board failed: ${result.errors[0]?.message ?? result.warnings[0]?.message ?? 'finding'}`);
     const frames = [45, ...characters.map((_, i) => 45 + 90 * (i + 1))];
     await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(tmp, 'f_'), '--frames', frames.join(','), '--project', tmp, '--size', '270x480', '--msaa', '0', '--jpeg', '0.92'], { cwd: ROOT });
     const manifest = {
@@ -190,6 +260,7 @@ export async function runCast({ projectDir, project, router }) {
     { role: 'user', content: `DATA:\n${JSON.stringify(data, null, 2)}\nReturn one json object with characters only.` },
   ], {
     validate: (d) => {
+      if (d && d.version === undefined) d.version = 1;
       const errs = validationErrors('cast', d);
       return errs.length ? errs : castErrors(d, script, catalog);
     },

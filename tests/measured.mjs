@@ -42,14 +42,21 @@ export async function runMeasured() {
     const edge = await runBoard(shotBoard('L5', (s) => { s.actors.find((a) => a.cast === 'satyavati').nudge = [1.5, 0, -0.5]; }));
     ok('edge intruder rule fires', edge.warnings.some((w) => w.code === 'edge intruder' && w.subject === 'satyavati'), JSON.stringify(edge.warnings.filter((w) => w.code === 'edge intruder')));
 
-    const cut = await runBoard(shotBoard('S14', (s) => { delete s.camera[1].third; }));
-    ok('cut subject rule fires', cut.errors.some((e) => e.code === 'cut subject' && e.subject === 'deer'), JSON.stringify(cut.errors.map((e) => `${e.code}:${e.subject}`)));
+    const cut = await runBoard(shotBoard('L16', (s) => { const xs = [-1.6, -0.8, 0, 0.8, 1.6]; for (const [i, a] of s.actors.entries()) { a.nudge = [xs[i], 0, 0]; a.scale = 1; delete a.appear; } }));
+    ok('cut subject rule fires', cut.errors.some((e) => e.code === 'cut subject'), JSON.stringify(cut.errors.map((e) => e.code)));
 
     const face = await runBoard(shotBoard('S38', (s) => { s.camera[1].size = 'wide'; s.camera[1].with = ['forestFire']; }));
     ok('face too small rule fires', face.errors.some((e) => e.code === 'face too small' && e.subject === 'agni'), JSON.stringify(face.errors.map((e) => e.code)));
 
     const entrance = await runBoard(shotBoard('S14', (s) => { s.camera[3].on = ['pandu']; const k = s.actors.find((a) => a.cast === 'kunti'); k.nudge = [-8, 0, 0]; }));
     ok('entrance off-screen rule fires', entrance.errors.some((e) => e.code === 'entrance off-screen' && e.subject === 'kunti'), JSON.stringify(entrance.errors.map((e) => e.code)));
+
+    const over = await runBoard(shotBoard('S14', (s) => {
+      s.end = '13.deer+0.1s';
+      s.camera = [{ at: '13.Pandu', size: 'wide', on: ['deer'], over: 'pandu', angle: 'eye', side: 'left', move: 'hold' }];
+      s.actors.find((a) => a.cast === 'pandu').nudge = [0, 0, 4];
+    }));
+    ok('screen-space over passes', ![...over.errors, ...over.warnings].some((e) => e.code === 'over not foreground'), JSON.stringify([...over.errors, ...over.warnings].map((e) => e.code)));
   } finally { rmSync(tmp, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { projectDir, requireFile } from './project.js';
 import { ROOT } from './env.js';
 import { SIZE, solveCamera } from './solver.js';
-import { OVER_DIST_RATIO } from './composition.js';
+import { OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_HEAD_RATIO } from './composition.js';
 import { normalizeWord } from '../../shared/words.mjs';
 
 const FPS = 30;
@@ -543,11 +543,11 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
       if (key.push) key.push = { ...key.push, from: parseAnchor(k.at, fps), ...(key.push.punchAt ? { punchAt: parseAnchor(key.push.punchAt, fps) } : {}) };
       const primary = subjects[0];
       if (over && primary) {
-        const cam = solved.key.pos;
-        const dist = (p) => Math.hypot(cam[0] - p[0], cam[1] - p[1], cam[2] - p[2]);
-        const dOver = dist(over.pos), dPrim = dist(primary.pos);
-        if (!solved.debug.over || dOver > dPrim * OVER_DIST_RATIO) {
-          throw new Error(`shot ${shot.id} key ${ki}: over cannot be foreground: ${over.id} is ${dOver.toFixed(1)} m from camera vs ${dPrim.toFixed(1)} m for ${primary.id}; move ${over.id} toward the camera or use with`);
+        const ob = solved.debug.over;
+        const overHead = ob?.head ?? 0, primHead = ob?.primaryHead ?? 0;
+        const ratio = primHead ? overHead / primHead : 0;
+        if (!ob || overHead < OVER_HEAD_MIN || overHead > OVER_HEAD_MAX || ratio < OVER_HEAD_RATIO) {
+          throw new Error(`shot ${shot.id} key ${ki}: over cannot be foreground: ${over.id} head ${(overHead * 100).toFixed(0)}% (want 18-30%) and ${ratio.toFixed(2)}x ${primary.id} (want >=1.8x); use with or move the actors`);
         }
       }
       if ((k.move ?? 'push') === 'follow' && primary) {

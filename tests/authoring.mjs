@@ -56,14 +56,16 @@ export function runAuthoring() {
   let glideMsg = '';
   try { compileBoard({ version: 1, cast: { kunti: { spec: 'C.kunti' } }, shots: [{ id: 'G', start: '1.Vyasa', light: 'day', sets: ['village'], actors: [{ cast: 'kunti', id: 'kunti', at: 'village.front' }], camera: [{ at: '1.Vyasa', size: 'medium', on: ['kunti'], move: 'glide', cut: true }] }] }, words, catalog); } catch (e) { glideMsg = e.message; }
   ok('glide with cut rejected', /glide\/crane cannot be combined with cut/.test(glideMsg), glideMsg);
-  const faceBoard = (side, over = false) => ({ version: 1, cast: { pandu: { spec: 'C.pandu' }, deer: { spec: { skin: '#b9773f' } } }, shots: [{ id: 'F', start: '13.Pandu', light: 'day', sets: ['deer'], actors: [{ cast: 'pandu', id: 'pandu', at: 'deer.deer', nudge: [0, 0, 2], prop: 'bowDrawn', ...(over ? {} : { face: 'deer' }) }, { cast: 'deer', id: 'deer', special: 'deer', at: 'deer.deer' }], camera: [{ at: '13.Pandu', size: 'wide', on: ['deer'], side, move: 'hold', ...(over ? { over: 'pandu' } : {}) }] }] });
-  const faceBeat = (side, over = false) => compileBoard(faceBoard(side, over), words, catalog).storyboard.shots[0].actors.find((a) => a.id === 'pandu').beats?.find((b) => b.facing !== undefined);
+  const faceBoard = (side, over = false, nudge = [0, 0, 2]) => ({ version: 1, cast: { pandu: { spec: 'C.pandu' }, deer: { spec: { skin: '#b9773f' } } }, shots: [{ id: 'F', start: '13.Pandu', light: 'day', sets: ['deer'], actors: [{ cast: 'pandu', id: 'pandu', at: 'deer.deer', nudge, prop: 'bowDrawn', ...(over ? {} : { face: 'deer' }) }, { cast: 'deer', id: 'deer', special: 'deer', at: 'deer.deer' }], camera: [{ at: '13.Pandu', size: 'wide', on: ['deer'], side, move: 'hold', ...(over ? { over: 'pandu' } : {}) }] }] });
+  const faceBeat = (side, over = false, nudge = [0, 0, 2]) => compileBoard(faceBoard(side, over, nudge), words, catalog).storyboard.shots[0].actors.find((a) => a.id === 'pandu').beats?.find((b) => b.facing !== undefined);
   const fl = faceBeat('left'), fr = faceBeat('right');
   ok('face flips across the line', !!fl && !!fr && fl.mirror !== fr.mirror, JSON.stringify([fl, fr]));
   ok('face aims the prop', !!fl && fl.facing !== 0 && fl.look !== 0, JSON.stringify(fl));
   let overMsg = '';
   try { faceBeat('left', true); } catch (e) { overMsg = e.message; }
-  ok('over must be foreground', /over cannot be foreground: pandu is [\d.]+ m from camera vs [\d.]+ m for deer; move pandu toward the camera or use with/.test(overMsg), overMsg);
+  ok('over must be foreground', /over cannot be foreground: pandu head [\d.]+%/.test(overMsg), overMsg);
+  const overOk = compileBoard(faceBoard('left', true, [0, 0, 4]), words, catalog).storyboard.shots[0].camera[0];
+  ok('over compiles at a screen-valid distance', overOk.over === 'pandu' && overOk.fov > 0, JSON.stringify(overOk));
   const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
   const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
   ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);

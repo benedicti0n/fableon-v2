@@ -1672,10 +1672,13 @@
             "arena.floor"
           ],
           "angle": "high",
-          "side": "left",
+          "side": "front",
           "move": "push",
           "scenery": true,
-          "third": "left"
+          "third": "left",
+          "with": [
+            "arena.pole"
+          ]
         },
         {
           "at": "26.string",
