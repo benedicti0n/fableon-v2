@@ -49,6 +49,15 @@
         }
       }
     },
+    "hookAdvisory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paradoxAsFact", "note"],
+      "properties": {
+        "paradoxAsFact": { "type": "boolean" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
     "lines": {
       "type": "array",
       "minItems": 2,
@@ -60,7 +69,7 @@
           "n": { "type": "integer", "minimum": 0 },
           "text": { "type": "string", "minLength": 1 },
           "gloss": { "type": "string", "minLength": 1 },
-          "beat": { "enum": ["hook", "setting", "action", "snap", "deadpan", "explain", "consequence", "twist"] },
+          "beat": { "enum": ["hook", "setting", "escalation", "mystery", "pivot", "analogy", "payoff", "action", "snap", "deadpan", "explain", "consequence", "twist"] },
           "facts": { "type": "array", "items": { "type": "string", "pattern": "^F[0-9]+$" } },
           "look": {
             "type": "object",
@@ -96,7 +105,7 @@
             "required": ["after", "s"],
             "properties": {
               "after": { "type": "string", "minLength": 1 },
-              "s": { "type": "number", "minimum": 0.15, "maximum": 1 }
+              "s": { "type": "number", "minimum": 0.05, "maximum": 1 }
             }
           }
         },

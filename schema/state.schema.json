@@ -29,6 +29,7 @@
               "cached": { "type": "integer", "minimum": 0 },
               "promptTokens": { "type": "integer", "minimum": 0 },
               "completionTokens": { "type": "integer", "minimum": 0 },
+              "fallbacks": { "type": "integer", "minimum": 0 },
               "costUsd": { "type": ["number", "null"] }
             }
           }

@@ -18,6 +18,31 @@ const logNormalizer = (data, kind, line, detail = '') => {
   log.lines.push(`${kind}${line !== undefined ? ` line ${line}` : ''}${detail ? `: ${detail}` : ''}`);
 };
 const BEAT_ORDER = ['hook', 'setting', 'action', 'snap', 'deadpan', 'explain', 'consequence', 'twist'];
+const LEGACY_ONLY = new Set(['action', 'snap', 'explain', 'consequence', 'twist']);
+const FORMULA_BEATS = new Set(['hook', 'setting', 'escalation', 'mystery', 'pivot', 'analogy', 'payoff']);
+const FORMULA_ORDER = ['hook', 'setting', 'escalation', 'mystery', 'pivot', 'analogy', 'payoff'];
+export const DEFAULT_PIVOTS = { en: ['You see,'], hi: ['दरअसल,', 'असल में,'] };
+const SETUP_START = /^(once\b|long ago\b|many years ago\b|in a\b|in the\b|there (was|were)\b|this is (the|a) story\b|एक (समय|गाँव|राज्य|दिन)\b|बहुत (पहले|समय)\b|यह कहानी\b|किसी (गाँव|राज्य)\b)/i;
+const DIALOGUE = /["“”„«»]([^"“”„«»]{2,80})["“”„«»]/u;
+
+/** Map a legacy beat to the reference formula beat for display and migration. */
+export function formulaBeat(beat) {
+  if (beat === 'hook' || beat === 'setting') return beat;
+  if (beat === 'action' || beat === 'snap' || beat === 'deadpan' || beat === 'consequence') return 'escalation';
+  if (beat === 'explain') return 'analogy';
+  if (beat === 'twist') return 'payoff';
+  return beat;
+}
+
+export function formulaPivots(project) {
+  const language = project.language ?? 'en';
+  const configured = project.script?.pivots?.[language];
+  return configured?.length ? configured : DEFAULT_PIVOTS[language] ?? DEFAULT_PIVOTS.en;
+}
+
+export function formulaLineTarget(seconds) {
+  return Math.max(10, Math.min(14, Math.round(Number(seconds) / 7)));
+}
 const NOT_NAMES = new Set(['He', 'She', 'It', 'They', 'We', 'You', 'His', 'Her', 'Their', 'The', 'A', 'An', 'And', 'But', 'Then', 'So', 'When', 'While', 'After', 'Before', 'If', 'Because', 'That', 'This', 'These', 'Those', 'Luckily', 'Unluckily']);
 const words = (s) => normalizedTokens(s);
 const normal = (s) => normalizedText(s);
@@ -35,7 +60,7 @@ function capitalizedNames(text) {
   return names;
 }
 
-export function hindiLineTarget(seconds) { return Math.max(1, Math.round((seconds / 3.2) * 0.85)); }
+export function hindiLineTarget(seconds) { return formulaLineTarget(seconds); }
 
 export function hindiWordBudget(n, targetWords) {
   const hook = Math.min(16, Math.max(6, Math.round(targetWords / n) + 2));
@@ -44,17 +69,17 @@ export function hindiWordBudget(n, targetWords) {
   return [hook, ...Array.from({ length: n - 1 }, (_, i) => base + (i < extra ? 1 : 0))];
 }
 
-export function hindiBeatPlan(n, maxFacts = 14) {
-  const fixed = 1 + 1 + 2 + 1 + 1; // hook + snap + deadpan pair + explain + twist
-  const rest = Math.max(0, n - fixed);
-  const factLines = Math.min(maxFacts, Math.max(3, rest - 6));
-  const setting = Math.max(2, rest - factLines);
-  const action = Math.max(2, Math.round(factLines * 0.5));
-  const consequence = Math.max(1, factLines - action);
-  const plan = ['hook', ...Array(setting).fill('setting'), ...Array(action).fill('action'), 'snap', 'deadpan', 'deadpan', 'explain', ...Array(consequence).fill('consequence'), 'twist'];
-  while (plan.length < n) plan.splice(plan.length - 1, 0, 'setting');
-  return plan.slice(0, n);
+/** Reference formula plan: hook, 1-2 setting, 3-6 escalation, mystery, pivot, analogy, 1-2 payoff. */
+export function formulaBeatPlan(n) {
+  const total = Math.max(10, Math.min(14, Number(n) || 10));
+  const fixed = 6; // hook + mystery + pivot + analogy + two payoff lines
+  const rest = total - fixed;
+  const setting = rest >= 5 ? 2 : 1;
+  const escalation = Math.max(3, rest - setting);
+  return ['hook', ...Array(setting).fill('setting'), ...Array(escalation).fill('escalation'), 'mystery', 'pivot', 'analogy', 'payoff', 'payoff'].slice(0, total);
 }
+
+export const hindiBeatPlan = formulaBeatPlan;
 
 export function deliveryErrors(line) {
   const d = line.delivery;
@@ -113,6 +138,67 @@ function hindiCraftErrors(data, project, facts) {
   }
   const verified = new Set((facts.facts ?? []).filter((f) => f.verified).map((f) => f.id));
   for (const l of data.lines) for (const id of l.facts ?? []) if (!verified.has(id)) errs.push(`/lines/${l.n} cites ${id}, which is missing or unverified`);
+  return errs;
+}
+
+const median = (xs) => {
+  const s = [...xs].sort((a, b) => a - b);
+  if (!s.length) return 0;
+  return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2;
+};
+
+/** Deterministic reference-formula checks for new-style scripts (old beat vocabulary keeps the legacy checks). */
+export function formulaErrors(data, project) {
+  const errs = [];
+  const lines = data.lines ?? [];
+  if (!lines.length) return ['/lines is empty'];
+  const hook = lines[0];
+  if (hook.beat !== 'hook') errs.push('/lines/0/beat must be hook');
+  if (lines.filter((l) => l.beat === 'hook').length !== 1) errs.push(`/lines has ${lines.filter((l) => l.beat === 'hook').length} hook lines; use exactly 1`);
+  const hookWords = words(hook.text).length;
+  if (hookWords > 16) errs.push(`/lines/0 hook is longer than 16 words (${hookWords}); cut at least ${hookWords - 16} word(s)`);
+  if (SETUP_START.test(String(hook.text).trim())) errs.push('/lines/0 hook starts with setup; state the paradox immediately');
+  if (!data.hookAdvisory || typeof data.hookAdvisory.paradoxAsFact !== 'boolean' || !String(data.hookAdvisory.note ?? '').trim()) errs.push('/hookAdvisory must judge whether the hook is a paradox stated as fact');
+  const setting = lines.filter((l) => l.beat === 'setting');
+  if (setting.length < 1 || setting.length > 2) errs.push(`/lines has ${setting.length} setting lines; use 1-2`);
+  const escalation = lines.filter((l) => l.beat === 'escalation' || l.beat === 'deadpan');
+  if (escalation.length < 3 || escalation.length > 6) errs.push(`/lines has ${escalation.length} escalation lines; use 3-6`);
+  if (!escalation.some((l) => { const m = DIALOGUE.exec(l.text ?? ''); return m && words(m[1]).length >= 2 && words(m[1]).length <= 10; })) errs.push('/lines escalation needs at least one short quoted in-character dialogue line');
+  const mystery = lines.filter((l) => l.beat === 'mystery');
+  if (mystery.length !== 1) errs.push(`/lines has ${mystery.length} mystery lines; use exactly 1`);
+  if (mystery.length === 1 && !/[?？]\s*["“”'’]?\s*$/.test(mystery[0].text ?? '')) errs.push('/lines mystery must end with a question mark');
+  const pivot = lines.filter((l) => l.beat === 'pivot');
+  if (pivot.length !== 1) errs.push(`/lines has ${pivot.length} pivot lines; use exactly 1`);
+  else {
+    const text = String(pivot[0].text ?? '').trim().replace(/^["“”'‘’]+/, '');
+    const phrases = formulaPivots(project);
+    if (!phrases.some((p) => text.startsWith(p))) errs.push(`/lines pivot must start with ${phrases.map((p) => `"${p}"`).join(' or ')}`);
+  }
+  if (lines.filter((l) => l.beat === 'analogy').length !== 1) errs.push(`/lines has ${lines.filter((l) => l.beat === 'analogy').length} analogy lines; use exactly 1`);
+  const payoff = lines.filter((l) => l.beat === 'payoff');
+  if (payoff.length < 1 || payoff.length > 2) errs.push(`/lines has ${payoff.length} payoff lines; use 1-2`);
+  if (lines[lines.length - 1].beat !== 'payoff') errs.push('/lines last line must be payoff');
+  let last = -1;
+  for (const l of lines) {
+    if (LEGACY_ONLY.has(l.beat)) { errs.push(`/lines/${l.n}/beat ${l.beat} is a legacy beat; use the formula beats`); continue; }
+    const mapped = formulaBeat(l.beat);
+    const bi = FORMULA_ORDER.indexOf(mapped);
+    if (bi < 0) errs.push(`/lines/${l.n}/beat ${l.beat} is not a formula beat`);
+    else { if (bi < last) errs.push(`/lines/${l.n}/beat ${l.beat} is out of formula order`); last = Math.max(last, bi); }
+  }
+  const sentenceLengths = lines.flatMap((l) => String(l.text ?? '').split(/[.!?।]+/).map((s) => s.trim()).filter(Boolean)).map((s) => words(s).length);
+  const med = median(sentenceLengths);
+  const band = project.language === 'hi' ? [8, 14] : [10, 16];
+  if (med < band[0] || med > band[1]) errs.push(`median sentence length ${med} is outside the language band ${band[0]}-${band[1]} (sentence lengths: ${sentenceLengths.join(', ')}); split long sentences on ideas or full stops`);
+  for (const l of lines) {
+    if (!l.look?.who?.length) errs.push(`/lines/${l.n}/look needs at least one declared character (who)`);
+    if (!l.look?.pose) errs.push(`/lines/${l.n}/look needs a catalog pose for a literal action`);
+    if (!String(l.look?.note ?? '').trim()) errs.push(`/lines/${l.n}/look note is required`);
+    if (project.language === 'hi') {
+      if (!l.gloss || !String(l.gloss).trim()) errs.push(`/lines/${l.n}/gloss is required for Hindi`);
+      if (!l.delivery?.tone) errs.push(`/lines/${l.n}/delivery/tone is required for Hindi`);
+    }
+  }
   return errs;
 }
 
@@ -181,7 +267,7 @@ function cleanHindiDelivery(data) {
   }
 }
 
-export function normalizeHindiScript(data, catalog) {
+export function normalizeHindiScript(data, catalog, { split = true } = {}) {
   for (const l of data.lines) normalizeLook(l, catalog);
   // A setting line that only reacts can inherit the fact of the previous/next factual line.
   for (let i = 0; i < data.lines.length; i++) {
@@ -210,7 +296,7 @@ export function normalizeHindiScript(data, catalog) {
   }
   merged.forEach((l, i) => { l.n = i; });
   data.lines = merged;
-  splitHindiLongLines(data);
+  if (split) splitHindiLongLines(data);
   cleanHindiDelivery(data);
   data.lines.forEach((l, i) => { l.n = i; });
 }
@@ -227,7 +313,8 @@ export function plannedPauseSeconds(data) {
 }
 
 export function validateScript(data, { project, facts, catalog, sourceTexts = [] }) {
-  if (project.language === 'hi') normalizeHindiScript(data, catalog);
+  const formulaIncoming = data.lines?.some((l) => ['escalation', 'mystery', 'pivot', 'analogy', 'payoff'].includes(l.beat));
+  if (project.language === 'hi') normalizeHindiScript(data, catalog, { split: !formulaIncoming });
   for (const l of data.lines ?? []) normalizeLook(l, catalog);
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
@@ -239,25 +326,32 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
   const lo = Math.ceil(target * (1 - tol)), hi = Math.floor(target * (1 + tol));
   const basis = deliveredRate ? `delivered rate target ${target.toFixed(1)} = ${project.seconds} s × ${deliveredRate} words/s` : `pause-aware target ${target.toFixed(1)} = (${project.seconds} - ${pauses.toFixed(2)} s pauses) × ${rate}`;
   if (total < lo || total > hi) errs.push(`/lines total ${total} words is outside ${lo}-${hi} (${basis}); ${total < lo ? `add about ${Math.ceil(target - total)} words` : `cut about ${Math.ceil(total - target)} words`}`);
-  if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
-  if (data.lines[data.lines.length - 1].beat !== 'twist') errs.push('/lines last beat must be twist');
-  const maxHook = project.language === 'hi' ? 20 : 16;
-  if (words(data.lines[0].text).length > maxHook) errs.push(`/lines/0 hook is longer than ${maxHook} words (${words(data.lines[0].text).length}); cut at least ${words(data.lines[0].text).length - maxHook} word(s)`);
+  const formula = data.lines.some((l) => ['escalation', 'mystery', 'pivot', 'analogy', 'payoff'].includes(l.beat));
+  if (!formula) {
+    if (data.lines[0].beat !== 'hook') errs.push('/lines/0/beat must be hook');
+    if (data.lines[data.lines.length - 1].beat !== 'twist') errs.push('/lines last beat must be twist');
+    const maxHook = project.language === 'hi' ? 20 : 16;
+    if (words(data.lines[0].text).length > maxHook) errs.push(`/lines/0 hook is longer than ${maxHook} words (${words(data.lines[0].text).length}); cut at least ${words(data.lines[0].text).length - maxHook} word(s)`);
+  }
+  const factBeats = formula ? ['setting', 'escalation', 'pivot', 'analogy'] : ['setting', 'action', 'snap', 'consequence'];
   let last = -1;
   for (const l of data.lines) {
     if (l.n !== data.lines.indexOf(l)) errs.push(`/lines/${l.n} n must be 0-based and ordered`);
     const maxLine = 22;
     if (l.n > 0 && words(l.text).length > maxLine) errs.push(`/lines/${l.n}/text is longer than ${maxLine} words (${words(l.text).length}); cut at least ${words(l.text).length - maxLine} word(s)`);
-    const bi = BEAT_ORDER.indexOf(l.beat);
-    if (bi < 0) errs.push(`/lines/${l.n}/beat is invalid`);
-    else { if (bi < last) errs.push(`/lines/${l.n}/beat ${l.beat} is out of formula order`); last = Math.max(last, bi); }
-    if (['setting', 'action', 'snap', 'consequence'].includes(l.beat) && !(l.facts ?? []).length) errs.push(`/lines/${l.n} needs at least one verified fact`);
+    if (!formula) {
+      const bi = BEAT_ORDER.indexOf(l.beat);
+      if (bi < 0) errs.push(`/lines/${l.n}/beat is invalid`);
+      else { if (bi < last) errs.push(`/lines/${l.n}/beat ${l.beat} is out of formula order`); last = Math.max(last, bi); }
+    }
+    if (factBeats.includes(l.beat) && !(l.facts ?? []).length) errs.push(`/lines/${l.n} needs at least one verified fact`);
     for (const id of l.facts ?? []) if (!factMap(facts).get(id)?.verified) errs.push(`/lines/${l.n} cites ${id}, which is missing or unverified`);
     errs.push(...deliveryErrors(l));
     const chars = new Set(data.characters.map((c) => c.id));
     errs.push(...lookErrors(l, catalog, chars));
   }
-  if (project.language === 'hi') errs.push(...hindiCraftErrors(data, project, facts));
+  if (formula) errs.push(...formulaErrors(data, project));
+  if (project.language === 'hi' && !formula) errs.push(...hindiCraftErrors(data, project, facts));
   const listed = new Set((data.names ?? []).map((n) => normalizeWord(n.word)));
   const declared = new Set([...(data.characters ?? []), ...(data.mentions ?? [])].map((c) => normalizeWord(c.name)));
   for (const n of data.names ?? []) if (!declared.has(normalizeWord(n.word))) errs.push(`/names "${n.word}" must be in characters or mentions`);
@@ -310,26 +404,24 @@ export async function runScript({ projectDir, project, router }) {
   const isHi = project.language === 'hi';
   const deliveredRate = project.voice?.rate?.delivered?.wordsPerSecond ?? null;
   const rate = deliveredRate ?? project.voice?.rate?.wordsPerSecond ?? WPS;
-  const lineTarget = isHi ? hindiLineTarget(project.seconds) : 17;
-  const lineLo = isHi ? Math.max(1, Math.floor(lineTarget * 0.8)) : 17;
-  const lineHi = isHi ? Math.ceil(lineTarget * 1.2) : 17;
-  const beatPlan = isHi ? hindiBeatPlan(lineTarget, verified.length) : null;
-  const beatChanges = isHi && beatPlan ? beatPlan.filter((b, i) => i && b !== beatPlan[i - 1]).length : 0;
-  const pauseEstimate = isHi ? lineTarget * 0.3 + beatChanges * 0.26 : 0;
+  const lineTarget = formulaLineTarget(project.seconds);
+  const lineLo = Math.max(8, lineTarget - 1);
+  const lineHi = Math.min(14, lineTarget + 1);
+  const beatPlan = formulaBeatPlan(lineTarget);
+  const beatChanges = beatPlan.filter((b, i) => i && b !== beatPlan[i - 1]).length;
+  const pauseEstimate = isHi ? lineTarget * 0.15 + beatChanges * 0.15 : 0;
   const target = deliveredRate ? project.seconds * deliveredRate : Math.max(1, project.seconds - pauseEstimate) * rate;
   const wordsTarget = Math.round(target);
   const wordsLo = Math.ceil(target * 0.93), wordsHi = Math.floor(target * 1.07);
-  const wordBudget = isHi ? hindiWordBudget(lineTarget, wordsTarget) : null;
-  const factSlots = isHi ? (() => {
-    let f = 0;
-    return beatPlan.map((b, i) => (['action', 'snap', 'consequence'].includes(b) ? `${i}:${verified[f++ % verified.length].id}` : null)).filter(Boolean);
-  })() : [];
+  const pivots = formulaPivots(project);
+  const pivotList = pivots.map((p) => `"${p}"`).join(isHi ? ' or ' : ' / ');
+  const wordBudget = hindiWordBudget(lineTarget, wordsTarget);
+  const budgetList = wordBudget.map((w, i) => `${i}:${w}`).join(', ');
+  const planList = beatPlan.map((b, i) => `${i}:${b}`).join(', ');
   const instruction = isHi
-    ? `Use exactly ${lineTarget} lines (${lineLo}-${lineHi} allowed) and about ${wordsTarget} words; hard range ${wordsLo}-${wordsHi}; about ${(target / lineTarget).toFixed(1)} words per line. Count words before returning; never exceed ${wordsHi}. Beat order, one beat per line: ${beatPlan.join(', ')}. Every line needs gloss, delivery and structured look (set, optional mark, declared who, optional pose/expr/prop).`
-    : `Use exactly 17 lines: hook 12-15 words, lines 1-15 19-21 words each, twist 18-21 words.`;
-  const repairHint = isHi
-    ? `Keep about ${lineTarget} lines (${lineLo}-${lineHi}) and ${wordsLo}-${wordsHi} words. Every line needs a gloss, delivery and catalog look; the hook, both deadpan lines, the single explain line and the twist need a pause or emphasis. Every pause/emphasis word must exist in its line.`
-    : 'Return exactly 17 lines with beats 0 hook, 1 setting, 2 setting, 3 action, 4 action, 5 action, 6 action, 7 snap, 8 deadpan, 9 deadpan, 10 explain, 11 explain, 12 explain, 13 consequence, 14 consequence, 15 consequence, 16 twist. Lines 1-15 must each be 19-21 words, the hook 12-15, the twist 18-21. Count words by splitting on spaces. If the total is too low, add words to lines 1-15 until each is 19-21 words; if a line is too long, shorten only that line.';
+    ? `Use exactly ${lineTarget} lines (${lineLo}-${lineHi} allowed) and about ${wordsTarget} words; hard range ${wordsLo}-${wordsHi}; about ${(target / lineTarget).toFixed(1)} words per line. Exact plan, one beat per line: ${planList}. Per-line word budget: ${budgetList}; stay within 2 words of each budget. Count words before returning. Exactly one mystery line ends with "?" before the pivot; the pivot line starts with ${pivotList}; the payoff is the last 1-2 lines. Optional deadpan pair: two consecutive escalation lines, good news then genuinely bad news, both beat escalation with tone deadpan. At least one escalation line must contain an actual quoted in-character sentence in quotation marks (for example the brahmin says \"मेरे पास कोई विकल्प नहीं।\"), not indirect speech. Every line needs gloss, delivery and a literal look with set, who, pose and note.`
+    : `Use exactly ${lineTarget} lines (${lineLo}-${lineHi} allowed) and about ${wordsTarget} words; hard range ${wordsLo}-${wordsHi}. Exact plan, one beat per line: ${planList}. Per-line word budget: ${budgetList}; stay within 2 words of each budget. Count words before returning. Exactly one mystery line ends with "?" before the pivot; the pivot line starts with ${pivotList}; the payoff is the last 1-2 lines. Every look needs set, who, pose and a literal note.`;
+  const repairHint = `Keep the reference formula: hook line 0 10-16 words with no setup; 1-2 setting lines; 3-6 escalation lines with one short quoted in-character dialogue inside an escalation line (actual quotation marks); exactly one mystery line ending in "?" before the pivot; the pivot line starts with ${pivotList}; exactly one analogy; the payoff is the last 1-2 lines. Median sentence length ${isHi ? '8-14' : '10-16'} words: split any long sentence into two short ones. Every look needs at least one who and a catalog pose. Every setting/escalation/pivot/analogy line cites a verified fact. Include hookAdvisory.${isHi ? ' Every line needs a gloss and delivery; every pause/emphasis word must exist in its line.' : ''} Use the exact plan ${planList} and word budget ${budgetList}. Keep about ${lineTarget} lines (${lineLo}-${lineHi}) and ${wordsLo}-${wordsHi} words.`;
   const { data, usage } = await router.callJson('script', [
     { role: 'system', content: isHi ? SCRIPT_HI : SCRIPT },
     { role: 'user', content: `STABLE CATALOG (sets, marks, poses, expressions and props are the only stageable ones):\n${card}\n\nDATA:\n<brief>\n${brief}\n</brief>\n<verified_facts>\n${verified.map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nTarget: ${project.seconds} seconds at ${rate} words/second = about ${wordsTarget} words (valid ${wordsLo}-${wordsHi}). ${instruction} Return json only.` },

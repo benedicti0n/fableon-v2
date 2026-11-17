@@ -25,7 +25,7 @@ export function modelForStage(project, stage, repo = repoModels()) {
     thinking: s.thinking ?? sd.thinking ?? null,
     reasoningEffort: s.reasoningEffort ?? sd.reasoningEffort ?? null,
     timeoutMs: repo.timeoutMs ?? 120000,
-    maxRepairs: repo.maxRepairs ?? 2,
+    maxRepairs: s.maxRepairs ?? sd.maxRepairs ?? repo.maxRepairs ?? 2,
     prices: repo.prices?.[model] ?? null,
   };
 }

@@ -75,11 +75,16 @@ docs say are pulled from the source) because the quote check must run against te
 ## Hindi script v2
 
 Hindi projects use a separate script prompt: conversational Hindustani in Devanagari with an English `gloss` per line,
-short lines, and a line count scaled from `seconds / 3.2` (the measured rate then sets the word budget). Every line
-carries `delivery` and catalog look fields (set, mark, character ids, pose, expression, prop). The deterministic checks
-enforce the beat order, the two-line good-news/bad-news deadpan pair, exactly one explain analogy, unique facts per
-action/snap/consequence run, catalog look items, and hook/twist delivery. Repeated fact lines and over-long Hindi lines
-are normalised (merged/split) before validation.
+short lines, and a line count scaled to the 10-14 formula lines. Every line carries `delivery` and catalog look fields
+(set, mark, character ids, pose, expression, prop). New scripts follow the STYLE_BIBLE formula: hook line 0 (a paradox
+stated as fact, at most 16 words, no setup), 1-2 setting lines, 3-6 escalation lines with a short quoted in-character
+line, exactly one mystery line ending in `?`, a pivot line starting with `दरअसल,` or `असल में,` (configurable via
+`project.script.pivots.hi`), one everyday analogy, and a 1-2 line ironic payoff. A deadpan good-news/bad-news pair is
+an optional escalation device. The deterministic checks enforce the counts and order, the pivot phrase, median
+sentence length (Hindi 8-14, English 10-16 words), literal looks (who + catalog pose), facts on
+setting/escalation/pivot/analogy, and the model's advisory `hookAdvisory`. Old scripts keep their legacy checks and
+map old beats (`action`/`snap`/`deadpan`/`consequence` → escalation, `explain` → analogy, `twist` → payoff) when read.
+Repeated fact lines and over-long Hindi lines are normalised (merged/split) before validation.
 
 Research adds `supports: yes|partly|no` per fact; only `yes` facts are citable. The fact-check prompt compares the
 Hindi line with the English facts through its gloss and adds a craft verdict (`ok`/`weak`); weak or unsupported lines
