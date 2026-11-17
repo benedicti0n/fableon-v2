@@ -89,6 +89,7 @@
         "research": { "$ref": "#/$defs/model" },
         "script": { "$ref": "#/$defs/model" },
         "factcheck": { "$ref": "#/$defs/model" },
+        "cast": { "$ref": "#/$defs/model" },
         "voice": { "$ref": "#/$defs/model" }
       }
     },

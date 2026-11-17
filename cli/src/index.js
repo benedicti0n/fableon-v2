@@ -10,6 +10,7 @@ import { catalogCardCommand } from './catalog-card.js';
 import { reviewCommand } from './review.js';
 import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
+import { castCommand } from './cast-command.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -65,6 +66,13 @@ export function main(argv = process.argv) {
     .option('--fit <mode>', 'voice fit on|off', 'on')
     .option('--cached-only', 'fit the voice from the cached base take without a new provider call')
     .action(async (opts) => { try { await runCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('cast')
+    .description('design the cast, write asset gaps and render the cast sheet')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--notes <text>', 'director notes; reruns the cast stage with them')
+    .action(async (opts) => { try { await castCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
     .command('models')

@@ -519,5 +519,30 @@
         "village moon polishing tradition"
       ]
     }
+  ],
+  "cast": [
+    {
+      "version": 1,
+      "characters": [
+        {
+          "id": "mira",
+          "name": "Mira",
+          "spec": {
+            "skin": "#c98c5c",
+            "build": "kid",
+            "top": "#c8342e",
+            "lower": "#f6efdc",
+            "head": "hair",
+            "hairCol": "#2a1a1e"
+          },
+          "scale": 1,
+          "mustHave": [
+            "red-attire",
+            "young"
+          ],
+          "notes": "Village child with a red shawl."
+        }
+      ]
+    }
   ]
 }

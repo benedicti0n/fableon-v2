@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "object": "noose",
+      "lines": [
+        8,
+        19
+      ],
+      "standIn": "net",
+      "priority": "high",
+      "note": "Yama's noose; use the net prop until a noose card exists"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "id": "savitri",
+      "name": "सावित्री",
+      "spec": {
+        "skin": "#e7b07e",
+        "build": "slim",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "flower": "#fff2c8",
+        "earrings": "#e8b53a"
+      },
+      "mustHave": [
+        "woman",
+        "sari",
+        "long-hair",
+        "young"
+      ],
+      "notes": "युवा राजकुमारी, साधारण वस्त्र, दृढ़ निगाहें",
+      "scale": 1
+    },
+    {
+      "id": "satyavan",
+      "name": "सत्यवान",
+      "spec": {
+        "skin": "#7f4b2e",
+        "build": "adult",
+        "top": null,
+        "lower": "#6b4a2e",
+        "head": "hair",
+        "hairCol": "#2a1a1e"
+      },
+      "mustHave": [
+        "forest-clothes",
+        "young-man"
+      ],
+      "notes": "युवा वनवासी, सीधा-सादा",
+      "scale": 1
+    },
+    {
+      "id": "yama",
+      "name": "यम",
+      "spec": {
+        "skin": "#2b1a1a",
+        "build": "big",
+        "top": "#c62828",
+        "lower": "#c62828",
+        "drape": "#c62828",
+        "head": "crown",
+        "crownCol": "#e8b53a",
+        "necklace": "#e8b53a",
+        "earrings": "#e8b53a"
+      },
+      "mustHave": [
+        "dark-skin",
+        "red-attire",
+        "crown",
+        "god"
+      ],
+      "notes": "काला शरीर, लाल आँखें, लाल वस्त्र, हाथ में पाश",
+      "scale": 1
+    },
+    {
+      "id": "narada",
+      "name": "नारद",
+      "spec": {
+        "skin": "#c98c5c",
+        "build": "elder",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "bun",
+        "hairCol": "#6a6a72",
+        "beard": "#8a8a92",
+        "beardLong": true,
+        "tilak": "#f4f1ea"
+      },
+      "mustHave": [
+        "sage",
+        "beard"
+      ],
+      "notes": "the sage who warns",
+      "scale": 1
+    }
+  ]
+}

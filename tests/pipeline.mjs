@@ -1,5 +1,5 @@
 // Offline pipeline test: a tiny mock project through brief, research, script and fact-check.
-import { copyFileSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ROOT } from '../cli/src/env.js';
@@ -59,6 +59,17 @@ export async function runPipelineTests() {
     ok('pronunciation TODO', approved.todos.includes('Mira'), approved.todos.join(','));
     ok('status craft advisory', approved.craft.some((c) => c.n === 2), JSON.stringify(approved.craft));
 
+    const castRun = new PipelineRunner(tmp, project, { to: 'cast', only: 'cast', autopilot: true, force: true });
+    await castRun.run();
+    const castJson = readJson(join(tmp, 'cast.json'), 'cast');
+    const assetsJson = readJson(join(tmp, 'assets.todo.json'), 'assets');
+    ok('cast schema', castJson.characters.length === 1 && castJson.characters[0].id === 'mira', JSON.stringify(castJson));
+    ok('cast mustHave', castJson.characters[0].mustHave.includes('red-attire'), JSON.stringify(castJson.characters[0].mustHave));
+    ok('cast sheet', existsSync(join(tmp, 'cast', 'cast-sheet.jpg')), 'cast/cast-sheet.jpg');
+    ok('cast assets todo', Array.isArray(assetsJson.assets), JSON.stringify(assetsJson));
+    const castStatus = statusTable(tmp).rows.find((r) => r.stage === 'cast');
+    ok('cast fresh', castStatus?.status === 'fresh', JSON.stringify(castStatus));
+
     // Hand edit: script is edited; fact-check is stale and the approved hash is invalidated.
     approve(tmp, project, 'script');
     const edited = JSON.parse(readFileSync(join(tmp, 'script.json'), 'utf8'));
@@ -67,6 +78,7 @@ export async function runPipelineTests() {
     const table = statusTable(tmp);
     ok('edited detection', table.rows.find((r) => r.stage === 'script')?.status === 'edited');
     ok('downstream stale', table.rows.find((r) => r.stage === 'factcheck')?.status === 'stale');
+    ok('cast stale after script edit', table.rows.find((r) => r.stage === 'cast')?.status === 'stale');
     ok('approval invalidated', table.rows.find((r) => r.stage === 'script')?.approved === 'no');
 
     const cacheText = readdirSync(join(tmp, '.fableon', 'cache')).map((f) => readFileSync(join(tmp, '.fableon', 'cache', f), 'utf8')).join('\n');

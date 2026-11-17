@@ -4,7 +4,7 @@ import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { allStatuses, approve, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
-const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', voice: 'voice.js' };
+const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', cast: 'cast.js', voice: 'voice.js' };
 
 export class PipelineRunner extends EventEmitter {
   constructor(projectDir, project, opts = {}) {
@@ -66,6 +66,7 @@ export class PipelineRunner extends EventEmitter {
       if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly });
       else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot });
       if (stage.name === 'factcheck') this.log(`factcheck reviewed ${result.reviewed ?? 0} line(s); factual flags ${result.failures?.length ?? 0}; craft weak ${result.craft?.length ?? 0}`);
+      if (stage.name === 'cast') this.log(`cast ${result.characters ?? 0} character(s), ${result.assets ?? 0} asset gap(s); sheet ${result.sheet}`);
       if (stage.name === 'factcheck' && result.failures?.length) {
         if (!autopilot) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check needs revision' });
