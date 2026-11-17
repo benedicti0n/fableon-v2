@@ -34,6 +34,7 @@ import { runFormulaTests } from './formula.mjs';
 import { runDirectorTests } from './director.mjs';
 import { runSoundTests } from './sound.mjs';
 import { runProviderTests } from './providers.mjs';
+import { runAllocatorTests } from './allocator.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -145,6 +146,8 @@ try {
   check('sound cues + mix', sound.ok, `${sound.checks.filter((c) => c.ok).length}/${sound.checks.length} checks`);
   const providers = await runProviderTests();
   check('provider registry', providers.ok, `${providers.checks.filter((c) => c.ok).length}/${providers.checks.length} checks`);
+  const allocator = runAllocatorTests();
+  check('director allocator', allocator.ok, `${allocator.checks.filter((c) => c.ok).length}/${allocator.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

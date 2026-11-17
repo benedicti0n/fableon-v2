@@ -97,7 +97,7 @@ The stage list is now `brief → research → script → factcheck → cast → 
 `cast/cast-sheet.jpg`; `fableon cast --notes` stores notes in `cast.notes.json`. `shotplan` turns the script/words,
 cast and asset gaps into a 20-32-shot plan grouped into scenes (`scene`, one place+time), with per-boundary
 `transition` (crossfade 6-8 f | flash 4 f | cut), direction marks (`punch`, `impact`, `drama`, `reveal`,
-`foreground`, `ease:"burst"`), walk/run `moves` paths and follow keys. The deterministic checks enforce <=2 cuts,
+`foreground`, `ease:"burst"`), walk/run `moves` paths and follow keys. A deterministic allocator fills DOF/foreground/hold shares, low heights, transitions and required punches after the model supplies content; continuous shots in one scene merge into one board shot with gliding keys. The deterministic checks enforce <=2 cuts,
 a flash after the hook (max 3), a crossfade on place/time changes, 70-85 % hold share, 25-40 % DOF and foreground
 shares, low full/wide heights and a punch on every hook/mystery/payoff line; `fableon shotplan --notes` stores
 `shotplan.notes.json`. `board` writes the authoring shots from the approved plan, translates the marks and moves,

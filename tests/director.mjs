@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 import { ENGINE, ROOT } from '../cli/src/env.js';
-import { baseShot } from '../cli/src/stages/board.js';
+import { baseShot, groupPlan } from '../cli/src/stages/board.js';
 import { compileBoard } from '../cli/src/authoring.js';
 import { directorErrors } from '../cli/src/stages/shotplan.js';
 import { filmErrors, filmStats } from '../cli/src/film.js';
@@ -67,6 +67,17 @@ export async function runDirectorTests() {
     const stats = filmStats(compiled, words, script);
     ok('film stats', stats.transition === undefined && stats.shots === 1 && stats.foregroundShare === 1 && stats.punches === 1 && stats.rolls === 1, JSON.stringify(stats));
     ok('film checks fire', filmErrors(stats, { words, script }).length > 0, JSON.stringify(filmErrors(stats, { words, script })));
+
+    const scenePlan = { version: 1, shots: [
+      { id: 'S1', scene: 'village-day', set: 'village', light: 'day', start: '0:0', lines: [0], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:0', size: 'wide', on: ['savitri'], angle: 'low', side: 'front', move: 'push' }], beats: [], fx: [] },
+      { id: 'S2', scene: 'village-day', set: 'village', light: 'day', start: '0:3', lines: [1], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:3', size: 'medium', on: ['savitri'], angle: 'eye', side: 'left', move: 'push' }], beats: [], fx: [] },
+    ] };
+    const groups = groupPlan(scenePlan);
+    const mergedShot = baseShot(groups[0], 0, groups, { characters: [{ id: 'savitri' }] }, catalog);
+    ok('scene grouping', groups.length === 1 && groups[0].keys.length === 2 && mergedShot.camera.length === 2, JSON.stringify({ groups: groups.length, keys: groups[0].keys.length }));
+    ok('continuous scene keys', mergedShot.camera[1].cut !== true && mergedShot.camera[1].move === 'glide' && mergedShot.camera[1].ease === 'glide', JSON.stringify(mergedShot.camera[1]));
+    const mergedCompiled = compileBoard({ version: 1, cast, shots: [mergedShot] }, words, catalog).storyboard;
+    ok('merged scene compiles', mergedCompiled.shots.length === 1 && mergedCompiled.shots[0].camera.length === 2, JSON.stringify(mergedCompiled.shots.length));
 
     const followNoMove = directorErrors({ shots: [
       { id: 'S1', start: '0:0', set: 'village', light: 'day', scene: 'v1', characters: ['savitri'], keys: [{ at: '0:0', size: 'full', on: ['savitri'], angle: 'low', side: 'front', move: 'follow', punch: '0:1' }] },

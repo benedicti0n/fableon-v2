@@ -24,7 +24,7 @@ export function filmStats(storyboard, words, script) {
   const shots = storyboard.shots ?? [];
   const total = Math.max(1, Math.round((words[words.length - 1]?.b ?? 0) * fps));
   const starts = shots.map((s) => anchorFrame(s.start, words, fps));
-  let hold = 0, dof = 0, keys = 0, fg = 0, low = 0, lowFull = 0, punches = 0, rolls = 0, cuts = 0, flashes = 0, crossfades = 0;
+  let hold = 0, dof = 0, keys = 0, fg = 0, low = 0, lowFull = 0, punches = 0, rolls = 0, cuts = 0, flashes = 0, crossfades = 0, holdKeys = 0, minHoldCreep = 1;
   shots.forEach((s, i) => {
     const t0 = starts[i], t1 = i + 1 < shots.length ? starts[i + 1] : total;
     if (s.transition?.type === 'cut') cuts++;
@@ -37,7 +37,7 @@ export function filmStats(storyboard, words, script) {
       const d = Math.max(0, b - a);
       const size = k.size ?? inferSize(k.fov);
       keys++;
-      if (['push', 'hold'].includes(k.move ?? 'push') && !k.ease) hold += d;
+      if (['push', 'hold'].includes(k.move ?? 'push') && !k.ease) { hold += d; holdKeys++; const rate = k.push?.rate ?? 0; minHoldCreep = Math.min(minHoldCreep, rate > 0 ? 1 - Math.exp(-rate * 60) : 0); }
       if (['close', 'medium', 'insert'].includes(size)) dof += d;
       if (k.over) fg++;
       if (['full', 'wide', 'establishing'].includes(size)) { lowFull++; if (k.angle === 'low') low++; }
@@ -52,7 +52,7 @@ export function filmStats(storyboard, words, script) {
     dofShare: +(dof / total).toFixed(3),
     foregroundShare: +(keys ? fg / keys : 0).toFixed(3),
     lowHeightShare: +(lowFull ? low / lowFull : 0).toFixed(3),
-    punches, rolls, kicks: (storyboard.kicks ?? []).length,
+    punches, rolls, kicks: (storyboard.kicks ?? []).length, holdKeys, minHoldCreep: +(holdKeys ? minHoldCreep : 1).toFixed(3),
     keys, seconds: +(total / fps).toFixed(2),
   };
 }
@@ -66,6 +66,7 @@ export function filmErrors(stats, { words, script, policy = {} } = {}) {
   if (stats.dofShare < (policy.dofMin ?? 0.25) || stats.dofShare > (policy.dofMax ?? 0.40)) errs.push(`film DOF share ${(stats.dofShare * 100).toFixed(0)}% is outside ${((policy.dofMin ?? 0.25) * 100).toFixed(0)}-${((policy.dofMax ?? 0.40) * 100).toFixed(0)}%`);
   if (stats.foregroundShare < (policy.fgMin ?? 0.25) || stats.foregroundShare > (policy.fgMax ?? 0.40)) errs.push(`film foreground share ${(stats.foregroundShare * 100).toFixed(0)}% is outside ${((policy.fgMin ?? 0.25) * 100).toFixed(0)}-${((policy.fgMax ?? 0.40) * 100).toFixed(0)}%`);
   if (!stats.punches) errs.push('film has no punch-in');
+  if (stats.holdKeys && stats.minHoldCreep < 0.06) errs.push(`hold creep ${(stats.minHoldCreep * 100).toFixed(1)}% over 2 s is below 6%`);
   return errs;
 }
 

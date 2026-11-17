@@ -6,6 +6,7 @@ import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/
 import { buildCatalogCard } from '../catalog-card.js';
 import { SHOTPLAN_SKELETON, SHOTPLAN_KEYS } from './prompts.js';
 import { formulaBeat } from './script.js';
+import { allocatePlan } from '../allocator.js';
 
 const PLAN_ANCHOR = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/;
 const SIDE_DEG = { front: 0, left: -30, right: 30, frontLeft: -15, frontRight: 15 };
@@ -332,7 +333,7 @@ export async function runShotplan({ projectDir, project, router }) {
       normalizeSkeleton(d, words, words[words.length - 1].b);
       return shotplanErrors(d, { script, words, cast, catalog, assets: assets.assets }, { skeleton: true });
     },
-    repairHint: 'Keep every valid shot. Use 20-32 shots, split long lines by word, cover every line in order, keep starts increasing and each shot 1.2-6 s (average 2.5-4 s), and give every new set a landmark in mustShow. Default every boundary to crossfade; at most 2 cuts and 3 flashes. Keep push/hold on 70-85% of screen time, close/medium on 25-40% of screen time, foreground on 25-40% of keys, and a punch on each hook/mystery/payoff line.',
+    repairHint: 'Keep every valid shot. Use 20-32 shots, split long lines by word, cover every line in order, keep starts increasing and each shot 1.2-6 s (average 2.5-4 s), and give every new set a landmark in mustShow. Supply content only; the allocator sets transitions, shares, foreground, low heights and a punch on each hook/mystery/payoff line.',
   });
 
   const keysSchema = JSON.parse(readFileSync(join(ROOT, 'schema', 'shotplan-keys.schema.json'), 'utf8'));
@@ -356,14 +357,14 @@ export async function runShotplan({ projectDir, project, router }) {
       for (const s of skeleton.shots) if (!byId.has(s.id)) errs.push(`/shots is missing ${s.id}`);
       if (new Set((d.shots ?? []).map((s) => s.id)).size !== (d.shots ?? []).length) errs.push('/shots has duplicate ids');
       if (errs.length) return errs;
-      const merged = normalizePlan(mergePlan(skeleton, d));
+      const merged = allocatePlan(normalizePlan(mergePlan(skeleton, d)), { script, words, catalog }).plan;
       const findings = shotplanErrors(merged, { script, words, cast, catalog, assets: assets.assets });
       if (!findings.length) d.shots = merged.shots.map((s) => ({ id: s.id, keys: s.keys, ...(s.beats ? { beats: s.beats } : {}), ...(s.fx ? { fx: s.fx } : {}), ...(s.standIns ? { standIns: s.standIns } : {}) }));
       return findings;
     },
-    repairHint: 'Keep every valid key. Start each shot on its first key, use a wide/establishing first key for the first shot and every new set, change size a step or side/angle >=30 degrees between adjacent keys, keep keys >=0.6 s, and turn mustShow into the first key with. Use push/hold for most keys, put a punch on each hook/mystery/payoff line, foreground on 25-40% of keys, and keep close/medium on 25-40% of screen time.',
+    repairHint: 'Keep every valid key. Start each shot on its first key, use a wide/establishing first key for the first shot and every new set, change size a step or side/angle >=30 degrees between adjacent keys, keep keys >=0.6 s, and turn mustShow into the first key with. Supply content only; the allocator fills shares, foreground, heights and required punches.',
   });
-  const plan = normalizePlan(mergePlan(skeleton, keyDataOut));
+  const plan = allocatePlan(normalizePlan(mergePlan(skeleton, keyDataOut)), { script, words, catalog }).plan;
   writeJsonArtifact(projectDir, 'shotplan', 'shotplan.json', plan, 'shotplan');
   writeTextArtifact(projectDir, 'shotplan', 'shotplan.md', renderShotplanMd(plan, { script, words, cast }));
   const times = spans(plan, words);

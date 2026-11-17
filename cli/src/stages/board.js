@@ -62,8 +62,38 @@ export function shotSchema(planShot, cast, catalog) {
   };
 }
 
+/** Group consecutive plan shots by scene; the group becomes one continuous board shot. */
+export function groupPlan(plan) {
+  const groups = [];
+  for (const shot of plan.shots ?? []) {
+    const prev = groups[groups.length - 1];
+    if (prev && prev.scene && shot.scene === prev.scene && shot.set === prev.set) prev.shots.push(shot);
+    else groups.push({ scene: shot.scene, set: shot.set, light: shot.light, shots: [shot] });
+  }
+  return groups.map((g) => {
+    const first = g.shots[0], last = g.shots[g.shots.length - 1];
+    return {
+      ...first,
+      id: g.scene ?? first.id,
+      scene: g.scene,
+      shots: g.shots,
+      start: first.start,
+      end: last.end,
+      lines: [...new Set(g.shots.flatMap((s) => s.lines ?? []))],
+      characters: [...new Set(g.shots.flatMap((s) => s.characters ?? []))],
+      mustShow: [...new Set(g.shots.flatMap((s) => s.mustShow ?? []))],
+      keys: g.shots.flatMap((s) => s.keys ?? []),
+      beats: g.shots.flatMap((s) => s.beats ?? []),
+      fx: g.shots.flatMap((s) => s.fx ?? []),
+      moves: g.shots.flatMap((s) => s.moves ?? []),
+      transition: first.transition,
+    };
+  });
+}
+
 export function baseShot(s, i, plan, cast, catalog) {
-  const hasScenes = (plan.shots ?? []).some((x) => x.scene);
+  const planShots = Array.isArray(plan) ? plan : plan.shots ?? [];
+  const hasScenes = planShots.some((x) => x.scene);
   const movesFor = (id) => (s.moves ?? []).filter((m) => m.who === id);
   const set = catalog.sets.find((x) => x.name === s.set) ?? catalog.sets[0];
   const mark = `${s.set}.${DEFAULTS[s.set] ?? set.marks[0]?.name ?? 'floor'}`;
@@ -85,16 +115,18 @@ export function baseShot(s, i, plan, cast, catalog) {
   const camera = (s.keys ?? []).map((k, j) => {
     const withIds = (k.with ?? []).filter((id) => { const m = set.marks.find((x) => x.name === id || `${s.set}.${x.name}` === id); return !m || (m.ids?.length ?? 0) > 0; });
     const on = asArray(k.on);
+    const continuous = j > 0 && s.scene && (s.shots?.length ?? 0) > 1;
     return {
       at: k.at, size: k.size === 'close' && on.length > 1 ? 'medium' : k.size, on, ...(withIds.length ? { with: withIds } : {}),
       angle: k.angle ?? (hasScenes && ['full', 'wide', 'establishing'].includes(k.size) ? 'low' : 'eye'),
-      side: k.side, move: k.move, ...(j && !['glide', 'burst', 'crane'].includes(k.move) ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
+      side: k.side, move: continuous ? 'glide' : k.move, ...(j && !continuous ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
+      ...(continuous ? { ease: k.ease ?? 'glide', easeFrames: k.easeFrames ?? 24 } : {}),
       ...(k.punch ? { punch: k.punch } : {}), ...(k.impact ? { impact: k.impact } : {}), ...(k.drama ? { drama: true } : {}),
-      ...(k.reveal ? { reveal: true } : {}), ...(k.foreground ? { foreground: k.foreground } : {}), ...(k.ease ? { ease: k.ease } : {}), ...(k.easeFrames ? { easeFrames: k.easeFrames } : {}),
+      ...(k.reveal ? { reveal: true } : {}), ...(k.foreground ? { foreground: k.foreground } : {}), ...(k.ease && !continuous ? { ease: k.ease } : {}), ...(k.easeFrames && !continuous ? { easeFrames: k.easeFrames } : {}),
     };
   });
   const fx = (s.fx ?? []).map((f) => ({ kind: f.kind, at: f.at, pos: { mark, nudge: [0, 2.2, -0.6] }, ...(f.kind === 'puff' ? { size: 2.6, dur: 0.4 } : {}), ...(f.kind === 'sparkle' ? { size: 0.8 } : {}), ...(f.kind === 'stars' ? { size: [1.5, 0.79], period: 0.4, dur: 0.4 } : {}) }));
-  return { id: s.id, start: s.start, end: i + 1 < plan.shots.length ? plan.shots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}), ...(s.transition ? { transition: s.transition } : {}) };
+  return { id: s.id, start: s.start, end: i + 1 < planShots.length ? planShots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}), ...(s.transition ? { transition: s.transition } : {}) };
 }
 
 function variants(shot, s, catalog) {
@@ -144,14 +176,15 @@ export async function runBoard({ projectDir, project, router }) {
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
   const castMap = Object.fromEntries(cast.characters.map((c) => [c.id, { spec: c.spec ?? c.cast, seed: seedOf(c.id) }]));
   const kicks = (plan.shots ?? []).flatMap((s) => [...(s.keys ?? []).map((k) => k.impact), ...(s.beats ?? []).map((b) => b.impact)].filter(Boolean).map((at) => ({ at, amp: 0.6 })));
-  let shots = plan.shots.map((s, i) => baseShot(s, i, plan, cast, catalog));
+  const groups = groupPlan(plan);
+  let shots = groups.map((s, i) => baseShot(s, i, groups, cast, catalog));
   const review = { version: 1, model: 'deterministic base + measured variants', shots: [] };
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-board-'));
   try {
     // Compile each shot alone; if a shot cannot compile, try its variants.
     for (let i = 0; i < shots.length; i++) {
       let chosen = null, findings = [], rounds = 0;
-      for (const v of variants(shots[i], plan.shots[i], catalog)) {
+      for (const v of variants(shots[i], groups[i], catalog)) {
         rounds++;
         try { compileBoard({ version: 1, partial: true, cast: castMap, shots: [v] }, words, catalog); chosen = v; break; }
         catch (e) { findings = [e.message]; }
@@ -176,7 +209,7 @@ export async function runBoard({ projectDir, project, router }) {
       const idx = shots.findIndex((s) => s.id === id);
       if (idx < 0) continue;
       let best = shots[idx], bestErrors = errs, rounds = 1;
-      for (const v of variants(shots[idx], plan.shots[idx], catalog).slice(1, 16)) {
+      for (const v of variants(shots[idx], groups[idx], catalog).slice(1, 16)) {
         rounds++;
         try {
           const r = await measureShot(tmp, v, castMap, words, catalog);
