@@ -2,6 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { ROOT } from './env.js';
+import { shotSchema } from './stages/board.js';
 import { projectDir, requireFile } from './project.js';
 
 const readJSON = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -53,7 +54,21 @@ export function specializeSchema(dirArg) {
   return { schema, board, words, catalog };
 }
 
-export function schemaCommand(dirArg, outArg) {
+export function schemaCommand(dirArg, outArg, shotId = null) {
+  if (shotId) {
+    const dir = projectDir(dirArg);
+    const plan = readJSON(requireFile(dir, 'shotplan.json'));
+    const cast = readJSON(requireFile(dir, 'cast.json'));
+    const catalog = readJSON(join(ROOT, 'schema', 'catalog.json'));
+    const shot = plan.shots.find((s) => s.id === shotId);
+    if (!shot) throw new Error(`shot ${shotId} is not in shotplan.json`);
+    const schema = shotSchema(shot, cast, catalog);
+    const out = outArg ? (isAbsolute(outArg) ? outArg : resolve(process.cwd(), outArg)) : join(dir, `shot-${shotId}.schema.json`);
+    writeFileSync(out, JSON.stringify(schema, null, 2) + '\n');
+    const size = readFileSync(out).length;
+    console.log(`shot schema: ${out} (${size} bytes, target <= 20480)`);
+    return { out, size, shot: shotId };
+  }
   const { schema, board } = specializeSchema(dirArg);
   const out = outArg ? (isAbsolute(outArg) ? outArg : resolve(process.cwd(), outArg)) : join(projectDir(dirArg), 'schema.json');
   if (outArg) mkdirSync(dirname(out), { recursive: true });

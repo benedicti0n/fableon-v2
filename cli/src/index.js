@@ -12,6 +12,7 @@ import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
 import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
+import { boardCommand } from './board-command.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -83,6 +84,14 @@ export function main(argv = process.argv) {
     .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
 
   program
+    .command('board')
+    .description('write and measured-repair the authoring board from the approved shot plan')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--shot <id>', 're-render only this shot segment after the board run')
+    .option('--notes <text>', 'director notes; reruns the board stage')
+    .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
     .command('models')
     .description('list or check provider models')
     .argument('<mode>', 'list or check')
@@ -105,7 +114,8 @@ export function main(argv = process.argv) {
     .description('write a per-project specialised authoring schema')
     .requiredOption('--project <dir>', 'project folder')
     .option('--out <file>', 'output schema file')
-    .action((opts) => schemaCommand(opts.project, opts.out));
+    .option('--shot <id>', 'write a slim per-shot board schema')
+    .action((opts) => schemaCommand(opts.project, opts.out, opts.shot ?? null));
 
   program
     .command('catalog-card')

@@ -21,6 +21,7 @@ export const makeContext = (dir) => {
     if (a.shot) return shotStart + (a.offset ?? 0);
     if (a.frame !== undefined) return a.frame + (a.offset ?? 0);
     if (a.end) return END + (a.offset ?? 0);
+    if (a.wordIndex !== undefined) { const hit = words.filter((w) => w.line === a.line)[a.wordIndex]; return hit ? Math.round(hit.a * fps) + (a.offset ?? 0) : 0; }
     const hit = words.filter((w) => w.line === a.line && norm(w.w) === norm(a.word))[a.nth ?? 0];
     return hit ? Math.round(hit.a * fps) + (a.offset ?? 0) : 0;
   };

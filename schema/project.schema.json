@@ -91,7 +91,9 @@
         "factcheck": { "$ref": "#/$defs/model" },
         "cast": { "$ref": "#/$defs/model" },
         "voice": { "$ref": "#/$defs/model" },
-        "shotplan": { "$ref": "#/$defs/model" }
+        "shotplan": { "$ref": "#/$defs/model" },
+        "board": { "$ref": "#/$defs/model" },
+        "boardEscalate": { "$ref": "#/$defs/model" }
       }
     },
     "budget": {

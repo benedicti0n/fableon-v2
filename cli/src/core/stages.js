@@ -39,6 +39,13 @@ export const STAGES = [
     projectKeys: ['language', 'seconds'],
     outputs: ['shotplan.json', 'shotplan.md'],
   },
+  {
+    name: 'board', version: 1, deps: ['shotplan'], prompt: '',
+    inputs: ['shotplan.json', 'script.json', 'words.json', 'cast.json', 'assets.todo.json'],
+    extraInputs: ['schema/catalog.json', 'schema/authoring.schema.json', 'docs/DIRECTOR_GUIDE.md', 'prompts/director-craft.md'],
+    projectKeys: ['language', 'seconds'],
+    outputs: ['board.json', 'board.review.json', 'storyboard.json'],
+  },
 ];
 
 export const stageByName = (name) => STAGES.find((s) => s.name === name);

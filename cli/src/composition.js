@@ -47,7 +47,7 @@ const MOVING = new Set(['tiltUp', 'tiltDown', 'pan', 'reveal', 'glide', 'follow'
 export const isMovingKey = (k) => MOVING.has(k.move) || k.type === 'tilt' || k.dur !== undefined || k.push?.rate === 0;
 export const SETTLE_CUT = 6;              // frames after a cut before measuring
 export const SAMPLE_EVERY = 12;           // extra samples in long keys
-export const AMBIENT_EFFECTS = new Set(['halo', 'fire', 'smoke', 'burst', 'splash', 'petals', 'puff', 'stars']);
+export const AMBIENT_EFFECTS = new Set(['halo', 'fire', 'smoke', 'burst', 'splash', 'petals', 'puff', 'stars', 'sparkle']);
 export const FIX = {
   hidden: 'move the subject into frame or remove it from this key',
   tooSmall: 'increase the size one step or move the camera closer',

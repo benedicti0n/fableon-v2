@@ -85,11 +85,12 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const ob = over ? subjBox(over) : null;
   const box = subjects.length ? unionBox(subjects) : null;
   const boxC = primary?.box ? [(primary.box[0] + primary.box[3]) / 2, (primary.box[1] + primary.box[4]) / 2, (primary.box[2] + primary.box[5]) / 2] : null;
+  const groupCenter = subjects.length > 1 ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, (box.z0 + box.z1) / 2] : null;
   const target = size === "establishing"
     ? [(setInfo.bounds.min[0] + setInfo.bounds.max[0]) / 2, (setInfo.bounds.min[1] + setInfo.bounds.max[1]) / 2, (setInfo.bounds.min[2] + setInfo.bounds.max[2]) / 2]
     : size === "wide"
       ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2, (box.z0 + box.z1) / 2]
-      : size === 'insert' && boxC ? boxC : [primary.kind === 'mark' ? primary.pos[0] : (pb.x0 + pb.x1) / 2, primary.kind === 'mark' ? primary.pos[1] : pb.eye, primary.kind === 'mark' ? primary.pos[2] : (pb.z0 + pb.z1) / 2];
+      : size === 'insert' && boxC ? boxC : groupCenter ?? [primary.kind === 'mark' ? primary.pos[0] : (pb.x0 + pb.x1) / 2, primary.kind === 'mark' ? primary.pos[1] : pb.eye, primary.kind === 'mark' ? primary.pos[2] : (pb.z0 + pb.z1) / 2];
   let spanV, spanH;
   if (size === "establishing") { spanV = setInfo.bounds.max[1] - setInfo.bounds.min[1]; spanH = setInfo.bounds.max[0] - setInfo.bounds.min[0]; }
   else if (size === "insert") { spanV = primary?.box ? primary.box[4] - primary.box[1] : 0.8; spanH = primary?.box ? primary.box[3] - primary.box[0] : 0.8; }
