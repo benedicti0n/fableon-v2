@@ -1,5 +1,5 @@
 // Stage dependency graph for Phase 3A. The GUI/server can reuse this registry.
-import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, CAST, SHOTPLAN, SOUND } from '../stages/prompts.js';
+import { BRIEF, RESEARCH, SCRIPT, SCRIPT_HI, FACTCHECK, PERFORMANCE, CAST, SHOTPLAN, SOUND } from '../stages/prompts.js';
 
 export const STAGES = [
   {
@@ -23,12 +23,17 @@ export const STAGES = [
     outputs: ['script.review.json'],
   },
   {
+    name: 'performance', version: 1, deps: ['factcheck'], prompt: PERFORMANCE,
+    inputs: ['script.json', 'script.review.json'], projectKeys: ['seconds', 'language'],
+    outputs: ['performance.json', 'performance.md'],
+  },
+  {
     name: 'cast', version: 1, deps: ['script'], prompt: CAST,
     inputs: ['script.json', 'research/facts.json', 'cast.notes.json'], extraInputs: ['schema/catalog.json'], projectKeys: ['language'],
     outputs: ['cast.json', 'assets.todo.json', 'cast/cast-sheet.jpg'],
   },
   {
-    name: 'voice', version: 1, deps: ['factcheck'], prompt: '',
+    name: 'voice', version: 1, deps: ['factcheck', 'performance'], prompt: '',
     inputs: ['SCRIPT.md', 'script.json', 'pronunciations.json', 'research/facts.json'], projectKeys: ['seconds', 'voice'],
     outputs: ['voice.wav', 'words.json'],
   },

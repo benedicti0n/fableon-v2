@@ -5,6 +5,7 @@ import { capture, loadDotEnv, ROOT } from '../env.js';
 import { historyPath, readJson, writeJsonArtifact } from '../core/artifacts.js';
 import { run } from '../env.js';
 import { synthesize } from '../voice/index.js';
+import { alignWords } from '../voice/align.js';
 import { countWords } from '../../../shared/words.mjs';
 import { plannedPauseSeconds, WPS } from './script.js';
 
@@ -116,8 +117,21 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
     project.voice.rate = { ...(project.voice.rate ?? {}), delivered: { wordsPerSecond: +(deliveredWords / finalDuration).toFixed(3), charactersPerSecond: +(deliveredChars / finalDuration).toFixed(3) } };
     writeJsonArtifact(projectDir, 'voice', 'project.json', project, 'project');
   }
-  const words = result.words?.length ? result.words : readJson(wordsPath);
-  writeJsonArtifact(projectDir, 'voice', 'words.json', scaleWords(words, atempo !== 1 ? 1 / atempo : 1), 'words');
+  let words = result.words?.length ? result.words : readJson(wordsPath);
+  let alignment = null;
+  const wantAlign = script && provider !== 'elevenlabs' && voice.align !== false;
+  if (wantAlign) {
+    try {
+      const aligned = await alignWords({ projectDir, wavPath: voicePath, script, method: voice.alignMethod ?? 'auto' });
+      words = aligned.words;
+      alignment = { method: aligned.method, words: words.length, warnings: aligned.warnings ?? [] };
+      steps.push({ step: `forced aligner ${aligned.method}`, words: words.length });
+    } catch (e) {
+      alignment = { method: 'provider-fallback', error: String(e.message ?? e).split('\n').slice(0, 4).join(' ') };
+      steps.push({ step: 'forced aligner failed; provider timings kept', error: alignment.error });
+    }
+  }
+  writeJsonArtifact(projectDir, 'voice', 'words.json', alignment && alignment.words ? words : scaleWords(words, atempo !== 1 ? 1 / atempo : 1), 'words');
   return {
     natural,
     target,
@@ -125,6 +139,7 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
     fit: { mode: fitMode, steps },
     provider,
     language,
+    alignment,
     warnings: result.warnings ?? [],
     characters: result.characters ?? 0,
     costUsd: result.costUsd ?? 0,

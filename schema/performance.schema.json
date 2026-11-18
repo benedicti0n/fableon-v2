@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/performance.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "lines"],
+  "properties": {
+    "version": { "const": 1 },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["n", "tone", "pace", "pauses", "stress"],
+        "properties": {
+          "n": { "type": "integer", "minimum": 0 },
+          "tone": { "enum": ["deadpan", "mock-serious", "matter-of-fact", "warm", "excited", "tense", "awe", "whisper"] },
+          "pace": { "type": "number", "minimum": 0.9, "maximum": 1.2 },
+          "pauses": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["after", "s"], "properties": { "after": { "type": "string", "minLength": 1 }, "s": { "type": "number", "minimum": 0.15, "maximum": 0.6 } } } },
+          "stress": { "type": "array", "maxItems": 2, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  }
+}

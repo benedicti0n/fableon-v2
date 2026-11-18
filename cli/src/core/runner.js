@@ -4,7 +4,7 @@ import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { allStatuses, approve, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
-const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js' };
+const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js' };
 
 export class PipelineRunner extends EventEmitter {
   constructor(projectDir, project, opts = {}) {

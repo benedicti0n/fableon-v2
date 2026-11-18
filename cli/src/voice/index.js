@@ -19,6 +19,15 @@ export function scriptBlocks(projectDir) {
       if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text, delivery: line.delivery });
       else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text, delivery: line.delivery }] });
     }
+    const perfPath = join(projectDir, 'performance.json');
+    if (existsSync(perfPath)) {
+      const perf = new Map((JSON.parse(readFileSync(perfPath, 'utf8')).lines ?? []).map((l) => [l.n, l]));
+      for (const b of blocks) for (const line of b.lines) {
+        const p = perf.get(line.n);
+        if (!p) continue;
+        line.delivery = { ...(line.delivery ?? {}), tone: p.tone, pauses: p.pauses ?? [], emphasis: p.stress ?? [] };
+      }
+    }
     return blocks;
   }
   const md = join(projectDir, 'SCRIPT.md');

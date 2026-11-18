@@ -37,6 +37,8 @@ import { runProviderTests } from './providers.mjs';
 import { runAllocatorTests } from './allocator.mjs';
 import { runBakeoffTests } from './bakeoff.mjs';
 import { runSarvamTests } from './voice_sarvam.mjs';
+import { runPerformanceTests } from './performance.mjs';
+import { runAlignerTests } from './aligner.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -154,6 +156,10 @@ try {
   check('bakeoff scoring', bakeoff.ok, `${bakeoff.checks.filter((c) => c.ok).length}/${bakeoff.checks.length} checks`);
   const sarvam = await runSarvamTests();
   check('Sarvam TTS', sarvam.ok, `${sarvam.checks.filter((c) => c.ok).length}/${sarvam.checks.length} checks`);
+  const performance = runPerformanceTests();
+  check('performance direction', performance.ok, `${performance.checks.filter((c) => c.ok).length}/${performance.checks.length} checks`);
+  const aligner = runAlignerTests();
+  check('forced aligner', aligner.ok, aligner.skipped ? aligner.checks[0].detail : `${aligner.checks.filter((c) => c.ok).length}/${aligner.checks.length} checks; ${aligner.checks.find((c) => c.name === 'aligner numbers')?.detail ?? ''}`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

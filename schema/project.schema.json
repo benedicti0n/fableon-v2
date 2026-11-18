@@ -68,6 +68,9 @@
         },
         "maxCharsPerRun": { "type": "integer", "minimum": 1 },
         "fit": { "enum": ["natural", "exact"] },
+        "performance": { "type": "boolean" },
+        "align": { "type": "boolean" },
+        "alignMethod": { "enum": ["auto", "mms", "whisper"] },
         "pace": { "type": "number", "minimum": 0.5, "maximum": 2 },
         "paceApplied": { "enum": ["local", "provider"] },
         "pauses": {
