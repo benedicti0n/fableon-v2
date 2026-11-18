@@ -14,6 +14,7 @@ import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
+import { runBakeoff } from './bakeoff.js';
 import { modelsCommand } from './models-command.js';
 import { voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -91,6 +92,22 @@ export function main(argv = process.argv) {
     .option('--shot <id>', 're-render only this shot segment after the board run')
     .option('--notes <text>', 'director notes; reruns the board stage')
     .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('bakeoff')
+    .description('run one stage across candidate models on fixed cached cases')
+    .requiredOption('--stage <name>', 'stage to bake off (script first)')
+    .option('--models <list>', 'comma-separated model ids or labels')
+    .option('--cases <list>', 'comma-separated project folders')
+    .option('--budget <usd>', 'hard spend ceiling', '5')
+    .action(async (opts) => {
+      try {
+        const models = opts.models ? opts.models.split(',').map((x) => x.trim()).filter(Boolean) : null;
+        const cases = opts.cases ? opts.cases.split(',').map((x) => x.trim()).filter(Boolean).map((x) => x.startsWith('/') ? x : `${process.cwd()}/${x}`) : null;
+        const r = await runBakeoff({ stage: opts.stage, models, cases, budget: Number(opts.budget) });
+        console.log(`bakeoff: ${r.rows.length} runs, spent $${r.spent.toFixed(4)}; ${r.outDir}`);
+      } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+    });
 
   program
     .command('usage')

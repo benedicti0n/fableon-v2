@@ -1,0 +1,277 @@
+{
+  "case": "work-bakasura-hi",
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "label": "Gemini 3.1 Flash-Lite",
+  "pass": true,
+  "errors": [],
+  "lines": 10,
+  "words": 161,
+  "hookWords": 13,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 2,
+  "firstTry": false,
+  "repairs": 1,
+  "promptTokens": 13210,
+  "completionTokens": 2115,
+  "costUsd": 0.005567,
+  "latencyMs": 7229,
+  "script": {
+    "version": 2,
+    "title": "भीम और बकासुर",
+    "seconds": 60,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "savitri",
+        "name": "सावित्री",
+        "role": "कथावाचक",
+        "look": "village"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "narada",
+        "name": "नारद",
+        "role": "the sage who warns"
+      }
+    ],
+    "names": [
+      {
+        "word": "सावित्री",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "The demon demanded a dinner, and the dinner ate him first."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "राक्षस ने इंसान मांगा, और उस इंसान ने राक्षस को ही खा लिया।",
+        "gloss": "The demon demanded a human, and that human ate the demon.",
+        "beat": "hook",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands and speaks."
+        }
+      },
+      {
+        "n": 1,
+        "text": "एकाचक्र गाँव के लोग हर महीने एक इंसान और राशन का एक कार्ट दान देते थे। यह राक्षस का नियम था।",
+        "gloss": "The people of Ekachakra village donated one human and a cart of rations every month. This was the demon's rule.",
+        "beat": "setting",
+        "facts": [
+          "F2"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri gestures to the village."
+        }
+      },
+      {
+        "n": 2,
+        "text": "गाँव के एक ब्राह्मण की बारी आई। वह रोते हुए बोला, \"मेरे पास कोई विकल्प नहीं है।\"",
+        "gloss": "The turn of a village Brahmin came. He cried and said, \"I have no option.\"",
+        "beat": "escalation",
+        "facts": [
+          "F5"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri looks down."
+        }
+      },
+      {
+        "n": 3,
+        "text": "तभी भीम ने कहा कि वह भोजन ले जाएगा। उसे बहुत तेज़ भूख लगी थी।",
+        "gloss": "Just then Bhima said he would carry the food. He was feeling very hungry.",
+        "beat": "escalation",
+        "facts": [
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri shrugs."
+        }
+      },
+      {
+        "n": 4,
+        "text": "यह अच्छी खबर थी कि ब्राह्मण बच गया। लेकिन बुरी खबर यह थी कि राक्षस भूखा था।",
+        "gloss": "It was good news that the Brahmin was saved. But the bad news was the demon was hungry.",
+        "beat": "escalation",
+        "facts": [
+          "F9"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri raises a finger."
+        }
+      },
+      {
+        "n": 5,
+        "text": "क्या राक्षस को पता था कि उसका आने वाला भोजन उसके लिए कब्र खोद रहा है?",
+        "gloss": "Did the demon know that his incoming meal was digging a grave for him?",
+        "beat": "mystery",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri looks puzzled."
+        }
+      },
+      {
+        "n": 6,
+        "text": "दरअसल, भीम ने जंगल पहुँचकर सारा भोजन खा लिया। उसने राक्षस का इंतज़ार करना शुरू किया।",
+        "gloss": "Actually, Bhima reached the forest and ate all the food. He started waiting for the demon.",
+        "beat": "pivot",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri nods."
+        }
+      },
+      {
+        "n": 7,
+        "text": "यह ऐसा था जैसे कोई चूहा बिल्ली को चिढ़ाए। भीम ने बड़े मजे से भोजन किया।",
+        "gloss": "It was like a mouse teasing a cat. Bhima ate the food with great joy.",
+        "beat": "analogy",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri mimics drinking."
+        }
+      },
+      {
+        "n": 8,
+        "text": "भीम ने बकासुर को घुटने पर तोड़ा। गाँव वालों ने फिर कभी उसे नहीं भेजा।",
+        "gloss": "Bhima broke Bakasura on his knee. The villagers never sent anyone again.",
+        "beat": "payoff",
+        "facts": [
+          "F15"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri claps hands."
+        }
+      },
+      {
+        "n": 9,
+        "text": "सब कुछ खत्म हुआ। राक्षस के अंत के साथ ही गाँव में शांति आ गई।",
+        "gloss": "Everything ended. With the end of the demon, peace came to the village.",
+        "beat": "payoff",
+        "facts": [
+          "F17"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri smiles."
+        }
+      }
+    ]
+  }
+}

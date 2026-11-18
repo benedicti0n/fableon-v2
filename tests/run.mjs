@@ -35,6 +35,7 @@ import { runDirectorTests } from './director.mjs';
 import { runSoundTests } from './sound.mjs';
 import { runProviderTests } from './providers.mjs';
 import { runAllocatorTests } from './allocator.mjs';
+import { runBakeoffTests } from './bakeoff.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -148,6 +149,8 @@ try {
   check('provider registry', providers.ok, `${providers.checks.filter((c) => c.ok).length}/${providers.checks.length} checks`);
   const allocator = runAllocatorTests();
   check('director allocator', allocator.ok, `${allocator.checks.filter((c) => c.ok).length}/${allocator.checks.length} checks`);
+  const bakeoff = runBakeoffTests();
+  check('bakeoff scoring', bakeoff.ok, `${bakeoff.checks.filter((c) => c.ok).length}/${bakeoff.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

@@ -33,11 +33,11 @@ const fallbacksOf = (sd) => (sd.fallbacks ?? (sd.fallback ? [sd.fallback] : []))
 const primaryOf = (sd) => sd.primary ?? sd;
 const baseFor = (provider, override, p, sd, d, repo) => ({
   provider,
-  model: override.model ?? p.model ?? sd.model ?? d.model ?? null,
+  model: override.model ?? sd.model ?? p.model ?? d.model ?? null,
   baseUrl: override.baseUrl ?? p.baseUrl ?? PROVIDERS[provider]?.baseUrl ?? repo.providers?.[provider]?.baseUrl ?? null,
   keyEnv: override.keyEnv ?? p.keyEnv ?? PROVIDERS[provider]?.keyEnv ?? repo.providers?.[provider]?.keyEnv ?? null,
-  temperature: override.temperature ?? p.temperature ?? sd.temperature ?? d.temperature ?? 0.7,
-  maxTokens: override.maxTokens ?? p.maxTokens ?? sd.maxTokens ?? d.maxTokens ?? 4096,
+  temperature: override.temperature ?? sd.temperature ?? p.temperature ?? d.temperature ?? 0.7,
+  maxTokens: override.maxTokens ?? sd.maxTokens ?? p.maxTokens ?? d.maxTokens ?? 4096,
   thinking: override.thinking ?? sd.thinking ?? null,
   reasoningEffort: override.reasoningEffort ?? sd.reasoningEffort ?? null,
   timeoutMs: repo.timeoutMs ?? 120000,
@@ -52,8 +52,9 @@ export function modelForStage(project, stage, repo = repoModels()) {
   const p = project.models?.default ?? d;
   const s = project.models?.[stage] ?? {};
   const primary = s.primary ?? s;
-  const provider = primary.provider ?? p.provider ?? sd.provider ?? d.provider;
-  const cfg = baseFor(provider, primary, p, sd, d, repo);
+  const explicitDefault = !!project.models?.default && (project.models.default.provider === 'mock' || !!project.models.default.model || !!project.models.default.baseUrl || !!project.models.default.keyEnv);
+  const provider = primary.provider ?? (explicitDefault ? p.provider : null) ?? sd.provider ?? p.provider ?? d.provider;
+  const cfg = baseFor(provider, primary, explicitDefault ? p : {}, sd, d, repo);
   cfg.prices = repo.prices?.[cfg.model] ?? catalogPrice(cfg.model) ?? null;
   return cfg;
 }

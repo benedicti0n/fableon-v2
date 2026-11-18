@@ -1,0 +1,315 @@
+{
+  "case": "work-bakasura-hi",
+  "provider": "gemini",
+  "model": "gemini-3.1-pro-preview",
+  "label": "Gemini 3.1 Pro",
+  "pass": true,
+  "errors": [],
+  "lines": 10,
+  "words": 176,
+  "hookWords": 16,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 2,
+  "firstTry": false,
+  "repairs": 1,
+  "promptTokens": 14056,
+  "completionTokens": 4335,
+  "costUsd": 0.080132,
+  "latencyMs": 104464,
+  "script": {
+    "version": 2,
+    "title": "Bhima's Dinner",
+    "seconds": 50,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "kunti",
+        "name": "कुंती",
+        "role": "the practical mother",
+        "look": "elder"
+      },
+      {
+        "id": "bhima",
+        "name": "भीम",
+        "role": "the hungry strongman",
+        "look": "stout"
+      },
+      {
+        "id": "bakasura",
+        "name": "बकासुर",
+        "role": "the hungry demon",
+        "look": "big"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "brahmin",
+        "name": "ब्राह्मण",
+        "role": "the worried host"
+      }
+    ],
+    "names": [
+      {
+        "word": "कुंती",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "भीम",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "बकासुर",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "ब्राह्मण",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "The food finished off the demon instead of the other way around."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "एक गांव ने राक्षस को अपना खाना भेजा। लेकिन उस खाने ने ही उसे निपटा दिया।",
+        "gloss": "A village sent a demon its food. But that food finished him off instead.",
+        "beat": "hook",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "kunti"
+          ],
+          "pose": "stand",
+          "note": "Kunti stands calmly"
+        }
+      },
+      {
+        "n": 1,
+        "text": "बकासुर नाम का एक खूंखार राक्षस था। वह हर महीने एक बैलगाड़ी खाना और एक इंसान मांगता था।",
+        "gloss": "There was a fierce demon named Bakasura. He demanded a cartload of food and one human every month.",
+        "beat": "setting",
+        "facts": [
+          "F1",
+          "F2"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "kunti"
+          ],
+          "pose": "talk",
+          "note": "Kunti explains the problem"
+        }
+      },
+      {
+        "n": 2,
+        "text": "ब्राह्मण परिवार की बारी आई, तो कुंती ने उनकी मदद की। उन्होंने कहा, \"मेरा बेटा भीम वहां जाएगा।\"",
+        "gloss": "When the Brahmin family's turn came, Kunti helped them. She said, \"My son Bhima will go there.\"",
+        "beat": "escalation",
+        "facts": [
+          "F5",
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "hut",
+          "who": [
+            "kunti"
+          ],
+          "pose": "point",
+          "note": "Kunti points to her son"
+        }
+      },
+      {
+        "n": 3,
+        "text": "भीम बहुत ताकतवर था, पर इसमें एक समस्या थी। वह जंगल पहुंचकर राक्षस का सारा खाना खाने लगा।",
+        "gloss": "Bhima was very strong, but there was one problem. He reached the forest and started eating all the demon's food.",
+        "beat": "escalation",
+        "facts": [
+          "F7",
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "front",
+          "who": [
+            "bhima"
+          ],
+          "pose": "belly",
+          "note": "Bhima rubs his belly after eating"
+        }
+      },
+      {
+        "n": 4,
+        "text": "राक्षस वहां पहुंचा तो उसका सारा भोजन गायब था। भीम ने मुड़कर उसकी तरफ देखा तक नहीं।",
+        "gloss": "When the demon arrived, all his food was gone. Bhima did not even turn to look at him.",
+        "beat": "escalation",
+        "facts": [
+          "F11",
+          "F12"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "front",
+          "who": [
+            "bakasura"
+          ],
+          "pose": "shout",
+          "note": "Bakasura shouts in anger"
+        }
+      },
+      {
+        "n": 5,
+        "text": "इंसान ने राक्षस का खाना खाया और पेड़ उखाड़ने लगा। ऐसे में राक्षस भला क्या करता है?",
+        "gloss": "The human ate the demon's food and started uprooting trees. In such a situation, what does a demon do?",
+        "beat": "mystery",
+        "facts": [
+          "F14"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "front",
+          "who": [
+            "bakasura"
+          ],
+          "pose": "armsUp",
+          "note": "Bakasura throws his arms up in confusion"
+        }
+      },
+      {
+        "n": 6,
+        "text": "दरअसल, भीम ने उस राक्षस को अपने घुटने पर मोड़ा। फिर उसने उसे बड़ी आसानी से तोड़कर मार डाला।",
+        "gloss": "You see, Bhima bent that demon over his knee. Then he easily broke him and killed him.",
+        "beat": "pivot",
+        "facts": [
+          "F15"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "front",
+          "who": [
+            "bhima"
+          ],
+          "pose": "flex",
+          "note": "Bhima flexes his muscles"
+        }
+      },
+      {
+        "n": 7,
+        "text": "यह बिल्कुल वैसा ही था। जैसे कोई इंसान किसी सूखी लकड़ी को बिना मेहनत के तोड़ देता है।",
+        "gloss": "It was exactly like that. Like someone snapping a dry stick without any effort.",
+        "beat": "analogy",
+        "facts": [
+          "F17"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "front",
+          "who": [
+            "bhima"
+          ],
+          "pose": "fold",
+          "note": "Bhima folds his arms"
+        }
+      },
+      {
+        "n": 8,
+        "text": "फिर उसने उस मरे हुए राक्षस को घसीटा। वह उसे चुपचाप गांव के दरवाज़े पर छोड़ आया।",
+        "gloss": "Then he dragged that dead demon. He quietly left him at the village door.",
+        "beat": "payoff",
+        "facts": [
+          "F18"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "mark": "door",
+          "who": [
+            "bhima"
+          ],
+          "pose": "walk",
+          "note": "Bhima walks away"
+        }
+      },
+      {
+        "n": 9,
+        "text": "सुबह गांव वालों ने उसे वहां मरा हुआ पाया। इसके बाद किसी ने राक्षस को खाना नहीं भेजा।",
+        "gloss": "In the morning, the villagers found him dead there. After that, nobody sent food to the demon.",
+        "beat": "payoff",
+        "facts": [
+          "F19"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "kunti"
+          ],
+          "pose": "hips",
+          "note": "Kunti stands with hands on hips, satisfied"
+        }
+      }
+    ]
+  }
+}

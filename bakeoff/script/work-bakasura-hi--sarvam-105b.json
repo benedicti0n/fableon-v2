@@ -1,0 +1,307 @@
+{
+  "case": "work-bakasura-hi",
+  "provider": "sarvam",
+  "model": "sarvam-105b",
+  "label": "Sarvam 105B",
+  "pass": true,
+  "errors": [],
+  "lines": 10,
+  "words": 158,
+  "hookWords": 15,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 2,
+  "firstTry": false,
+  "repairs": 1,
+  "promptTokens": 12927,
+  "completionTokens": 36434,
+  "costUsd": 0.01182,
+  "latencyMs": 79556,
+  "script": {
+    "version": 2,
+    "title": "भीमा और बकासुर",
+    "seconds": 60,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "bhima",
+        "name": "भीमा",
+        "role": "the strong Pandava",
+        "look": "elephant head pen and palm leaves"
+      },
+      {
+        "id": "kunti",
+        "name": "कुंती",
+        "role": "Bhima's mother",
+        "look": "neutral expression"
+      },
+      {
+        "id": "brahmana",
+        "name": "ब्राह्मण",
+        "role": "the hosting Brahmana",
+        "look": "stern expression"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "narada",
+        "name": "नारद",
+        "role": "the sage who warns"
+      }
+    ],
+    "names": [
+      {
+        "word": "भीमा",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "कुंती",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "ब्राह्मण",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "The demon demanded a monthly human tribute, yet the intended meal consumed him first."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "एक दानव जो हर महीने एक इंसान मांगता था, उसे उसी इंसान ने पहले खाया।",
+        "gloss": "A demon who demanded one human every month was eaten by that very human first.",
+        "beat": "hook",
+        "facts": [
+          "F22"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands holding the food cart",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 1,
+        "text": "गाँव में हर महीने एक इंसान और चावल की गाड़ी भेजी जाती थी। डर के कारण कोई मना नहीं करता था।",
+        "gloss": "Every month the village sent one human and a cart of rice. Fear ensured no one refused.",
+        "beat": "setting",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands near the carts",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 2,
+        "text": "कुंती ने अपने बेटे को भेजने का फैसला किया। ब्राह्मण के पास पैसे नहीं थे।",
+        "gloss": "Kunti decided to send her son. The Brahmana had no money.",
+        "beat": "setting",
+        "facts": [
+          "F5"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "kunti"
+          ],
+          "pose": "stand",
+          "note": "कुंती stands pointing to the hut",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 3,
+        "text": "भीमा को मुफ्त खाना मिलने की खुशी थी। उसने बिना सोचे स्वीकार कर लिया।",
+        "gloss": "Bhima was glad to get free food. He accepted without thinking.",
+        "beat": "escalation",
+        "facts": [
+          "F7"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands with arms folded",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 4,
+        "text": "सामने एक लाल आँखों वाला दानव खड़ा था। वह उसे आसानी से पीस देता।",
+        "gloss": "A red-eyed demon stood before him. It would crush him effortlessly.",
+        "beat": "escalation",
+        "facts": [
+          "F22"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा looks toward the forest"
+        }
+      },
+      {
+        "n": 5,
+        "text": "ब्राह्मण ने कहा \"मेरे पास विकल्प नहीं।\" यह बात सच थी कि भीमा के पास दस हज़ार हाथियों की ताकत थी।",
+        "gloss": "The Brahmana said there was no choice. It was true that Bhima had the strength of ten thousand elephants.",
+        "beat": "escalation",
+        "facts": [
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "brahmana",
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "ब्राह्मण and भीमा stand near the door",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 6,
+        "text": "दानव ने अपनी गाड़ी देखी। क्या उसके होश पूरी तरह उड़ गए होंगे?",
+        "gloss": "The demon saw his cart. Had he lost all his senses?",
+        "beat": "mystery",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands eating near the plate"
+        }
+      },
+      {
+        "n": 7,
+        "text": "दरअसल, भीमा ने दानव का खाना खुद खाना शुरू कर दिया था।",
+        "gloss": "Actually, Bhima had started eating the demon's food himself.",
+        "beat": "pivot",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands holding the plate"
+        }
+      },
+      {
+        "n": 8,
+        "text": "यह वैसा है जैसे कोई मेहमान अपने होस्ट का खाना खत्म कर दे। कोई शर्म नहीं आई।",
+        "gloss": "It is like a guest finishing the host's food. No shame was felt.",
+        "beat": "analogy",
+        "facts": [
+          "F13"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands with folded arms",
+          "mark": "front"
+        }
+      },
+      {
+        "n": 9,
+        "text": "दानव आया और उसने अपना खाना गायब पाया। फिर भीमा ने उसे घुटने पर तोड़ दिया।",
+        "gloss": "The demon arrived and found his food gone. Then Bhima broke him over his knee.",
+        "beat": "payoff",
+        "facts": [
+          "F15"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "भीमा stands ready to fight",
+          "mark": "front"
+        }
+      }
+    ]
+  }
+}

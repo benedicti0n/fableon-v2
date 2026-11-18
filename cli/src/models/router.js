@@ -67,7 +67,7 @@ export class ModelRouter {
     const res = await fetch(`${base}${PROVIDERS[c.provider].modelsPath}`, { headers, signal: this.signal ?? undefined });
     if (!res.ok) throw new Error(`${c.provider} GET ${PROVIDERS[c.provider].modelsPath} failed: HTTP ${res.status}`);
     const j = await res.json();
-    return (j.data ?? j.models ?? []).map((m) => m.id ?? m.name).filter(Boolean);
+    return (j.data ?? j.models ?? []).map((m) => m.id ?? m.name).filter(Boolean).map((id) => PROVIDERS[c.provider]?.stripModelsPrefix ? String(id).replace(/^models\//, '') : id);
   }
 
   async resolveModel(stage, config = null) {
@@ -110,7 +110,7 @@ export class ModelRouter {
         const res = await fetch(`${base}${PROVIDERS[c.provider]?.chatPath ?? '/chat/completions'}`, {
           method: 'POST',
           headers,
-          body: JSON.stringify({ model, messages, temperature: params.temperature, max_tokens: params.maxTokens, ...(c.provider === 'openrouter' && PROVIDERS.openrouter.providerPreferences ? { provider: PROVIDERS.openrouter.providerPreferences } : {}), ...(params.thinking ? { thinking: { type: params.thinking } } : {}), ...(params.reasoningEffort ? { reasoning_effort: params.reasoningEffort } : {}), ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
+          body: JSON.stringify({ model, messages, temperature: params.temperature, ...(c.provider === 'openai' ? { max_completion_tokens: params.maxTokens } : { max_tokens: params.maxTokens }), ...(c.provider === 'openrouter' && PROVIDERS.openrouter.providerPreferences ? { provider: PROVIDERS.openrouter.providerPreferences } : {}), ...(c.provider === 'deepseek' && params.thinking ? { thinking: { type: params.thinking } } : {}), ...(params.reasoningEffort && c.provider !== 'sarvam' ? { reasoning_effort: params.reasoningEffort } : {}), ...(params.jsonMode ? { response_format: { type: 'json_object' } } : {}), stream: false }),
           signal: ctrl.signal,
         });
         if (res.status === 429 || res.status >= 500) throw new Error(`HTTP ${res.status}`);

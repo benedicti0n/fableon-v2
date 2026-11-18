@@ -1,19 +1,19 @@
 {
   "default": { "provider": "deepseek", "model": null },
   "stageDefaults": {
-    "brief": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.7, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.7 } },
-    "research": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.4 } },
-    "script": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.8, "maxTokens": 12000, "maxRepairs": 3, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.8, "maxTokens": 12000 } },
-    "factcheck": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "enabled", "reasoningEffort": "low", "temperature": 0.2, "maxTokens": 24000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "enabled", "reasoningEffort": "high", "temperature": 0.2, "maxTokens": 24000 } },
-    "cast": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000 } },
-    "shotplan": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000, "maxRepairs": 4, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000 } },
+    "brief": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.7 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.7 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.7 } ] },
+    "research": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.4 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4 } ] },
+    "script": { "primary": { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.8, "maxTokens": 12000, "maxRepairs": 5 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.8, "maxTokens": 12000 }, { "provider": "sarvam", "model": "sarvam-105b", "temperature": 0.8, "maxTokens": 32000, "jsonMode": false }, { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.8, "maxTokens": 12000 } ] },
+    "factcheck": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "enabled", "reasoningEffort": "low", "temperature": 0.2, "maxTokens": 24000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.2, "maxTokens": 24000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "enabled", "reasoningEffort": "high", "temperature": 0.2, "maxTokens": 24000 } ] },
+    "cast": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.4, "maxTokens": 8000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4, "maxTokens": 8000 } ] },
+    "shotplan": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000, "maxRepairs": 4 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.4, "maxTokens": 32000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4, "maxTokens": 32000 } ] },
     "board": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 16000, "unused": "deterministic board writer; Phase 3E bake-off" },
-    "sound": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000, "fallback": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000 } },
+    "sound": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.3, "maxTokens": 6000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.3, "maxTokens": 6000 } ] },
     "boardEscalate": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.2, "maxTokens": 24000, "unused": "deterministic board writer; Phase 3E bake-off" }
   },
   "timeoutMs": 120000,
   "maxRepairs": 2,
-  "providers": {},
+  "providers": { "openrouter": { "unused": "Phase 3E user decision: no credits; data_collection deny blocks free endpoints" } },
   "prices": {
     "deepseek-flash": {
       "input": 0.3,
@@ -34,7 +34,91 @@
       "rate": "peak",
       "source": "https://api-docs.deepseek.com/quick_start/pricing",
       "date": "2026-11-16"
+    },
+    "gpt-5.4-nano-2026-03-17": {
+      "input": 0.2,
+      "output": 1.25,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "date": "2026-11-18"
+    },
+    "gpt-5.4-mini": {
+      "input": 0.75,
+      "output": 4.5,
+      "cacheInput": 0.075,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+      "date": "2026-11-18"
+    },
+    "gpt-5.2": {
+      "input": 1.75,
+      "output": 14,
+      "cacheInput": 0.175,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "date": "2026-11-18"
+    },
+    "gemini-3.1-flash-lite": {
+      "input": 0.25,
+      "output": 1.5,
+      "cacheInput": 0.025,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "date": "2026-11-18"
+    },
+    "gemini-3.5-flash-lite": {
+      "input": 0.3,
+      "output": 2.5,
+      "cacheInput": 0.03,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "date": "2026-11-18"
+    },
+    "gemini-3.1-pro-preview": {
+      "input": 2,
+      "output": 12,
+      "cacheInput": 0.2,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "date": "2026-11-18"
+    },
+    "sarvam-105b": {
+      "input": 0.113636364,
+      "output": 0.284090909,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "originalCurrency": "INR",
+      "original": { "input": 10, "output": 25 },
+      "inrPerUsd": 88,
+      "source": "https://docs.sarvam.ai/api/token-factory/models",
+      "date": "2026-11-18"
+    },
+    "sarvam-105b-conversations": {
+      "input": 0.113636364,
+      "output": 0.284090909,
+      "currency": "USD",
+      "unit": "per 1M tokens",
+      "rate": "standard",
+      "originalCurrency": "INR",
+      "original": { "input": 10, "output": 25 },
+      "inrPerUsd": 88,
+      "source": "https://docs.sarvam.ai/api/token-factory/models",
+      "date": "2026-11-18"
     }
+
   },
   "voicePrices": {
     "elevenlabs": {

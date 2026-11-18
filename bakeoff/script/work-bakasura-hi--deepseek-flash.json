@@ -1,0 +1,314 @@
+{
+  "case": "work-bakasura-hi",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "label": "DeepSeek Flash (direct)",
+  "pass": true,
+  "errors": [],
+  "lines": 10,
+  "words": 174,
+  "hookWords": 14,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 2,
+  "firstTry": false,
+  "repairs": 1,
+  "promptTokens": 13139,
+  "completionTokens": 3504,
+  "costUsd": 0.004496,
+  "latencyMs": 18403,
+  "script": {
+    "version": 2,
+    "title": "बकासुर का खाना",
+    "seconds": 50,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "bhima",
+        "name": "भीम",
+        "role": "the strong one, incognito and hungry",
+        "look": "tall, broad-shouldered, dark-haired, simple dhoti, bare arms"
+      },
+      {
+        "id": "brahmin",
+        "name": "ब्राह्मण",
+        "role": "the host whose turn came",
+        "look": "thin, grey-haired, white dhoti, worried face"
+      },
+      {
+        "id": "kunti",
+        "name": "कुंती",
+        "role": "the mother who offers her son",
+        "look": "elder woman, plain sari, calm face"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "bakasura",
+        "name": "बकासुर",
+        "role": "the demon who charges a monthly fee"
+      }
+    ],
+    "names": [
+      {
+        "word": "भीम",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "बकासुर",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "कुंती",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "ब्राह्मण",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "States flatly that the demon's dinner ate the demon first, the central contradiction as plain fact."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "बकासुर का खाना मुफ्त में आया था, और खाने वाले ने खाना खा लिया।",
+        "gloss": "Bakasura's dinner arrived free of charge, and the one to be eaten ate the food instead.",
+        "beat": "hook",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "sit",
+          "note": "Bhima sits by the tribute cart, already eating."
+        }
+      },
+      {
+        "n": 1,
+        "text": "बकासुर का हिसाब सीधा था। हर महीने एक आदमी, दो भैंसे और एक गाड़ी चावल।",
+        "gloss": "Bakasura's account was simple. Every month one man, two buffaloes and a cart of rice.",
+        "beat": "setting",
+        "facts": [
+          "F2",
+          "F23"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "brahmin",
+            "kunti"
+          ],
+          "pose": "stand",
+          "note": "The brahmin and Kunti stand by the loaded cart at the village edge."
+        }
+      },
+      {
+        "n": 2,
+        "text": "बारी बहुत सालों बाद आती थी, पर आज ब्राह्मण की बारी थी। उसके पास खरीदने के लिए कुछ नहीं था।",
+        "gloss": "The turn came after many years, but today it was the brahmin's turn. He had nothing to buy a substitute with.",
+        "beat": "escalation",
+        "facts": [
+          "F3",
+          "F5"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "brahmin"
+          ],
+          "pose": "shrug",
+          "note": "The brahmin shrugs with empty palms at his hut door."
+        }
+      },
+      {
+        "n": 3,
+        "text": "ब्राह्मण ने कहा, \"मेरे पास कोई विकल्प नहीं।\" तभी कुंती अपने बेटे को आगे करके बोलीं।",
+        "gloss": "The brahmin said, \"I have no option.\" Then Kunti pushed her son forward and spoke.",
+        "beat": "escalation",
+        "facts": [
+          "F5",
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "brahmin",
+            "kunti"
+          ],
+          "pose": "talk",
+          "note": "The brahmin talks with open hands; Kunti steps forward beside him."
+        }
+      },
+      {
+        "n": 4,
+        "text": "भीम वायु का बेटा था, ताकत में दस हज़ार हाथी। उसने बस इतना कहा, \"ठीक है।\"",
+        "gloss": "Bhima was the wind god's son, with the strength of ten thousand elephants. He just said, \"Fine.\"",
+        "beat": "escalation",
+        "facts": [
+          "F7",
+          "F8",
+          "F9"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima",
+            "kunti"
+          ],
+          "pose": "stand",
+          "note": "Bhima stands tall and nods once; Kunti watches him."
+        }
+      },
+      {
+        "n": 5,
+        "text": "लेकिन जो आदमी खुद खाया जाने जा रहा था, वह गाड़ी का चावल क्यों खा रहा था?",
+        "gloss": "But why was the man going to be eaten himself eating the cart's rice?",
+        "beat": "mystery",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "bhima"
+          ],
+          "pose": "sit",
+          "note": "Bhima sits beside the cart, rice in hand, looking up."
+        }
+      },
+      {
+        "n": 6,
+        "text": "दरअसल, भीम जंगल में खाना ले गया और खुद खाने लगा, ज़ोर से बकासुर को पुकारते हुए।",
+        "gloss": "Actually, Bhima carried the food to the forest and began eating it himself, loudly calling Bakasura.",
+        "beat": "pivot",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "shout",
+          "note": "Bhima shouts into the forest clearing with a handful of rice."
+        }
+      },
+      {
+        "n": 7,
+        "text": "यह वैसा ही था जैसे कोई पार्सल देने वाला खुद पार्सल खोलकर बैठ जाए। बकासुर आया, तो थाली खाली थी।",
+        "gloss": "It was like a delivery man opening the parcel himself and sitting down. Bakasura arrived, and the plate was empty.",
+        "beat": "analogy",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "point",
+          "note": "Bhima points at the empty vessels in the clearing."
+        }
+      },
+      {
+        "n": 8,
+        "text": "बकासुर ने पूछा कि उसके सामने कौन खा रहा है। भीम ने जवाब नहीं दिया, खाते रहे।",
+        "gloss": "Bakasura asked who was eating in front of him. Bhima gave no answer and kept eating.",
+        "beat": "payoff",
+        "facts": [
+          "F11",
+          "F12"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "sit",
+          "note": "Bhima sits and eats, facing the clearing."
+        }
+      },
+      {
+        "n": 9,
+        "text": "फिर उसने भीम की पीठ पर ज़ोर का वार किया। भीम ने थाली पूरी की, हाथ धोए, और मुस्कुराकर खड़े हो गए।",
+        "gloss": "Then he struck Bhima hard on the back. Bhima finished the plate, washed his hands, and stood up smiling.",
+        "beat": "payoff",
+        "facts": [
+          "F12",
+          "F13"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "bhima"
+          ],
+          "pose": "stand",
+          "note": "Bhima stands up with a smile, empty vessels behind him."
+        }
+      }
+    ]
+  }
+}

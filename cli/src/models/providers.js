@@ -7,6 +7,21 @@ export const PROVIDERS = {
     chatPath: '/chat/completions',
     modelsPath: '/models',
   },
+  openai: {
+    label: 'OpenAI',
+    baseUrl: 'https://api.openai.com/v1',
+    keyEnv: 'OPENAI_API_KEY',
+    chatPath: '/chat/completions',
+    modelsPath: '/models',
+  },
+  gemini: {
+    label: 'Google Gemini',
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    keyEnv: 'GEMINI_API_KEY',
+    chatPath: '/chat/completions',
+    modelsPath: '/models',
+    stripModelsPrefix: true,
+  },
   openrouter: {
     label: 'OpenRouter',
     baseUrl: 'https://openrouter.ai/api/v1',

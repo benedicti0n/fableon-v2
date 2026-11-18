@@ -1,0 +1,379 @@
+{
+  "case": "fixtures-savitri-hi",
+  "provider": "sarvam",
+  "model": "sarvam-105b",
+  "label": "Sarvam 105B",
+  "pass": true,
+  "errors": [],
+  "lines": 13,
+  "words": 252,
+  "hookWords": 16,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 6,
+  "firstTry": false,
+  "repairs": 5,
+  "promptTokens": 63428,
+  "completionTokens": 115467,
+  "costUsd": 0.040011,
+  "latencyMs": 252336,
+  "script": {
+    "version": 2,
+    "title": "सावित्री की जीत",
+    "seconds": 60,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "savitri",
+        "name": "सावित्री",
+        "role": "the princess who out-argued Death",
+        "look": "standard"
+      },
+      {
+        "id": "satyavan",
+        "name": "सत्यवान",
+        "role": "the chosen husband",
+        "look": "standard"
+      },
+      {
+        "id": "yaman",
+        "name": "यमा",
+        "role": "the god of death",
+        "look": "standard"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "narada",
+        "name": "नारद",
+        "role": "the sage who warns"
+      }
+    ],
+    "names": [
+      {
+        "word": "सावित्री",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "सत्यवान",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "यमा",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "नारद",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "सावित्री ने मृत्यु को बहस में हराकर उसके हस्ताक्षर प्राप्त किए।"
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "सावित्री ने मृत्यु को बहस में मात्र हराया। उसने एक हस्ताक्षरित समझौते से उसे वापस भेजा।",
+        "gloss": "Savitri defeated death in debate. She sent it back with a signed agreement.",
+        "beat": "hook",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands with folded hands"
+        }
+      },
+      {
+        "n": 1,
+        "text": "सावित्री ने स्वयं सत्यवान को चुना हुआ था। नारद की चेतावनी याद रखते हुए वह हर दिन गिनती करती रही।",
+        "gloss": "Savitri chose Satyavan herself. Remembering Narada's warning she kept counting every day.",
+        "beat": "setting",
+        "facts": [
+          "F3"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands watching"
+        }
+      },
+      {
+        "n": 2,
+        "text": "सत्यवान वन में फल और लकड़ी काटने गया। अचानक सिर में तेज दर्द उठा और वह जमीन पर गिर पड़ा।",
+        "gloss": "Satyavan went to cut fruit and wood. Suddenly sharp pain rose and he fell to the ground.",
+        "beat": "setting",
+        "facts": [
+          "F4"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "satyavan"
+          ],
+          "pose": "stand",
+          "note": "Satyavan falls to the ground after pain"
+        }
+      },
+      {
+        "n": 3,
+        "text": "यमा ने सत्यवान को अत्यंत अधिक पुण्यवान बताया। दूत भेजे बिना उन्होंने फिर स्वयं ही यह बहुत अत्यंत कठिन काम संभाला।",
+        "gloss": "Yama said Satyavan is extremely virtuous. Therefore without sending messengers he handled this very difficult work himself.",
+        "beat": "escalation",
+        "facts": [
+          "F5"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yaman",
+            "satyavan"
+          ],
+          "pose": "stand",
+          "note": "Yama arrives with red robes"
+        }
+      },
+      {
+        "n": 4,
+        "text": "यमा ने स्पष्ट किया कि दूत भेजना उचित नहीं। सत्यवान के पुण्य के कारण उन्होंने फिर स्वयं आकर कार्य संभाला।",
+        "gloss": "Yama explained that sending messengers was not proper. Because of Satyavan's merit they came themselves and handled the work.",
+        "beat": "escalation",
+        "facts": [
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yaman",
+            "satyavan"
+          ],
+          "pose": "stand",
+          "note": "Yama stands with noose"
+        }
+      },
+      {
+        "n": 5,
+        "text": "यमा ने सत्यवान की आत्मा निकाली और बांध ली। दक्षिण ओर तेज़ी से चल पड़े जबकि सावित्री पीछे चल दी।",
+        "gloss": "Yama drew out Satyavan's soul and bound it. Then he moved south quickly while Savitri followed.",
+        "beat": "escalation",
+        "facts": [
+          "F7"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "walk",
+          "note": "Savitri walks behind Yama"
+        }
+      },
+      {
+        "n": 6,
+        "text": "सावित्री ने उनसे एक बात कही। \"मैं पीछे चलती रहूंगी कृपया एक वरदान अवश्य दीजिए।\" यमा उनकी तर्क से प्रसन्न हुए।",
+        "gloss": "Savitri told them one thing. \"I will keep walking behind please give one boon definitely.\" Yama was pleased by her reasoning.",
+        "beat": "escalation",
+        "facts": [
+          "F8"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "talk",
+          "note": "Savitri talks to Yama"
+        }
+      },
+      {
+        "n": 7,
+        "text": "पहला वरदान आंखों की रोशनी लौटाने का था। दूसरा राज्य वापसी का था और तीसरा सौ बेटों का था।",
+        "gloss": "The first boon was for returning eyesight. The second was kingdom return and the third was a hundred sons.",
+        "beat": "escalation",
+        "facts": [
+          "F9"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "stand",
+          "note": "Savitri presents requests"
+        }
+      },
+      {
+        "n": 8,
+        "text": "फिर चौथा वरदान उसने स्वयं और सत्यवान के सौ पुत्र मांगे। क्या यमा को यह जाल दिखाई नहीं दिया?",
+        "gloss": "Then she asked for a hundred sons for herself and Satyavan. Did Yama not see this trap?",
+        "beat": "mystery",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "stand",
+          "note": "Savitri points upward"
+        }
+      },
+      {
+        "n": 9,
+        "text": "दरअसल, यमा ने चौथे वरदान में खुद को उलझा लिया। अब उनकी अपनी बात उनके खिलाफ पूरी तरह थी।",
+        "gloss": "Actually Yama trapped himself in the fourth boon. Now his own words were fully against him.",
+        "beat": "pivot",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "stand",
+          "note": "Savitri smiles"
+        }
+      },
+      {
+        "n": 10,
+        "text": "यह वैसा है जैसे दुकानदार मुफ्त नमकीन दे। बाद में फिर कहे कि नमक उसी बिल में जुड़ा है।",
+        "gloss": "This is like a shopkeeper giving free snacks. Later he says salt is included in the same bill.",
+        "beat": "analogy",
+        "facts": [
+          "F12"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri holds a plate"
+        }
+      },
+      {
+        "n": 11,
+        "text": "सावित्री ने कहा कि बिना पिता के सौ पुत्र नहीं। अब सत्यवान की जीवन शक्ति तुरंत लौटाकर दया दिखाओ।",
+        "gloss": "Savitri said without a father hundred sons cannot be. Now return Satyavan's life force immediately and show mercy.",
+        "beat": "payoff",
+        "facts": [
+          "F13"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yaman"
+          ],
+          "pose": "stand",
+          "note": "Savitri points at Yama"
+        }
+      },
+      {
+        "n": 12,
+        "text": "सत्यवान सावित्री की गोद में जागे। यमा ने चार सौ साल का जीवन दिया। बुद्धि हथियार और धैर्य रणनीति।",
+        "gloss": "Satyavan woke on Savitri's lap. Yama gave four hundred years of life. Intelligence weapon and patience strategy.",
+        "beat": "payoff",
+        "facts": [
+          "F14"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "satyavan"
+          ],
+          "pose": "stand",
+          "note": "Savitri and Satyavan stand together"
+        }
+      }
+    ]
+  }
+}

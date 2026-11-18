@@ -268,6 +268,7 @@ function cleanHindiDelivery(data) {
 }
 
 export function normalizeHindiScript(data, catalog, { split = true } = {}) {
+  for (const n of data.names ?? []) { if (n.phonemes === undefined) n.phonemes = null; if (n.suggested === undefined) n.suggested = true; }
   for (const l of data.lines) normalizeLook(l, catalog);
   // A setting line that only reacts can inherit the fact of the previous/next factual line.
   for (let i = 0; i < data.lines.length; i++) {

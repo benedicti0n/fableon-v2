@@ -1,0 +1,379 @@
+{
+  "case": "fixtures-savitri-hi",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "label": "DeepSeek Flash (direct)",
+  "pass": true,
+  "errors": [],
+  "lines": 13,
+  "words": 243,
+  "hookWords": 15,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 6,
+  "firstTry": false,
+  "repairs": 5,
+  "promptTokens": 70892,
+  "completionTokens": 13909,
+  "costUsd": 0.018013,
+  "latencyMs": 51772,
+  "script": {
+    "version": 2,
+    "title": "सावित्री और यमराज",
+    "seconds": 60,
+    "wps": 3.75,
+    "characters": [
+      {
+        "id": "savitri",
+        "name": "सावित्री",
+        "role": "the princess who argues with Death",
+        "look": "slim young woman, red sari, hair tied back, calm eyes"
+      },
+      {
+        "id": "satyavan",
+        "name": "सत्यवान",
+        "role": "the husband with one year to live",
+        "look": "young woodcutter, simple dhoti, axe on shoulder"
+      },
+      {
+        "id": "yama",
+        "name": "यमराज",
+        "role": "the god of death",
+        "look": "dark-skinned, red-eyed, red robe, noose in hand"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "narada",
+        "name": "नारद",
+        "role": "the sage who warns"
+      }
+    ],
+    "names": [
+      {
+        "word": "सावित्री",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "सत्यवान",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "यमराज",
+        "phonemes": null,
+        "suggested": true
+      },
+      {
+        "word": "नारद",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "Hook states as flat fact that a bride knowingly married a man with one year left, which is the paradox."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "एक राजकुमारी ने जान-बूझकर ऐसे आदमी से शादी की, जिसके पास बस एक साल था।",
+        "gloss": "A princess knowingly married a man who had only one year left.",
+        "beat": "hook",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "palace",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands alone in the palace courtyard, garland in hand."
+        }
+      },
+      {
+        "n": 1,
+        "text": "सावित्री राजा की बेटी थी, तेज दिमाग और ठंडे मन वाली। नारद जी ने साफ चेतावनी दी थी।",
+        "gloss": "Savitri was a king's daughter, sharp-minded and cool-hearted. Sage Narada had warned her plainly.",
+        "beat": "setting",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "palace",
+          "who": [
+            "savitri"
+          ],
+          "pose": "sit",
+          "note": "Savitri sits by the mango tree, listening with a still face."
+        }
+      },
+      {
+        "n": 2,
+        "text": "सत्यवान जंगल में लकड़ी काटता था, सीधा-सादा और बेहद नेक। शादी के बाद सावित्री ने दिन गिनने शुरू किए।",
+        "gloss": "Satyavan cut wood in the forest, simple and very virtuous. After the wedding Savitri began counting days.",
+        "beat": "setting",
+        "facts": [
+          "F3",
+          "F4"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "satyavan"
+          ],
+          "pose": "carry",
+          "note": "Satyavan walks past the hut doorway with an axe on his shoulder."
+        }
+      },
+      {
+        "n": 3,
+        "text": "एक साल बीता, और जंगल में सत्यवान के सिर में दर्द उठा। वह पेड़ के नीचे बैठ गया।",
+        "gloss": "A year passed, and in the forest Satyavan's head began to ache. He sat down under a tree.",
+        "beat": "escalation",
+        "facts": [
+          "F4"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "satyavan"
+          ],
+          "pose": "sit",
+          "note": "Satyavan sits in the clearing, one hand pressed to his head."
+        }
+      },
+      {
+        "n": 4,
+        "text": "तभी एक काला-साँवला, लाल आँखों वाला आदमी लाल कपड़ों में आया। हाथ में फंदा था, और वह खुद यमराज था।",
+        "gloss": "Then a dark man with red eyes came dressed in red. He held a noose, and he was Yama himself.",
+        "beat": "escalation",
+        "facts": [
+          "F5"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yama"
+          ],
+          "pose": "stand",
+          "note": "Yama stands at the clearing edge, noose in hand, facing Satyavan."
+        }
+      },
+      {
+        "n": 5,
+        "text": "यमराज बोले, \"मैं दूत नहीं भेजता, क्योंकि यह आत्मा बहुत पवित्र है।\" सावित्री पीछे खड़ी सब सुन रही थी।",
+        "gloss": "Yama said, \"I do not send messengers, because this soul is too pure.\" Savitri stood behind, hearing everything.",
+        "beat": "escalation",
+        "facts": [
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yama",
+            "savitri"
+          ],
+          "pose": "talk",
+          "note": "Yama speaks at the clearing while Savitri stands behind him."
+        }
+      },
+      {
+        "n": 6,
+        "text": "उसने सत्यवान की जान शरीर से खींची, फंदे में बाँधी और दक्षिण की ओर चल दिया। सावित्री पैदल पीछे चल पड़ी।",
+        "gloss": "He drew Satyavan's life from his body, bound it in the noose and walked south. Savitri followed on foot.",
+        "beat": "escalation",
+        "facts": [
+          "F7"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yama",
+            "savitri"
+          ],
+          "pose": "walk",
+          "note": "Yama walks away with the noose while Savitri follows behind."
+        }
+      },
+      {
+        "n": 7,
+        "text": "सावित्री ने हाथ नहीं उठाया, बस चलती रही और तर्क करती रही। यमराज उसकी बातों से प्रसन्न हो गए।",
+        "gloss": "Savitri did not raise a hand, she just kept walking and reasoning. Yama grew pleased with her words.",
+        "beat": "escalation",
+        "facts": [
+          "F8"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri",
+            "yama"
+          ],
+          "pose": "talk",
+          "note": "Savitri speaks while walking beside Yama in the clearing."
+        }
+      },
+      {
+        "n": 8,
+        "text": "पहले तीन वरदान मिले, पर सत्यवान की जान अलग रखी गई। फिर चौथा वरदान माँगा गया, और यमराज ने हाँ कह दी?",
+        "gloss": "The first three boons came, but Satyavan's life was kept aside. Then a fourth boon was asked, and Yama said yes?",
+        "beat": "mystery",
+        "facts": [
+          "F9",
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "yama",
+            "savitri"
+          ],
+          "pose": "offer",
+          "note": "Yama extends an open hand toward Savitri in the clearing."
+        }
+      },
+      {
+        "n": 9,
+        "text": "दरअसल, चौथा वरदान था सत्यवान से सौ बेटे, और यमराज ने बिना सोचे हाँ कह दी। बेटे बिना पिता कैसे होंगे?",
+        "gloss": "You see, the fourth boon was a hundred sons from Satyavan, and Yama granted it without thinking. How can sons exist without a father?",
+        "beat": "pivot",
+        "facts": [
+          "F10",
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri"
+          ],
+          "pose": "point",
+          "note": "Savitri points a finger at Yama in the clearing."
+        }
+      },
+      {
+        "n": 10,
+        "text": "यह वैसा ही है जैसे कोई दुकानदार लिख दे कि सामान कल मिलेगा, पर दुकान बंद रहेगी। शब्दों में फँसना पड़ता है।",
+        "gloss": "It is like a shopkeeper writing that goods will come tomorrow, but the shop stays shut. You have to get caught in your own words.",
+        "beat": "analogy",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "shrug",
+          "note": "Savitri shrugs near the boats on the sand."
+        }
+      },
+      {
+        "n": 11,
+        "text": "यमराज ने फंदा खोला और सत्यवान को चार सौ साल की उम्र दी। सत्यवान जागा और पूछा, \"वह काला आदमी कहाँ गया?\"",
+        "gloss": "Yama untied the noose and gave Satyavan four hundred years of life. Satyavan woke and asked, \"Where did that dark man go?\"",
+        "beat": "payoff",
+        "facts": [
+          "F12",
+          "F13"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "satyavan",
+            "savitri"
+          ],
+          "pose": "sit",
+          "note": "Satyavan sits up in the clearing, looking around."
+        }
+      },
+      {
+        "n": 12,
+        "text": "सावित्री ने कहा कि जीत तलवार स",
+        "gloss": "Savitri said that victory comes not from the sword but from words.",
+        "beat": "payoff",
+        "facts": [
+          "F14"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "deer",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands in the clearing, calm and finished."
+        }
+      }
+    ]
+  }
+}

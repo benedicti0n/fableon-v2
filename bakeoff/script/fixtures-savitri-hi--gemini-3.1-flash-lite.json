@@ -1,0 +1,344 @@
+{
+  "case": "fixtures-savitri-hi",
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "label": "Gemini 3.1 Flash-Lite",
+  "pass": true,
+  "errors": [],
+  "lines": 13,
+  "words": 220,
+  "hookWords": 15,
+  "mystery": true,
+  "pivot": true,
+  "analogy": true,
+  "payoff": true,
+  "advisoryTrue": true,
+  "calls": 3,
+  "firstTry": false,
+  "repairs": 2,
+  "promptTokens": 22714,
+  "completionTokens": 4436,
+  "costUsd": 0.010058,
+  "latencyMs": 14176,
+  "script": {
+    "version": 2,
+    "title": "सावित्री की चतुराई",
+    "seconds": 90,
+    "wps": 2.74,
+    "characters": [
+      {
+        "id": "savitri",
+        "name": "सावित्री",
+        "role": "the princess who out-argued death",
+        "look": "village"
+      }
+    ],
+    "mentions": [
+      {
+        "id": "narada",
+        "name": "नारद",
+        "role": "the sage who warns"
+      }
+    ],
+    "names": [
+      {
+        "word": "सावित्री",
+        "phonemes": null,
+        "suggested": true
+      }
+    ],
+    "hookAdvisory": {
+      "paradoxAsFact": true,
+      "note": "Savitri marries a man knowing he will die, treating mortality as a contractual error."
+    },
+    "lines": [
+      {
+        "n": 0,
+        "text": "सावित्री ने एक ऐसे आदमी से शादी की जो एक साल में मरने वाला था।",
+        "gloss": "Savitri married a man who was going to die in one year.",
+        "beat": "hook",
+        "facts": [
+          "F1"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands calmly in the village."
+        }
+      },
+      {
+        "n": 1,
+        "text": "उसके ससुर द्युमत्सेन का राज्य छिन गया था। वे लोग जंगल में सादगी से रहते थे।",
+        "gloss": "Her father-in-law Dyumatsena lost his kingdom. They lived in the forest with simplicity.",
+        "beat": "setting",
+        "facts": [
+          "F15"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri looks towards the forest edge."
+        }
+      },
+      {
+        "n": 2,
+        "text": "सावित्री रोज़ गिनती करती थी कि पति की मौत में कितने दिन बाकी हैं। वह शांत थी।",
+        "gloss": "Savitri counted every day how many were left until her husband's death. She was calm.",
+        "beat": "setting",
+        "facts": [
+          "F3"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "think",
+          "note": "Savitri counts on her fingers."
+        }
+      },
+      {
+        "n": 3,
+        "text": "जंगल में सत्यवान को सिर में दर्द हुआ। वह अचानक ज़मीन पर गिर गया, सब शांत।",
+        "gloss": "In the forest Satyavan felt pain in his head. He suddenly fell to the ground, all quiet.",
+        "beat": "escalation",
+        "facts": [
+          "F4"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri holds a jar looking concerned."
+        }
+      },
+      {
+        "n": 4,
+        "text": "यमराज प्रकट हुए और बोले, \"मैं तुम्हारे पति के प्राण लेने आया हूँ।\" वह बहुत डरावने थे।",
+        "gloss": "Yama appeared and said, \"I have come to take your husband's life.\" He was very scary.",
+        "beat": "escalation",
+        "facts": [
+          "F5",
+          "F6"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands before an unseen presence."
+        }
+      },
+      {
+        "n": 5,
+        "text": "यमराज ने सत्यवान की आत्मा को रस्सी से बांधा। सावित्री निडर होकर उनके पीछे-पीछे चलती रही थी।",
+        "gloss": "Yama tied Satyavan's soul with a rope. Savitri kept walking behind them without any fear.",
+        "beat": "escalation",
+        "facts": [
+          "F7"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "walk",
+          "note": "Savitri follows a path."
+        }
+      },
+      {
+        "n": 6,
+        "text": "सावित्री ने यमराज से तर्क किया। वह उसकी बातों से खुश हुए और वरदान देने को कहा।",
+        "gloss": "Savitri argued with Yama. He became happy with her words and asked to give a boon.",
+        "beat": "escalation",
+        "facts": [
+          "F8"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "pray",
+          "note": "Savitri folds her hands in respect."
+        }
+      },
+      {
+        "n": 7,
+        "text": "यमराज ने सौ पुत्रों का वरदान दिया। वह यह जाल समझ नहीं पाए, सब बहुत आसान था।",
+        "gloss": "Yama gave a boon of a hundred sons. He could not understand this trap, all was easy.",
+        "beat": "escalation",
+        "facts": [
+          "F10"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri looks clever."
+        }
+      },
+      {
+        "n": 8,
+        "text": "सावित्री ने पूछा, \"मेरे पति के बिना मुझे सौ पुत्र कैसे प्राप्त हो सकते हैं?\" क्या यमराज फंसे?",
+        "gloss": "Savitri asked, \"How can I get a hundred sons without my husband?\" Was Yama trapped?",
+        "beat": "mystery",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "point",
+          "note": "Savitri gestures with her finger."
+        }
+      },
+      {
+        "n": 9,
+        "text": "असल में, यमराज को अपने ही वचनों के जाल में फँसना पड़ा था। सत्यवान को लौटाना अनिवार्य था।",
+        "gloss": "You see, Yama had to get trapped in his own words. Returning Satyavan was mandatory.",
+        "beat": "pivot",
+        "facts": [
+          "F11"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri looks triumphant."
+        }
+      },
+      {
+        "n": 10,
+        "text": "यह ठीक एक चतुर वकील जैसा था जो भारी कानून की किताब से केस जीत जाता है।",
+        "gloss": "This was just like a clever lawyer who wins a case using a heavy law book.",
+        "beat": "analogy",
+        "facts": [
+          "F12"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri holds a scroll."
+        }
+      },
+      {
+        "n": 11,
+        "text": "यमराज ने हार मानकर सत्यवान के प्राण लौटा दिए। उन्होंने उसे जीवन का नया दान दिया था।",
+        "gloss": "Yama conceded and returned Satyavan's life. He had given him a new gift of life.",
+        "beat": "payoff",
+        "facts": [
+          "F12"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri smiles softly."
+        }
+      },
+      {
+        "n": 12,
+        "text": "सावित्री ने साबित किया कि बुद्धिमानी मृत्यु को परास्त कर सकती है। साहस हमेशा सबसे बड़ा हथियार है।",
+        "gloss": "Savitri proved that intelligence can defeat death. Courage is always the biggest weapon.",
+        "beat": "payoff",
+        "facts": [
+          "F14"
+        ],
+        "delivery": {
+          "tone": "deadpan",
+          "pauses": [],
+          "emphasis": []
+        },
+        "look": {
+          "set": "village",
+          "who": [
+            "savitri"
+          ],
+          "pose": "stand",
+          "note": "Savitri stands tall."
+        }
+      }
+    ]
+  }
+}

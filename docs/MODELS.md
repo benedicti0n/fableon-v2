@@ -89,8 +89,9 @@ Cost is computed only when `models.json` has a price for the resolved model:
 
 ### Stage defaults
 
-`models.json` `stageDefaults`: `deepseek-flash` for brief, research, script, factcheck, cast, shotplan and sound
-(thinking disabled except factcheck: enabled, effort `low`, temperature 0.2). A project-level
+`models.json` `stageDefaults` (Phase 3E routing): brief/research/cast/shotplan/sound use `deepseek-flash`; factcheck uses
+`deepseek-flash` with thinking enabled at effort `low`; script uses `gemini-3.1-flash-lite` after the blind ranking, with
+Gemini 3.1 Pro, Sarvam 105B and DeepSeek Flash as explicit fallbacks. A project-level
 `models.default.model` or `models.<stage>.model` overrides these. `models.board` / `models.boardEscalate` are kept
 but unused (the board writer is deterministic; Phase 3E bake-off).
 
@@ -106,13 +107,27 @@ project also sets `models.<stage>.fallback`; mock projects never fall back.
 
 `cli/src/models/providers.js` registers `deepseek` (direct), `openrouter` (OpenAI-compatible at
 `https://openrouter.ai/api/v1`, `OPENROUTER_API_KEY`), `sarvam` (chat at `https://api.sarvam.ai/v1/chat/completions`,
-`sarvam-105b` / `sarvam-105b-conversations`, `api-subscription-key` header), `openai-compatible` and `mock`.
+`sarvam-105b` / `sarvam-105b-conversations`, `api-subscription-key` header), `openai`
+(`https://api.openai.com/v1`, `OPENAI_API_KEY`), `gemini` (`https://generativelanguage.googleapis.com/v1beta/openai`,
+`GEMINI_API_KEY`), `openai-compatible` and `mock`. OpenRouter is kept for code/tests but **unused in Phase 3E**: the key
+reported USD 0 credits and the `data_collection: deny` privacy filter removed the free endpoints. The user chose direct
+providers instead of topping it up.
 OpenRouter requests send `HTTP-Referer: https://fableon.local`, `X-Title: Fableon` and
 `provider: {data_collection: "deny"}` so routing only uses providers that do not store the request. The live catalog is
 `models.catalog.json` (dated 2026-11-17): 439 models with context, max output, supported parameters and prices per 1M
 tokens. `fableon models catalog --provider openrouter` refreshes it. JSON mode is requested only when the catalog says
 the model supports `response_format`/`structured_outputs`; otherwise the prompt is JSON-only and ajv+repairs still gate
-every output. Costs for OpenRouter come from this catalog; DeepSeek costs come from `models.json` prices.
+every output. Costs for OpenRouter come from this catalog; DeepSeek, OpenAI, Gemini and Sarvam costs come from `models.json` prices
+(official source URL and date per model; Sarvam is INR ₹10/₹25 per 1M converted at ₹88/USD for the USD log).
+
+## Phase 3E routing and blind ranking
+
+Script bake-off cases: `fixtures/savitri-hi` and `work/bakasura-hi`. The blind sheet is `bakeoff/script/blind.md`; after
+the user ranked it, the labels resolved to: Savitri **B = Gemini 3.1 Flash-Lite**, Bakasura **D = Gemini 3.1 Pro**
+(the user's top choices). The default script route is Gemini 3.1 Flash-Lite because it passed both cases and was the
+cheapest passing Savitri script; the Bakasura project will override `models.script` to Gemini 3.1 Pro for its top
+choice. Fallbacks are Gemini 3.1 Pro, Sarvam 105B and DeepSeek Flash. Full results and the seeded factcheck test are in
+`docs/reports/phase-3e.md` and `bakeoff/script/results.json`.
 
 ## Provider contract
 

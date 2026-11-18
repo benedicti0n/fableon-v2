@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ModelRouter } from '../cli/src/models/router.js';
-import { catalogPrice, modelForStage, fallbackConfigsForStage } from '../cli/src/core/model-config.js';
+import { catalogPrice, modelForStage, fallbackConfigsForStage, repoModels } from '../cli/src/core/model-config.js';
 
 export async function runProviderTests() {
   const checks = [], errors = [];
@@ -44,6 +44,21 @@ export async function runProviderTests() {
     ok('prompt-only json', !JSON.parse(calls.at(-1).opts.body).response_format, calls.at(-1).opts.body);
 
     calls.length = 0;
+    const oa = new ModelRouter(tmp, project('brief', { provider: 'openai', model: 'gpt-5.4-mini' }), { noCache: true, logCalls: false });
+    await oa.chat('brief', [{ role: 'user', content: 'Return json.' }], {});
+    const oac = calls.at(-1), oab = JSON.parse(oac.opts.body);
+    ok('openai url/auth', oac.url === 'https://api.openai.com/v1/chat/completions' && oac.opts.headers.Authorization?.startsWith('Bearer '), oac.url);
+    ok('openai token field', oab.max_completion_tokens === 4096 && oab.max_tokens === undefined, oac.opts.body);
+    ok('openai json mode', oab.response_format?.type === 'json_object' && !oab.thinking, JSON.stringify(oab));
+
+    calls.length = 0;
+    const ge = new ModelRouter(tmp, project('brief', { provider: 'gemini', model: 'gemini-3.1-flash-lite' }), { noCache: true, logCalls: false });
+    await ge.chat('brief', [{ role: 'user', content: 'Return json.' }], {});
+    const gec = calls.at(-1), geb = JSON.parse(gec.opts.body);
+    ok('gemini url/auth', gec.url === 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions' && gec.opts.headers.Authorization?.startsWith('Bearer '), gec.url);
+    ok('gemini json mode', geb.response_format?.type === 'json_object' && !geb.thinking, JSON.stringify(geb));
+
+    calls.length = 0;
     const sv = new ModelRouter(tmp, project('brief', { provider: 'sarvam', model: 'sarvam-105b' }), { noCache: true, logCalls: false });
     const sres = await sv.callJson('brief', [{ role: 'system', content: 'Return json.' }, { role: 'user', content: 'Return {"ok":true}.' }]);
     const sc = calls.at(-1);
@@ -63,6 +78,11 @@ export async function runProviderTests() {
     try { await retry.chat('brief', [{ role: 'user', content: 'Return json.' }], { jsonMode: true }); } catch (e) { err = e.message; }
     ok('error body surfaced', /HTTP 400/.test(err), err);
 
+    const liveRepo = repoModels();
+    const route = modelForStage({ models: {} }, 'script', liveRepo);
+    const routeFb = fallbackConfigsForStage({ models: {} }, 'script', liveRepo);
+    ok('phase 3E script route', route.provider === 'gemini' && route.model === 'gemini-3.1-flash-lite' && routeFb[0].model === 'gemini-3.1-pro-preview', JSON.stringify({ route, routeFb }));
+    ok('openrouter marked unused', !!liveRepo.providers?.openrouter?.unused, JSON.stringify(liveRepo.providers));
     const repo = { default: { provider: 'deepseek', model: null }, stageDefaults: { script: { primary: { provider: 'deepseek', model: 'deepseek-flash' }, fallbacks: [{ provider: 'openrouter', model: 'mistralai/mistral-nemo' }, { provider: 'deepseek', model: 'deepseek-v4-pro' }] } }, maxRepairs: 0, prices: {} };
     const cfg = modelForStage({ models: {} }, 'script', repo);
     const fbs = fallbackConfigsForStage({ models: {} }, 'script', repo);
