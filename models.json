@@ -121,6 +121,7 @@
 
   },
   "voicePrices": {
+    "sarvam": { "bulbul:v4-flash": 2, "bulbul:v3": 3, "unit": "INR per 1k characters", "source": "https://docs.sarvam.ai/api/getting-started/pricing", "date": "2026-11-18" },
     "elevenlabs": {
       "eleven_multilingual_v2": 0.08,
       "eleven_v3": 0.08,

@@ -164,6 +164,22 @@ timings. The chosen default is Callum (`N2lVS1w4EtoT3dr4eOWO`) × `eleven_v3`, d
 control take (64 words / 25.2 s = 2.54, rounded up for the line-gap budget); the dramatic pauses are added locally and
 are not counted twice.
 
+### Sarvam Bulbul (Phase 3E)
+
+Verified against <https://docs.sarvam.ai/api/api-guides-tutorials/text-to-speech/voices> and
+<https://docs.sarvam.ai/api/getting-started/pricing> on 2026-11-18:
+
+- Endpoint: `POST https://api.sarvam.ai/text-to-speech`, `api-subscription-key` header; response `audios: ["<base64>"]`.
+- Models: `bulbul:v4-flash` (latest, 2500 chars/request, 222 persona voices), `bulbul:v3` (30+ short-name voices,
+  2500 chars), `bulbul:v2` (legacy, 1500 chars).
+- Pace: 0.5–2.0 for v3/v4-flash. Prices: ₹2 per 1,000 chars for v4-flash, ₹3 for v3 (pay-as-you-go).
+- Output: WAV/MP3/linear16 etc; the provider uses 24 kHz mono WAV here. Bulbul has **no SSML**; pauses are exact local
+  silences between phrase requests, and stress is tested through punctuation/phrase splits.
+- **Nachiket** is a Bulbul v4 Flash persona: `nachiket_hi_devotional` (also `nachiket_en_ads`). The v3 short-name
+  catalog has no Nachiket; closest v3 male narrators are Shubh, Ashutosh, Ratan and Mani.
+- `fableon voice budget` reads the ElevenLabs subscription and prints Sarvam's logged Phase 3E spend (Sarvam exposes no
+  balance/quota endpoint); the phase budget is ₹200.
+
 ### Reference pace (Phase 3D)
 
 The first Savitri animatic's delivery had too many dramatic pauses. `fableon voice pace --project <dir>` rebuilds the

@@ -16,8 +16,8 @@
       "additionalProperties": false,
       "anyOf": [{ "required": ["provider"] }, { "required": ["engine"] }],
       "properties": {
-        "provider": { "enum": ["kokoro", "elevenlabs"] },
-        "engine": { "enum": ["kokoro", "elevenlabs"] },
+        "provider": { "enum": ["kokoro", "elevenlabs", "sarvam"] },
+        "engine": { "enum": ["kokoro", "elevenlabs", "sarvam"] },
         "model": { "type": ["string", "null"] },
         "voiceId": { "type": ["string", "null"] },
         "voice": { "type": "string", "minLength": 1 },

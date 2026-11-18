@@ -16,9 +16,10 @@ import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
 import { modelsCommand } from './models-command.js';
-import { voiceCheckCommand, voicePaceCommand } from './voice-command.js';
+import { voiceBudgetCommand, voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
 import { runRound2 } from './voice/round2.js';
+import { runRound3 } from './voice/round3.js';
 import {
   allCommand, assembleCommand, audioCommand, initCommand, qaCommand, renderCommand, shotsCommand, stillsCommand, voiceCommand,
 } from './pipeline.js';
@@ -223,7 +224,7 @@ export function main(argv = process.argv) {
 
   program
     .command('voice [mode]')
-    .description('fixture Kokoro narration, or a voice provider mode: check | audition | pace')
+    .description('fixture Kokoro narration, or a voice provider mode: check | audition | pace | budget')
     .option('--project <dir>', 'project folder')
     .option('--speed <speed>', 'Kokoro speaking speed', '1.35')
     .option('--voice <voice>', 'Kokoro voice id', 'am_michael')
@@ -242,6 +243,7 @@ export function main(argv = process.argv) {
         catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
         return;
       }
+      if (mode === 'budget') { try { await voiceBudgetCommand(); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } return; }
       if (mode === 'pace') {
         if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
         try { await voicePaceCommand(opts.project, opts); }
@@ -252,7 +254,8 @@ export function main(argv = process.argv) {
         if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
         try {
           const models = opts.models ? opts.models.split(',').map((x) => x.trim()).filter(Boolean) : null;
-          const r = opts.round === '2' ? await runRound2(opts.project) : await runAuditions(opts.project, { voices: Number(opts.voices ?? 4), models });
+          const r = opts.round === '3' ? await runRound3(opts.project) : opts.round === '2' ? await runRound2(opts.project) : await runAuditions(opts.project, { voices: Number(opts.voices ?? 4), models });
+          if (opts.round === '3' && r.ok) console.log(`round 3: ${r.rows.length} takes, ${r.md}`);
           if (!r.ok) process.exitCode = 1;
         } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
         return;

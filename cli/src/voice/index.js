@@ -4,8 +4,10 @@ import { join } from 'node:path';
 import { findPython, ROOT, run } from '../env.js';
 import { readJson } from '../core/artifacts.js';
 import { synthesizeElevenLabs } from './elevenlabs.js';
+import { synthesizeSarvam } from './sarvam.js';
 
 export { synthesizeElevenLabs } from './elevenlabs.js';
+export { synthesizeSarvam } from './sarvam.js';
 
 export function scriptBlocks(projectDir) {
   const scriptPath = join(projectDir, 'script.json');
@@ -46,6 +48,12 @@ export async function synthesize({ provider, projectDir, project, pauseScale = 1
     const blocks = scriptBlocks(projectDir);
     if (!blocks.length) throw new Error('voice has no script lines');
     const result = await synthesizeElevenLabs({ projectDir, project, blocks, pauseScale });
+    return { ...result, usage: { calls: result.calls.length, cached: result.calls.filter((c) => c.cached).length, promptTokens: 0, completionTokens: 0, costUsd: result.costUsd } };
+  }
+  if (provider === 'sarvam') {
+    const lines = scriptBlocks(projectDir).flatMap((b) => b.lines);
+    if (!lines.length) throw new Error('voice has no script lines');
+    const result = await synthesizeSarvam({ projectDir, project, lines, marked: !!project.voice?.performance, pace: project.voice?.pace });
     return { ...result, usage: { calls: result.calls.length, cached: result.calls.filter((c) => c.cached).length, promptTokens: 0, completionTokens: 0, costUsd: result.costUsd } };
   }
   throw new Error(`unknown voice provider "${provider}" (choose kokoro or elevenlabs)`);
