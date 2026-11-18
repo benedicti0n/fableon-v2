@@ -14,6 +14,7 @@ export const TONE = {
 export const CHAR = {
   uCharTint: { value: new THREE.Vector3(1, 0.94, 0.92) }, uCharShade: { value: 0.86 }, uGrad: { value: 0.07 },
   uBodyGrad: { value: 0.2 }, uSideTint: { value: new THREE.Vector3(0.92, 0.9, 0.96) },
+  uRim: { value: 1 }, uRimCol: { value: new THREE.Vector3(0.95, 0.52, 0.16) },
 };
 
 // directional light 0 = the sun = the only shadow caster (three sorts shadow-casting lights first). Only the

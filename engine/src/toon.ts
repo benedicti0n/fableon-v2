@@ -9,6 +9,11 @@ export const WHITE = "#ffffff";
 export const MOUTH = "#5a1e28";
 export const TONGUE = "#e86e78";
 export type C3 = [number, number, number];
+const _lin = (c: number) => { const v = c / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+const _lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); return 0.2126 * _lin((n >> 16) & 255) + 0.7152 * _lin((n >> 8) & 255) + 0.0722 * _lin(n & 255); };
+/** contrast of a skin colour against the plum ink; the 3C warning threshold is 2.2 */
+export const contrastAgainstInk = (skin: string) => (_lum(skin) + 0.05) / 0.05;
+export const needsFeatureRim = (skin: string) => contrastAgainstInk(skin) < 2.2;
 export const SH_SKIN: C3 = [0.96, 0.86, 0.84]; // measured shadow/lit ratio on skin heads
 export const SH_CLOTH: C3 = [0.64, 0.66, 0.74]; // torsos: lit side -> far side ~0.65
 export const SH_FELT: C3 = [0.62, 0.62, 0.7];
@@ -307,18 +312,21 @@ export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k
 /** face v2 (front / 3-4). u = 1 % of the head path width W. Eyes 26u apart on the centre line, brows 20u up, mouth 20u
  *  down, everything slid toward the facing side. No blush, no catchlights. */
 export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing: number, look: number, lid: number, brim: boolean,
-  skin: string, moustache?: string, stout = false) => {
+  skin: string, moustache?: string, stout = false, featureRim = false) => {
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy;
+  const halo = mix(skin, "#ffe6c0", 0.58);
   for (const side of [-1, 1]) {
     const x = fx + side * ex;
     const kind = eyeKind(F.eye[(facing ? side === facing : side > 0) ? 1 : 0], lid);
+    if (featureRim) p.ell(x, ey, (kind === "shock" ? 9.5 : 8) * u, (kind === "shock" ? 12 : 10) * u, halo, 0);
     eye(p, kind, x, ey, u, side, look, skin);
     const [dI, dO] = F.brow, by = ey - (brim ? 17 : 20) * u;
     if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
     else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u);
   }
   const mx = cx + 8 * u * facing, my = cy + 20 * u;
+  if (featureRim) p.ell(mx, my, 11 * u, 7 * u, halo, 0);
   mouth(p, F.mouth, mx, my, u);
   if (moustache) for (const s of [-1, 1])
     taper(p, [mx + s * 1.5 * u, cy + 12.5 * u], [mx + s * (stout ? 19 : 15) * u, cy + (stout ? 10.5 : 15) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, moustache);
@@ -326,14 +334,17 @@ export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr,
 };
 
 /** profile face (facing screen-right): one eye, brow, nose tick, mouth near the front edge; no skin bump nose, no ear */
-export const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: number, brim: boolean, skin: string, moustache?: string, stout = false) => {
+export const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: number, brim: boolean, skin: string, moustache?: string, stout = false, featureRim = false) => {
   const u = W / 100, F = FACE[expr], ex = hx + 27 * u, ey = hy;
   const kind = eyeKind(F.eye[1], lid);
+  const halo = mix(skin, "#ffe6c0", 0.58);
+  if (featureRim) p.ell(ex, ey, (kind === "shock" ? 9.5 : 8) * u, (kind === "shock" ? 12 : 10) * u, halo, 0);
   eye(p, kind, ex, ey, u, 1, 0.6, skin);
   const by = ey - (brim ? 17 : 20) * u, [dI, dO] = F.brow;
   if (kind === "shock" || kind === "shockHalf") p.arc(ex, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
   else taper(p, [ex + 8 * u, by + dI * u], [ex - 7 * u, by - u + dO * u], 5 * u, 2.5 * u);
   p.stroke([[hx + 44 * u, hy + 4 * u], [hx + 47.5 * u, hy + 9 * u], [hx + 43 * u, hy + 10 * u]], 3 * u);
+  if (featureRim) p.ell(hx + 33 * u, hy + 21 * u, 8 * u, 5 * u, halo, 0);
   mouth(p, F.mouth, hx + 33 * u, hy + 21 * u, u, 0.62);
   if (moustache) taper(p, [hx + 41 * u, hy + 13.5 * u], [hx + 25 * u, hy + (stout ? 11.5 : 16) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, moustache);
   if (expr === "nervous") p.ell(hx - 30 * u, hy - 24 * u, 3 * u, 5 * u, "#9fd4ff", 2 * u);

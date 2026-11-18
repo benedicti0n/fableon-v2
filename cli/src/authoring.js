@@ -503,6 +503,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const out = { id: shot.id, start, light: shot.light ?? 'day', sets };
   if (shot.end !== undefined) out.end = parseAnchor(shot.end, fps);
   if (shot.sun) out.sun = shot.sun;
+  if (shot.look) out.look = shot.look;
   const list = [];
   for (const entry of shot.actors ?? []) {
     if (entry && typeof entry === 'object' && entry.row) list.push(...expandRow(entry.row, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)));

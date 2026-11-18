@@ -4,7 +4,7 @@
 // turbans, a sage's topknot, beards, blindfold. Design space 600 x 1000 units, soles at y = 975 (same as toon.ts).
 import {
   Pen, INK, P2, Blob, Expr, blobPts, headBlob, thickAngle, mul, mix, shade, curve, rotPts, lerp2, rad, clamp, rnd, ellPts, rrect,
-  taper, faceFront, SH_SKIN, SH_CLOTH, SH_FELT, WHITE, DEF_LIGHT, lidOf,
+  taper, faceFront, SH_SKIN, SH_CLOTH, SH_FELT, WHITE, DEF_LIGHT, lidOf, needsFeatureRim,
 } from "./toon";
 
 export type Build = "adult" | "stout" | "kid" | "big" | "elder" | "slim" | "baby";
@@ -66,7 +66,7 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   let lid = lidOf(blink);
   if (o.blind) lid = 1;
   const H = headBlob(seed, Bd.a, facing), W = 2 * H.a, HH = 2 * H.b, u = W / 100, sole = 975;
-  const thick = thickAngle(light), ow = 5 * u;
+  const thick = thickAngle(light), ow = 5 * u, readable = needsFeatureRim(skin);
   const moving = pose === "walk" || pose === "run" || pose === "sneak";
   const bobA = pose === "run" ? 0.035 : pose === "walk" ? 0.02 : pose === "sneak" ? 0.012 : 0;
   const tall = (1 + Bd.torso + Bd.legs) * HH;
@@ -234,9 +234,10 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
     p.poly(bp, null, ow * 0.8);
     for (let i = -1; i <= 1; i++) p.stroke([[300 + i * 18 * u, by + 0.22 * bl], [300 + i * 22 * u, by + 0.7 * bl]], 1.8 * u, mix(o.beard, INK, 0.35));
   }
-  faceFront(p, 300, hc, W, o.blindfold ? "neutral" : expr, facing, look, lid, brim, skin, o.moustache ?? undefined, o.build === "stout" || o.build === "big");
+  faceFront(p, 300, hc, W, o.blindfold ? "neutral" : expr, facing, look, lid, brim, skin, o.moustache ?? undefined, o.build === "stout" || o.build === "big", readable);
   if (o.beard) { // redraw the mouth over the beard
     const mx = 300 + 8 * u * facing, my = hc + 20 * u;
+    if (readable) p.ell(mx, my, 10 * u, 6 * u, mix(skin, "#ffe6c0", 0.58), 0);
     if (expr === "shock") p.ell(mx, my + 2 * u, 8 * u, 10 * u, "#5a1e28", 3 * u); else p.stroke([[mx - 7 * u, my], [mx + 7 * u, my]], 3.6 * u);
   }
   if (o.blindfold) {

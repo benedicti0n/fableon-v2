@@ -58,6 +58,7 @@ export function shotSchema(planShot, cast, catalog) {
       sets: { type: 'array', items: { enum: [planShot.set] }, minItems: 1, maxItems: 1 },
       actors: { type: 'array', items: actor }, camera: { type: 'array', items: camera, minItems: 1 },
       transition: { type: 'object', additionalProperties: false, required: ['type'], properties: { type: { enum: ['crossfade', 'flash', 'cut'] }, frames: { type: 'number', minimum: 1, maximum: 24 } } },
+      look: { type: 'object', additionalProperties: false, required: ['mood'], properties: { mood: { enum: ['golden-glow', 'warm-side', 'dusk', 'night-moon', 'noon'] }, shafts: { type: 'boolean' }, sun: { type: 'boolean' }, glow: { type: 'number' }, rim: { type: 'number' }, grade: { type: 'string' } } },
     },
   };
 }
@@ -87,6 +88,7 @@ export function groupPlan(plan) {
       fx: g.shots.flatMap((s) => s.fx ?? []),
       moves: g.shots.flatMap((s) => s.moves ?? []),
       transition: first.transition,
+      look: first.look ?? (first.mood ? { mood: first.mood } : undefined),
     };
   });
 }
@@ -128,7 +130,7 @@ export function baseShot(s, i, plan, cast, catalog) {
     };
   });
   const fx = (s.fx ?? []).map((f) => ({ kind: f.kind, at: f.at, pos: { mark, nudge: [0, 2.2, -0.6] }, ...(f.kind === 'puff' ? { size: 2.6, dur: 0.4 } : {}), ...(f.kind === 'sparkle' ? { size: 0.8 } : {}), ...(f.kind === 'stars' ? { size: [1.5, 0.79], period: 0.4, dur: 0.4 } : {}) }));
-  return { id: s.id, start: s.start, end: i + 1 < planShots.length ? planShots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}), ...(s.transition ? { transition: s.transition } : {}) };
+  return { id: s.id, start: s.start, end: i + 1 < planShots.length ? planShots[i + 1].start : 'end', light: s.light, sets: [s.set], actors, camera, ...(fx.length ? { fx } : {}), ...(s.transition ? { transition: s.transition } : {}), ...(s.look ? { look: s.look } : {}) };
 }
 
 function variants(shot, s, catalog) {

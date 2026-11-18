@@ -2,6 +2,7 @@
 // TypeScript shapes the interpreter consumes).
 import type { Pose, PropK, SpecialK } from "../people";
 import type { Expr } from "../toon";
+import type { Look } from "../look";
 
 export type Anchor =
   | { line: number; word: string; nth?: number; offset?: number }
@@ -93,7 +94,7 @@ export type Crowd = {
 export type Shot = {
   id: string; start: Anchor; end?: Anchor; light: "day" | "golden" | "night" | "deep"; sets: string[];
   transition?: { type: "crossfade" | "flash" | "cut"; frames?: number };
-  sun?: { az: number; el: number }; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; crowds?: Crowd[]; fx?: Effect[]; set?: SetAction[];
+  sun?: { az: number; el: number }; look?: Look; camera?: CamKey[]; dof?: DofEntry[]; actors?: Actor[]; crowds?: Crowd[]; fx?: Effect[]; set?: SetAction[];
 };
 export type CastEntry = { spec: string | Record<string, unknown>; seed: number };
 export type Storyboard = {

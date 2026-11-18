@@ -4,6 +4,7 @@
 import * as THREE from "three";
 import { ctex, cloudHD, waterNear, waterFar } from "./paint";
 import { LIGHTS, LOOK, LightName } from "./lights";
+import { Look, moodRig } from "./look";
 import { TONE, CHAR, LFB, untone } from "./shade";
 import { NOINK } from "./ink";
 import { Pool, Actor, Fx, Stage, CamInfo, FPS, Place } from "./cast";
@@ -12,12 +13,13 @@ import { WATER_Y, RIVER_Z, V3 } from "./places";
 
 export type Cam = { pos: V3; look: V3; fov: number; roll: number };
 export type ShotDef = {
-  id: number; a: number; b: number; light: LightName; sets: string[];
+  id: number; a: number; b: number; light: LightName; sets: string[]; look?: Look;
   cam: (f: number) => Cam; stage: (t: number, f: number, out: Stage, cam: CamInfo) => void;
   pose?: (t: number, f: number, s: Sets) => void; sunAz?: number; sunEl?: number;
 };
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+const hexTriple = (hex: string): [number, number, number] => { const n = parseInt(hex.replace("#", ""), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; };
 const discTex = () => ctex("sunDisc", 128, 128, (g) => {
   const gr = g.createRadialGradient(64, 64, 58, 64, 64, 64); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(1, "rgba(255,255,255,0)");
   g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
@@ -30,6 +32,19 @@ const haloTex = () => ctex("sunHalo", 256, 256, (g) => {
     const i = (y * 256 + x) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = Math.round(255 * Math.min(1, a));
   }
   g.putImageData(im, 0, 0);
+});
+const shaftTex = () => ctex("shafts", 512, 512, (g) => {
+  g.clearRect(0, 0, 512, 512);
+  for (let i = 0; i < 5; i++) {
+    const x = 40 + i * 105, w = 44 + (i % 2) * 22;
+    const gr = g.createLinearGradient(x, 0, x + 190, 512);
+    gr.addColorStop(0, "rgba(255,236,196,0.00)");
+    gr.addColorStop(0.18, "rgba(255,228,174,0.30)");
+    gr.addColorStop(0.62, "rgba(255,210,150,0.10)");
+    gr.addColorStop(1, "rgba(255,200,140,0.00)");
+    g.fillStyle = gr;
+    g.beginPath(); g.moveTo(x, 0); g.lineTo(x + w, 0); g.lineTo(x + w + 210, 512); g.lineTo(x + 190, 512); g.closePath(); g.fill();
+  }
 });
 const starTex = () => ctex("stars2", 4096, 1024, (g, r) => {
   g.fillStyle = "#000000"; g.fillRect(0, 0, 4096, 1024);
@@ -49,7 +64,7 @@ export class World {
   private fog = new THREE.Fog("#bccbec", 25, 420);
   private WU: Record<string, THREE.IUniform>;
   private water: THREE.Mesh;
-  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite;
+  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite; private shafts: THREE.Mesh;
   private sunCache = new Map<number, THREE.Vector3>();
   private cloudMaps: Record<string, THREE.Texture[]>;
   private clouds: THREE.Mesh[] = [];
@@ -81,6 +96,8 @@ export class World {
     this.sunHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex(), color: new THREE.Color(1, 1, 1), fog: false, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending }));
     this.sunDisc.renderOrder = -0.5; this.sunHalo.renderOrder = 5;
     for (const m of [this.sunDisc, this.sunHalo]) { m.frustumCulled = false; m.layers.set(NOINK); R.add(m); }
+    this.shafts = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shaftTex(), transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide }));
+    this.shafts.frustumCulled = false; this.shafts.renderOrder = 3; this.shafts.layers.set(NOINK); R.add(this.shafts);
     this.hemi = new THREE.HemisphereLight("#cfe6ff", "#6c5c8c", 1.1);
     this.sun = new THREE.DirectionalLight("#fff0d6", 2.6);
     this.sun.castShadow = true;
@@ -121,7 +138,7 @@ export class World {
   private shotSun(s: ShotDef) {
     let v = this.sunCache.get(s.id);
     if (v) return v;
-    const L = LIGHTS[s.light];
+    const L = moodRig(s.look?.mood)?.light ?? LIGHTS[s.light];
     let fx = 0, fz = 0;
     for (let f = s.a; f < s.b; f += 3) { const c = s.cam(f), x = c.look[0] - c.pos[0], z = c.look[2] - c.pos[2], n = Math.hypot(x, z) || 1; fx += x / n; fz += z / n; }
     const n = Math.hypot(fx, fz) || 1; fx /= n; fz /= n;
@@ -135,7 +152,7 @@ export class World {
   private fx(i: number) { while (this.fxs.length <= i) this.fxs.push(new Fx(this.root)); return this.fxs[i]; }
 
   update(s: ShotDef, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene, pxH: number, kick: (f: number, c: Cam) => Cam) {
-    const t = f / FPS, L = LIGHTS[s.light], K = LOOK[s.light];
+    const t = f / FPS, rig = moodRig(s.look?.mood), L = rig?.light ?? LIGHTS[s.light], K = rig?.world ?? LOOK[s.light];
     // ---- camera ----
     const c = kick(f, s.cam(f));
     cam.position.set(...c.pos); cam.up.set(0, 1, 0); cam.lookAt(...c.look); cam.rotateZ(c.roll);
@@ -160,6 +177,8 @@ export class World {
     TONE.uLambert.value = L.lambert; TONE.uSideK.value = L.sideK; TONE.uTerm.value = L.term; TONE.uBounce.value.set(...K.bounce); TONE.uSat.value = K.sat;
     CHAR.uCharTint.value.set(...L.charTint); CHAR.uCharShade.value = L.charShade; CHAR.uGrad.value = L.charGrad;
     CHAR.uBodyGrad.value = L.bodyGrad; CHAR.uSideTint.value.set(...L.sideTint);
+    CHAR.uRim.value = rig ? (s.look?.rim ?? rig.rim.intensity) : 1;
+    CHAR.uRimCol.value.set(...hexTriple(rig ? rig.rim.color : "#f28429"));
     // ---- sky, fog, sun disc, clouds, stars ----
     const su = this.skyMat.uniforms;
     K.sky.c.forEach((h, i) => untone(h, su["c" + i].value));
@@ -169,13 +188,23 @@ export class World {
     this.stars.visible = !!K.stars; this.stars.position.copy(cam.position);
     untone(L.fog, this.fog.color); this.fog.near = L.fogNear; this.fog.far = L.fogFar;
     scene.fog = this.fog; scene.background = null;
-    const showSun = s.light === "golden";
+    const showSun = rig ? rig.sun : s.light === "golden";
     this.sunDisc.visible = this.sunHalo.visible = showSun;
     if (showSun) {
       this.sunDisc.position.copy(cam.position).addScaledVector(sunDir, 900);
       this.sunDisc.scale.setScalar(2 * 900 * Math.tan(THREE.MathUtils.degToRad(1.7)));
       this.sunHalo.position.copy(this.sunDisc.position); this.sunHalo.scale.setScalar(2 * 900 * Math.tan(THREE.MathUtils.degToRad(24)));
       (this.sunHalo.material as THREE.SpriteMaterial).color.set(L.sunDisc).multiplyScalar(1.3);
+    }
+    const shaftsOn = !!(s.look && rig && (s.look.shafts ?? rig.shafts));
+    this.shafts.visible = shaftsOn;
+    if (shaftsOn) {
+      const fwd = new THREE.Vector3(); cam.getWorldDirection(fwd);
+      this.shafts.position.copy(cam.position).addScaledVector(fwd, 38);
+      this.shafts.quaternion.copy(cam.quaternion);
+      const h = 2 * 38 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      this.shafts.scale.set(h * 1.15, h, 1);
+      (this.shafts.material as THREE.MeshBasicMaterial).color.set(rig!.glow.tint);
     }
     const maps = this.cloudMaps[s.light];
     for (let i = 0; i < this.clouds.length; i++) {

@@ -179,11 +179,36 @@ export const GRADE_DEEP: GradeParams = {
   vig: [0.22, 0.4],
 };
 type LightName = "day" | "golden" | "night" | "deep";
-export const GRADES: Record<LightName, GradeParams> = { day: GRADE_DAY2, golden: GRADE_GOLDEN2, night: GRADE_NIGHT, deep: GRADE_DEEP };
-export const GRADE_STRENGTH: Record<LightName, number> = { day: 1, golden: 1, night: 1, deep: 1 };
-/** Apply the preset of a light to the effect (only touches uniforms when the light changes). */
-export function gradeFor(fx: GradeEffect, light: LightName) {
+// Mood presets (Phase 3F): gentle S-curves, shadow lift toward violet and warm highlights. Values are calibrated on the
+// Adi golden/night frames and the STYLE_BIBLE; see docs/reports/phase-3f.md.
+export const GRADE_GOLDEN_GLOW: GradeParams = {
+  ky: [0, 0.07, 0.22, 0.52, 0.82, 0.95, 1], sat: [1.02, 1.16, 1.22],
+  tintS: [0.04, 0.006], tintM: [0.008, 0], tintH: [-0.018, 0.01], vig: [0.24, 0.38],
+};
+export const GRADE_WARM_SIDE: GradeParams = {
+  ky: [0, 0.09, 0.26, 0.58, 0.83, 0.94, 1], sat: [1.0, 1.08, 1.08],
+  tintS: [0.02, 0.004], tintM: [0.004, 0], tintH: [0.006, 0], vig: [0.14, 0.44],
+};
+export const GRADE_DUSK: GradeParams = {
+  ky: [0, 0.06, 0.2, 0.5, 0.8, 0.94, 1], sat: [1.05, 1.15, 1.2],
+  tintS: [0.045, 0], tintM: [0.015, 0], tintH: [-0.02, 0.012], vig: [0.26, 0.36],
+};
+export const GRADE_NIGHT_MOON: GradeParams = {
+  ky: [0, 0.08, 0.24, 0.54, 0.82, 0.94, 1], sat: [1.05, 1.18, 1.15],
+  tintS: [0.04, 0.002], tintM: [-0.006, 0.004], tintH: [-0.012, 0.008], vig: [0.28, 0.36],
+};
+export const GRADE_NOON: GradeParams = {
+  ky: [0, 0.1, 0.3, 0.62, 0.84, 0.94, 1], sat: [1.0, 1.04, 1.02],
+  tintS: [0.012, 0], tintM: [0.004, 0], tintH: [0.008, 0], vig: [0.1, 0.46],
+};
+export const GRADES: Record<string, GradeParams> = {
+  day: GRADE_DAY2, golden: GRADE_GOLDEN2, night: GRADE_NIGHT, deep: GRADE_DEEP,
+  goldenGlow: GRADE_GOLDEN_GLOW, warmSide: GRADE_WARM_SIDE, dusk: GRADE_DUSK, nightMoon: GRADE_NIGHT_MOON, noon: GRADE_NOON,
+};
+export const GRADE_STRENGTH: Record<string, number> = { day: 1, golden: 1, night: 1, deep: 1, goldenGlow: 1, warmSide: 1, dusk: 1, nightMoon: 1, noon: 1 };
+/** Apply a light/mood preset to the effect (only touches uniforms when the preset changes). */
+export function gradeFor(fx: GradeEffect, name: string) {
   const tag = fx as unknown as { _light?: string };
-  if (tag._light !== light) { fx.set(GRADES[light]); tag._light = light; }
-  fx.amount = GRADE_STRENGTH[light];
+  if (tag._light !== name) { fx.set(GRADES[name] ?? GRADES.day); tag._light = name; }
+  fx.amount = GRADE_STRENGTH[name] ?? 1;
 }

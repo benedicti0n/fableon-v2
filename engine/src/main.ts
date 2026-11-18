@@ -8,6 +8,8 @@ import { World } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur } from "./lensblur";
 import { GradeEffect, GRADES, gradeFor } from "./grade";
+import { HalationEffect } from "./halation";
+import { moodRig } from "./look";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
 import type { Wd } from "./core/anchors";
@@ -247,15 +249,17 @@ const composer = new EffectComposer(renderer, { multisampling: MS, frameBufferTy
 const ink = new InkPass(scene, cam);
 const lens = new LensBlur({ maxCoC: 24, nearScale: 1.2 });
 const grade = new GradeEffect(GRADES.day, 1);
+const halation = new HalationEffect();
 const preP = new EffectPass(cam, lens.pre), mainP = new EffectPass(cam, lens.main);
 composer.addPass(new RenderPass(scene, cam));
 if (!OFF.has("ink")) composer.addPass(ink);
 if (!OFF.has("lens")) { composer.addPass(preP); composer.addPass(mainP); }
-composer.addPass(new EffectPass(cam, ...(OFF.has("bloom") ? [] : [makeBloom()]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [grade])));
+composer.addPass(new EffectPass(cam, ...(OFF.has("bloom") ? [] : [makeBloom()]), ...(OFF.has("halation") ? [] : [halation]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [grade])));
 // MSAA is the costliest part on the CPU renderer (~3 s/frame at 2K): without it, SMAA on the final image smooths the
 // card cut-outs and remaining geometry edges (the world ink lines are already anti-aliased by the ink pass)
 if (MS === 0 && !OFF.has("smaa")) { const smaa = new SMAAEffect({ preset: SMAAPreset.HIGH, edgeDetectionMode: EdgeDetectionMode.COLOR }); composer.addPass(new EffectPass(cam, smaa)); }
 composer.setSize(W, H);
+halation.setSize(W, H);
 
 const out = document.createElement("canvas"); out.width = W; out.height = H;
 const g2 = out.getContext("2d")!;
@@ -276,7 +280,14 @@ const drawShot = (id: number, f: number) => {
   lens.cInf = d.cInf;
   // the lens passes cost a lot on the CPU renderer: skip them on sharp shots
   preP.enabled = mainP.enabled = d.cInf > 0.25;
-  gradeFor(grade, s.light);
+  const rig = moodRig(s.look?.mood);
+  if (s.look && rig) {
+    halation.intensity = s.look.glow ?? rig.glow.intensity;
+    halation.threshold = rig.glow.threshold;
+    halation.tint = rig.glow.tint;
+    halation.radius = Math.max(4, Math.round(rig.glow.radius * H / 1080));
+  } else halation.intensity = 0;
+  gradeFor(grade, s.look && rig ? rig.grade : s.light);
   composer.render();
   { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); }
   PROF.render = performance.now() - t0;

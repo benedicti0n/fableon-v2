@@ -51,7 +51,7 @@ vec3 outgoingLight = diffuseColor.rgb * tintK;
     float skin = step( 0.5, c1.a ) * step( 0.3, c1.r ) * step( c1.b + 0.12, c1.r ) * step( c1.g, c1.r + 0.02 );
     float torso = step( 0.27, vMapUv.y ) * step( vMapUv.y, 0.57 ) * step( 0.5, c1.a ) * step( 0.5, c2.a ) * step( 0.04, max( c1.r, max( c1.g, c1.b ) ) );
     float rim = warm * smoothstep( 0.1, 0.4, sl ) * edge * max( skin * head, torso ) * mix( 0.6, 1.0, sunVis );
-    outgoingLight += vec3( 0.95, 0.52, 0.16 ) * rim;
+    outgoingLight += uRimCol * rim * uRim;
   }
   #endif
 }
@@ -59,7 +59,7 @@ vec3 outgoingLight = diffuseColor.rgb * tintK;
 `;
 
 const DECL = "#include <common>\nuniform vec3 uCharTint; uniform float uCharShade; uniform float uGrad; uniform float uBodyGrad; uniform vec3 uSideTint;"
-  + " uniform float uGradK; uniform float uGradKB; uniform float uTintK; uniform float uNorm; uniform float uGain; uniform float uPx;";
+  + " uniform float uGradK; uniform float uGradKB; uniform float uTintK; uniform float uNorm; uniform float uGain; uniform float uPx; uniform float uRim; uniform vec3 uRimCol;";
 /** card-only constants (not per light): gradient share, tint share, overall gain (calibrated: faces ~.93 V) */
 export const CARD_K = { uGradK: { value: GRAD_K }, uGradKB: { value: GRAD_KB }, uTintK: { value: TINT_K }, uNorm: { value: 0.7 }, uGain: { value: 1.03 }, uPx: { value: 0.5 } }; // uPx = render height / 1920 (set per draw in cast.ts)
 

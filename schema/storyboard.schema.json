@@ -1151,6 +1151,19 @@
         "end": {
           "$ref": "#/$defs/Anchor"
         },
+        "look": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mood"],
+          "properties": {
+            "mood": { "enum": ["golden-glow", "warm-side", "dusk", "night-moon", "noon"] },
+            "shafts": { "type": "boolean" },
+            "sun": { "type": "boolean" },
+            "glow": { "type": "number" },
+            "rim": { "type": "number" },
+            "grade": { "type": "string" }
+          }
+        },
         "transition": {
           "type": "object",
           "additionalProperties": false,
