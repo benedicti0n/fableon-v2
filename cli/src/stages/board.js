@@ -116,10 +116,12 @@ export function baseShot(s, i, plan, cast, catalog) {
     const withIds = (k.with ?? []).filter((id) => { const m = set.marks.find((x) => x.name === id || `${s.set}.${x.name}` === id); return !m || (m.ids?.length ?? 0) > 0; });
     const on = asArray(k.on);
     const continuous = j > 0 && s.scene && (s.shots?.length ?? 0) > 1;
+    // A continuous scene keeps the key's own push/hold so the frame never freezes; the key change itself glides.
+    const move = continuous && ['glide', 'crane'].includes(k.move) ? 'push' : k.move;
     return {
       at: k.at, size: k.size === 'close' && on.length > 1 ? 'medium' : k.size, on, ...(withIds.length ? { with: withIds } : {}),
       angle: k.angle ?? (hasScenes && ['full', 'wide', 'establishing'].includes(k.size) ? 'low' : 'eye'),
-      side: k.side, move: continuous ? 'glide' : k.move, ...(j && !continuous ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
+      side: k.side, move, ...(j && !continuous ? { cut: true } : {}), ...(on.every((id) => !(s.characters ?? []).includes(id)) ? { scenery: true } : {}),
       ...(continuous ? { ease: k.ease ?? 'glide', easeFrames: k.easeFrames ?? 24 } : {}),
       ...(k.punch ? { punch: k.punch } : {}), ...(k.impact ? { impact: k.impact } : {}), ...(k.drama ? { drama: true } : {}),
       ...(k.reveal ? { reveal: true } : {}), ...(k.foreground ? { foreground: k.foreground } : {}), ...(k.ease && !continuous ? { ease: k.ease } : {}), ...(k.easeFrames && !continuous ? { easeFrames: k.easeFrames } : {}),

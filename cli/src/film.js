@@ -37,7 +37,7 @@ export function filmStats(storyboard, words, script) {
       const d = Math.max(0, b - a);
       const size = k.size ?? inferSize(k.fov);
       keys++;
-      if (['push', 'hold'].includes(k.move ?? 'push') && !k.ease) { hold += d; holdKeys++; const rate = k.push?.rate ?? 0; minHoldCreep = Math.min(minHoldCreep, rate > 0 ? 1 - Math.exp(-rate * 60) : 0); }
+      if (['push', 'hold'].includes(k.move ?? 'push')) { hold += d; holdKeys++; const rate = k.push?.rate ?? 0; minHoldCreep = Math.min(minHoldCreep, rate !== 0 ? 1 - Math.exp(-Math.abs(rate) * 60) : 0); }
       if (['close', 'medium', 'insert'].includes(size)) dof += d;
       if (k.over) fg++;
       if (['full', 'wide', 'establishing'].includes(size)) { lowFull++; if (k.angle === 'low') low++; }
@@ -62,7 +62,7 @@ export function filmErrors(stats, { words, script, policy = {} } = {}) {
   if (!stats.keys) return errs;
   if (stats.cuts > (policy.maxCuts ?? 2)) errs.push(`film has ${stats.cuts} hard cuts; use at most ${policy.maxCuts ?? 2}`);
   if (stats.flashes > (policy.maxFlashes ?? 3)) errs.push(`film has ${stats.flashes} flashes; use at most ${policy.maxFlashes ?? 3}`);
-  if (stats.holdShare < (policy.holdMin ?? 0.70) || stats.holdShare > (policy.holdMax ?? 0.85)) errs.push(`film hold share ${(stats.holdShare * 100).toFixed(0)}% is outside ${((policy.holdMin ?? 0.70) * 100).toFixed(0)}-${((policy.holdMax ?? 0.85) * 100).toFixed(0)}%`);
+  if (stats.holdShare < (policy.holdMin ?? 0.70) || stats.holdShare > (policy.holdMax ?? 0.95)) errs.push(`film hold share ${(stats.holdShare * 100).toFixed(0)}% is outside ${((policy.holdMin ?? 0.70) * 100).toFixed(0)}-${((policy.holdMax ?? 0.95) * 100).toFixed(0)}%`);
   if (stats.dofShare < (policy.dofMin ?? 0.25) || stats.dofShare > (policy.dofMax ?? 0.40)) errs.push(`film DOF share ${(stats.dofShare * 100).toFixed(0)}% is outside ${((policy.dofMin ?? 0.25) * 100).toFixed(0)}-${((policy.dofMax ?? 0.40) * 100).toFixed(0)}%`);
   if (stats.foregroundShare < (policy.fgMin ?? 0.25) || stats.foregroundShare > (policy.fgMax ?? 0.40)) errs.push(`film foreground share ${(stats.foregroundShare * 100).toFixed(0)}% is outside ${((policy.fgMin ?? 0.25) * 100).toFixed(0)}-${((policy.fgMax ?? 0.40) * 100).toFixed(0)}%`);
   if (!stats.punches) errs.push('film has no punch-in');

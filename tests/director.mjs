@@ -75,7 +75,7 @@ export async function runDirectorTests() {
     const groups = groupPlan(scenePlan);
     const mergedShot = baseShot(groups[0], 0, groups, { characters: [{ id: 'savitri' }] }, catalog);
     ok('scene grouping', groups.length === 1 && groups[0].keys.length === 2 && mergedShot.camera.length === 2, JSON.stringify({ groups: groups.length, keys: groups[0].keys.length }));
-    ok('continuous scene keys', mergedShot.camera[1].cut !== true && mergedShot.camera[1].move === 'glide' && mergedShot.camera[1].ease === 'glide', JSON.stringify(mergedShot.camera[1]));
+    ok('continuous scene keys', mergedShot.camera[1].cut !== true && mergedShot.camera[1].move === 'push' && mergedShot.camera[1].ease === 'glide', JSON.stringify(mergedShot.camera[1]));
     const mergedCompiled = compileBoard({ version: 1, cast, shots: [mergedShot] }, words, catalog).storyboard;
     ok('merged scene compiles', mergedCompiled.shots.length === 1 && mergedCompiled.shots[0].camera.length === 2, JSON.stringify(mergedCompiled.shots.length));
 
