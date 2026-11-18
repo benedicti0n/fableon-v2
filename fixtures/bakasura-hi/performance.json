@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "lines": [
+    {
+      "n": 0,
+      "tone": "deadpan",
+      "pace": 1,
+      "pauses": [
+        {
+          "after": "मंगवाया,",
+          "s": 0.35
+        }
+      ],
+      "stress": [
+        "भोजन",
+        "खाना"
+      ]
+    },
+    {
+      "n": 1,
+      "tone": "matter-of-fact",
+      "pace": 1.05,
+      "pauses": [],
+      "stress": [
+        "सीधा",
+        "इंसान"
+      ]
+    },
+    {
+      "n": 2,
+      "tone": "deadpan",
+      "pace": 1.1,
+      "pauses": [],
+      "stress": [
+        "अच्छी",
+        "सालों"
+      ]
+    },
+    {
+      "n": 3,
+      "tone": "deadpan",
+      "pace": 1,
+      "pauses": [],
+      "stress": [
+        "बुरी",
+        "बेटे"
+      ]
+    },
+    {
+      "n": 4,
+      "tone": "matter-of-fact",
+      "pace": 1.05,
+      "pauses": [],
+      "stress": [
+        "दावत",
+        "सारा"
+      ]
+    },
+    {
+      "n": 5,
+      "tone": "deadpan",
+      "pace": 1,
+      "pauses": [],
+      "stress": [
+        "बेवकूफ",
+        "कौन"
+      ]
+    },
+    {
+      "n": 6,
+      "tone": "mock-serious",
+      "pace": 1,
+      "pauses": [],
+      "stress": [
+        "ताकतवर",
+        "कमर"
+      ]
+    },
+    {
+      "n": 7,
+      "tone": "deadpan",
+      "pace": 1.1,
+      "pauses": [],
+      "stress": [
+        "डिलीवरी",
+        "पीट"
+      ]
+    },
+    {
+      "n": 8,
+      "tone": "tense",
+      "pace": 1,
+      "pauses": [
+        {
+          "after": "दिया।",
+          "s": 0.35
+        }
+      ],
+      "stress": [
+        "लाश",
+        "हैरान"
+      ]
+    },
+    {
+      "n": 9,
+      "tone": "warm",
+      "pace": 1.05,
+      "pauses": [],
+      "stress": [
+        "त्योहार",
+        "हमेशा"
+      ]
+    }
+  ]
+}

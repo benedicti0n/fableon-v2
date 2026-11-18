@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "lines": [
+    {
+      "n": 0,
+      "verdict": "opinion",
+      "craft": "ok",
+      "facts": [
+        "F10",
+        "F11"
+      ],
+      "note": "Comic personification of F11; underlying beat is Bhima eating the demon's food.",
+      "fix": "None.",
+      "hash": "659b14be4eb3d4c96a8bf0f16af3ea7c356c943c3ecf4d5db7d50835c507495c",
+      "confirmed": false
+    },
+    {
+      "n": 1,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F1",
+        "F2"
+      ],
+      "note": "Matches the fixed tribute of food and a human near Ekachakra.",
+      "fix": "No change.",
+      "hash": "671283d4df40dcab88ee50098f073b5851857f298cd3b35250857d60547c0c5d",
+      "confirmed": false
+    },
+    {
+      "n": 2,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F3"
+      ],
+      "note": "'Good thing' is framing; F3 supports the long gap between turns.",
+      "fix": "None.",
+      "hash": "0e8381fbcb1dfe561789834c2815d5806c03e9c6193b7a9ce7ccf4ccaf740c35",
+      "confirmed": false
+    },
+    {
+      "n": 3,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F5",
+        "F7"
+      ],
+      "note": "Accurate: the turn falls on the Brahmin host, and Kunti offers a son.",
+      "fix": "No change.",
+      "hash": "107dfe980a78210d877e5842ad6a966b431da63dfa7e3776b351a32ebadc601a",
+      "confirmed": false
+    },
+    {
+      "n": 4,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F7",
+        "F8",
+        "F10",
+        "F14"
+      ],
+      "note": "Kunti/Bhima and the eating are supported; 'feast' is framing.",
+      "fix": "None.",
+      "hash": "847b91ed7bb0e27ca152d44c1caa049141ab8a202e1bfb16b685db3f7849d44b",
+      "confirmed": false
+    },
+    {
+      "n": 5,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F11",
+        "F12"
+      ],
+      "note": "Core beat matches F11–F12; 'stupid human' is rhetorical color, not a new factual claim.",
+      "fix": "Optional: sharpen to the cited demand: 'who dares eat my food in front of me?'",
+      "hash": "36ae436f7511702196331f59a7280477dc04d3d7c352760427dfa5cf6461a8d8",
+      "confirmed": false
+    },
+    {
+      "n": 6,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F8",
+        "F14",
+        "F16"
+      ],
+      "note": "Strength, finishing the meal, and breaking the back are all supported.",
+      "fix": "None.",
+      "hash": "19f6dd6162c4360c60e269f7d492ada893bec926f853799e514607300f130c98",
+      "confirmed": false
+    },
+    {
+      "n": 7,
+      "verdict": "opinion",
+      "craft": "ok",
+      "facts": [
+        "F10",
+        "F16"
+      ],
+      "note": "Analogy/opinion; cited F17 is unrelated to the pizza comparison.",
+      "fix": "None.",
+      "hash": "2de10ff9d67b1ed8f0b72786656caeeea2e5f9162a5f44d6fc9cd3017c8db88b",
+      "confirmed": false
+    },
+    {
+      "n": 8,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F18",
+        "F19"
+      ],
+      "note": "Matches: Bhima leaves the corpse at the town gate; villagers are astonished in the morning.",
+      "fix": "No change.",
+      "hash": "346ee26964f5a7e0842565864dbb4a6f2bde85d34f69bd040ef9aa4e679a2a4c",
+      "confirmed": false
+    },
+    {
+      "n": 9,
+      "verdict": "ok",
+      "craft": "ok",
+      "facts": [
+        "F21"
+      ],
+      "note": "Festival in remembrance of deliverance is supported; 'deadly feast ended' follows from the deliverance.",
+      "fix": "No change.",
+      "hash": "ce1fd6ef45019f6e99dbb25f89d55b6df9bc79ad712b8fccd44f225b5e818341",
+      "confirmed": false
+    }
+  ],
+  "overrides": [],
+  "model": "deepseek-flash",
+  "settings": {
+    "temperature": 0,
+    "thinking": "enabled",
+    "reasoningEffort": "low",
+    "jsonMode": true
+  },
+  "reviewedAt": "2026-11-18T05:34:17.788Z"
+}

@@ -1,0 +1,320 @@
+{
+  "version": 2,
+  "title": "Bhima and Bakasura",
+  "seconds": 48,
+  "wps": 3.71,
+  "characters": [
+    {
+      "id": "bakasura",
+      "name": "बकासुर",
+      "role": "the hungry demon",
+      "look": "agni"
+    },
+    {
+      "id": "bhima",
+      "name": "भीम",
+      "role": "the strong pandava",
+      "look": "big"
+    },
+    {
+      "id": "brahmin",
+      "name": "ब्राह्मण",
+      "role": "the scared host",
+      "look": "elder"
+    },
+    {
+      "id": "kunti",
+      "name": "कुंती",
+      "role": "the mother",
+      "look": "adult"
+    }
+  ],
+  "mentions": [
+    {
+      "id": "ekachakra",
+      "name": "एकचक्र",
+      "role": "the village"
+    }
+  ],
+  "names": [
+    {
+      "word": "एकचक्र",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "बकासुर",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "ब्राह्मण",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "कुंती",
+      "phonemes": null,
+      "suggested": true
+    },
+    {
+      "word": "भीम",
+      "phonemes": null,
+      "suggested": true
+    }
+  ],
+  "hookAdvisory": {
+    "paradoxAsFact": true,
+    "note": "The meal ate the monster's meal."
+  },
+  "lines": [
+    {
+      "n": 0,
+      "text": "एक राक्षस ने अपना भोजन मंगवाया, लेकिन उस भोजन ने ही राक्षस का खाना खा लिया।",
+      "gloss": "A demon ordered his food, but the food ate the demon's meal.",
+      "beat": "hook",
+      "facts": [
+        "F11"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [
+          {
+            "after": "मंगवाया,",
+            "s": 0.35
+          }
+        ],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "bakasura"
+        ],
+        "pose": "shout",
+        "note": "Bakasura shouts for his food."
+      }
+    },
+    {
+      "n": 1,
+      "text": "एकचक्र गाँव का नियम सीधा था। बकासुर राक्षस ढेर सारा खाना और एक इंसान मांगता था।",
+      "gloss": "The rule of Ekachakra village was simple. The demon Bakasura demanded lots of food and a human.",
+      "beat": "setting",
+      "facts": [
+        "F1",
+        "F2"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "bakasura"
+        ],
+        "pose": "belly",
+        "note": "Bakasura pats his belly."
+      }
+    },
+    {
+      "n": 2,
+      "text": "गाँव वालों के लिए अच्छी बात यह थी कि मौत की बारी सालों में एक बार आती थी।",
+      "gloss": "The good thing for the villagers was that the turn for death came once in years.",
+      "beat": "escalation",
+      "facts": [
+        "F3"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "brahmin"
+        ],
+        "pose": "fold",
+        "note": "The Brahmin folds his hands in relief."
+      }
+    },
+    {
+      "n": 3,
+      "text": "बुरी खबर थी कि इस बार ब्राह्मण मेज़बान की बारी थी। कुंती बोली, \"मैं अपने बेटे को भेजूंगी।\"",
+      "gloss": "The bad news was that this time it was the Brahmin host's turn. Kunti said, \"I will send my son.\"",
+      "beat": "escalation",
+      "facts": [
+        "F5",
+        "F7"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [
+          {
+            "after": "थी।",
+            "s": 0.35
+          },
+          {
+            "after": "बोला,",
+            "s": 0.12
+          }
+        ],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "brahmin"
+        ],
+        "pose": "pray",
+        "note": "The Brahmin prays and cries."
+      }
+    },
+    {
+      "n": 4,
+      "text": "कुंती ने भीम को भेजा, जिसे इसमें दावत दिखी। वह जंगल जाकर राक्षस का सारा खाना खा गया।",
+      "gloss": "Kunti sent Bhima, who only saw a feast in this. He went to the forest and devoured all the demon's food.",
+      "beat": "escalation",
+      "facts": [
+        "F10"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "hermitage",
+        "who": [
+          "bhima"
+        ],
+        "pose": "sit",
+        "note": "Bhima sits and eats the food."
+      }
+    },
+    {
+      "n": 5,
+      "text": "बकासुर वहाँ पहुँचा तो भीम उसका खाना खा रहा था। उसने पूछा कि यह बेवकूफ इंसान आखिर है कौन?",
+      "gloss": "Bakasura arrived to find Bhima eating his food. He asked who this stupid human was.",
+      "beat": "mystery",
+      "facts": [
+        "F11",
+        "F12"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [
+          {
+            "after": "था।",
+            "s": 0.12
+          }
+        ],
+        "emphasis": []
+      },
+      "look": {
+        "set": "hermitage",
+        "who": [
+          "bakasura"
+        ],
+        "pose": "armsUp",
+        "note": "Bakasura raises arms in confusion."
+      }
+    },
+    {
+      "n": 6,
+      "text": "दरअसल, भीम बहुत ताकतवर था। उसने आराम से खाना खत्म किया और फिर बकासुर की कमर तोड़ दी।",
+      "gloss": "Actually, Bhima was very strong. He comfortably finished the food and then broke Bakasura's back.",
+      "beat": "pivot",
+      "facts": [
+        "F16"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "hermitage",
+        "who": [
+          "bhima"
+        ],
+        "pose": "flex",
+        "note": "Bhima flexes his muscles after fighting."
+      }
+    },
+    {
+      "n": 7,
+      "text": "यह ऐसा था जैसे आप पिज़्ज़ा मंगवाएं, और डिलीवरी वाला ही पिज़्ज़ा खाकर आपको पीट कर चला जाए।",
+      "gloss": "It was like you order a pizza, and the delivery guy eats the pizza and beats you up before leaving.",
+      "beat": "analogy",
+      "facts": [
+        "F17"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "bhima"
+        ],
+        "pose": "shrug",
+        "note": "Bhima shrugs casually."
+      }
+    },
+    {
+      "n": 8,
+      "text": "भीम ने राक्षस की लाश को घसीटकर नगर-द्वार पर छोड़ दिया। सुबह गाँव वाले हैरान रह गए।",
+      "gloss": "Bhima dragged the demon's corpse to the town gate. In the morning, the villagers were shocked.",
+      "beat": "payoff",
+      "facts": [
+        "F18",
+        "F19"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [
+          {
+            "after": "दिया।",
+            "s": 0.35
+          }
+        ],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "bhima"
+        ],
+        "pose": "throw",
+        "note": "Bhima throws the body at the door."
+      }
+    },
+    {
+      "n": 9,
+      "text": "गाँव वालों ने खुशी से त्योहार मनाया। बकासुर की जानलेवा दावत हमेशा के लिए खत्म हो गई।",
+      "gloss": "The villagers happily celebrated. Bakasura's deadly feast ended forever.",
+      "beat": "payoff",
+      "facts": [
+        "F21"
+      ],
+      "delivery": {
+        "tone": "deadpan",
+        "pauses": [],
+        "emphasis": []
+      },
+      "look": {
+        "set": "village",
+        "who": [
+          "brahmin"
+        ],
+        "pose": "armsUp",
+        "note": "The Brahmin celebrates."
+      }
+    }
+  ]
+}

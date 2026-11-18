@@ -1,0 +1,882 @@
+{
+  "version": 1,
+  "cast": {
+    "bakasura": {
+      "spec": {
+        "skin": "#523f6b",
+        "build": "big",
+        "top": null,
+        "lower": "#241a16",
+        "drape": "#8a1f1f",
+        "head": "bald",
+        "beard": "#a8322a",
+        "beardLong": false,
+        "moustache": "#a8322a",
+        "necklace": "#d9c7a0",
+        "earrings": "#d9c7a0",
+        "belly": 1.2
+      },
+      "seed": 149
+    },
+    "bhima": {
+      "spec": {
+        "skin": "#3e2a1a",
+        "build": "adult",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "hair",
+        "hairCol": "#1e1418",
+        "necklace": "#e8b53a"
+      },
+      "seed": 860
+    },
+    "brahmin": {
+      "spec": {
+        "skin": "#e8b58a",
+        "build": "elder",
+        "top": null,
+        "lower": "#f6efdc",
+        "drape": "#f2deb0",
+        "head": "bun",
+        "hairCol": "#8a8a92",
+        "beard": "#8a8a92",
+        "beardLong": false,
+        "tilak": "#f4f1ea"
+      },
+      "seed": 960
+    },
+    "kunti": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "earrings": "#e8b53a"
+      },
+      "seed": 874
+    },
+    "ekachakra": {
+      "spec": {
+        "skin": "#8a6a4a",
+        "build": "stout",
+        "top": null,
+        "lower": "#6a8a4a",
+        "head": "hair",
+        "hairCol": "#3a2a1a"
+      },
+      "seed": 410
+    }
+  },
+  "shots": [
+    {
+      "id": "village-day",
+      "start": "0:0",
+      "end": "4:0",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "bakasura",
+          "id": "bakasura",
+          "at": "village.front",
+          "nudge": [
+            -0.5,
+            0,
+            0
+          ],
+          "pose": "shout",
+          "expr": "stern",
+          "do": [
+            [
+              "0:1",
+              {
+                "pose": "shout",
+                "expr": "stern"
+              }
+            ],
+            [
+              "0:6",
+              {
+                "pose": "shout",
+                "expr": "stern",
+                "talk": {
+                  "base": "stern",
+                  "rate": 1
+                }
+              }
+            ],
+            [
+              "0:10",
+              {
+                "pose": "armsUp",
+                "expr": "grin"
+              }
+            ],
+            [
+              "0:11",
+              {
+                "pose": "belly",
+                "expr": "grin"
+              }
+            ],
+            [
+              "1:0",
+              {
+                "pose": "belly",
+                "expr": "grin"
+              }
+            ],
+            [
+              "1:8",
+              {
+                "pose": "point",
+                "expr": "stern",
+                "talk": {
+                  "base": "stern",
+                  "rate": 1
+                }
+              }
+            ],
+            [
+              "1:14",
+              {
+                "pose": "present",
+                "expr": "grin"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "brahmin",
+          "id": "brahmin",
+          "at": "village.front",
+          "nudge": [
+            0,
+            0,
+            0
+          ],
+          "pose": "pray",
+          "expr": "relief",
+          "do": [
+            [
+              "2:0",
+              {
+                "pose": "pray",
+                "expr": "relief"
+              }
+            ],
+            [
+              "2:9",
+              {
+                "pose": "fold",
+                "expr": "nervous"
+              }
+            ],
+            [
+              "3:0",
+              {
+                "pose": "pray",
+                "expr": "pained"
+              }
+            ],
+            [
+              "3:10",
+              {
+                "pose": "fold",
+                "expr": "shock"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "kunti",
+          "id": "kunti",
+          "at": "village.front",
+          "nudge": [
+            0.5,
+            0,
+            0
+          ],
+          "pose": "present",
+          "expr": "stern",
+          "do": [
+            [
+              "3:6",
+              {
+                "pose": "present",
+                "expr": "stern",
+                "talk": {
+                  "base": "stern",
+                  "rate": 1
+                }
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "0:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "punch": "0:1",
+          "drama": true,
+          "foreground": "village.door",
+          "ease": "glide"
+        },
+        {
+          "at": "0:6",
+          "size": "medium",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "frontLeft",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "0:11",
+          "drama": true
+        },
+        {
+          "at": "0:11",
+          "size": "close",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "eye",
+          "side": "frontRight",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "0:14"
+        },
+        {
+          "at": "1:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "drama": true,
+          "foreground": "village.door"
+        },
+        {
+          "at": "1:8",
+          "size": "medium",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "1:14"
+        },
+        {
+          "at": "2:0",
+          "size": "wide",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "reveal": true
+        },
+        {
+          "at": "2:9",
+          "size": "medium",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "foreground": "village.front"
+        },
+        {
+          "at": "3:0",
+          "size": "close",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "3:4",
+          "drama": true
+        },
+        {
+          "at": "3:6",
+          "size": "full",
+          "on": [
+            "kunti"
+          ],
+          "with": [
+            "brahmin"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "3:12"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": "0:0",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        },
+        {
+          "kind": "sweat",
+          "at": "0:13",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        },
+        {
+          "kind": "sweat",
+          "at": "3:3",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        }
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
+    },
+    {
+      "id": "hermitage-day",
+      "start": "4:0",
+      "end": "7:0",
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "actors": [
+        {
+          "cast": "bhima",
+          "id": "bhima",
+          "at": "hermitage.clearing",
+          "nudge": [
+            -0.25,
+            0,
+            0
+          ],
+          "pose": "sit",
+          "expr": "smile",
+          "do": [
+            [
+              "4:0",
+              {
+                "pose": "sit",
+                "expr": "smile"
+              }
+            ],
+            [
+              "4:6",
+              {
+                "pose": "drink",
+                "expr": "smile_closed"
+              }
+            ],
+            [
+              "4:12",
+              {
+                "pose": "hold",
+                "expr": "lick"
+              }
+            ],
+            [
+              "5:2",
+              {
+                "pose": "sit",
+                "expr": "neutral"
+              }
+            ],
+            [
+              "6:0",
+              {
+                "pose": "flex",
+                "expr": "stern"
+              }
+            ],
+            [
+              "6:8",
+              {
+                "pose": "grab",
+                "expr": "stern"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "bakasura",
+          "id": "bakasura",
+          "at": "hermitage.clearing",
+          "nudge": [
+            0.25,
+            0,
+            0
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "do": [
+            [
+              "5:0",
+              {
+                "pose": "armsUp",
+                "expr": "shock"
+              }
+            ],
+            [
+              "5:10",
+              {
+                "pose": "point",
+                "expr": "stern",
+                "talk": {
+                  "base": "stern",
+                  "rate": 1
+                },
+                "face": "bhima"
+              }
+            ],
+            [
+              "6:10",
+              {
+                "pose": "shout",
+                "expr": "pained"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "4:0",
+          "size": "establishing",
+          "on": [
+            "bhima"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "push",
+          "reveal": true,
+          "foreground": "hermitage.clearing"
+        },
+        {
+          "at": "4:6",
+          "size": "medium",
+          "on": [
+            "bhima"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24
+        },
+        {
+          "at": "4:12",
+          "size": "close",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "4:15"
+        },
+        {
+          "at": "5:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "with": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "frontLeft",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "5:0",
+          "drama": true,
+          "foreground": "hermitage.hut"
+        },
+        {
+          "at": "5:10",
+          "size": "full",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "right",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "5:15"
+        },
+        {
+          "at": "6:0",
+          "size": "medium",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24
+        },
+        {
+          "at": "6:8",
+          "size": "full",
+          "on": [
+            "bhima"
+          ],
+          "with": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "6:14",
+          "impact": "6:14",
+          "drama": true,
+          "foreground": "hermitage.mat"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "4:14",
+          "pos": {
+            "mark": "hermitage.clearing",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          },
+          "size": 0.8
+        },
+        {
+          "kind": "burst",
+          "at": "6:14",
+          "pos": {
+            "mark": "hermitage.clearing",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        }
+      ],
+      "transition": {
+        "type": "flash",
+        "frames": 4
+      }
+    },
+    {
+      "id": "village-day",
+      "start": "7:0",
+      "end": "end",
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "actors": [
+        {
+          "cast": "bhima",
+          "id": "bhima",
+          "at": "village.front",
+          "nudge": [
+            -0.45,
+            0,
+            0
+          ],
+          "pose": "shrug",
+          "expr": "smile",
+          "do": [
+            [
+              "7:0",
+              {
+                "pose": "shrug",
+                "expr": "smile"
+              }
+            ],
+            [
+              "7:8",
+              {
+                "pose": "shrug",
+                "expr": "smile"
+              }
+            ],
+            [
+              "8:0",
+              {
+                "pose": "carry",
+                "expr": "stern"
+              }
+            ],
+            [
+              "8:8",
+              {
+                "pose": "throw",
+                "expr": "stern"
+              }
+            ]
+          ]
+        },
+        {
+          "cast": "brahmin",
+          "id": "brahmin",
+          "at": "village.front",
+          "nudge": [
+            0.45,
+            0,
+            0
+          ],
+          "pose": "armsUp",
+          "expr": "shock",
+          "do": [
+            [
+              "8:11",
+              {
+                "pose": "armsUp",
+                "expr": "shock"
+              }
+            ],
+            [
+              "9:0",
+              {
+                "pose": "armsUp",
+                "expr": "laugh"
+              }
+            ],
+            [
+              "9:7",
+              {
+                "pose": "fold",
+                "expr": "grin"
+              }
+            ]
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "at": "7:0",
+          "size": "wide",
+          "on": [
+            "bhima"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push"
+        },
+        {
+          "at": "7:8",
+          "size": "full",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24
+        },
+        {
+          "at": "8:0",
+          "size": "wide",
+          "on": [
+            "bhima"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "8:8",
+          "drama": true,
+          "foreground": "village.front"
+        },
+        {
+          "at": "8:11",
+          "size": "medium",
+          "on": [
+            "brahmin"
+          ],
+          "with": [
+            "bhima"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "8:15"
+        },
+        {
+          "at": "9:0",
+          "size": "wide",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "9:0"
+        },
+        {
+          "at": "9:7",
+          "size": "full",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "ease": "glide",
+          "easeFrames": 24,
+          "punch": "9:12",
+          "foreground": "village.door"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": "8:8",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        },
+        {
+          "kind": "petals",
+          "at": "9:1",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          }
+        },
+        {
+          "kind": "sparkle",
+          "at": "9:10",
+          "pos": {
+            "mark": "village.front",
+            "nudge": [
+              0,
+              2.2,
+              -0.6
+            ]
+          },
+          "size": 0.8
+        }
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      }
+    }
+  ],
+  "kicks": [
+    {
+      "at": "0:2",
+      "amp": 0.6
+    },
+    {
+      "at": "0:14",
+      "amp": 0.6
+    },
+    {
+      "at": "3:4",
+      "amp": 0.6
+    },
+    {
+      "at": "4:15",
+      "amp": 0.6
+    },
+    {
+      "at": "6:14",
+      "amp": 0.6
+    },
+    {
+      "at": "6:14",
+      "amp": 0.6
+    },
+    {
+      "at": "8:8",
+      "amp": 0.6
+    },
+    {
+      "at": "8:15",
+      "amp": 0.6
+    },
+    {
+      "at": "9:12",
+      "amp": 0.6
+    }
+  ]
+}

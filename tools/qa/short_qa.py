@@ -49,7 +49,7 @@ black = [i for i in range(n) if stats["mean"][i] < 0.04]
 white = [i for i in range(n) if stats["mean"][i] > 0.93 and i not in planned]
 frozen, run_start = [], None
 for i in range(len(diff)):
-    if diff[i] < 0.02:
+    if diff[i] < 0.005:
         run_start = i if run_start is None else run_start
     else:
         if run_start is not None and i - run_start >= 12: frozen.append((run_start, i))

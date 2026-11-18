@@ -1,0 +1,313 @@
+{
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "A demon named Vaka (Bakasura) ruled the town and country near Ekachakra, living on human flesh.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "there liveth a Rakshasa of the name of Vaka, which cannibal is the lord of this country and town"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F2",
+      "claim": "The tribute fixed for the demon was a cart-load of rice, two buffaloes, and a human being to carry it to him.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "a cart-load of rice, two buffaloes, and a human being who conveyeth them unto him"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F3",
+      "claim": "Householders took turns sending the tribute, and a family's turn came only after many long years.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "The turn, however, cometh to a particular family at intervals of many long years."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F4",
+      "claim": "Anyone who tried to dodge the tribute was killed by the demon along with their family.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "If there are any that seek to avoid it, the Rakshasa slayeth them with their children and wives and devoureth them all."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F5",
+      "claim": "The Pandavas were living disguised in the house of a Brahmana at Ekachakra when the tribute turn fell on their host.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "those mighty car-warriors, the sons of Kunti, on arriving at Ekachakra, lived for a short time in the abode of a Brahmana"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F6",
+      "claim": "Bhima alone ate half of all the food the Pandavas collected while begging.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "the mighty Bhima alone took the other moiety"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F7",
+      "claim": "Kunti offered one of her five sons to go to the demon in the Brahmana's place.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "I have five sons, O Brahmana, let one of them go, carrying in thy behalf tribute of that Rakshasa."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F8",
+      "claim": "Kunti told the Brahmana that Bhima was immensely strong and would not be killed by the demon.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "this Rakshasa will not be able to kill my son, for that son of mine is endued with great prowess and energy"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F9",
+      "claim": "Bhima accepted the task with the words 'So be it.'",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Bhima replied unto them, saying, 'So be it.'"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": false
+    },
+    {
+      "id": "F10",
+      "claim": "Bhima carried the demon's food to the forest and began eating it himself while calling the demon by name.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "began to eat himself the food he carried, calling loudly to the Rakshasa by name"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F11",
+      "claim": "The demon arrived to find Bhima eating the food intended for him.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Beholding Bhima eating his food, the Rakshasa advanced, biting his nether lip and expanding his eyes in wrath."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F12",
+      "claim": "The demon demanded to know who was eating his food in front of him.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Who is this fool, who desiring to go to the abode of Yama, eateth in my very sight the food intended for me?"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F13",
+      "claim": "Bhima smiled in derision and kept eating without looking up, even after the demon struck him on the back.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "did not even look up at the Rakshasa but continued to eat as before"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F14",
+      "claim": "Bhima finished the whole meal, washed, and then stood up cheerfully to fight.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "had leisurely eaten up the whole of that food and washing himself stood cheerfully for fight"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F15",
+      "claim": "The fight began with the two hurling trees at each other until the area was stripped of trees.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "the combat with trees between that human being and the Rakshasa, became so terrible that the region around soon became destitute of trees"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F16",
+      "claim": "Bhima finally broke the demon's back across his knee, and the demon died.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Then Vaka, huge as a mountain, thus broken (on Bhima’s knee), died, uttering frightful yells."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F17",
+      "claim": "Bhima made the dead demon's relatives promise to stop killing human beings.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Do not ever again kill human beings. If ye kill men, ye will have to die even as Vaka."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F18",
+      "claim": "Bhima dragged the dead demon to a town gate and left, unseen by anyone.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Then Bhima, dragging the lifeless cannibal, placed him at one of the gates of the town and went away unobserved by any one."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F19",
+      "claim": "In the morning the townspeople found the demon dead and were astonished at the feat.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "The next morning the inhabitants of the town in coming out saw the Rakshasa lying dead on the ground"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F20",
+      "claim": "The Brahmana hid the truth, crediting a nameless mantra-skilled Brahmana with carrying the food and killing the demon.",
+      "kind": "event",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "A certain high-souled Brahmana, skilled in mantras, beheld me weeping with my relatives after I had been ordered to supply the Rakshasa’s food."
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F21",
+      "claim": "The townspeople established a festival in remembrance of their deliverance.",
+      "kind": "tradition",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "they all established a festival in which the worship of Brahmanas was the principal ceremony"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    },
+    {
+      "id": "F22",
+      "claim": "The demon is described as huge, red-eyed, red-bearded, with a mouth stretching ear to ear.",
+      "kind": "person",
+      "sources": [
+        {
+          "source": "S1",
+          "quote": "Of huge body and great strength, of red eyes, red beard, and red hair, he was terrible to behold"
+        }
+      ],
+      "confidence": "high",
+      "supports": "yes",
+      "verified": true
+    }
+  ],
+  "version": 1
+}

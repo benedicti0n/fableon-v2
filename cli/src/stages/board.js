@@ -109,7 +109,7 @@ export function baseShot(s, i, plan, cast, catalog) {
       pose: first.pose ?? 'stand', expr: first.expr ?? 'neutral',
       ...(first.prop ? { prop: first.prop } : {}), ...(first.face ? { face: first.face } : {}),
       ...(moves.length ? { motion: { type: 'path', keys: moves.flatMap((m) => [[m.at, m.from], [m.until, m.to]]), walk: { rate: moves[0].gait === 'run' ? 3.2 : 1.6 } } } : {}),
-      do: beats.map((b) => { const { who, at, ...rest } = b; if (rest.talk === true) rest.talk = { base: rest.expr ?? 'neutral', rate: 1 }; return [at, rest]; }),
+      do: beats.map((b) => { const { who, at, impact, ...rest } = b; if (rest.talk === true) rest.talk = { base: rest.expr ?? 'neutral', rate: 1 }; return [at, rest]; }),
     };
   });
   const camera = (s.keys ?? []).map((k, j) => {

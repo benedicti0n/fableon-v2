@@ -198,7 +198,7 @@ export function directorErrors(data, { script, words, catalog }, policy = {}) {
     }
     if (t.type === 'crossfade' && ((t.frames ?? 7) < 6 || (t.frames ?? 7) > 8)) errs.push(`/shots/${i} crossfade must be 6-8 frames (got ${t.frames})`);
     const placeChange = prev.set !== s.set || prev.light !== s.light;
-    if (placeChange && t.type !== 'crossfade') errs.push(`/shots/${i} changes place/time and needs a crossfade (got ${t.type})`);
+    if (placeChange && !['crossfade', 'flash'].includes(t.type)) errs.push(`/shots/${i} changes place/time and needs a crossfade or the post-hook flash (got ${t.type})`);
   });
   if (cuts > (policy.maxCuts ?? 2)) errs.push(`/shots has ${cuts} hard cuts; use at most ${policy.maxCuts ?? 2}`);
   if (flashes > (policy.maxFlashes ?? 3)) errs.push(`/shots has ${flashes} flashes; use at most ${policy.maxFlashes ?? 3}`);

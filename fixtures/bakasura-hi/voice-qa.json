@@ -1,0 +1,180 @@
+{
+ "sampleRate": 48000,
+ "duration": 65.25,
+ "lufs": -16.0,
+ "truePeak": -3.41,
+ "clippedSamples": 0,
+ "bandwidthHz": 14707.7,
+ "leadIn": 0.0,
+ "tail": 0.04,
+ "silenceSeconds": 4.09,
+ "silenceShare": 0.0627,
+ "perceptualSilenceShare": 0.1586,
+ "digitalZeroRuns": [],
+ "pauseCount": 19,
+ "deliberatePauses": 3,
+ "guardViolations": 0,
+ "fragmentFinalFalls": 2,
+ "lineFinalFalls": 4,
+ "pauses": [
+  {
+   "start": 1.02,
+   "end": 1.2,
+   "seconds": 0.18,
+   "before": "ने",
+   "after": "अपना",
+   "guard": false
+  },
+  {
+   "start": 5.38,
+   "end": 5.99,
+   "seconds": 0.61,
+   "before": "लिया",
+   "after": "एकचक्र",
+   "guard": false
+  },
+  {
+   "start": 7.71,
+   "end": 7.85,
+   "seconds": 0.14,
+   "before": "था",
+   "after": "बकासुर",
+   "guard": false
+  },
+  {
+   "start": 11.95,
+   "end": 12.16,
+   "seconds": 0.21,
+   "before": "था",
+   "after": "गाँव",
+   "guard": false
+  },
+  {
+   "start": 16.78,
+   "end": 16.98,
+   "seconds": 0.2,
+   "before": "थी",
+   "after": "बुरी",
+   "guard": false
+  },
+  {
+   "start": 22.83,
+   "end": 23.09,
+   "seconds": 0.26,
+   "before": "भेजूंगी",
+   "after": "कुंती",
+   "guard": false
+  },
+  {
+   "start": 25.69,
+   "end": 25.84,
+   "seconds": 0.15,
+   "before": "इसमें",
+   "after": "दावत",
+   "guard": false
+  },
+  {
+   "start": 27.88,
+   "end": 28.0,
+   "seconds": 0.12,
+   "before": "जाकर",
+   "after": "राक्षस",
+   "guard": false
+  },
+  {
+   "start": 30.23,
+   "end": 30.49,
+   "seconds": 0.26,
+   "before": "गया",
+   "after": "बकासुर",
+   "guard": false
+  },
+  {
+   "start": 36.27,
+   "end": 36.42,
+   "seconds": 0.15,
+   "before": "इंसान",
+   "after": "आखिर",
+   "guard": false
+  },
+  {
+   "start": 37.24,
+   "end": 37.54,
+   "seconds": 0.3,
+   "before": "कौन",
+   "after": "दरअसल",
+   "guard": false
+  },
+  {
+   "start": 39.8,
+   "end": 39.92,
+   "seconds": 0.12,
+   "before": "था",
+   "after": "उसने",
+   "guard": false
+  },
+  {
+   "start": 44.29,
+   "end": 44.57,
+   "seconds": 0.28,
+   "before": "दी",
+   "after": "यह",
+   "guard": false
+  },
+  {
+   "start": 50.1,
+   "end": 50.74,
+   "seconds": 0.64,
+   "before": "जाए",
+   "after": "भीम",
+   "guard": false
+  },
+  {
+   "start": 52.88,
+   "end": 53.08,
+   "seconds": 0.2,
+   "before": "को",
+   "after": "घसीटकर",
+   "guard": false
+  },
+  {
+   "start": 55.54,
+   "end": 55.67,
+   "seconds": 0.13,
+   "before": "दिया",
+   "after": "सुबह",
+   "guard": false
+  },
+  {
+   "start": 57.76,
+   "end": 58.36,
+   "seconds": 0.6,
+   "before": "गए",
+   "after": "गाँव",
+   "guard": false
+  },
+  {
+   "start": 59.12,
+   "end": 59.39,
+   "seconds": 0.27,
+   "before": "ने",
+   "after": "खुशी",
+   "guard": false
+  },
+  {
+   "start": 59.92,
+   "end": 60.05,
+   "seconds": 0.13,
+   "before": "से",
+   "after": "त्योहार",
+   "guard": false
+  }
+ ],
+ "errors": [],
+ "warnings": [
+  "2 natural intra-line pitch fall(s)",
+  "perceptual pauses 15.9% (natural prosody; digital silence is 6.3%)",
+  "bandwidth 14708 Hz is below 15 kHz"
+ ],
+ "ok": true
+}

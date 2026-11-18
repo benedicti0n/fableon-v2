@@ -1,0 +1,1867 @@
+{
+  "version": 1,
+  "fps": 30,
+  "tailFrames": 36,
+  "crossfade": 10,
+  "shots": [
+    {
+      "id": "village-day",
+      "start": {
+        "line": 0,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "line": 4,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "bakasura",
+          "id": "bakasura",
+          "pos": [
+            -0.5,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "shout",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 1,
+                "offset": -2
+              },
+              "pose": "shout",
+              "expr": "stern"
+            },
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "shout",
+              "expr": "stern",
+              "talk": {
+                "base": "stern",
+                "rate": 1
+              }
+            },
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 10,
+                "offset": -2
+              },
+              "pose": "armsUp",
+              "expr": "grin"
+            },
+            {
+              "at": {
+                "line": 0,
+                "wordIndex": 11,
+                "offset": -2
+              },
+              "pose": "belly",
+              "expr": "grin"
+            },
+            {
+              "at": {
+                "line": 1,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "belly",
+              "expr": "grin"
+            },
+            {
+              "at": {
+                "line": 1,
+                "wordIndex": 8,
+                "offset": -2
+              },
+              "pose": "point",
+              "expr": "stern",
+              "talk": {
+                "base": "stern",
+                "rate": 1
+              }
+            },
+            {
+              "at": {
+                "line": 1,
+                "wordIndex": 14,
+                "offset": -2
+              },
+              "pose": "present",
+              "expr": "grin"
+            }
+          ]
+        },
+        {
+          "who": "brahmin",
+          "id": "brahmin",
+          "pos": [
+            0,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "pray",
+          "expr": "relief",
+          "beats": [
+            {
+              "at": {
+                "line": 2,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "pray",
+              "expr": "relief"
+            },
+            {
+              "at": {
+                "line": 2,
+                "wordIndex": 9,
+                "offset": -2
+              },
+              "pose": "fold",
+              "expr": "nervous"
+            },
+            {
+              "at": {
+                "line": 3,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "pray",
+              "expr": "pained"
+            },
+            {
+              "at": {
+                "line": 3,
+                "wordIndex": 10,
+                "offset": -2
+              },
+              "pose": "fold",
+              "expr": "shock"
+            }
+          ]
+        },
+        {
+          "who": "kunti",
+          "id": "kunti",
+          "pos": [
+            0.5,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "present",
+          "expr": "stern",
+          "beats": [
+            {
+              "at": {
+                "line": 3,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "present",
+              "expr": "stern",
+              "talk": {
+                "base": "stern",
+                "rate": 1
+              }
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": {
+            "line": 0,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ]
+        },
+        {
+          "kind": "sweat",
+          "at": {
+            "line": 0,
+            "wordIndex": 13,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ]
+        },
+        {
+          "kind": "sweat",
+          "at": {
+            "line": 3,
+            "wordIndex": 3,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -1.1277124314583218,
+            2.969526269658038,
+            -15.523294012525382
+          ],
+          "look": [
+            -0.5,
+            3.5649648295980554,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 0,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 0,
+              "wordIndex": 1,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 0,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "over": "village.door",
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -1.958188825994463,
+            2.2751446745159702,
+            -20.265112149841542
+          ],
+          "look": [
+            -0.5,
+            2.6615527870404594,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 0,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.0025,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 0,
+              "wordIndex": 11,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 0,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "frontLeft",
+          "angle": "low",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            0.04545048497774662,
+            2.969526269658038,
+            -21.69390051699478
+          ],
+          "look": [
+            -0.5,
+            2.7838018030413303,
+            -24.5
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 0,
+              "wordIndex": 11,
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 0,
+              "wordIndex": 14,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 0,
+            "wordIndex": 11,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "frontRight",
+          "angle": "eye",
+          "size": "close",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -1.0021699451666573,
+            4,
+            -17.318635210020304
+          ],
+          "look": [
+            -0.5,
+            3.2323077007921825,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 1,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 1,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "over": "village.door",
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "high",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -3.0045718761284674,
+            2.969526269658038,
+            -20.78681949361721
+          ],
+          "look": [
+            -0.5,
+            2.6615527870404594,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 1,
+              "wordIndex": 8,
+              "offset": -2
+            },
+            "rate": 0.0025,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 1,
+              "wordIndex": 14,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 1,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "eye",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.605798173824437,
+            2.856509936165858,
+            -15.836682497211168
+          ],
+          "look": [
+            0,
+            3.4916119398258996,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 2,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": -0.004
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 2,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -1.3641121275432078,
+            2.856509936165858,
+            -20.538330720819506
+          ],
+          "look": [
+            0,
+            2.568405710491349,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 2,
+              "wordIndex": 9,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 2,
+            "wordIndex": 9,
+            "offset": -2
+          },
+          "over": "village.front",
+          "semantic": true,
+          "move": "push",
+          "side": "frontLeft",
+          "angle": "eye",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.18654229255849594,
+            2.856509936165858,
+            -21.832320931359032
+          ],
+          "look": [
+            0,
+            2.6827676932018414,
+            -24.5
+          ],
+          "fov": 37,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 3,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 3,
+              "wordIndex": 4,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 3,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "close",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            1.784716444096943,
+            2.243477949878305,
+            -17.890706858137975
+          ],
+          "look": [
+            0.5,
+            2.894697487742321,
+            -24.5
+          ],
+          "fov": 41,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 3,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.0022,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 3,
+              "wordIndex": 12,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "kunti"
+          ],
+          "at": {
+            "line": 3,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "with": [
+            "brahmin"
+          ],
+          "semantic": true,
+          "move": "push",
+          "side": "frontRight",
+          "angle": "low",
+          "size": "full",
+          "ease": "glide",
+          "dur": 24
+        }
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "dof": [
+        {
+          "at": {
+            "line": 0,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -0.5,
+            2.969526269658038,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 0,
+            "wordIndex": 11,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            -0.5,
+            2.969526269658038,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 1,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -0.5,
+            2.969526269658038,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 2,
+            "wordIndex": 9,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            0,
+            2.856509936165858,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 3,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            0,
+            2.856509936165858,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 3,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            0.5,
+            2.88915909917471,
+            -24.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hermitage-day",
+      "start": {
+        "line": 4,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "hermitage"
+      ],
+      "end": {
+        "line": 7,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "actors": [
+        {
+          "who": "bhima",
+          "id": "bhima",
+          "pos": [
+            -150.25,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "sit",
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "sit",
+              "expr": "smile"
+            },
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 6,
+                "offset": -2
+              },
+              "pose": "drink",
+              "expr": "smile_closed"
+            },
+            {
+              "at": {
+                "line": 4,
+                "wordIndex": 12,
+                "offset": -2
+              },
+              "pose": "hold",
+              "expr": "lick"
+            },
+            {
+              "at": {
+                "line": 5,
+                "wordIndex": 2,
+                "offset": -2
+              },
+              "pose": "sit",
+              "expr": "neutral"
+            },
+            {
+              "at": {
+                "line": 6,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "flex",
+              "expr": "stern"
+            },
+            {
+              "at": {
+                "line": 6,
+                "wordIndex": 8,
+                "offset": -2
+              },
+              "pose": "grab",
+              "expr": "stern"
+            }
+          ]
+        },
+        {
+          "who": "bakasura",
+          "id": "bakasura",
+          "pos": [
+            -149.75,
+            1.5,
+            -60
+          ],
+          "view": 180,
+          "pose": "armsUp",
+          "expr": "shock",
+          "beats": [
+            {
+              "at": {
+                "line": 5,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "armsUp",
+              "expr": "shock"
+            },
+            {
+              "at": {
+                "line": 5,
+                "wordIndex": 10,
+                "offset": -2
+              },
+              "pose": "point",
+              "expr": "stern",
+              "talk": {
+                "base": "stern",
+                "rate": 1
+              },
+              "face": "bhima"
+            },
+            {
+              "at": {
+                "frame": 1001
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            },
+            {
+              "at": {
+                "frame": 1124
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            },
+            {
+              "at": {
+                "frame": 1220
+              },
+              "facing": 1,
+              "mirror": false,
+              "look": 1
+            },
+            {
+              "at": {
+                "line": 6,
+                "wordIndex": 10,
+                "offset": -2
+              },
+              "pose": "shout",
+              "expr": "pained"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": {
+            "line": 4,
+            "wordIndex": 14,
+            "offset": -2
+          },
+          "pos": [
+            -150,
+            3.7,
+            -60.6
+          ],
+          "size": 0.8
+        },
+        {
+          "kind": "burst",
+          "at": {
+            "line": 6,
+            "wordIndex": 14,
+            "offset": -2
+          },
+          "pos": [
+            -150,
+            3.7,
+            -60.6
+          ]
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -172.73595741851517,
+            4,
+            -157.35174824462115
+          ],
+          "look": [
+            -150,
+            23.633005891940233,
+            -72.5
+          ],
+          "fov": 48,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": -0.004
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 4,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "over": "hermitage.clearing",
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "high",
+          "size": "establishing"
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -149.1468656680282,
+            2.88915909917471,
+            -64.11695337449233
+          ],
+          "look": [
+            -150.25,
+            2.5960875592644337,
+            -60
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "wordIndex": 6,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 4,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "frontLeft",
+          "angle": "eye",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -150.25,
+            2.243477949878305,
+            -62.720300049540555
+          ],
+          "look": [
+            -150.25,
+            2.7124213002975206,
+            -60
+          ],
+          "fov": 37,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 4,
+              "wordIndex": 12,
+              "offset": -2
+            },
+            "rate": 0.003,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 4,
+              "wordIndex": 15,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 4,
+            "wordIndex": 12,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "low",
+          "size": "close",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -147.42098416263184,
+            2.2751446745159702,
+            -68.69200543669056
+          ],
+          "look": [
+            -149.75,
+            3.5616523709793646,
+            -60
+          ],
+          "fov": 45,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 5,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 5,
+              "wordIndex": 0,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 5,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "with": [
+            "bhima"
+          ],
+          "over": "hermitage.hut",
+          "semantic": true,
+          "move": "push",
+          "side": "frontLeft",
+          "angle": "low",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -153.25988685993462,
+            2.2751446745159702,
+            -66.07930237022515
+          ],
+          "look": [
+            -149.75,
+            2.954101403224157,
+            -60
+          ],
+          "fov": 41,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 5,
+              "wordIndex": 10,
+              "offset": -2
+            },
+            "rate": 0.0022,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 5,
+              "wordIndex": 15,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bakasura"
+          ],
+          "at": {
+            "line": 5,
+            "wordIndex": 10,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "right",
+          "angle": "low",
+          "size": "full",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -151.3531343319718,
+            2.243477949878305,
+            -64.11695337449233
+          ],
+          "look": [
+            -150.25,
+            2.5960875592644337,
+            -60
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 6,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.0025
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 6,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "frontRight",
+          "angle": "low",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -146.8835013672661,
+            2.243477949878305,
+            -65.83094667550631
+          ],
+          "look": [
+            -150.25,
+            2.8946974877423197,
+            -60
+          ],
+          "fov": 41,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 6,
+              "wordIndex": 8,
+              "offset": -2
+            },
+            "rate": 0.0022,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 6,
+              "wordIndex": 14,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 6,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "with": [
+            "bakasura"
+          ],
+          "over": "hermitage.mat",
+          "semantic": true,
+          "move": "push",
+          "side": "left",
+          "angle": "low",
+          "size": "full",
+          "ease": "glide",
+          "dur": 24
+        }
+      ],
+      "transition": {
+        "type": "flash",
+        "frames": 4
+      },
+      "dof": [
+        {
+          "at": {
+            "line": 4,
+            "wordIndex": 6,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -150.25,
+            2.88915909917471,
+            -60
+          ]
+        },
+        {
+          "at": {
+            "line": 4,
+            "wordIndex": 12,
+            "offset": -2
+          },
+          "cInf": 13,
+          "dur": 0,
+          "focus": [
+            -150.25,
+            2.88915909917471,
+            -60
+          ]
+        },
+        {
+          "at": {
+            "line": 5,
+            "wordIndex": 10,
+            "offset": -2
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            -149.75,
+            2.969526269658038,
+            -60
+          ]
+        },
+        {
+          "at": {
+            "line": 6,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            -150.25,
+            2.88915909917471,
+            -60
+          ]
+        },
+        {
+          "at": {
+            "line": 6,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            -150.25,
+            2.88915909917471,
+            -60
+          ]
+        }
+      ]
+    },
+    {
+      "id": "village-day",
+      "start": {
+        "line": 7,
+        "wordIndex": 0,
+        "offset": -2
+      },
+      "light": "day",
+      "sets": [
+        "village"
+      ],
+      "end": {
+        "end": true,
+        "offset": 0
+      },
+      "actors": [
+        {
+          "who": "bhima",
+          "id": "bhima",
+          "pos": [
+            -0.45,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "shrug",
+          "expr": "smile",
+          "beats": [
+            {
+              "at": {
+                "line": 7,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "shrug",
+              "expr": "smile"
+            },
+            {
+              "at": {
+                "line": 7,
+                "wordIndex": 8,
+                "offset": -2
+              },
+              "pose": "shrug",
+              "expr": "smile"
+            },
+            {
+              "at": {
+                "line": 8,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "carry",
+              "expr": "stern"
+            },
+            {
+              "at": {
+                "line": 8,
+                "wordIndex": 8,
+                "offset": -2
+              },
+              "pose": "throw",
+              "expr": "stern"
+            }
+          ]
+        },
+        {
+          "who": "brahmin",
+          "id": "brahmin",
+          "pos": [
+            0.45,
+            1.5,
+            -24.5
+          ],
+          "view": -4,
+          "pose": "armsUp",
+          "expr": "shock",
+          "beats": [
+            {
+              "at": {
+                "line": 8,
+                "wordIndex": 11,
+                "offset": -2
+              },
+              "pose": "armsUp",
+              "expr": "shock"
+            },
+            {
+              "at": {
+                "line": 9,
+                "wordIndex": 0,
+                "offset": -2
+              },
+              "pose": "armsUp",
+              "expr": "laugh"
+            },
+            {
+              "at": {
+                "line": 9,
+                "wordIndex": 7,
+                "offset": -2
+              },
+              "pose": "fold",
+              "expr": "grin"
+            }
+          ]
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": {
+            "line": 8,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ]
+        },
+        {
+          "kind": "petals",
+          "at": {
+            "line": 9,
+            "wordIndex": 1,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ]
+        },
+        {
+          "kind": "sparkle",
+          "at": {
+            "line": 9,
+            "wordIndex": 10,
+            "offset": -2
+          },
+          "pos": [
+            0,
+            3.7,
+            -25.1
+          ],
+          "size": 0.8
+        }
+      ],
+      "camera": [
+        {
+          "type": "dolly",
+          "pos": [
+            -1.052068706651669,
+            2.88915909917471,
+            -15.890016362564287
+          ],
+          "look": [
+            -0.45,
+            3.4801683780285946,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 7,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 7,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "eye",
+          "size": "wide"
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            0.834716444096943,
+            2.243477949878305,
+            -17.890706858137975
+          ],
+          "look": [
+            -0.45,
+            2.894697487742321,
+            -24.5
+          ],
+          "fov": 41,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 7,
+              "wordIndex": 8,
+              "offset": -2
+            },
+            "rate": 0.0022
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 7,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "frontRight",
+          "angle": "low",
+          "size": "full",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.9316549653213351,
+            4,
+            -17.61201309005143
+          ],
+          "look": [
+            -0.45,
+            3.1718084054670013,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0.07853981633974483,
+          "push": {
+            "from": {
+              "line": 8,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 8,
+              "wordIndex": 8,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "bhima"
+          ],
+          "at": {
+            "line": 8,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "over": "village.front",
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "high",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.9408594986721011,
+            2.856509936165858,
+            -20.460650714637744
+          ],
+          "look": [
+            0.45,
+            2.568405710491349,
+            -24.5
+          ],
+          "fov": 39,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 8,
+              "wordIndex": 11,
+              "offset": -2
+            },
+            "rate": 0.0025,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 8,
+              "wordIndex": 15,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 8,
+            "wordIndex": 11,
+            "offset": -2
+          },
+          "with": [
+            "bhima"
+          ],
+          "semantic": true,
+          "move": "push",
+          "side": "frontLeft",
+          "angle": "eye",
+          "size": "medium",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.155798173824437,
+            2.248083365468111,
+            -15.836682497211168
+          ],
+          "look": [
+            0.45,
+            3.4896774045059598,
+            -24.5
+          ],
+          "fov": 45,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 9,
+              "wordIndex": 0,
+              "offset": -2
+            },
+            "rate": 0.002,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 9,
+              "wordIndex": 0,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 9,
+            "wordIndex": 0,
+            "offset": -2
+          },
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "low",
+          "size": "wide",
+          "ease": "glide",
+          "dur": 24
+        },
+        {
+          "type": "dolly",
+          "pos": [
+            -0.02257948169295554,
+            2.248083365468111,
+            -17.741798552539137
+          ],
+          "look": [
+            0.45,
+            2.9033368314567705,
+            -24.5
+          ],
+          "fov": 41,
+          "roll": 0,
+          "push": {
+            "from": {
+              "line": 9,
+              "wordIndex": 7,
+              "offset": -2
+            },
+            "rate": 0.0022,
+            "punch": 0.006,
+            "punchAt": {
+              "line": 9,
+              "wordIndex": 12,
+              "offset": -2
+            }
+          },
+          "subjects": [
+            "brahmin"
+          ],
+          "at": {
+            "line": 9,
+            "wordIndex": 7,
+            "offset": -2
+          },
+          "over": "village.door",
+          "semantic": true,
+          "move": "push",
+          "side": "front",
+          "angle": "low",
+          "size": "full",
+          "ease": "glide",
+          "dur": 24
+        }
+      ],
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "dof": [
+        {
+          "at": {
+            "line": 7,
+            "wordIndex": 8,
+            "offset": -2
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            -0.45,
+            2.88915909917471,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 8,
+            "wordIndex": 11,
+            "offset": -2
+          },
+          "cInf": 11,
+          "dur": 0,
+          "focus": [
+            0.45,
+            2.856509936165858,
+            -24.5
+          ]
+        },
+        {
+          "at": {
+            "line": 9,
+            "wordIndex": 7,
+            "offset": -2
+          },
+          "cInf": 8,
+          "dur": 0,
+          "focus": [
+            0.45,
+            2.856509936165858,
+            -24.5
+          ]
+        }
+      ]
+    }
+  ],
+  "cast": {
+    "bakasura": {
+      "spec": {
+        "skin": "#523f6b",
+        "build": "big",
+        "top": null,
+        "lower": "#241a16",
+        "drape": "#8a1f1f",
+        "head": "bald",
+        "beard": "#a8322a",
+        "beardLong": false,
+        "moustache": "#a8322a",
+        "necklace": "#d9c7a0",
+        "earrings": "#d9c7a0",
+        "belly": 1.2
+      },
+      "seed": 149
+    },
+    "bhima": {
+      "spec": {
+        "skin": "#3e2a1a",
+        "build": "adult",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "hair",
+        "hairCol": "#1e1418",
+        "necklace": "#e8b53a"
+      },
+      "seed": 860
+    },
+    "brahmin": {
+      "spec": {
+        "skin": "#e8b58a",
+        "build": "elder",
+        "top": null,
+        "lower": "#f6efdc",
+        "drape": "#f2deb0",
+        "head": "bun",
+        "hairCol": "#8a8a92",
+        "beard": "#8a8a92",
+        "beardLong": false,
+        "tilak": "#f4f1ea"
+      },
+      "seed": 960
+    },
+    "kunti": {
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "earrings": "#e8b53a"
+      },
+      "seed": 874
+    },
+    "ekachakra": {
+      "spec": {
+        "skin": "#8a6a4a",
+        "build": "stout",
+        "top": null,
+        "lower": "#6a8a4a",
+        "head": "hair",
+        "hairCol": "#3a2a1a"
+      },
+      "seed": 410
+    }
+  },
+  "kicks": [
+    {
+      "at": {
+        "line": 0,
+        "wordIndex": 2,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 0,
+        "wordIndex": 14,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 3,
+        "wordIndex": 4,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 4,
+        "wordIndex": 15,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 6,
+        "wordIndex": 14,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 6,
+        "wordIndex": 14,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 8,
+        "wordIndex": 8,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 8,
+        "wordIndex": 15,
+        "offset": -2
+      },
+      "amp": 0.6
+    },
+    {
+      "at": {
+        "line": 9,
+        "wordIndex": 12,
+        "offset": -2
+      },
+      "amp": 0.6
+    }
+  ]
+}

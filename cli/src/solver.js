@@ -242,7 +242,7 @@ export function solveCamera({ key, subjects, setInfo, keepout = [], aspect = ASP
   const yc = eye[0] * up[0] + eye[1] * up[1] + eye[2] * up[2];
   const eyeLine = zc > 0 ? 0.5 - 0.5 * (yc / zc) / Math.tan((vfov * DEG) / 2) : 0.5;
   const move = key.move ?? "push";
-  const rate = move === "hold" ? 0.0015 : cfg.rate;
+  const rate = move === "hold" ? 0.0025 : cfg.rate;
   const type = move === "tiltUp" || move === "tiltDown" || move === "pan" ? "tilt" : "dolly";
   const push = move === "glide" || move === "crane"
     ? { from: key.at, rate: 0 }

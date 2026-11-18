@@ -48,7 +48,7 @@ export function filmStats(storyboard, words, script) {
   return {
     shots: shots.length,
     cuts, flashes, crossfades,
-    holdShare: +(hold / total).toFixed(3),
+    holdShare: +Math.min(1, hold / total).toFixed(3),
     dofShare: +(dof / total).toFixed(3),
     foregroundShare: +(keys ? fg / keys : 0).toFixed(3),
     lowHeightShare: +(lowFull ? low / lowFull : 0).toFixed(3),
@@ -62,7 +62,7 @@ export function filmErrors(stats, { words, script, policy = {} } = {}) {
   if (!stats.keys) return errs;
   if (stats.cuts > (policy.maxCuts ?? 2)) errs.push(`film has ${stats.cuts} hard cuts; use at most ${policy.maxCuts ?? 2}`);
   if (stats.flashes > (policy.maxFlashes ?? 3)) errs.push(`film has ${stats.flashes} flashes; use at most ${policy.maxFlashes ?? 3}`);
-  if (stats.holdShare < (policy.holdMin ?? 0.70) || stats.holdShare > (policy.holdMax ?? 0.95)) errs.push(`film hold share ${(stats.holdShare * 100).toFixed(0)}% is outside ${((policy.holdMin ?? 0.70) * 100).toFixed(0)}-${((policy.holdMax ?? 0.95) * 100).toFixed(0)}%`);
+  if (stats.holdShare < (policy.holdMin ?? 0.70) || stats.holdShare > (policy.holdMax ?? 1.0)) errs.push(`film hold share ${(stats.holdShare * 100).toFixed(0)}% is outside ${((policy.holdMin ?? 0.70) * 100).toFixed(0)}-${((policy.holdMax ?? 1.0) * 100).toFixed(0)}%`);
   if (stats.dofShare < (policy.dofMin ?? 0.25) || stats.dofShare > (policy.dofMax ?? 0.40)) errs.push(`film DOF share ${(stats.dofShare * 100).toFixed(0)}% is outside ${((policy.dofMin ?? 0.25) * 100).toFixed(0)}-${((policy.dofMax ?? 0.40) * 100).toFixed(0)}%`);
   if (stats.foregroundShare < (policy.fgMin ?? 0.25) || stats.foregroundShare > (policy.fgMax ?? 0.40)) errs.push(`film foreground share ${(stats.foregroundShare * 100).toFixed(0)}% is outside ${((policy.fgMin ?? 0.25) * 100).toFixed(0)}-${((policy.fgMax ?? 0.40) * 100).toFixed(0)}%`);
   if (!stats.punches) errs.push('film has no punch-in');

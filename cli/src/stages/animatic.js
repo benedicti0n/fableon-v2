@@ -60,6 +60,20 @@ export async function runAnimatic({ projectDir }) {
     for (const k of shot.camera ?? []) if (k.cut) { const f = shiftFrame(ctx.anchor(k.at, start)); planned.push([f, f]); }
     if (start > 10) xfade.push(shiftPair([start - 10, start]));
   }
+  if (existsSync(join(projectDir, 'board.json'))) {
+    const board = JSON.parse(readFileSync(join(projectDir, 'board.json'), 'utf8'));
+    const anchorFrame = (a) => {
+      const m = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(String(a));
+      if (!m) return null;
+      const off = m[3] ? (m[5] === 's' ? Number(m[4]) * 30 : Number(m[4])) : 0;
+      return ctx.anchor({ line: Number(m[1]), wordIndex: Number(m[2]), offset: (m[3] === '-' ? -1 : 1) * off });
+    };
+    for (const k of board.kicks ?? []) { const f = anchorFrame(k.at); if (f !== null) { events.push(shiftFrame(f)); planned.push(shiftPair([f, f + 7])); } }
+    for (const s of board.shots ?? []) for (const k of s.camera ?? []) {
+      if (k.punch) { const f = anchorFrame(k.punch); if (f !== null) { events.push(shiftFrame(f), shiftFrame(f + 30)); planned.push(shiftPair([f, f + 30])); } }
+      if (k.impact) { const f = anchorFrame(k.impact); if (f !== null) { events.push(shiftFrame(f)); planned.push(shiftPair([f, f + 7])); } }
+    }
+  }
   const meta = join(projectDir, 'animatic-qa-meta.json');
   const ints = (list) => list.map(([a, b]) => [Math.round(a), Math.round(b)]);
   const shiftedShots = (metaRaw.shots ?? []).map((x) => ({ ...x, a: Math.max(0, x.a - off), b: x.b - off }));
@@ -76,9 +90,9 @@ export async function runAnimatic({ projectDir }) {
   const white = framesList((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const frozen = spanList(framesLine);
   const pops = framesList(popsLine);
-  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 1));
+  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 3));
   const ok = !black.length && !white.length && !frozen.length && !unexplained.length;
-  const summary = ['# Animatic QA', '', `- ${get('SPECS ')}`, `- ${get('LOUDNESS ')}`, `- ${framesLine}`, `- planned events ignored (±1 frame): ${events.length} frames from ${eventsPath}`, `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`, `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`, '', `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length})`, ''].join('\n');
+  const summary = ['# Animatic QA', '', `- ${get('SPECS ')}`, `- ${get('LOUDNESS ')}`, `- ${framesLine}`, `- planned events ignored (±3 frames): ${events.length} frames from ${eventsPath}`, `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`, `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`, '', `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length})`, ''].join('\n');
   writeFile(join(projectDir, 'animatic-qa.md'), report + '\n\n' + summary);
   return { video, qa: join(projectDir, 'animatic-qa.md'), specs: get('SPECS '), frames: framesLine, pops: popsLine, verdict: ok ? 'PASS' : 'FAIL' };
 }

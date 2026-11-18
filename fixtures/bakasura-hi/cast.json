@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "id": "bakasura",
+      "name": "बकासुर",
+      "spec": {
+        "skin": "#523f6b",
+        "build": "big",
+        "top": null,
+        "lower": "#241a16",
+        "drape": "#8a1f1f",
+        "head": "bald",
+        "beard": "#a8322a",
+        "beardLong": false,
+        "moustache": "#a8322a",
+        "necklace": "#d9c7a0",
+        "earrings": "#d9c7a0",
+        "belly": 1.2
+      },
+      "scale": 1.12,
+      "mustHave": [
+        "beard",
+        "red-attire"
+      ],
+      "notes": "Hulking demon, charcoal-indigo skin, bare chest with blood-red sash, short red beard and moustache, bone necklace and earrings; belly pat gesture."
+    },
+    {
+      "id": "bhima",
+      "name": "भीम",
+      "spec": {
+        "skin": "#3e2a1a",
+        "build": "adult",
+        "top": null,
+        "lower": "#e8a33a",
+        "head": "hair",
+        "hairCol": "#1e1418",
+        "necklace": "#e8b53a"
+      },
+      "mustHave": [
+        "simple-clothes",
+        "young-man"
+      ],
+      "notes": "Strongest Pandava; eats, fights, drags the demon.",
+      "scale": 1
+    },
+    {
+      "id": "brahmin",
+      "name": "ब्राह्मण",
+      "spec": {
+        "skin": "#e8b58a",
+        "build": "elder",
+        "top": null,
+        "lower": "#f6efdc",
+        "drape": "#f2deb0",
+        "head": "bun",
+        "hairCol": "#8a8a92",
+        "beard": "#8a8a92",
+        "beardLong": false,
+        "tilak": "#f4f1ea"
+      },
+      "mustHave": [
+        "sage"
+      ],
+      "notes": "Scared host at Ekachakra; prays, cries, celebrates.",
+      "scale": 1
+    },
+    {
+      "id": "kunti",
+      "name": "कुंती",
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": "#e0565a",
+        "sari": "#2f8a8a",
+        "border": "#f2c230",
+        "head": "long",
+        "hairCol": "#1e1418",
+        "earrings": "#e8b53a"
+      },
+      "mustHave": [
+        "woman",
+        "sari",
+        "long-hair"
+      ],
+      "notes": "Mother who offers Bhima in the Brahmana's place.",
+      "scale": 1
+    },
+    {
+      "id": "ekachakra",
+      "name": "एकचक्र",
+      "spec": {
+        "skin": "#8a6a4a",
+        "build": "stout",
+        "top": null,
+        "lower": "#6a8a4a",
+        "head": "hair",
+        "hairCol": "#3a2a1a"
+      },
+      "mustHave": [
+        "simple-clothes"
+      ],
+      "notes": "The village where the Pandavas lived disguised.",
+      "scale": 1
+    }
+  ]
+}

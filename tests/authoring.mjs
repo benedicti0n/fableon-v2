@@ -68,7 +68,7 @@ export function runAuthoring() {
   ok('over compiles at a screen-valid distance', overOk.over === 'pandu' && overOk.fov > 0, JSON.stringify(overOk));
   const semantic = { ...board, shots: [{ ...board.shots[0], camera: [{ at: '1.Vyasa', size: 'close', on: ['kunti'], move: 'hold' }] }] };
   const cam = compileBoard(semantic, words, catalog).storyboard.shots[0].camera[0];
-  ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0015);
+  ok('semantic camera solved', cam.type === 'dolly' && cam.fov === 37 && cam.push?.rate === 0.0025);
   ok('semantic camera dof', compileBoard(semantic, words, catalog).storyboard.shots[0].dof?.[0]?.cInf === 13);
   return { ok: errors.length === 0, errors, checks };
 }

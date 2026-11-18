@@ -1,0 +1,1116 @@
+{
+  "version": 1,
+  "shots": [
+    {
+      "id": "S1",
+      "lines": [
+        0
+      ],
+      "start": "0:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "Establishing: Bakasura looms at the village front, shouting for his food.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "0:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "with": [
+            "village.front",
+            "village.hut"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "punch": "0:1",
+          "drama": true,
+          "reveal": false,
+          "foreground": "village.door",
+          "ease": "glide",
+          "note": "Establishing low wide: Bakasura looms over the village front, palms framing the lens."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "0:1",
+          "pose": "shout",
+          "expr": "stern",
+          "impact": "0:2"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": "0:0",
+          "note": "Dust kicked up at the demon's feet."
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "lines": [
+        0
+      ],
+      "start": "0:6",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "bakasura"
+      ],
+      "action": "Medium on Bakasura, mouth wide in a shout, arms spread.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "0:6",
+          "size": "medium",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "frontLeft",
+          "move": "push",
+          "punch": "0:11",
+          "drama": true,
+          "note": "Medium low on Bakasura bellowing, arms spread wide."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "0:6",
+          "pose": "shout",
+          "expr": "stern",
+          "talk": true
+        },
+        {
+          "who": "bakasura",
+          "at": "0:10",
+          "pose": "armsUp",
+          "expr": "grin"
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "lines": [
+        0
+      ],
+      "start": "0:11",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "bakasura"
+      ],
+      "action": "Close on Bakasura's hungry grin as he pats his belly.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "0:11",
+          "size": "close",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "eye",
+          "side": "frontRight",
+          "move": "push",
+          "punch": "0:14",
+          "note": "Close on the hungry grin as he pats his belly."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "0:11",
+          "pose": "belly",
+          "expr": "grin",
+          "impact": "0:14"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sweat",
+          "at": "0:13",
+          "note": "A greedy bead of sweat."
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "lines": [
+        1
+      ],
+      "start": "1:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "Wide: Bakasura stands over a pile of food, patting his belly.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "1:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "with": [
+            "village.front",
+            "village.boats"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "push",
+          "drama": true,
+          "note": "High wide: Bakasura over the food pile, patting his belly.",
+          "foreground": "village.door"
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "1:0",
+          "pose": "belly",
+          "expr": "grin"
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "lines": [
+        1
+      ],
+      "start": "1:8",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "bakasura"
+      ],
+      "action": "Medium: Bakasura gestures at the food and then at a cowering villager.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "1:8",
+          "size": "medium",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "eye",
+          "side": "left",
+          "move": "push",
+          "punch": "1:14",
+          "note": "Medium: he gestures at the food, then at a cowering villager."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "1:8",
+          "pose": "point",
+          "expr": "stern",
+          "talk": true
+        },
+        {
+          "who": "bakasura",
+          "at": "1:14",
+          "pose": "present",
+          "expr": "grin"
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "lines": [
+        2
+      ],
+      "start": "2:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "brahmin"
+      ],
+      "mustShow": [
+        "village.hut"
+      ],
+      "action": "Wide: Brahmin stands outside his hut, folding his hands in relief.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "2:0",
+          "size": "wide",
+          "on": [
+            "brahmin"
+          ],
+          "with": [
+            "village.hut",
+            "village.door"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "reveal": true,
+          "note": "Wide at the hut: the Brahmin folds his hands in relief."
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "2:0",
+          "pose": "pray",
+          "expr": "relief"
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "lines": [
+        2
+      ],
+      "start": "2:9",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "brahmin"
+      ],
+      "mustShow": [
+        "brahmin"
+      ],
+      "action": "Medium: Brahmin's face relaxes into a nervous smile.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "2:9",
+          "size": "medium",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "note": "Medium: his face relaxes into a nervous smile.",
+          "foreground": "village.front"
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "2:9",
+          "pose": "fold",
+          "expr": "nervous"
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "lines": [
+        3
+      ],
+      "start": "3:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "brahmin"
+      ],
+      "mustShow": [
+        "brahmin"
+      ],
+      "action": "Close: Brahmin's smile collapses; he prays, tears welling.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "3:0",
+          "size": "close",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "punch": "3:4",
+          "drama": true,
+          "note": "Close: the smile collapses; he prays, tears welling."
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "3:0",
+          "pose": "pray",
+          "expr": "pained",
+          "impact": "3:4"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sweat",
+          "at": "3:3",
+          "note": "Tears/sweat at the eyes."
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "lines": [
+        3
+      ],
+      "start": "3:6",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "kunti",
+        "brahmin"
+      ],
+      "mustShow": [
+        "kunti"
+      ],
+      "action": "Medium: Kunti steps forward, hand on chest, speaking firmly to the Brahmin.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "3:6",
+          "size": "full",
+          "on": [
+            "kunti"
+          ],
+          "with": [
+            "brahmin"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "glide",
+          "punch": "3:12",
+          "note": "Medium: Kunti steps forward, hand on chest, speaking firmly.",
+          "ease": "glide"
+        }
+      ],
+      "beats": [
+        {
+          "who": "kunti",
+          "at": "3:6",
+          "pose": "present",
+          "expr": "stern",
+          "talk": true
+        },
+        {
+          "who": "brahmin",
+          "at": "3:10",
+          "pose": "fold",
+          "expr": "shock"
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "lines": [
+        4
+      ],
+      "start": "4:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "hermitage.hut"
+      ],
+      "action": "Establishing: Bhima sits at the hermitage, a feast spread before him.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "flash",
+        "frames": 4
+      },
+      "keys": [
+        {
+          "at": "4:0",
+          "size": "establishing",
+          "on": [
+            "bhima"
+          ],
+          "with": [
+            "hermitage.hut",
+            "hermitage.mat"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "push",
+          "reveal": true,
+          "note": "Establishing the hermitage: Bhima sits before a spread feast.",
+          "foreground": "hermitage.clearing"
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "4:0",
+          "pose": "sit",
+          "expr": "smile"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "lines": [
+        4
+      ],
+      "start": "4:6",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "bhima"
+      ],
+      "action": "Medium: Bhima eats with relish, eyes closed in delight.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "4:6",
+          "size": "medium",
+          "on": [
+            "bhima"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "note": "Medium: Bhima eats with relish, eyes closed in delight."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "4:6",
+          "pose": "drink",
+          "expr": "smile_closed"
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "lines": [
+        4
+      ],
+      "start": "4:12",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "bhima"
+      ],
+      "action": "Close: Bhima licks his fingers, a pile of empty leaves beside him.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "4:12",
+          "size": "close",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "punch": "4:15",
+          "note": "Close: he licks his fingers over empty leaves."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "4:12",
+          "pose": "hold",
+          "expr": "lick",
+          "impact": "4:15"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "4:14",
+          "note": "Satisfied sparkle."
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "lines": [
+        5
+      ],
+      "start": "5:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bakasura",
+        "bhima"
+      ],
+      "mustShow": [
+        "bakasura"
+      ],
+      "action": "Wide: Bakasura arrives at the clearing, arms raised in confusion at Bhima.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "5:0",
+          "size": "wide",
+          "on": [
+            "bakasura"
+          ],
+          "with": [
+            "bhima",
+            "hermitage.clearing"
+          ],
+          "angle": "low",
+          "side": "frontLeft",
+          "move": "push",
+          "drama": true,
+          "note": "Wide: Bakasura arrives, arms raised in confusion at Bhima.",
+          "foreground": "hermitage.hut",
+          "punch": "5:0"
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "5:0",
+          "pose": "armsUp",
+          "expr": "shock"
+        },
+        {
+          "who": "bhima",
+          "at": "5:2",
+          "pose": "sit",
+          "expr": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "lines": [
+        5
+      ],
+      "start": "5:10",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bakasura"
+      ],
+      "mustShow": [
+        "bakasura"
+      ],
+      "action": "Medium: Bakasura points at Bhima, demanding to know who he is.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "5:10",
+          "size": "full",
+          "on": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "right",
+          "move": "push",
+          "punch": "5:15",
+          "note": "Medium: Bakasura points at Bhima, demanding who he is."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bakasura",
+          "at": "5:10",
+          "pose": "point",
+          "expr": "stern",
+          "talk": true,
+          "face": "bhima"
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "lines": [
+        6
+      ],
+      "start": "6:0",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "bhima"
+      ],
+      "action": "Medium: Bhima stands, flexing his muscles calmly.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "6:0",
+          "size": "medium",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "push",
+          "note": "Medium: Bhima stands, flexing calmly."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "6:0",
+          "pose": "flex",
+          "expr": "stern"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "lines": [
+        6
+      ],
+      "start": "6:8",
+      "set": "hermitage",
+      "light": "day",
+      "characters": [
+        "bhima",
+        "bakasura"
+      ],
+      "mustShow": [
+        "bhima"
+      ],
+      "action": "Full: Bhima grabs Bakasura and bends him backward.",
+      "scene": "hermitage-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "6:8",
+          "size": "full",
+          "on": [
+            "bhima"
+          ],
+          "with": [
+            "bakasura"
+          ],
+          "angle": "low",
+          "side": "left",
+          "move": "push",
+          "punch": "6:14",
+          "impact": "6:14",
+          "drama": true,
+          "note": "Full: Bhima grabs Bakasura and bends him backward.",
+          "foreground": "hermitage.mat"
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "6:8",
+          "pose": "grab",
+          "expr": "stern",
+          "impact": "6:14"
+        },
+        {
+          "who": "bakasura",
+          "at": "6:10",
+          "pose": "shout",
+          "expr": "pained"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "burst",
+          "at": "6:14",
+          "note": "Impact burst as the demon's back cracks."
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "lines": [
+        7
+      ],
+      "start": "7:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "Wide: Bhima shrugs casually at the village front.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "7:0",
+          "size": "wide",
+          "on": [
+            "bhima"
+          ],
+          "with": [
+            "village.front",
+            "village.boats"
+          ],
+          "angle": "eye",
+          "side": "front",
+          "move": "push",
+          "note": "Wide: Bhima shrugs casually at the village front."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "7:0",
+          "pose": "shrug",
+          "expr": "smile"
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "lines": [
+        7
+      ],
+      "start": "7:8",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "bhima"
+      ],
+      "action": "Medium: Bhima continues to shrug, looking unbothered.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "7:8",
+          "size": "full",
+          "on": [
+            "bhima"
+          ],
+          "angle": "low",
+          "side": "frontRight",
+          "move": "push",
+          "note": "Medium: Bhima continues to shrug, looking unbothered."
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "7:8",
+          "pose": "shrug",
+          "expr": "smile"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "lines": [
+        8
+      ],
+      "start": "8:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bhima"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "Wide: Bhima drags the demon's body and throws it at the gate.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "8:0",
+          "size": "wide",
+          "on": [
+            "bhima"
+          ],
+          "with": [
+            "village.front",
+            "village.boats"
+          ],
+          "angle": "high",
+          "side": "front",
+          "move": "glide",
+          "punch": "8:8",
+          "drama": true,
+          "note": "Wide: Bhima drags the demon's body and throws it at the gate.",
+          "foreground": "village.front",
+          "ease": "glide"
+        }
+      ],
+      "beats": [
+        {
+          "who": "bhima",
+          "at": "8:0",
+          "pose": "carry",
+          "expr": "stern"
+        },
+        {
+          "who": "bhima",
+          "at": "8:8",
+          "pose": "throw",
+          "expr": "stern",
+          "impact": "8:8"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "dust",
+          "at": "8:8",
+          "note": "Dust rising where the body lands."
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "lines": [
+        8
+      ],
+      "start": "8:11",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "bhima",
+        "brahmin"
+      ],
+      "mustShow": [
+        "brahmin"
+      ],
+      "action": "Medium: Brahmin and villagers look shocked in the morning light.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "8:11",
+          "size": "medium",
+          "on": [
+            "brahmin"
+          ],
+          "with": [
+            "bhima"
+          ],
+          "angle": "eye",
+          "side": "frontLeft",
+          "move": "push",
+          "punch": "8:15",
+          "note": "Medium: Brahmin and villagers look shocked in the morning light."
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "8:11",
+          "pose": "armsUp",
+          "expr": "shock",
+          "impact": "8:15"
+        }
+      ]
+    },
+    {
+      "id": "S21",
+      "lines": [
+        9
+      ],
+      "start": "9:0",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "brahmin"
+      ],
+      "mustShow": [
+        "village.front"
+      ],
+      "action": "Wide: The Brahmin raises his arms, celebrating with the village.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "9:0",
+          "size": "wide",
+          "on": [
+            "brahmin"
+          ],
+          "with": [
+            "village.front",
+            "village.hut"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "push",
+          "note": "Wide: the Brahmin raises his arms, celebrating with the village.",
+          "punch": "9:0"
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "9:0",
+          "pose": "armsUp",
+          "expr": "laugh"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "petals",
+          "at": "9:1",
+          "note": "Festival petals over the village."
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "lines": [
+        9
+      ],
+      "start": "9:7",
+      "set": "village",
+      "light": "day",
+      "characters": [
+        "brahmin"
+      ],
+      "mustShow": [
+        "brahmin"
+      ],
+      "action": "Close: The Brahmin smiles widely, relieved the threat is gone.",
+      "scene": "village-day",
+      "transition": {
+        "type": "crossfade",
+        "frames": 7
+      },
+      "keys": [
+        {
+          "at": "9:7",
+          "size": "full",
+          "on": [
+            "brahmin"
+          ],
+          "angle": "low",
+          "side": "front",
+          "move": "glide",
+          "punch": "9:12",
+          "note": "Close: the Brahmin smiles widely, relieved the threat is gone.",
+          "foreground": "village.door",
+          "ease": "glide"
+        }
+      ],
+      "beats": [
+        {
+          "who": "brahmin",
+          "at": "9:7",
+          "pose": "fold",
+          "expr": "grin",
+          "impact": "9:12"
+        }
+      ],
+      "fx": [
+        {
+          "kind": "sparkle",
+          "at": "9:10",
+          "note": "Relief sparkle."
+        }
+      ]
+    }
+  ]
+}

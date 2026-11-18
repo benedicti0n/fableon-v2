@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "bakasura-hi",
+  "title": "Bhima and Bakasura",
+  "topic": "Bhima and Bakasura: the demon's dinner who ate the dinner first",
+  "seconds": 66,
+  "language": "hi",
+  "voice": {
+    "provider": "sarvam",
+    "model": "bulbul:v4-flash",
+    "voiceId": "nachiket_hi_devotional",
+    "language": "hi",
+    "pace": 1.1,
+    "performance": true,
+    "fit": "natural",
+    "sampleRate": 48000,
+    "normalize": true,
+    "trim": true,
+    "align": true,
+    "maxCharsPerRun": 10000,
+    "rate": {
+      "delivered": {
+        "wordsPerSecond": 2.682,
+        "charactersPerSecond": 12.613
+      }
+    }
+  },
+  "research": {
+    "web": false,
+    "maxSources": 8
+  },
+  "models": {
+    "default": {
+      "provider": "deepseek",
+      "model": null
+    },
+    "script": {
+      "provider": "gemini",
+      "model": "gemini-3.1-pro-preview",
+      "temperature": 0.8,
+      "maxTokens": 12000,
+      "maxRepairs": 5
+    }
+  },
+  "autopilot": false
+}

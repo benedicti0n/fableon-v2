@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "duration": 66.41,
+  "music": [
+    {
+      "scene": "village-day",
+      "mood": "warm",
+      "tempo": 96,
+      "intensity": 0.42,
+      "instruments": [
+        "tanpura",
+        "sitar",
+        "tabla",
+        "flute"
+      ]
+    },
+    {
+      "scene": "hermitage-day",
+      "mood": "tense",
+      "tempo": 88,
+      "intensity": 0.5,
+      "instruments": [
+        "tanpura",
+        "tabla",
+        "sitar"
+      ]
+    }
+  ],
+  "stingers": [
+    {
+      "kind": "hook",
+      "at": "0:0"
+    },
+    {
+      "kind": "mystery",
+      "at": "5:0"
+    },
+    {
+      "kind": "payoff",
+      "at": "8:0"
+    }
+  ],
+  "sfx": [
+    {
+      "kind": "thud",
+      "at": "0:2",
+      "note": "impact kick"
+    },
+    {
+      "kind": "thud",
+      "at": "0:14",
+      "note": "impact kick"
+    },
+    {
+      "kind": "thud",
+      "at": "3:4",
+      "note": "impact kick"
+    },
+    {
+      "kind": "flashHit",
+      "at": "4:0",
+      "note": "transition flash"
+    },
+    {
+      "kind": "shimmer",
+      "at": "4:14",
+      "note": "fx sparkle"
+    },
+    {
+      "kind": "steps",
+      "at": "5:2",
+      "note": "Bakasura's heavy arrival at the clearing"
+    },
+    {
+      "kind": "thud",
+      "at": "6:14",
+      "note": "impact kick"
+    },
+    {
+      "kind": "whoosh",
+      "at": "8:1",
+      "note": "corpse dragged to the town gate"
+    },
+    {
+      "kind": "thud",
+      "at": "8:8",
+      "note": "impact kick"
+    },
+    {
+      "kind": "thud",
+      "at": "8:15",
+      "note": "impact kick"
+    },
+    {
+      "kind": "pop",
+      "at": "9:2",
+      "note": "village festival begins"
+    },
+    {
+      "kind": "shimmer",
+      "at": "9:10",
+      "note": "fx sparkle"
+    }
+  ]
+}

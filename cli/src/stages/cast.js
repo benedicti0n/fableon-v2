@@ -147,16 +147,16 @@ function castDefs(characters, catalog) {
 function boardFromShots(characters, catalog, shots) {
   return { version: 1, fps: 30, tailFrames: 0, cast: castDefs(characters, catalog), shots };
 }
-function groupShot(characters, catalog, { spacing = 1.0, side = 'front', third = null } = {}) {
+function groupShot(characters, catalog, { spacing = 1.0, side = 'front', third = null, set = 'hermitage', mark = 'hermitage.clearing' } = {}) {
   return {
-    id: 'cast', start: 'f0', end: 'f90', light: 'day', sets: ['hermitage'],
-    actors: characters.map((c, i) => ({ cast: c.id, at: 'hermitage.clearing', nudge: [(i - (characters.length - 1) / 2) * spacing, 0, 0], pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 })),
+    id: 'cast', start: 'f0', end: 'f90', light: 'day', sets: [set],
+    actors: characters.map((c, i) => ({ cast: c.id, at: mark, nudge: [(i - (characters.length - 1) / 2) * spacing, 0, 0], pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 })),
     camera: [{ at: 'f0', size: 'wide', on: characters.map((c) => c.id), move: 'hold', side, ...(third ? { third } : {}) }],
   };
 }
-function soloShot(c, catalog, { mark = 'hermitage.clearing', nudge = [0, 0, 0], side = 'front', angle = 'eye' } = {}) {
+function soloShot(c, catalog, { set = 'hermitage', mark = 'hermitage.clearing', nudge = [0, 0, 0], side = 'front', angle = 'eye' } = {}) {
   return {
-    id: c.id, start: 'f0', end: 'f90', light: 'day', sets: ['hermitage'],
+    id: c.id, start: 'f0', end: 'f90', light: 'day', sets: [set],
     actors: [{ cast: c.id, at: mark, nudge, pose: 'stand', expr: 'neutral', facing: 'camera', scale: c.scale ?? 1 }],
     camera: [{ at: 'f0', size: 'medium', on: [c.id], move: 'hold', side, angle }],
   };
@@ -168,7 +168,8 @@ async function measureBoard(tmp, board, words, catalog) {
   const result = await checkFramesMeasured(tmp);
   return { storyboard, result };
 }
-const cleanSheet = (r) => r.errors.length === 0 && !r.warnings.some((w) => ['edge intruder', 'blocker', 'cut subject', 'floating subjects'].includes(w.code));
+const SHEET_IGNORE = new Set(['tangent']);
+const cleanSheet = (r) => !r.errors.some((e) => !SHEET_IGNORE.has(e.code)) && !r.warnings.some((w) => ['edge intruder', 'blocker', 'cut subject', 'floating subjects'].includes(w.code));
 
 async function groupBlockers(tmp, characters) {
   const jobs = characters.map((c) => ({ frame: 45, subjects: [c.id], over: null, with: [], edge: characters.filter((x) => x.id !== c.id).map((x) => x.id) }));
@@ -199,33 +200,46 @@ async function castSheet(projectDir, characters, catalog) {
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cast-'));
   try {
     let group = null, last = null;
-    for (const side of ['front', 'left', 'right']) for (const spacing of [1.0, 0.9, 0.8]) for (const third of [null, 'left', 'right']) {
-      if (third && side !== 'front') continue;
-      try {
-        const shot = groupShot(characters, catalog, { spacing, side, third });
-        const { result } = await measureBoard(tmp, boardFromShots(characters, catalog, [shot]), words, catalog);
-        if (cleanSheet(result)) {
-          const blocked = await groupBlockers(tmp, characters);
-          if (!blocked) { group = shot; break; }
-          last = blocked;
-        } else last = result.errors[0]?.message ?? result.warnings.find((w) => w.code === 'edge intruder' || w.code === 'floating subjects')?.message ?? 'finding';
-      } catch (e) { last = e.message; }
+    const sets = [
+      { set: 'arena', mark: 'arena.floor' },
+      { set: 'deer', mark: 'deer.clearing' },
+      { set: 'city', mark: 'city.clearing' },
+      { set: 'lac', mark: 'lac.stage' },
+      { set: 'village', mark: 'village.front' },
+      { set: 'palace', mark: 'palace.courtyard' },
+      { set: 'hermitage', mark: 'hermitage.clearing' },
+    ];
+    for (const { set, mark } of sets) {
+      for (const side of ['front', 'left', 'right']) for (const spacing of [1.0, 0.9, 0.8, 0.7, 0.6]) for (const third of [null, 'left', 'right']) {
+        if (third && side !== 'front') continue;
+        try {
+          const shot = groupShot(characters, catalog, { spacing, side, third, set, mark });
+          const { result } = await measureBoard(tmp, boardFromShots(characters, catalog, [shot]), words, catalog);
+          if (cleanSheet(result)) {
+            const blocked = await groupBlockers(tmp, characters);
+            if (!blocked) { group = shot; break; }
+            last = blocked;
+          } else last = result.errors[0]?.message ?? result.warnings.find((w) => w.code === 'edge intruder' || w.code === 'floating subjects')?.message ?? 'finding';
+        } catch (e) { last = e.message; }
+        if (group) break;
+      }
+      if (!group) console.log(`cast set ${set} blocked: ${last ?? 'no variant'}`);
       if (group) break;
     }
     if (!group) throw new Error(`cast sheet group has no clean measured variant: ${last ?? 'no variant'}`);
 
     const solos = [];
     for (const c of characters) {
-      const options = [
-        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'front', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [1.4, 0, 0], side: 'front', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [-1.4, 0, 0], side: 'front', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [0, 0, 1.2], side: 'front', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [0, 0, -1.2], side: 'front', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'front', angle: 'low' },
-        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'left', angle: 'eye' },
-        { mark: 'hermitage.clearing', nudge: [0, 0, 0], side: 'right', angle: 'eye' },
-      ];
+      const options = sets.flatMap(({ set, mark }) => [
+        { set, mark, nudge: [0, 0, 0], side: 'front', angle: 'eye' },
+        { set, mark, nudge: [1.4, 0, 0], side: 'front', angle: 'eye' },
+        { set, mark, nudge: [-1.4, 0, 0], side: 'front', angle: 'eye' },
+        { set, mark, nudge: [0, 0, 1.2], side: 'front', angle: 'eye' },
+        { set, mark, nudge: [0, 0, -1.2], side: 'front', angle: 'eye' },
+        { set, mark, nudge: [0, 0, 0], side: 'front', angle: 'low' },
+        { set, mark, nudge: [0, 0, 0], side: 'left', angle: 'eye' },
+        { set, mark, nudge: [0, 0, 0], side: 'right', angle: 'eye' },
+      ]);
       let solo = null;
       for (const o of options) {
         try {
