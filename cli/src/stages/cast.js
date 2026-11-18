@@ -9,6 +9,9 @@ import { checkFramesMeasured } from '../frames.js';
 import { CAST } from './prompts.js';
 
 const HEX = /^#[0-9a-f]{6}$/i;
+const PLACE_ROLE = /^(the\s+)?(village|town|city|forest|river|kingdom|country|land|place|palace|hermitage|sea|mountain|temple|street|market|home|house)$/i;
+/** A place mention is background/world, never a character card. */
+export const isPlaceMention = (m) => PLACE_ROLE.test(String(m?.role ?? "").trim()) || /^(village|town|city|forest|river|kingdom|country|palace|hermitage)$/i.test(String(m?.name ?? "").trim());
 const simpleClothes = (s) => !!s.lower && !s.top && !s.drape;
 const TRAITS = {
   'dark-skin': { field: 'skin', ok: (s) => HEX.test(s.skin ?? '') && luminance(s.skin) < 0.12, hint: 'skin must be a dark hex colour' },
@@ -78,7 +81,7 @@ const specOf = (c, catalog) => c.spec ?? (c.cast ? castKeySpec(c.cast, catalog) 
 /** Colour/build/head distinctness and every mustHave trait. */
 export function castErrors(data, script, catalog) {
   const errs = [];
-  const wanted = new Map([...(script.characters ?? []), ...(script.mentions ?? [])].map((c) => [c.id, c]));
+  const wanted = new Map([...(script.characters ?? []), ...(script.mentions ?? []).filter((m) => !isPlaceMention(m))].map((c) => [c.id, c]));
   const seen = new Set();
   for (const c of data.characters ?? []) {
     if (seen.has(c.id)) errs.push(`/characters duplicate id ${c.id}`);
@@ -195,7 +198,7 @@ async function groupBlockers(tmp, characters) {
   return null;
 }
 
-async function castSheet(projectDir, characters, catalog) {
+export async function castSheet(projectDir, characters, catalog) {
   const words = [{ w: 'cast', a: 0, b: 10, line: 0 }];
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cast-'));
   try {
@@ -289,7 +292,7 @@ export async function runCast({ projectDir, project, router }) {
   }).filter(Boolean);
   const data = {
     characters: script.characters ?? [],
-    mentions: script.mentions ?? [],
+    mentions: (script.mentions ?? []).filter((m) => !isPlaceMention(m)),
     facts: verified.map((f) => ({ id: f.id, claim: f.claim })),
     sceneLooks: (script.lines ?? []).map((l) => ({ n: l.n, who: l.look?.who ?? [], note: l.look?.note ?? '' })),
     castlist: examples,
@@ -305,7 +308,7 @@ export async function runCast({ projectDir, project, router }) {
       const errs = validationErrors('cast', d);
       return errs.length ? errs : castErrors(d, script, catalog);
     },
-    repairHint: 'Use only the listed Spec fields and trait names. Every script character and mention needs an entry. Inline spec is preferred for new characters.',
+    repairHint: 'Use only the listed Spec fields and trait names. Every script character and every person/being mention needs an entry; place mentions are background only. Inline spec is preferred for new characters.',
   });
   const characters = draft.characters.map((c) => ({ ...c, scale: c.scale ?? 1, notes: c.notes ?? '' }));
   const assets = assetGaps(script, catalog);

@@ -43,6 +43,10 @@ import { runVoiceQaTests } from './voice_qa.mjs';
 import { runGuardPauseTests } from './guard_pauses.mjs';
 import { runLookTests } from './look.mjs';
 import { runLookQaTests } from './lookqa.mjs';
+import { runLockTests } from './lock.mjs';
+import { runCleanTests } from './clean.mjs';
+import { runVoiceRateTests } from './voice_rate.mjs';
+import { runCastPlaceTests } from './cast_places.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -172,6 +176,14 @@ try {
   check('look rules', look.ok, `${look.checks.filter((c) => c.ok).length}/${look.checks.length} checks`);
   const lookqa = runLookQaTests();
   check('look QA', lookqa.ok, `${lookqa.checks.filter((c) => c.ok).length}/${lookqa.checks.length} checks`);
+  const lock = runLockTests();
+  check('approved lock', lock.ok, `${lock.checks.filter((c) => c.ok).length}/${lock.checks.length} checks`);
+  const clean = runCleanTests();
+  check('clean', clean.ok, `${clean.checks.filter((c) => c.ok).length}/${clean.checks.length} checks`);
+  const rate = runVoiceRateTests();
+  check('voice-aware budget', rate.ok, `${rate.checks.filter((c) => c.ok).length}/${rate.checks.length} checks`);
+  const places = runCastPlaceTests();
+  check('cast places', places.ok, `${places.checks.filter((c) => c.ok).length}/${places.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

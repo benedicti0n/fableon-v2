@@ -4,8 +4,9 @@ import { join } from 'node:path';
 import { ROOT } from '../env.js';
 import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/artifacts.js';
 import { buildCatalogCard } from '../catalog-card.js';
-import { markScriptRevised } from '../core/state.js';
+import { isApprovedLocked, markScriptRevised } from '../core/state.js';
 import { SCRIPT, SCRIPT_HI, REVISE } from './prompts.js';
+import { voiceRate } from '../voice/rate.js';
 import { countWords, normalizedText, normalizedTokens, normalizeWord } from '../../../shared/words.mjs';
 
 export const WPS = 3.75; // measured on the fixture: 451 words / 120.1 s
@@ -319,8 +320,9 @@ export function validateScript(data, { project, facts, catalog, sourceTexts = []
   for (const l of data.lines ?? []) normalizeLook(l, catalog);
   const errs = validationErrors('script', data);
   if (errs.length) return errs;
-  const deliveredRate = project.voice?.rate?.delivered?.wordsPerSecond ?? null;
-  const rate = deliveredRate ?? project.voice?.rate?.wordsPerSecond ?? WPS;
+  const vr = voiceRate(project);
+  const deliveredRate = vr.source === 'delivered' ? vr.wordsPerSecond : null;
+  const rate = vr.wordsPerSecond;
   const pauses = plannedPauseSeconds(data);
   const target = deliveredRate ? project.seconds * deliveredRate : Math.max(1, project.seconds - pauses) * rate, total = data.lines.reduce((n, l) => n + countWords(l.text), 0);
   const tol = project.language === 'hi' ? 0.15 : 0.07;
@@ -403,8 +405,9 @@ export async function runScript({ projectDir, project, router }) {
   })();
   const verified = (facts.facts ?? []).filter((f) => f.verified);
   const isHi = project.language === 'hi';
-  const deliveredRate = project.voice?.rate?.delivered?.wordsPerSecond ?? null;
-  const rate = deliveredRate ?? project.voice?.rate?.wordsPerSecond ?? WPS;
+  const vr = voiceRate(project);
+  const deliveredRate = vr.source === 'delivered' ? vr.wordsPerSecond : null;
+  const rate = vr.wordsPerSecond;
   const lineTarget = formulaLineTarget(project.seconds);
   const lineLo = Math.max(8, lineTarget - 1);
   const lineHi = Math.min(14, lineTarget + 1);
@@ -427,6 +430,7 @@ export async function runScript({ projectDir, project, router }) {
     { role: 'system', content: isHi ? SCRIPT_HI : SCRIPT },
     { role: 'user', content: `STABLE CATALOG (sets, marks, poses, expressions and props are the only stageable ones):\n${card}\n\nDATA:\n<brief>\n${brief}\n</brief>\n<verified_facts>\n${verified.map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nTarget: ${project.seconds} seconds at ${rate} words/second = about ${wordsTarget} words (valid ${wordsLo}-${wordsHi}). ${instruction} Return json only.` },
   ], { validate: (d) => validateScript(d, { project, facts, catalog, sourceTexts }), repairHint });
+  data.wps = rate;
   writeJsonArtifact(projectDir, 'script', 'script.json', data, 'script');
   writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, data, facts));
   return { usage, normalizer: normalizerLog.get(data) ?? null };
@@ -434,6 +438,7 @@ export async function runScript({ projectDir, project, router }) {
 
 /** Rewrite only the failing lines; every other line stays byte-identical. */
 export async function reviseScript({ projectDir, project, router, failures }) {
+  if (isApprovedLocked(projectDir, project, 'script')) throw new Error('script output is approved and read-only; the factcheck revision loop will not modify it');
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));

@@ -105,8 +105,24 @@ export function recordStage(projectDir, project, name, { status = 'fresh', usage
   return state.stages[name];
 }
 
+/** True when this stage's current output files are the ones the user approved, even if inputs have since changed. */
+export function isApprovedLocked(projectDir, project, name, state = loadState(projectDir)) {
+  const stage = stageByName(name);
+  const st = state.stages?.[name];
+  if (!stage || !st?.approvedHash) return false;
+  return st.outputHash === stageOutputHash(projectDir, stage);
+}
+
+/** Approved stage outputs are read-only unless the user explicitly forces a non-autopilot run. */
+export function assertWritable(projectDir, project, name, { autopilot = false, force = false } = {}) {
+  if (!isApprovedLocked(projectDir, project, name)) return;
+  if (autopilot) throw new Error(`${name} output is approved and read-only in autopilot; review it and rerun without --autopilot`);
+  if (!force) throw new Error(`${name} output is approved; review the new inputs and rerun with --force to replace it, or approve the new output`);
+}
+
 export function markScriptRevised(projectDir) {
   const project = readJson(join(projectDir, 'project.json'), 'project');
+  if (isApprovedLocked(projectDir, project, 'script')) throw new Error('script output is approved and read-only; rerun with --force without autopilot to revise it');
   const stage = stageByName('script');
   const state = loadState(projectDir);
   const hash = computeHash(projectDir, project, stage);

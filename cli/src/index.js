@@ -17,6 +17,7 @@ import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
 import { lookdevCommand } from './lookdev.js';
 import { lookcheckCommand } from './lookcheck.js';
+import { cleanCommand, freeBytes } from './clean.js';
 import { modelsCommand } from './models-command.js';
 import { voiceBudgetCommand, voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -95,6 +96,23 @@ export function main(argv = process.argv) {
     .option('--shot <id>', 're-render only this shot segment after the board run')
     .option('--notes <text>', 'director notes; reruns the board stage')
     .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('clean')
+    .description('remove regenerable render segments, old voice auditions and preview stills')
+    .option('--project <dir>', 'one project (default: every work/ project)')
+    .option('--dry-run', 'list the files and space without deleting')
+    .action((opts) => {
+      try {
+        const before = freeBytes();
+        const r = cleanCommand(opts.project ?? null, { dryRun: !!opts.dryRun });
+        const mb = (r.bytes / 1024 / 1024).toFixed(1);
+        console.log(`clean: ${r.files.length} file(s), ${mb} MB${opts.dryRun ? ' (dry run)' : ''}`);
+        for (const f of r.files.slice(0, 80)) console.log(`  ${f}`);
+        if (r.files.length > 80) console.log(`  … ${r.files.length - 80} more`);
+        if (before != null) { const after = freeBytes(); console.log(`disk free: ${(before / 1e9).toFixed(2)} GB -> ${(after / 1e9).toFixed(2)} GB`); }
+      } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+    });
 
   program
     .command('lookcheck')

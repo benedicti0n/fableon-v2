@@ -2,7 +2,7 @@
 import { EventEmitter } from 'node:events';
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { allStatuses, approve, loadState, recordStage, saveState, statusOf } from './state.js';
+import { allStatuses, approve, assertWritable, isApprovedLocked, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
 const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js' };
 
@@ -42,6 +42,7 @@ export class PipelineRunner extends EventEmitter {
       const shouldRun = force || ['missing', 'stale', 'failed'].includes(status.status) || (status.status === 'edited' && force);
       if (!shouldRun) { this.emit('skip', { stage: stage.name, status: status.status }); continue; }
       if (status.status === 'edited' && !force) throw new Error(`${stage.name} has hand-edited output; review it, approve it, or rerun with --force`);
+      assertWritable(this.projectDir, this.project, stage.name, { autopilot, force });
       if (!autopilot) {
         for (const dep of stage.deps) {
           const ds = statusOf(this.projectDir, this.project, stageByName(dep));
@@ -74,6 +75,9 @@ export class PipelineRunner extends EventEmitter {
         if (!autopilot) {
           recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: 'fact-check needs revision' });
           throw new Error(`fact-check failed:\n${result.failures.map((f) => `  line ${f.n}: ${f.verdict}${f.craft === 'weak' ? ' / craft weak' : ''} — ${f.note} (${f.fix})`).join('\n')}\nReview ${join(this.projectDir, 'script.review.json')} and revise the script.`);
+        }
+        if (isApprovedLocked(this.projectDir, this.project, 'script')) {
+          throw new Error('fact-check flags an approved script; review script.review.json and revise/approve it deliberately (the autopilot revision loop will not touch it)');
         }
         let failures = result.failures;
         let previousReview = result.review;

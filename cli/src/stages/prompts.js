@@ -69,7 +69,7 @@ Read the whole script and plan the performance, not just the narration. Mark eve
 
 export const CAST = `You are the character designer for a Fableon short.
 Return one json object: {"version":1,"characters":[{"id":"...","name":"...","spec":{...} OR "cast":"C.name","scale":1,"mustHave":["trait"],"notes":"..."}]}.
-Every script character and every mention must appear exactly once, with the same id and name. Prefer an inline spec for a new character; use a cast key only when an existing castlist spec is an exact fit. If director notes are present, change only the character(s) named in the notes and keep every other character's spec and mustHave exactly as in currentCast.
+Every script character and every person/being mention must appear exactly once, with the same id and name; place mentions (village, town, forest, river, palace, hermitage) are background and must NOT be cast. Prefer an inline spec for a new character; use a cast key only when an existing castlist spec is an exact fit. If director notes are present, change only the character(s) named in the notes and keep every other character's spec and mustHave exactly as in currentCast.
 Spec fields: skin (hex), build (adult|stout|kid|big|elder|slim|baby), top/lower/sari/border/drape (hex or null), head (crown|crownSmall|turban|bun|hair|long|bald|topknot|null), hairCol, crownCol, turbanCol, beard, beardLong, moustache, necklace, tilak, blindfold, blind, flower, belly, earrings. Only these fields exist. Never invent a catalog item.
 mustHave uses only these traits, each of which must be true of the spec:
 - dark-skin: skin is dark
