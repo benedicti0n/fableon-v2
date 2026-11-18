@@ -11,21 +11,50 @@ import type { LightName } from "./lights";
 
 export const FPS = 30;
 // ---------------- canvas pool ----------------
-type Entry = { cv: HTMLCanvasElement; tex: THREE.CanvasTexture; w: number; h: number };
-export type Req = { key: string; w: number; h: number; k: number; draw: (p: Pen) => void; tex?: THREE.CanvasTexture };
-const makeEntry = (w: number, h: number): Entry => {
+type Entry = { cv: HTMLCanvasElement; tex: THREE.CanvasTexture; w: number; h: number; k: number; inkCv?: HTMLCanvasElement; inkTex?: THREE.CanvasTexture; sdfTex?: THREE.DataTexture; sdfW?: number; sdfH?: number; inkKey?: string };
+export type Req = { key: string; w: number; h: number; k: number; draw: (p: Pen) => void; mask?: boolean; flat?: boolean; actor?: boolean; tex?: THREE.CanvasTexture; inkTex?: THREE.CanvasTexture; sdfTex?: THREE.DataTexture; sdfW?: number; sdfH?: number };
+const makeEntry = (w: number, h: number, k = 1): Entry => {
   const cv = document.createElement("canvas");
   cv.width = w; cv.height = h;
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 1;
-  return { cv, tex, w, h };
+  return { cv, tex, w, h, k };
 };
+const sdfCv = document.createElement("canvas");
+/** 8-bit distance-to-silhouette (inside positive) at 1/8 card resolution; rows are flipped for the DataTexture UV. */
+const distanceField = (cv: HTMLCanvasElement): [Uint8Array, number, number] => {
+  const sw = Math.max(64, Math.round(cv.width / 8)), sh = Math.max(64, Math.round(cv.height / 8));
+  sdfCv.width = sw; sdfCv.height = sh;
+  const g = sdfCv.getContext("2d")!;
+  g.clearRect(0, 0, sw, sh); g.drawImage(cv, 0, 0, sw, sh);
+  const a = g.getImageData(0, 0, sw, sh).data;
+  const INF = 1e6, S = Math.SQRT2, d = new Float32Array(sw * sh);
+  for (let i = 0; i < d.length; i++) d[i] = a[i * 4 + 3] >= 128 ? INF : 0;
+  for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
+    const i = y * sw + x; if (d[i] === 0) continue;
+    let v = d[i];
+    if (x > 0) v = Math.min(v, d[i - 1] + 1);
+    if (y > 0) { v = Math.min(v, d[i - sw] + 1); if (x > 0) v = Math.min(v, d[i - sw - 1] + S); if (x < sw - 1) v = Math.min(v, d[i - sw + 1] + S); }
+    d[i] = v;
+  }
+  for (let y = sh - 1; y >= 0; y--) for (let x = sw - 1; x >= 0; x--) {
+    const i = y * sw + x; if (d[i] === 0) continue;
+    let v = d[i];
+    if (x < sw - 1) v = Math.min(v, d[i + 1] + 1);
+    if (y < sh - 1) { v = Math.min(v, d[i + sw] + 1); if (x < sw - 1) v = Math.min(v, d[i + sw + 1] + S); if (x > 0) v = Math.min(v, d[i + sw - 1] + S); }
+    d[i] = v;
+  }
+  const out = new Uint8Array(sw * sh);
+  for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) out[(sh - 1 - y) * sw + x] = Math.min(255, Math.round(d[y * sw + x]));
+  return [out, sw, sh];
+};
+
 export class Pool {
   private live = new Map<string, Entry>();
   private free: Entry[] = [];
   private reqs: Req[] = [];
-  req(key: string, w: number, h: number, k: number, draw: (p: Pen) => void) {
-    const r: Req = { key: `${w}x${h}|${key}`, w, h, k, draw };
+  req(key: string, w: number, h: number, k: number, draw: (p: Pen) => void, mask = true, flat = false, actor = true) {
+    const r: Req = { key: `${flat ? "flat|" : ""}${w}x${h}|${key}`, w, h, k, draw, mask, flat, actor };
     this.reqs.push(r);
     return r;
   }
@@ -37,14 +66,39 @@ export class Pool {
       let e = this.live.get(key);
       if (!e) {
         const r = rs[0], i = this.free.findIndex((x) => x.w === r.w && x.h === r.h);
-        e = i >= 0 ? this.free.splice(i, 1)[0] : makeEntry(r.w, r.h);
+        e = i >= 0 ? this.free.splice(i, 1)[0] : makeEntry(r.w, r.h, r.k);
+        e.k = r.k;
         const g = e.cv.getContext("2d")!;
         g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, e.w, e.h); g.setTransform(r.k, 0, 0, r.k, 0, 0);
-        r.draw(new Pen(g));
+        const inkCv = e.inkCv ?? document.createElement("canvas");
+        inkCv.width = e.w; inkCv.height = e.h;
+        const inkG = inkCv.getContext("2d")!;
+        inkG.setTransform(1, 0, 0, 1, 0, 0); inkG.clearRect(0, 0, e.w, e.h); inkG.setTransform(r.k, 0, 0, r.k, 0, 0);
+        const p = new Pen(g); p.flat = !!r.actor && (!!r.flat || lookFlat); r.draw(p);
         e.tex.needsUpdate = true;
+        e.inkCv = inkCv;
         this.live.set(key, e);
       }
-      for (const r of rs) r.tex = e.tex;
+      if (rs[0].mask && e.inkKey !== key) {
+        if (!e.inkTex) {
+          e.inkTex = new THREE.CanvasTexture(e.inkCv!);
+          e.inkTex.colorSpace = THREE.NoColorSpace;
+          e.inkTex.minFilter = THREE.LinearFilter; e.inkTex.magFilter = THREE.LinearFilter;
+          e.inkTex.generateMipmaps = false;
+        } else { e.inkTex.image = e.inkCv!; e.inkTex.needsUpdate = true; }
+        const [sdfData, sw, sh] = distanceField(e.cv);
+        if (!e.sdfTex || e.sdfW !== sw || e.sdfH !== sh) {
+          e.sdfTex = new THREE.DataTexture(sdfData, sw, sh, THREE.RedFormat, THREE.UnsignedByteType);
+          e.sdfTex.minFilter = THREE.LinearFilter; e.sdfTex.magFilter = THREE.LinearFilter;
+          e.sdfTex.generateMipmaps = false; e.sdfTex.needsUpdate = true;
+          e.sdfW = sw; e.sdfH = sh;
+        } else { (e.sdfTex.image.data as Uint8Array).set(sdfData); e.sdfTex.needsUpdate = true; }
+        e.inkKey = key;
+      }
+      for (const r of rs) {
+        r.tex = e.tex;
+        if (r.mask) { r.inkTex = e.inkTex; r.sdfTex = e.sdfTex; r.sdfW = e.sdfW; r.sdfH = e.sdfH; }
+      }
     }
     this.reqs = [];
     // keep the free list small (old canvases are garbage)
@@ -53,6 +107,8 @@ export class Pool {
 }
 
 // ---------------- sprite meshes ----------------
+let lookFlat = false;
+export const setLookFlat = (v: boolean) => { lookFlat = v; };
 const blank = (() => { const c = document.createElement("canvas"); c.width = c.height = 2; return new THREE.CanvasTexture(c); })();
 export const SU = 0.00216; // metres per design unit: 1000 units = 2.16 m
 const geoFor = (w: number, h: number, base: number) => { const g = new THREE.PlaneGeometry(w * SU, h * SU); g.translate(0, (base - h / 2) * SU, 0); return g; };
@@ -76,7 +132,20 @@ export class Actor {
     parent.add(this.mesh);
   }
   geo(name: string) { this.mesh.geometry = GEOS[name] ?? GEOS.body; }
-  bind() { const t = this.r?.tex; if (t) { this.mat.map = t; this.dmat.map = t; } }
+  bind() {
+    const t = this.r?.tex;
+    if (t) { this.mat.map = t; this.dmat.map = t; }
+    const U = this.mat.userData.cardU as Record<string, { value: unknown }> | undefined;
+    const r = this.r;
+    if (U && r) {
+      U.uInkMask.value = r.inkTex ?? null;
+      U.uSdf.value = r.sdfTex ?? null;
+      U.uSdfScale.value = (r.w ?? 1) / Math.max(1, r.sdfW ?? 1);
+      U.uInkW.value = 8 * (r.k ?? 1) + 1;
+      U.uRimW.value = 0.03 * (r.w ?? 1);
+      U.uInkOn.value = r.inkTex ? 1 : 0;
+    }
+  }
 }
 export class Fx {
   mesh: THREE.Mesh; mat: THREE.MeshBasicMaterial; soft: THREE.MeshBasicMaterial; blob: THREE.MeshBasicMaterial; glow: THREE.MeshBasicMaterial; fire: THREE.MeshBasicMaterial; r: Req | null = null;

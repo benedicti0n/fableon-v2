@@ -17,6 +17,7 @@ import { samplePath, ballisticAt, walkPhase, bobOffset, addScreen } from "../cor
 import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Shot as CamShot } from "../core/camera";
 import { gnCard } from "../core/specials";
 import { assembleShots, layersAt as layersAtShots, dofAt as dofAtList, transitionMaps, Def, Dof } from "../core/shotlist";
+import { setFeatureRim } from "../toon";
 import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person, ganesha } from "../people";
 import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
 import CATALOG from "../../../schema/catalog.json";
@@ -35,6 +36,7 @@ const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const num = (v: unknown, d = 0) => (typeof v === "number" ? v : d);
 
 export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = new Map()): Runtime {
+  setFeatureRim(sb.featureRim === true);
   const fps = sb.fps ?? 30;
   const { A, AW, END, TOTAL, T } = makeAnchors(words, fps, sb.tailFrames ?? 36);
   const defaults = (CATALOG as { defaults?: { sunBySet?: Record<string, { az: number; el: number }>; setPieces?: Record<string, { height?: number }> } }).defaults ?? {};

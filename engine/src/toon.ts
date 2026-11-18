@@ -13,7 +13,10 @@ const _lin = (c: number) => { const v = c / 255; return v <= 0.04045 ? v / 12.92
 const _lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); return 0.2126 * _lin((n >> 16) & 255) + 0.7152 * _lin((n >> 8) & 255) + 0.0722 * _lin(n & 255); };
 /** contrast of a skin colour against the plum ink; the 3C warning threshold is 2.2 */
 export const contrastAgainstInk = (skin: string) => (_lum(skin) + 0.05) / 0.05;
-export const needsFeatureRim = (skin: string) => contrastAgainstInk(skin) < 2.2;
+let featureRimOn = false;
+/** project.json look.featureRim: off by default; when off, dark-skin eyes use the ordinary face library */
+export const setFeatureRim = (v: boolean) => { featureRimOn = v; };
+export const needsFeatureRim = (skin: string) => featureRimOn && contrastAgainstInk(skin) < 2.2;
 export const SH_SKIN: C3 = [0.96, 0.86, 0.84]; // measured shadow/lit ratio on skin heads
 export const SH_CLOTH: C3 = [0.64, 0.66, 0.74]; // torsos: lit side -> far side ~0.65
 export const SH_FELT: C3 = [0.62, 0.62, 0.7];
@@ -34,6 +37,12 @@ export const mul = (c: string, m: C3) => {
   return `#${ch((n >> 16) & 255, m[0])}${ch((n >> 8) & 255, m[1])}${ch(n & 255, m[2])}`;
 };
 export const shade = (c: string, k: number) => mul(c, [k, k, k]);
+const inkLike = (c: string | null | undefined) => {
+  if (!c || !c.startsWith("#")) return false;
+  const n = parseInt(c.slice(1), 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 52;
+};
 export const mix = (a: string, b: string, t: number) => {
   const A = parseInt(a.slice(1), 16), B = parseInt(b.slice(1), 16);
   const ch = (s: number) => Math.round(((A >> s) & 255) * (1 - t) + ((B >> s) & 255) * t).toString(16).padStart(2, "0");
@@ -76,10 +85,31 @@ export const townsfolk = (v = 0): Outfit => {
 
 export class Pen {
   g: CanvasRenderingContext2D;
+  ink?: CanvasRenderingContext2D;
   ol = 12;
+  /** look shots: solid base fills, no painted crescent (characters stay flat-lit) */
+  flat = false;
   /** [angle, cx, cy] rotation about (cx, cy), optional post-translation [.., dx, dy] */
   rot: number[] | null = null;
-  constructor(g: CanvasRenderingContext2D) { this.g = g; }
+  constructor(g: CanvasRenderingContext2D, ink?: CanvasRenderingContext2D) { this.g = g; this.ink = ink; }
+  private inkPath(pts: P2[], close: boolean) {
+    const q = this.ink; if (!q) return;
+    q.beginPath();
+    pts.forEach((p, i) => { const [x, y] = this.P(p[0], p[1]); if (i) q.lineTo(x, y); else q.moveTo(x, y); });
+    if (close) q.closePath();
+  }
+  private inkStroke(pts: P2[], w: number, close = false) {
+    const q = this.ink; if (!q) return;
+    this.inkPath(pts, close);
+    q.lineCap = "round"; q.lineJoin = "round"; q.strokeStyle = "#ffffff"; q.lineWidth = w; q.stroke();
+  }
+  private inkFill(pts: P2[]) {
+    const q = this.ink; if (!q) return;
+    this.inkPath(pts, true); q.fillStyle = "#ffffff"; q.fill();
+  }
+  /** explicit no-rim region (hair, dark marks): added to the card's ink mask */
+  markInk(pts: P2[]) { this.inkFill(pts); }
+  markInkEll(cx: number, cy: number, rx: number, ry: number, rot = 0) { this.inkFill(ellPts(cx, cy, rx, ry, 0, 360, rot)); }
   P(x: number, y: number): P2 {
     if (!this.rot) return [x, y];
     const r = this.rot, a = r[0], cx = r[1], cy = r[2], dx = r.length > 3 ? r[3] : 0, dy = r.length > 4 ? r[4] : 0, c = Math.cos(a), s = Math.sin(a);
@@ -95,8 +125,8 @@ export class Pen {
   poly(pts: P2[], fill: string | null, ol?: number) {
     const g = this.g, w = ol ?? this.ol;
     this.path(pts, true);
-    if (fill) { g.fillStyle = fill; g.fill(); }
-    if (w) { g.lineWidth = w; g.strokeStyle = INK; g.lineJoin = "round"; g.stroke(); }
+    if (fill) { g.fillStyle = fill; g.fill(); if (inkLike(fill)) this.inkFill(pts); }
+    if (w) { g.lineWidth = w; g.strokeStyle = INK; g.lineJoin = "round"; g.stroke(); this.inkStroke(pts, w, true); }
   }
   ell(cx: number, cy: number, rx: number, ry: number, fill: string | null, ol?: number, a0 = 0, a1 = 360, rot = 0) {
     this.poly(ellPts(cx, cy, rx, ry, a0, a1, rot), fill, ol);
@@ -105,13 +135,14 @@ export class Pen {
   line(pts: P2[], fill: string, w: number, ink = true) {
     const g = this.g;
     g.lineCap = "round"; g.lineJoin = "round";
-    if (ink) { this.path(pts, false); g.strokeStyle = INK; g.lineWidth = w + 2 * this.ol * 0.9; g.stroke(); }
+    if (ink) { this.path(pts, false); g.strokeStyle = INK; g.lineWidth = w + 2 * this.ol * 0.9; g.stroke(); this.inkStroke(pts, w + 2 * this.ol * 0.9); }
     this.path(pts, false); g.strokeStyle = fill; g.lineWidth = w; g.stroke();
   }
   stroke(pts: P2[], w: number, fill = INK) {
     const g = this.g;
     g.lineCap = "round"; g.lineJoin = "round";
     this.path(pts, false); g.strokeStyle = fill; g.lineWidth = w; g.stroke();
+    if (inkLike(fill)) this.inkStroke(pts, w);
   }
   arc(cx: number, cy: number, rx: number, ry: number, a0: number, a1: number, w: number, fill = INK) {
     const pts: P2[] = [];
@@ -121,12 +152,14 @@ export class Pen {
   dot(cx: number, cy: number, r: number, fill = INK) {
     const [x, y] = this.P(cx, cy);
     this.g.beginPath(); this.g.arc(x, y, r, 0, Math.PI * 2); this.g.fillStyle = fill; this.g.fill();
+    if (inkLike(fill)) this.inkFill(ellPts(cx, cy, r, r));
   }
   /** draw with a closed shape as clip */
   clip(pts: P2[], fn: () => void) { const g = this.g; g.save(); this.path(pts, true); g.clip(); fn(); g.restore(); }
   /** flat fill + soft crescent on the side away from the light (light = canvas angle the light comes FROM).
    *  Radial ramp centred `shift` R toward the light: flat out to ~0.6 R on the far side, full shadow by ~0.8 R. */
   shadedFill(pts: P2[], base: string, shadow: string, light: number, R: number, shift = 0.45, r0 = 1.05, r1 = 1.25) {
+    if (this.flat) { this.poly(pts, base, 0); if (inkLike(base)) this.inkFill(pts); return; }
     const g = this.g, n = pts.length;
     let cx = 0, cy = 0;
     for (const [x, y] of pts) { cx += x / n; cy += y / n; }
@@ -134,9 +167,11 @@ export class Pen {
     const gr = g.createRadialGradient(gx, gy, 0, gx, gy, r1 * R);
     gr.addColorStop(0, base); gr.addColorStop(r0 / r1, base); gr.addColorStop(1, shadow);
     this.path(pts, true); g.fillStyle = gr; g.fill();
+    if (inkLike(base)) this.inkFill(pts);
   }
   /** broad gradient across a shape along the light: lit edge = base, far edge = shadow (torsos, coats) */
   gradFill(pts: P2[], base: string, shadow: string, light: number, flat = 0.22) {
+    if (this.flat) { this.poly(pts, base, 0); if (inkLike(base)) this.inkFill(pts); return; }
     const g = this.g, dx = Math.cos(light), dy = Math.sin(light), n = pts.length;
     let cx = 0, cy = 0, lo = Infinity, hi = -Infinity;
     for (const [x, y] of pts) { cx += x / n; cy += y / n; const d = x * dx + y * dy; lo = Math.min(lo, d); hi = Math.max(hi, d); }
@@ -145,6 +180,7 @@ export class Pen {
     const gr = g.createLinearGradient(ax, ay, bx, by);
     gr.addColorStop(0, base); gr.addColorStop(flat, base); gr.addColorStop(1, shadow);
     this.path(pts, true); g.fillStyle = gr; g.fill();
+    if (inkLike(base)) this.inkFill(pts);
   }
   /** thick-thin ink ring: w(θ) = w0 (1 + k cos(θ − thick)), θ from the contour centroid (canvas angles) */
   inkRing(pts: P2[], w0: number, thick: number, k = 0.45, col = INK) {
@@ -163,11 +199,17 @@ export class Pen {
     const trace = (r: P2[]) => { r.forEach(([x0, y0], i) => { const [x, y] = this.P(x0, y0); if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.closePath(); };
     g.beginPath(); trace(out); trace(inn.reverse());
     g.fillStyle = col; g.fill("evenodd");
+    if (this.ink) {
+      const q = this.ink; q.beginPath();
+      const t2 = (r: P2[]) => { r.forEach(([x0, y0], i) => { const [x, y] = this.P(x0, y0); if (i) q.lineTo(x, y); else q.moveTo(x, y); }); q.closePath(); };
+      t2(out); t2(inn); q.fillStyle = "#ffffff"; q.fill("evenodd");
+    }
   }
   /** flat strap with a thin ink rim (cross belts, sash, rifle, handles) */
   band(pts: P2[], fill: string, w: number, rim: number, cap: CanvasLineCap = "butt") {
     const g = this.g; g.lineCap = cap; g.lineJoin = "round";
     this.path(pts, false); g.strokeStyle = INK; g.lineWidth = w + 2 * rim; g.stroke();
+    this.inkStroke(pts, w + 2 * rim);
     this.path(pts, false); g.strokeStyle = fill; g.lineWidth = w; g.stroke();
     g.lineCap = "round";
   }
@@ -281,25 +323,25 @@ export const eye = (p: Pen, kind: EyeK, x: number, ey: number, u: number, side: 
 };
 
 /** open "D" mouth with a white teeth band (+ tongue) */
-export const dmouth = (p: Pen, mx: number, y: number, rx: number, ry: number, u: number, tongue = false) => {
-  p.ell(mx, y, rx, ry, MOUTH, 0, 0, 180);
+export const dmouth = (p: Pen, mx: number, y: number, rx: number, ry: number, u: number, tongue = false, feature = false) => {
+  p.ell(mx, y, rx, ry, feature ? mix(MOUTH, "#c76a72", 0.55) : MOUTH, 0, 0, 180);
   p.clip([[mx - rx, y], [mx + rx, y], [mx + rx, y + 3 * u], [mx - rx, y + 3 * u]], () => p.ell(mx, y, rx, ry, WHITE, 0, 0, 180));
-  if (tongue) p.ell(mx + 2 * u, y + 0.62 * ry, 0.4 * rx, 0.28 * ry, TONGUE, 0);
+  if (tongue) p.ell(mx + 2 * u, y + 0.62 * ry, 0.4 * rx, 0.28 * ry, feature ? mix(TONGUE, "#ffb0b8", 0.5) : TONGUE, 0);
   p.ell(mx, y, rx, ry, null, 3 * u, 0, 180);
 };
 
-export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1) => {
-  const mw = 4 * u;
+export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1, feature = false) => {
+  const mw = 4 * u, mc = feature ? mix(MOUTH, "#c76a72", 0.55) : MOUTH;
   switch (kind) {
     case "dash": p.stroke([[mx - 5.5 * u * k, my], [mx + 5.5 * u * k, my - 0.8 * u]], mw); break;
     case "frown": p.arc(mx, my + 3 * u, 6.5 * u * k, 3.5 * u, 200, 340, mw); break;
     case "smirk": p.arc(mx + u, my - 3 * u, 7 * u * k, 4 * u, 10, 150, mw); break;
     case "smile": p.arc(mx, my - 3 * u, 8 * u * k, 4.5 * u, 20, 160, mw); break;
     case "smileWide": p.arc(mx, my - 4 * u, 11 * u * k, 6 * u, 15, 165, mw); break;
-    case "grin": dmouth(p, mx, my - u, 12 * u * k, 8 * u, u); break;
-    case "laugh": dmouth(p, mx, my, 16 * u * k, 11 * u, u, true); break;
-    case "o": p.ell(mx + 4 * u, my, 3.5 * u, 4 * u, MOUTH, 2.8 * u); break;
-    case "O": p.ell(mx, my + 2 * u, 9 * u * k, 11 * u, MOUTH, 3.2 * u); break;
+    case "grin": dmouth(p, mx, my - u, 12 * u * k, 8 * u, u, false, feature); break;
+    case "laugh": dmouth(p, mx, my, 16 * u * k, 11 * u, u, true, feature); break;
+    case "o": p.ell(mx + 4 * u, my, 3.5 * u, 4 * u, mc, 2.8 * u); break;
+    case "O": p.ell(mx, my + 2 * u, 9 * u * k, 11 * u, mc, 3.2 * u); break;
     case "wave": { const s: P2[] = []; for (let i = 0; i <= 12; i++) s.push([mx - 9 * u * k + i * 1.5 * u * k, my + 1.5 * u * Math.sin(i * 1.3)]); p.stroke(s, 3 * u); break; }
     case "teeth":
       p.poly([[mx - 12 * u * k, my - 4 * u], [mx + 12 * u * k, my - 4 * u], [mx + 11 * u * k, my + 4 * u], [mx - 11 * u * k, my + 4 * u]], WHITE, 3 * u);
@@ -315,19 +357,18 @@ export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr,
   skin: string, moustache?: string, stout = false, featureRim = false) => {
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy;
-  const halo = mix(skin, "#ffe6c0", 0.58);
+  const rimCol = mix(skin, "#ffffff", 0.2);
   for (const side of [-1, 1]) {
     const x = fx + side * ex;
     const kind = eyeKind(F.eye[(facing ? side === facing : side > 0) ? 1 : 0], lid);
-    if (featureRim) p.ell(x, ey, (kind === "shock" ? 9.5 : 8) * u, (kind === "shock" ? 12 : 10) * u, halo, 0);
+    if (featureRim) p.stroke(ellPts(x, ey, (kind === "shock" ? 12.5 : 8.5) * u, (kind === "shock" ? 12.5 : 10.5) * u), 1.2 * u, rimCol);
     eye(p, kind, x, ey, u, side, look, skin);
     const [dI, dO] = F.brow, by = ey - (brim ? 17 : 20) * u;
     if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
     else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u);
   }
   const mx = cx + 8 * u * facing, my = cy + 20 * u;
-  if (featureRim) p.ell(mx, my, 11 * u, 7 * u, halo, 0);
-  mouth(p, F.mouth, mx, my, u);
+  mouth(p, F.mouth, mx, my, u, 1, featureRim);
   if (moustache) for (const s of [-1, 1])
     taper(p, [mx + s * 1.5 * u, cy + 12.5 * u], [mx + s * (stout ? 19 : 15) * u, cy + (stout ? 10.5 : 15) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, moustache);
   if (expr === "nervous") p.ell(cx + 40 * u * (facing || 1), cy - 22 * u, 3 * u, 5 * u, "#9fd4ff", 2 * u);
@@ -337,15 +378,14 @@ export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr,
 export const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: number, brim: boolean, skin: string, moustache?: string, stout = false, featureRim = false) => {
   const u = W / 100, F = FACE[expr], ex = hx + 27 * u, ey = hy;
   const kind = eyeKind(F.eye[1], lid);
-  const halo = mix(skin, "#ffe6c0", 0.58);
-  if (featureRim) p.ell(ex, ey, (kind === "shock" ? 9.5 : 8) * u, (kind === "shock" ? 12 : 10) * u, halo, 0);
+  const rimCol = mix(skin, "#ffffff", 0.2);
+  if (featureRim) p.stroke(ellPts(ex, ey, (kind === "shock" ? 12.5 : 8.5) * u, (kind === "shock" ? 12.5 : 10.5) * u), 1.2 * u, rimCol);
   eye(p, kind, ex, ey, u, 1, 0.6, skin);
   const by = ey - (brim ? 17 : 20) * u, [dI, dO] = F.brow;
   if (kind === "shock" || kind === "shockHalf") p.arc(ex, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
   else taper(p, [ex + 8 * u, by + dI * u], [ex - 7 * u, by - u + dO * u], 5 * u, 2.5 * u);
   p.stroke([[hx + 44 * u, hy + 4 * u], [hx + 47.5 * u, hy + 9 * u], [hx + 43 * u, hy + 10 * u]], 3 * u);
-  if (featureRim) p.ell(hx + 33 * u, hy + 21 * u, 8 * u, 5 * u, halo, 0);
-  mouth(p, F.mouth, hx + 33 * u, hy + 21 * u, u, 0.62);
+  mouth(p, F.mouth, hx + 33 * u, hy + 21 * u, u, 0.62, featureRim);
   if (moustache) taper(p, [hx + 41 * u, hy + 13.5 * u], [hx + 25 * u, hy + (stout ? 11.5 : 16) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, moustache);
   if (expr === "nervous") p.ell(hx - 30 * u, hy - 24 * u, 3 * u, 5 * u, "#9fd4ff", 2 * u);
 };

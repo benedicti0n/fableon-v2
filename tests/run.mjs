@@ -47,6 +47,7 @@ import { runLockTests } from './lock.mjs';
 import { runCleanTests } from './clean.mjs';
 import { runVoiceRateTests } from './voice_rate.mjs';
 import { runCastPlaceTests } from './cast_places.mjs';
+import { runGlowTests } from './glow.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -184,6 +185,8 @@ try {
   check('voice-aware budget', rate.ok, `${rate.checks.filter((c) => c.ok).length}/${rate.checks.length} checks`);
   const places = runCastPlaceTests();
   check('cast places', places.ok, `${places.checks.filter((c) => c.ok).length}/${places.checks.length} checks`);
+  const glow = runGlowTests();
+  check('glow mask', glow.ok, `${glow.checks.filter((c) => c.ok).length}/${glow.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

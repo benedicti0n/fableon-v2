@@ -75,6 +75,9 @@
       "items": {
         "$ref": "#/$defs/Shot"
       }
+    },
+    "featureRim": {
+      "type": "boolean"
     }
   },
   "$defs": {
@@ -3867,23 +3870,55 @@
         "look": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["mood"],
+          "required": [
+            "mood"
+          ],
           "properties": {
-            "mood": { "enum": ["golden-glow", "warm-side", "dusk", "night-moon", "noon"] },
-            "shafts": { "type": "boolean" },
-            "sun": { "type": "boolean" },
-            "glow": { "type": "number" },
-            "rim": { "type": "number" },
-            "grade": { "type": "string" }
+            "mood": {
+              "enum": [
+                "golden-glow",
+                "warm-side",
+                "dusk",
+                "night-moon",
+                "noon"
+              ]
+            },
+            "shafts": {
+              "type": "boolean"
+            },
+            "sun": {
+              "type": "boolean"
+            },
+            "glow": {
+              "type": "number"
+            },
+            "rim": {
+              "type": "number"
+            },
+            "grade": {
+              "type": "string"
+            }
           }
         },
         "transition": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "properties": {
-            "type": { "enum": ["crossfade", "flash", "cut"] },
-            "frames": { "type": "number", "minimum": 1, "maximum": 24 }
+            "type": {
+              "enum": [
+                "crossfade",
+                "flash",
+                "cut"
+              ]
+            },
+            "frames": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 24
+            }
           }
         }
       }
@@ -3975,7 +4010,11 @@
               "type": "string"
             },
             "ease": {
-              "enum": ["glide", "burst", "linear"]
+              "enum": [
+                "glide",
+                "burst",
+                "linear"
+              ]
             },
             "easeFrames": {
               "type": "number",

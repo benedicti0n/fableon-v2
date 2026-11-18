@@ -112,8 +112,9 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
     fs.mkdirSync(path.dirname(out), { recursive: true });
     for (const f of framesCsv.split(',').map(Number)) {
       const t = Date.now();
-      const d = await pg.evaluate(([f, q]) => window.renderFrame(f, q), [f, JPEG]);
-      fs.writeFileSync(`${out}${f}.jpg`, Buffer.from(d.split(',')[1], 'base64'));
+      const d = await pg.evaluate(([f, q, mask, png]) => mask ? window.renderMask(f) : png ? window.renderFramePNG(f) : window.renderFrame(f, q), [f, JPEG, !!opt.mask, !!opt.png]);
+      const ext = opt.mask || opt.png ? 'png' : 'jpg';
+      fs.writeFileSync(`${out}${f}.${ext}`, Buffer.from(d.split(',')[1], 'base64'));
       console.log('still', f, ((Date.now() - t) / 1000).toFixed(1) + 's', JSON.stringify(await pg.evaluate(() => Object.fromEntries(Object.entries(window.PROF).map(([k, v]) => [k, Math.round(v)])))));
     }
   } else {

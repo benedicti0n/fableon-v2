@@ -42,5 +42,8 @@
       "maxRepairs": 5
     }
   },
-  "autopilot": false
+  "autopilot": false,
+  "look": {
+    "featureRim": false
+  }
 }

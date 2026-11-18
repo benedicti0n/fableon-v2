@@ -3,12 +3,13 @@
 // Post chain (bridge short): InkPass (world ink, own pass) -> lens blur pre + main -> [bloom + NEUTRAL tone map + grade],
 // MSAA 4. Every pixel-sized parameter is specified at 1080x1920 and scaled with the output height.
 import * as THREE from "three";
-import { EffectComposer, RenderPass, EffectPass, BloomEffect, BlendFunction, ToneMappingEffect, ToneMappingMode, SMAAEffect, SMAAPreset, EdgeDetectionMode } from "postprocessing";
+import { EffectComposer, RenderPass, EffectPass, BlendFunction, ToneMappingEffect, ToneMappingMode, SMAAEffect, SMAAPreset, EdgeDetectionMode } from "postprocessing";
 import { World } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur } from "./lensblur";
-import { GradeEffect, GRADES, gradeFor } from "./grade";
+import { GradeEffect, GRADES, GRADE_STRENGTH, gradeFor } from "./grade";
 import { HalationEffect } from "./halation";
+import { MaskedBloomEffect } from "./glow";
 import { moodRig } from "./look";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
@@ -55,10 +56,46 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(40, W / H, 0.15, 1500);
 const world = new World();
+world.noShafts = OFF.has("shafts");
 scene.add(world.root);
 noInkFallback(world.root);
 
 const MEASURE = measureSubjects();
+
+// ---------- character mask: actor/special cards only, flat alpha coverage ----------
+// This is the same alpha-cut as the coverage pass, at full output resolution. The glow passes multiply their source
+// and their added light by (1 - mask), dilated by one pixel at 1080, so world glow never crosses a character.
+const charMaskRT = new THREE.WebGLRenderTarget(W, H, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType, depthBuffer: true });
+const charMaskScene = new THREE.Scene();
+const charMaskGroup = new THREE.Group(); charMaskScene.add(charMaskGroup);
+const charMaskMat = (tex: THREE.Texture) => new THREE.ShaderMaterial({
+  uniforms: { map: { value: tex } },
+  vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+  fragmentShader: "uniform sampler2D map; varying vec2 vUv; void main(){ if (texture2D(map, vUv).a < 0.5) discard; gl_FragColor = vec4(1.0); }",
+  depthTest: true, depthWrite: true, side: THREE.DoubleSide, toneMapped: false, fog: false,
+});
+const maskMeshes: THREE.Mesh[] = [];
+function renderCharMask(active: boolean) {
+  if (!active) return;
+  let n = 0;
+  for (const a of world.coverageCards.actors) {
+    const tex = a.r?.tex;
+    if (!tex) continue;
+    let m = maskMeshes[n];
+    if (!m) { m = new THREE.Mesh(a.mesh.geometry, charMaskMat(tex)); maskMeshes[n] = m; charMaskGroup.add(m); }
+    m.geometry = a.mesh.geometry;
+    (m.material as THREE.ShaderMaterial).uniforms.map.value = tex;
+    m.position.copy(a.mesh.position); m.quaternion.copy(a.mesh.quaternion); m.scale.copy(a.mesh.scale);
+    m.visible = true; n++;
+  }
+  for (let i = n; i < maskMeshes.length; i++) maskMeshes[i].visible = false;
+  const oldTarget = renderer.getRenderTarget();
+  const oldClear = new THREE.Color(); renderer.getClearColor(oldClear); const oldAlpha = renderer.getClearAlpha();
+  const oldSpace = renderer.outputColorSpace;
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  renderer.setRenderTarget(charMaskRT); renderer.setClearColor(0x000000, 1); renderer.clear(); renderer.render(charMaskScene, cam);
+  renderer.setRenderTarget(oldTarget); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace;
+}
 
 // ---------- coverage pass: the same frame as flat object IDs ----------
 // Separate scene, separate unlit material, no post chain. This path is only used by `fableon frames` and
@@ -240,7 +277,7 @@ function coverageFrame(f: number, opts: any = {}) {
 (window as unknown as Record<string, unknown>).coverageFrame = coverageFrame;
 
 const makeBloom = () => {
-  const b = new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.5, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true, levels: 6, radius: 0.6 });
+  const b = new MaskedBloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.5, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true, levels: 6, radius: 0.6 });
   const mip = b.mipmapBlurPass, setSize = mip.setSize.bind(mip);
   mip.setSize = (w: number, h: number) => setSize(Math.round((960 * w) / Math.max(h, 1)), 960);
   return b;
@@ -250,11 +287,12 @@ const ink = new InkPass(scene, cam);
 const lens = new LensBlur({ maxCoC: 24, nearScale: 1.2 });
 const grade = new GradeEffect(GRADES.day, 1);
 const halation = new HalationEffect();
+const bloom = OFF.has("bloom") ? null : makeBloom();
 const preP = new EffectPass(cam, lens.pre), mainP = new EffectPass(cam, lens.main);
 composer.addPass(new RenderPass(scene, cam));
 if (!OFF.has("ink")) composer.addPass(ink);
 if (!OFF.has("lens")) { composer.addPass(preP); composer.addPass(mainP); }
-composer.addPass(new EffectPass(cam, ...(OFF.has("bloom") ? [] : [makeBloom()]), ...(OFF.has("halation") ? [] : [halation]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [grade])));
+composer.addPass(new EffectPass(cam, ...(bloom ? [bloom] : []), ...(OFF.has("halation") ? [] : [halation]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [grade])));
 // MSAA is the costliest part on the CPU renderer (~3 s/frame at 2K): without it, SMAA on the final image smooths the
 // card cut-outs and remaining geometry edges (the world ink lines are already anti-aliased by the ink pass)
 if (MS === 0 && !OFF.has("smaa")) { const smaa = new SMAAEffect({ preset: SMAAPreset.HIGH, edgeDetectionMode: EdgeDetectionMode.COLOR }); composer.addPass(new EffectPass(cam, smaa)); }
@@ -272,6 +310,11 @@ const drawShot = (id: number, f: number) => {
   let t0 = performance.now();
   const target = world.update(s, f, cam, scene, H, RT.kickCam);
   PROF.update = performance.now() - t0; t0 = performance.now();
+  const lookOn = !!s.look;
+  renderCharMask(lookOn);
+  if (bloom) bloom.setCharMask(charMaskRT.texture, W, H, lookOn);
+  halation.setCharMask(charMaskRT.texture, W, H, lookOn);
+  world.setShaftMask(charMaskRT.texture, W, H, lookOn);
   noInkFallback(world.root);
   const d = RT.dofAt(f);
   cam.getWorldDirection(fwd);
@@ -288,13 +331,16 @@ const drawShot = (id: number, f: number) => {
     halation.radius = Math.max(4, Math.round(rig.glow.radius * H / 1080));
   } else halation.intensity = 0;
   gradeFor(grade, s.look && rig ? rig.grade : s.light);
+  grade.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
+  grade.setCharMask(charMaskRT.texture, W, H, lookOn);
+  grade.protect = s.look ? 1 : 0;
   composer.render();
   { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); }
   PROF.render = performance.now() - t0;
 };
 
 (window as unknown as Record<string, unknown>).TOTAL = RT.TOTAL;
-(window as unknown as Record<string, unknown>).renderFrame = (f: number, quality = 0.94) => {
+const renderComposite = (f: number) => {
   const layers = RT.layersAt(f);
   g2.globalAlpha = 1;
   layers.forEach((l, i) => {
@@ -308,10 +354,35 @@ const drawShot = (id: number, f: number) => {
   for (const f0 of RT.FLASHES) if (f >= f0 && f < f0 + 4) flash = Math.max(flash, [1, 0.75, 0.45, 0.2][f - f0]);
   if (flash > 0) { g2.globalAlpha = flash; g2.fillStyle = "#ffffff"; g2.fillRect(0, 0, W, H); }
   g2.globalAlpha = 1;
+  return out;
+};
+(window as unknown as Record<string, unknown>).renderFrame = (f: number, quality = 0.94) => {
   const t1 = performance.now();
-  const url = out.toDataURL("image/jpeg", quality);
+  const url = renderComposite(f).toDataURL("image/jpeg", quality);
   PROF.encode = performance.now() - t1;
   return url;
+};
+(window as unknown as Record<string, unknown>).renderFramePNG = (f: number) => {
+  const t1 = performance.now();
+  const url = renderComposite(f).toDataURL("image/png");
+  PROF.encode = performance.now() - t1;
+  return url;
+};
+(window as unknown as Record<string, unknown>).renderMask = (f: number) => {
+  const shot = RT.SHOTS.find((s) => f >= s.a && f < s.b);
+  if (!shot) return "";
+  world.update(shot, f, cam, scene, H, RT.kickCam);
+  renderCharMask(true);
+  const raw = new Uint8Array(W * H * 4);
+  renderer.readRenderTargetPixels(charMaskRT, 0, 0, W, H, raw);
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d")!; const img = ctx.createImageData(W, H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const o = ((H - 1 - y) * W + x) * 4, q = (y * W + x) * 4;
+    const v = raw[o]; img.data[q] = v; img.data[q + 1] = v; img.data[q + 2] = v; img.data[q + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  return cv.toDataURL("image/png");
 };
 (window as unknown as Record<string, unknown>).shotOf = (f: number) => RT.layersAt(f).map((l) => l.id);
 (window as unknown as Record<string, unknown>).SHOTLIST = RT.SHOTS.map((s) => [s.id, s.a, s.b, s.light, s.sets.join("+")]);

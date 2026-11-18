@@ -14,6 +14,8 @@
 // `amount` blends the whole grade (0 = bypass) so it can be dialled back once lighting/albedo work brightens the render.
 import { Effect, BlendFunction } from "postprocessing";
 import { Uniform, Vector3, Vector2 } from "three";
+import type { Texture } from "three";
+import { MaskUniforms, makeMaskUniforms, maskFn, maskSet } from "./charMask";
 
 const frag = /* glsl */ `
 uniform float gradeKy[7];
@@ -24,12 +26,23 @@ uniform vec3 gradeTintM;
 uniform vec3 gradeTintH;
 uniform vec2 gradeVig;      // x = strength k, y = start radius r0
 uniform float gradeAmount;
+uniform float gradeProtect;  // look shots: leave luma < 0.06 untouched, fade the shadow tint in 0.06-0.18
+uniform float legacyKy[7];
+uniform float legacyKm[7];
+uniform vec3 legacySat;
+uniform vec3 legacyTintS;
+uniform vec3 legacyTintM;
+uniform vec3 legacyTintH;
+uniform vec2 legacyVig;
+uniform float legacyAmount;
+uniform float gradeMaskOn;
+${maskFn("g")}
 
-vec3 gradeEncode(vec3 c) {   // linear -> sRGB
+vec3 gradeEncode(vec3 c) {
   c = clamp(c, 0.0, 1.0);
   return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(vec3(0.0031308), c));
 }
-vec3 gradeDecode(vec3 c) {   // sRGB -> linear
+vec3 gradeDecode(vec3 c) {
   return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
 }
 float gradeHermite(float v, float x0, float x1, float y0, float y1, float m0, float m1) {
@@ -45,24 +58,71 @@ float gradeCurve(float v) {
   if (v < 0.9)  return gradeHermite(v, 0.75, 0.9, gradeKy[4], gradeKy[5], gradeKm[4], gradeKm[5]);
   return gradeHermite(v, 0.9, 1.0, gradeKy[5], gradeKy[6], gradeKm[5], gradeKm[6]);
 }
+float legacyCurve(float v) {
+  v = clamp(v, 0.0, 1.0);
+  if (v < 0.1)  return gradeHermite(v, 0.0, 0.1, legacyKy[0], legacyKy[1], legacyKm[0], legacyKm[1]);
+  if (v < 0.25) return gradeHermite(v, 0.1, 0.25, legacyKy[1], legacyKy[2], legacyKm[1], legacyKm[2]);
+  if (v < 0.5)  return gradeHermite(v, 0.25, 0.5, legacyKy[2], legacyKy[3], legacyKm[2], legacyKm[3]);
+  if (v < 0.75) return gradeHermite(v, 0.5, 0.75, legacyKy[3], legacyKy[4], legacyKm[3], legacyKm[4]);
+  if (v < 0.9)  return gradeHermite(v, 0.75, 0.9, legacyKy[4], legacyKy[5], legacyKm[4], legacyKm[5]);
+  return gradeHermite(v, 0.9, 1.0, legacyKy[5], legacyKy[6], legacyKm[5], legacyKm[6]);
+}
 
-void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-  vec3 src = gradeEncode(inputColor.rgb);
-  vec3 c = vec3(gradeCurve(src.r), gradeCurve(src.g), gradeCurve(src.b));
-  const vec3 W = vec3(0.2126, 0.7152, 0.0722);
+const vec3 W = vec3(0.2126, 0.7152, 0.0722);
+vec3 gradeFinish(vec3 src, vec3 c, vec3 sat, vec3 tintS, vec3 tintM, vec3 tintH, vec2 vig, vec2 uv, float protectOn, float amount) {
   float y = dot(c, W);
   float wS = 1.0 - smoothstep(0.0, 0.55, y);
   float wH = smoothstep(0.45, 1.0, y);
   float wM = 1.0 - wS - wH;
-  float s = gradeSat.y + (gradeSat.x - gradeSat.y) * wS + (gradeSat.z - gradeSat.y) * wH;
+  float s = sat.y + (sat.x - sat.y) * wS + (sat.z - sat.y) * wH;
   c = vec3(y) + s * (c - vec3(y));
-  c += wS * gradeTintS + wM * gradeTintM + wH * gradeTintH;
+  float srcY = dot(src, W);
+  float protect = smoothstep(0.06, 0.18, srcY);
+  float shadowW = mix(wS, protect * (1.0 - smoothstep(0.45, 0.70, srcY)), protectOn);
+  c += shadowW * tintS + wM * tintM + wH * tintH;
   vec2 p = uv * 2.0 - 1.0;
   float r = length(p) * 0.70710678;
-  c *= 1.0 - gradeVig.x * smoothstep(gradeVig.y, 1.0, r);
+  c *= 1.0 - vig.x * smoothstep(vig.y, 1.0, r);
   c = clamp(c, 0.0, 1.0);
-  outputColor = vec4(gradeDecode(mix(src, c, gradeAmount)), inputColor.a);
-}`;
+  return mix(src, c, amount * mix(1.0, protect, protectOn));
+}
+vec3 gradeMood(vec3 src, vec2 uv) {
+  vec3 c = vec3(gradeCurve(src.r), gradeCurve(src.g), gradeCurve(src.b));
+  return gradeFinish(src, c, gradeSat, gradeTintS, gradeTintM, gradeTintH, gradeVig, uv, 1.0, gradeAmount);
+}
+vec3 gradeLegacy(vec3 src, vec2 uv) {
+  vec3 c = vec3(legacyCurve(src.r), legacyCurve(src.g), legacyCurve(src.b));
+  return gradeFinish(src, c, legacySat, legacyTintS, legacyTintM, legacyTintH, legacyVig, uv, 0.0, legacyAmount);
+}
+
+void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+  vec3 src = gradeEncode(inputColor.rgb);
+  if (gradeMaskOn < 0.5) {
+    // Legacy path: the exact single-grade shader (bit-identical for storyboards without a look block).
+    vec3 c = vec3(gradeCurve(src.r), gradeCurve(src.g), gradeCurve(src.b));
+    float y = dot(c, W);
+    float wS = 1.0 - smoothstep(0.0, 0.55, y);
+    float wH = smoothstep(0.45, 1.0, y);
+    float wM = 1.0 - wS - wH;
+    float s = gradeSat.y + (gradeSat.x - gradeSat.y) * wS + (gradeSat.z - gradeSat.y) * wH;
+    c = vec3(y) + s * (c - vec3(y));
+    float srcY = dot(src, W);
+    float protect = smoothstep(0.06, 0.18, srcY);
+    float shadowW = mix(wS, protect * (1.0 - smoothstep(0.45, 0.70, srcY)), gradeProtect);
+    c += shadowW * gradeTintS + wM * gradeTintM + wH * gradeTintH;
+    vec2 p = uv * 2.0 - 1.0;
+    float r = length(p) * 0.70710678;
+    c *= 1.0 - gradeVig.x * smoothstep(gradeVig.y, 1.0, r);
+    c = clamp(c, 0.0, 1.0);
+    outputColor = vec4(gradeDecode(mix(src, c, gradeAmount * mix(1.0, protect, gradeProtect))), inputColor.a);
+  } else {
+    float m = gMaskAt(uv);
+    vec3 world = gradeMood(src, uv);
+    vec3 character = gradeLegacy(src, uv);
+    outputColor = vec4(gradeDecode(mix(world, character, m)), inputColor.a);
+  }
+}
+`;
 
 // BT.709 zero-luma chroma basis (sRGB-encoded units): unit Cb and unit Cr as RGB offsets with Y' unchanged
 const E_CB: [number, number, number] = [0.0, -0.18733, 1.8556];
@@ -112,7 +172,9 @@ export const GRADE_GOLDEN: GradeParams = {
 //   highlights tint: hue 0 deg, RGB offset (+0.0, -0.0, +0.0)/255
 
 export class GradeEffect extends Effect {
+  mask: MaskUniforms;
   constructor(p: GradeParams, amount = 1) {
+    const mask = makeMaskUniforms("g");
     super("GradeEffect", frag, {
       blendFunction: BlendFunction.NORMAL,
       uniforms: new Map<string, Uniform>([
@@ -124,8 +186,37 @@ export class GradeEffect extends Effect {
         ["gradeTintH", new Uniform(tintRGB(...p.tintH))],
         ["gradeVig", new Uniform(new Vector2(...p.vig))],
         ["gradeAmount", new Uniform(amount)],
+        ["gradeProtect", new Uniform(0)],
+        ["legacyKy", new Uniform(p.ky.slice())],
+        ["legacyKm", new Uniform(monoTangents(p.ky))],
+        ["legacySat", new Uniform(new Vector3(...p.sat))],
+        ["legacyTintS", new Uniform(tintRGB(...p.tintS))],
+        ["legacyTintM", new Uniform(tintRGB(...p.tintM))],
+        ["legacyTintH", new Uniform(tintRGB(...p.tintH))],
+        ["legacyVig", new Uniform(new Vector2(...p.vig))],
+        ["legacyAmount", new Uniform(1)],
+        ["gradeMaskOn", new Uniform(0)],
+        ...Object.entries(mask),
       ]),
     });
+    this.mask = mask;
+  }
+  /** the character-card grade (the shot's legacy light preset), applied inside the charMask only */
+  setLegacy(p: GradeParams, amount = 1) {
+    const u = this.uniforms;
+    u.get("legacyKy")!.value = p.ky.slice();
+    u.get("legacyKm")!.value = monoTangents(p.ky);
+    (u.get("legacySat")!.value as Vector3).set(...p.sat);
+    u.get("legacyTintS")!.value = tintRGB(...p.tintS);
+    u.get("legacyTintM")!.value = tintRGB(...p.tintM);
+    u.get("legacyTintH")!.value = tintRGB(...p.tintH);
+    // cards stay flat: no screen-space vignette on the character grade
+    (u.get("legacyVig")!.value as Vector2).set(0, 0);
+    u.get("legacyAmount")!.value = amount;
+  }
+  setCharMask(tex: Texture, width: number, height: number, on: boolean) {
+    maskSet(this.mask, "g", tex, width, height, on);
+    this.uniforms.get("gradeMaskOn")!.value = on ? 1 : 0;
   }
   /** switch preset per shot (day <-> golden) or blend two presets during a crossfade/time-of-day change */
   set(p: GradeParams, q?: GradeParams, t = 0) {
@@ -147,6 +238,8 @@ export class GradeEffect extends Effect {
   }
   get amount() { return this.uniforms.get("gradeAmount")!.value as number; }
   set amount(v: number) { this.uniforms.get("gradeAmount")!.value = v; }
+  get protect() { return this.uniforms.get("gradeProtect")!.value as number; }
+  set protect(v: number) { this.uniforms.get("gradeProtect")!.value = v; }
 }
 
 /** Presets per light (plain objects: edit / re-fit freely). */
@@ -182,20 +275,20 @@ type LightName = "day" | "golden" | "night" | "deep";
 // Mood presets (Phase 3F): gentle S-curves, shadow lift toward violet and warm highlights. Values are calibrated on the
 // Adi golden/night frames and the STYLE_BIBLE; see docs/reports/phase-3f.md.
 export const GRADE_GOLDEN_GLOW: GradeParams = {
-  ky: [0, 0.07, 0.22, 0.52, 0.82, 0.95, 1], sat: [1.02, 1.16, 1.22],
-  tintS: [0.04, 0.006], tintM: [0.008, 0], tintH: [-0.018, 0.01], vig: [0.24, 0.38],
+  ky: [0, 0.07, 0.22, 0.55, 0.86, 0.97, 1], sat: [1.02, 1.16, 1.22],
+  tintS: [0.10, 0.004], tintM: [0.008, 0], tintH: [-0.03, 0.016], vig: [0.50, 0.22],
 };
 export const GRADE_WARM_SIDE: GradeParams = {
-  ky: [0, 0.09, 0.26, 0.58, 0.83, 0.94, 1], sat: [1.0, 1.08, 1.08],
-  tintS: [0.02, 0.004], tintM: [0.004, 0], tintH: [0.006, 0], vig: [0.14, 0.44],
+  ky: [0, 0.04, 0.14, 0.48, 0.86, 0.97, 1], sat: [1.0, 1.08, 1.1],
+  tintS: [0.10, 0.004], tintM: [0.008, 0], tintH: [0.008, 0], vig: [0.48, 0.22],
 };
 export const GRADE_DUSK: GradeParams = {
-  ky: [0, 0.06, 0.2, 0.5, 0.8, 0.94, 1], sat: [1.05, 1.15, 1.2],
-  tintS: [0.045, 0], tintM: [0.015, 0], tintH: [-0.02, 0.012], vig: [0.26, 0.36],
+  ky: [0, 0.05, 0.16, 0.5, 0.88, 0.99, 1], sat: [1.05, 1.15, 1.22],
+  tintS: [0.10, 0], tintM: [0.015, 0], tintH: [-0.02, 0.012], vig: [0.55, 0.20],
 };
 export const GRADE_NIGHT_MOON: GradeParams = {
-  ky: [0, 0.08, 0.24, 0.54, 0.82, 0.94, 1], sat: [1.05, 1.18, 1.15],
-  tintS: [0.04, 0.002], tintM: [-0.006, 0.004], tintH: [-0.012, 0.008], vig: [0.28, 0.36],
+  ky: [0, 0.14, 0.4, 0.72, 0.96, 1, 1], sat: [1.05, 1.18, 1.15],
+  tintS: [0.08, 0.002], tintM: [-0.005, 0.004], tintH: [-0.012, 0.008], vig: [0.50, 0.18],
 };
 export const GRADE_NOON: GradeParams = {
   ky: [0, 0.1, 0.3, 0.62, 0.84, 0.94, 1], sat: [1.0, 1.04, 1.02],

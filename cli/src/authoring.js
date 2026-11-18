@@ -620,7 +620,7 @@ export function compileBoard(board, words, catalog) {
   };
   const ctx0 = Object.entries(board.cast ?? {}).filter(([, d]) => !d.group);
   const out = {
-    version: 1, fps, tailFrames: board.tailFrames ?? 36, crossfade: board.crossfade ?? 10,
+    version: 1, fps, tailFrames: board.tailFrames ?? 36, crossfade: board.crossfade ?? 10, ...(board.featureRim !== undefined ? { featureRim: board.featureRim } : {}),
     ...(board.flash !== undefined ? { flash: parseAnchor(board.flash, fps) } : {}),
     ...(board.points ? { points: Object.fromEntries(Object.entries(board.points).map(([k, v]) => [k, resolvePoint(v, [], catalog)])) } : {}),
   };

@@ -5,9 +5,10 @@ import * as THREE from "three";
 import { ctex, cloudHD, waterNear, waterFar } from "./paint";
 import { LIGHTS, LOOK, LightName } from "./lights";
 import { Look, moodRig } from "./look";
+import { makeMaskUniforms, maskFn, maskSet } from "./charMask";
 import { TONE, CHAR, LFB, untone } from "./shade";
 import { NOINK } from "./ink";
-import { Pool, Actor, Fx, Stage, CamInfo, FPS, Place } from "./cast";
+import { Pool, Actor, Fx, Stage, CamInfo, FPS, Place, setLookFlat } from "./cast";
 import { buildSets, Sets } from "./sets";
 import { WATER_Y, RIVER_Z, V3 } from "./places";
 
@@ -55,6 +56,7 @@ export class World {
   root = new THREE.Group();
   sets: Sets;
   coverageCards: { places: Place[]; actors: Actor[]; fxs: { p: any; mesh: THREE.Mesh }[] } = { places: [], actors: [], fxs: [] };
+  noShafts = false;
   private pool = new Pool();
   private actors: Actor[] = [];
   private fxs: Fx[] = [];
@@ -64,8 +66,10 @@ export class World {
   private fog = new THREE.Fog("#bccbec", 25, 420);
   private WU: Record<string, THREE.IUniform>;
   private water: THREE.Mesh;
-  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite; private shafts: THREE.Mesh;
+  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite; private shafts: THREE.Mesh; private shaftMat: THREE.ShaderMaterial;
+  private shaftMask = makeMaskUniforms("s");
   private sunCache = new Map<number, THREE.Vector3>();
+  private charSunCache = new Map<number, THREE.Vector3>();
   private cloudMaps: Record<string, THREE.Texture[]>;
   private clouds: THREE.Mesh[] = [];
   private frustum = new THREE.Frustum();
@@ -96,7 +100,14 @@ export class World {
     this.sunHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex(), color: new THREE.Color(1, 1, 1), fog: false, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending }));
     this.sunDisc.renderOrder = -0.5; this.sunHalo.renderOrder = 5;
     for (const m of [this.sunDisc, this.sunHalo]) { m.frustumCulled = false; m.layers.set(NOINK); R.add(m); }
-    this.shafts = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shaftTex(), transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide }));
+    this.shaftMat = new THREE.ShaderMaterial({
+      uniforms: { map: { value: shaftTex() }, opacity: { value: 0.55 }, color: { value: new THREE.Color(1, 1, 1) }, ...this.shaftMask },
+      vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+      fragmentShader: `uniform sampler2D map; uniform float opacity; uniform vec3 color; varying vec2 vUv; ${maskFn("s")}
+        void main(){ vec4 t = texture2D(map, vUv); float m = sMaskAt(vUv); gl_FragColor = vec4(t.rgb * color * opacity * (1.0 - m), t.a * opacity * (1.0 - m)); }`,
+      transparent: true, blending: THREE.AdditiveBlending, depthTest: true, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide,
+    });
+    this.shafts = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.shaftMat);
     this.shafts.frustumCulled = false; this.shafts.renderOrder = 3; this.shafts.layers.set(NOINK); R.add(this.shafts);
     this.hemi = new THREE.HemisphereLight("#cfe6ff", "#6c5c8c", 1.1);
     this.sun = new THREE.DirectionalLight("#fff0d6", 2.6);
@@ -148,10 +159,30 @@ export class World {
     this.sunCache.set(s.id, v);
     return v;
   }
+  /** legacy light direction for the cards only (the world keeps the mood key) */
+  private charSun(s: ShotDef) {
+    let v = this.charSunCache.get(s.id);
+    if (v) return v;
+    const L = LIGHTS[s.light];
+    let fx = 0, fz = 0;
+    for (let f = s.a; f < s.b; f += 3) { const c = s.cam(f), x = c.look[0] - c.pos[0], z = c.look[2] - c.pos[2], n = Math.hypot(x, z) || 1; fx += x / n; fz += z / n; }
+    const n = Math.hypot(fx, fz) || 1; fx /= n; fz /= n;
+    const az = THREE.MathUtils.degToRad(s.sunAz ?? L.az), el = THREE.MathUtils.degToRad(s.sunEl ?? L.el);
+    const hx = fx * Math.cos(az) - fz * Math.sin(az), hz = fz * Math.cos(az) + fx * Math.sin(az);
+    v = new THREE.Vector3(hx * Math.cos(el), Math.sin(el), hz * Math.cos(el)).normalize();
+    this.charSunCache.set(s.id, v);
+    return v;
+  }
   private actor(i: number) { while (this.actors.length <= i) this.actors.push(new Actor(this.root)); return this.actors[i]; }
   private fx(i: number) { while (this.fxs.length <= i) this.fxs.push(new Fx(this.root)); return this.fxs[i]; }
 
+  /** the shaft card is a screen-space additive plane: keep it off the actor/special cards even where depth leaks */
+  setShaftMask(tex: THREE.Texture, width: number, height: number, on: boolean) {
+    maskSet(this.shaftMask, "s", tex, width, height, on);
+  }
+
   update(s: ShotDef, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene, pxH: number, kick: (f: number, c: Cam) => Cam) {
+    setLookFlat(!!s.look);
     const t = f / FPS, rig = moodRig(s.look?.mood), L = rig?.light ?? LIGHTS[s.light], K = rig?.world ?? LOOK[s.light];
     // ---- camera ----
     const c = kick(f, s.cam(f));
@@ -175,10 +206,17 @@ export class World {
     this.sun.shadow.bias = L.bias; this.sun.shadow.normalBias = L.normalBias * (Rr / 12);
     TONE.uLitCol.value.set(...L.lit); TONE.uShadeCol.value.set(...L.shade); TONE.uShadeLift.value.set(...L.lift);
     TONE.uLambert.value = L.lambert; TONE.uSideK.value = L.sideK; TONE.uTerm.value = L.term; TONE.uBounce.value.set(...K.bounce); TONE.uSat.value = K.sat;
-    CHAR.uCharTint.value.set(...L.charTint); CHAR.uCharShade.value = L.charShade; CHAR.uGrad.value = L.charGrad;
-    CHAR.uBodyGrad.value = L.bodyGrad; CHAR.uSideTint.value.set(...L.sideTint);
-    CHAR.uRim.value = rig ? (s.look?.rim ?? rig.rim.intensity) : 1;
-    CHAR.uRimCol.value.set(...hexTriple(rig ? rig.rim.color : "#f28429"));
+    // Cards keep the LEGACY preset's flat two-tone shading in every mood: the mood key/sky lights the world only.
+    const charL = LIGHTS[s.light], cs = this.charSun(s), camRight = V(0, 0, 0).setFromMatrixColumn(cam.matrixWorld, 0);
+    CHAR.uCharTint.value.set(...charL.charTint); CHAR.uCharShade.value = rig ? 1 : charL.charShade; CHAR.uGrad.value = rig ? 0 : charL.charGrad;
+    CHAR.uBodyGrad.value = rig ? 0 : charL.bodyGrad; CHAR.uSideTint.value.set(...(rig ? [1, 1, 1] as [number, number, number] : charL.sideTint));
+    CHAR.uRim.value = rig ? 0 : 1;
+    CHAR.uRimCol.value.set(...hexTriple("#f28429"));
+    CHAR.uRimMask.value = 0; CHAR.uInkLook.value = 0;
+    CHAR.uFill.value = 0;
+    CHAR.uCharLook.value = rig ? 1 : 0;
+    CHAR.uCharSide.value = cs.dot(camRight) >= 0 ? 1 : -1;
+    CHAR.uCharUp.value = THREE.MathUtils.clamp(cs.y * 2, 0, 1);
     // ---- sky, fog, sun disc, clouds, stars ----
     const su = this.skyMat.uniforms;
     K.sky.c.forEach((h, i) => untone(h, su["c" + i].value));
@@ -197,14 +235,14 @@ export class World {
       (this.sunHalo.material as THREE.SpriteMaterial).color.set(L.sunDisc).multiplyScalar(1.3);
     }
     const shaftsOn = !!(s.look && rig && (s.look.shafts ?? rig.shafts));
-    this.shafts.visible = shaftsOn;
+    this.shafts.visible = shaftsOn && !this.noShafts;
     if (shaftsOn) {
       const fwd = new THREE.Vector3(); cam.getWorldDirection(fwd);
-      this.shafts.position.copy(cam.position).addScaledVector(fwd, 38);
+      this.shafts.position.copy(cam.position).addScaledVector(fwd, 90);
       this.shafts.quaternion.copy(cam.quaternion);
-      const h = 2 * 38 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      const h = 2 * 90 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
       this.shafts.scale.set(h * 1.15, h, 1);
-      (this.shafts.material as THREE.MeshBasicMaterial).color.set(rig!.glow.tint);
+      (this.shaftMat.uniforms.color.value as THREE.Color).set(rig!.glow.tint).multiplyScalar(0.85);
     }
     const maps = this.cloudMaps[s.light];
     for (let i = 0; i < this.clouds.length; i++) {
@@ -235,7 +273,7 @@ export class World {
       if (!this.frustum.intersectsSphere(this.sph.set(this.v.set(p.x, p.y + 1.1 * sc2, p.z), 3.5 * sc2))) continue;
       const a = this.actor(ai++);
       const [w, h, k] = p.size;
-      a.r = this.pool.req(p.key, w, h, k, p.draw);
+      a.r = this.pool.req(p.key, w, h, k, p.draw, false, !!s.look, true);
       a.geo(p.geo ?? "body");
       a.mesh.visible = true;
       a.mesh.position.set(p.x, p.y, p.z);
@@ -250,7 +288,7 @@ export class World {
     for (const p of st.fx) {
       if (!this.frustum.intersectsSphere(this.sph.set(this.v.set(p.x, p.y, p.z), Math.max(p.w, p.h)))) continue;
       const e = this.fx(fi++);
-      e.r = this.pool.req(p.key, p.cw, p.ch, 1, p.draw);
+      e.r = this.pool.req(p.key, p.cw, p.ch, 1, p.draw, false, false, false);
       e.use(p.kind ?? "cut");
       e.mesh.visible = true;
       e.mesh.position.set(p.x, p.y, p.z);

@@ -3,87 +3,280 @@
   "$id": "https://fableon.local/schema/project.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "id", "title", "topic", "seconds", "language", "voice", "research", "models", "autopilot"],
+  "required": [
+    "version",
+    "id",
+    "title",
+    "topic",
+    "seconds",
+    "language",
+    "voice",
+    "research",
+    "models",
+    "autopilot"
+  ],
   "properties": {
-    "version": { "const": 1 },
-    "id": { "type": "string", "minLength": 1 },
-    "title": { "type": "string", "minLength": 1 },
-    "topic": { "type": "string", "minLength": 1 },
-    "seconds": { "type": "number", "exclusiveMinimum": 5, "maximum": 600 },
-    "language": { "enum": ["en", "hi"] },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seconds": {
+      "type": "number",
+      "exclusiveMinimum": 5,
+      "maximum": 600
+    },
+    "language": {
+      "enum": [
+        "en",
+        "hi"
+      ]
+    },
     "voice": {
       "type": "object",
       "additionalProperties": false,
-      "anyOf": [{ "required": ["provider"] }, { "required": ["engine"] }],
+      "anyOf": [
+        {
+          "required": [
+            "provider"
+          ]
+        },
+        {
+          "required": [
+            "engine"
+          ]
+        }
+      ],
       "properties": {
-        "provider": { "enum": ["kokoro", "elevenlabs", "sarvam"] },
-        "engine": { "enum": ["kokoro", "elevenlabs", "sarvam"] },
-        "model": { "type": ["string", "null"] },
-        "voiceId": { "type": ["string", "null"] },
-        "voice": { "type": "string", "minLength": 1 },
-        "language": { "enum": ["en", "hi"] },
-        "speed": { "type": "number", "minimum": 0.25, "maximum": 4 },
+        "provider": {
+          "enum": [
+            "kokoro",
+            "elevenlabs",
+            "sarvam"
+          ]
+        },
+        "engine": {
+          "enum": [
+            "kokoro",
+            "elevenlabs",
+            "sarvam"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "voiceId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "voice": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "enum": [
+            "en",
+            "hi"
+          ]
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 4
+        },
         "settings": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "stability": { "type": "number", "minimum": 0, "maximum": 1 },
-            "similarity_boost": { "type": "number", "minimum": 0, "maximum": 1 },
-            "style": { "type": "number", "minimum": 0, "maximum": 1 },
-            "use_speaker_boost": { "type": "boolean" },
-            "speed": { "type": "number", "minimum": 0.25, "maximum": 4 },
-            "outputFormat": { "type": "string", "minLength": 1 },
-            "apply_text_normalization": { "enum": ["auto", "on", "off"] },
-            "languageCode": { "type": "string", "minLength": 2, "maxLength": 3 }
+            "stability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "similarity_boost": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "style": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "use_speaker_boost": {
+              "type": "boolean"
+            },
+            "speed": {
+              "type": "number",
+              "minimum": 0.25,
+              "maximum": 4
+            },
+            "outputFormat": {
+              "type": "string",
+              "minLength": 1
+            },
+            "apply_text_normalization": {
+              "enum": [
+                "auto",
+                "on",
+                "off"
+              ]
+            },
+            "languageCode": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 3
+            }
           }
         },
         "rate": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "wordsPerSecond": { "type": "number", "exclusiveMinimum": 0 },
-            "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 },
+            "wordsPerSecond": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "charactersPerSecond": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
             "delivered": {
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "wordsPerSecond": { "type": "number", "exclusiveMinimum": 0 },
-                "charactersPerSecond": { "type": "number", "exclusiveMinimum": 0 }
+                "wordsPerSecond": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "charactersPerSecond": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
               }
             }
           }
         },
         "tones": {
           "type": "object",
-          "propertyNames": { "enum": ["deadpan", "mock-serious", "matter-of-fact", "warm", "excited", "tense", "awe", "whisper"] },
+          "propertyNames": {
+            "enum": [
+              "deadpan",
+              "mock-serious",
+              "matter-of-fact",
+              "warm",
+              "excited",
+              "tense",
+              "awe",
+              "whisper"
+            ]
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "stability": { "type": "number", "minimum": 0, "maximum": 1 },
-              "style": { "type": "number", "minimum": 0, "maximum": 1 },
-              "speed": { "type": "number", "minimum": 0.25, "maximum": 4 }
+              "stability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "style": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "speed": {
+                "type": "number",
+                "minimum": 0.25,
+                "maximum": 4
+              }
             }
           }
         },
-        "maxCharsPerRun": { "type": "integer", "minimum": 1 },
-        "fit": { "enum": ["natural", "exact"] },
-        "performance": { "type": "boolean" },
-        "align": { "type": "boolean" },
-        "alignMethod": { "enum": ["auto", "mms", "whisper"] },
-        "sampleRate": { "type": "integer", "minimum": 8000, "maximum": 48000 },
-        "normalize": { "type": "boolean" },
-        "trim": { "type": "boolean" },
-        "maxInternalPause": { "type": "number", "minimum": 0, "maximum": 0.3 },
-        "pace": { "type": "number", "minimum": 0.5, "maximum": 2 },
-        "paceApplied": { "enum": ["local", "provider"] },
+        "maxCharsPerRun": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fit": {
+          "enum": [
+            "natural",
+            "exact"
+          ]
+        },
+        "performance": {
+          "type": "boolean"
+        },
+        "align": {
+          "type": "boolean"
+        },
+        "alignMethod": {
+          "enum": [
+            "auto",
+            "mms",
+            "whisper"
+          ]
+        },
+        "sampleRate": {
+          "type": "integer",
+          "minimum": 8000,
+          "maximum": 48000
+        },
+        "normalize": {
+          "type": "boolean"
+        },
+        "trim": {
+          "type": "boolean"
+        },
+        "maxInternalPause": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.3
+        },
+        "pace": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "paceApplied": {
+          "enum": [
+            "local",
+            "provider"
+          ]
+        },
         "pauses": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "dramatic": { "type": "number", "minimum": 0, "maximum": 1 },
-            "other": { "type": "number", "minimum": 0, "maximum": 1 },
-            "beatGap": { "type": "number", "minimum": 0, "maximum": 1 }
+            "dramatic": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "other": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "beatGap": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
           }
         }
       }
@@ -91,10 +284,19 @@
     "research": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["web", "maxSources"],
+      "required": [
+        "web",
+        "maxSources"
+      ],
       "properties": {
-        "web": { "type": "boolean" },
-        "maxSources": { "type": "integer", "minimum": 1, "maximum": 40 }
+        "web": {
+          "type": "boolean"
+        },
+        "maxSources": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 40
+        }
       }
     },
     "script": {
@@ -105,8 +307,20 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "en": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-            "hi": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+            "en": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "hi": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }
@@ -114,58 +328,183 @@
     "models": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["default"],
+      "required": [
+        "default"
+      ],
       "properties": {
-        "default": { "$ref": "#/$defs/model" },
-        "brief": { "$ref": "#/$defs/model" },
-        "research": { "$ref": "#/$defs/model" },
-        "script": { "$ref": "#/$defs/model" },
-        "factcheck": { "$ref": "#/$defs/model" },
-        "cast": { "$ref": "#/$defs/model" },
-        "voice": { "$ref": "#/$defs/model" },
-        "shotplan": { "$ref": "#/$defs/model" },
-        "board": { "$ref": "#/$defs/model" },
-        "boardEscalate": { "$ref": "#/$defs/model" }
+        "default": {
+          "$ref": "#/$defs/model"
+        },
+        "brief": {
+          "$ref": "#/$defs/model"
+        },
+        "research": {
+          "$ref": "#/$defs/model"
+        },
+        "script": {
+          "$ref": "#/$defs/model"
+        },
+        "factcheck": {
+          "$ref": "#/$defs/model"
+        },
+        "cast": {
+          "$ref": "#/$defs/model"
+        },
+        "voice": {
+          "$ref": "#/$defs/model"
+        },
+        "shotplan": {
+          "$ref": "#/$defs/model"
+        },
+        "board": {
+          "$ref": "#/$defs/model"
+        },
+        "boardEscalate": {
+          "$ref": "#/$defs/model"
+        }
       }
     },
     "budget": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "maxCallsPerStage": { "type": "integer", "minimum": 1 },
-        "maxTokensPerRun": { "type": "integer", "minimum": 1 }
+        "maxCallsPerStage": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxTokensPerRun": {
+          "type": "integer",
+          "minimum": 1
+        }
       }
     },
-    "autopilot": { "type": "boolean" }
+    "autopilot": {
+      "type": "boolean"
+    },
+    "look": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "featureRim": {
+          "type": "boolean"
+        }
+      }
+    }
   },
   "$defs": {
     "model": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["provider"],
+      "required": [
+        "provider"
+      ],
       "properties": {
-        "provider": { "enum": ["deepseek", "openai", "gemini", "sarvam", "openrouter", "openai-compatible", "mock"] },
-        "model": { "type": ["string", "null"] },
-        "baseUrl": { "type": "string" },
-        "keyEnv": { "type": "string" },
-        "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
-        "maxTokens": { "type": "integer", "minimum": 64, "maximum": 32768 },
-        "maxRepairs": { "type": "integer", "minimum": 0, "maximum": 6 },
-        "thinking": { "enum": ["enabled", "disabled"] },
-        "reasoningEffort": { "enum": ["none", "low", "high", "max"] },
+        "provider": {
+          "enum": [
+            "deepseek",
+            "openai",
+            "gemini",
+            "sarvam",
+            "openrouter",
+            "openai-compatible",
+            "mock"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "baseUrl": {
+          "type": "string"
+        },
+        "keyEnv": {
+          "type": "string"
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "maxTokens": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 32768
+        },
+        "maxRepairs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "thinking": {
+          "enum": [
+            "enabled",
+            "disabled"
+          ]
+        },
+        "reasoningEffort": {
+          "enum": [
+            "none",
+            "low",
+            "high",
+            "max"
+          ]
+        },
         "fallback": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["provider"],
+          "required": [
+            "provider"
+          ],
           "properties": {
-            "provider": { "enum": ["deepseek", "openai", "gemini", "sarvam", "openrouter", "openai-compatible", "mock"] },
-            "model": { "type": ["string", "null"] },
-            "baseUrl": { "type": "string" },
-            "keyEnv": { "type": "string" },
-            "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
-            "maxTokens": { "type": "integer", "minimum": 64, "maximum": 32768 },
-            "thinking": { "enum": ["enabled", "disabled"] },
-            "reasoningEffort": { "enum": ["none", "low", "high", "max"] }
+            "provider": {
+              "enum": [
+                "deepseek",
+                "openai",
+                "gemini",
+                "sarvam",
+                "openrouter",
+                "openai-compatible",
+                "mock"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "baseUrl": {
+              "type": "string"
+            },
+            "keyEnv": {
+              "type": "string"
+            },
+            "temperature": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "maxTokens": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 32768
+            },
+            "thinking": {
+              "enum": [
+                "enabled",
+                "disabled"
+              ]
+            },
+            "reasoningEffort": {
+              "enum": [
+                "none",
+                "low",
+                "high",
+                "max"
+              ]
+            }
           }
         }
       }

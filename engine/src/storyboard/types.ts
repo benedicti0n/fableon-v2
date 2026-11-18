@@ -98,6 +98,7 @@ export type Shot = {
 };
 export type CastEntry = { spec: string | Record<string, unknown>; seed: number };
 export type Storyboard = {
+  featureRim?: boolean;
   version: 1; fps: number; tailFrames: number; flash?: Anchor; crossfade: number;
   points?: Record<string, Point>; cast?: Record<string, CastEntry>; kicks?: { at: Anchor; amp: number }[];
   shots: Shot[];

@@ -53,6 +53,9 @@
       "items": {
         "$ref": "#/$defs/Shot"
       }
+    },
+    "featureRim": {
+      "type": "boolean"
     }
   },
   "$defs": {
@@ -1154,14 +1157,34 @@
         "look": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["mood"],
+          "required": [
+            "mood"
+          ],
           "properties": {
-            "mood": { "enum": ["golden-glow", "warm-side", "dusk", "night-moon", "noon"] },
-            "shafts": { "type": "boolean" },
-            "sun": { "type": "boolean" },
-            "glow": { "type": "number" },
-            "rim": { "type": "number" },
-            "grade": { "type": "string" }
+            "mood": {
+              "enum": [
+                "golden-glow",
+                "warm-side",
+                "dusk",
+                "night-moon",
+                "noon"
+              ]
+            },
+            "shafts": {
+              "type": "boolean"
+            },
+            "sun": {
+              "type": "boolean"
+            },
+            "glow": {
+              "type": "number"
+            },
+            "rim": {
+              "type": "number"
+            },
+            "grade": {
+              "type": "string"
+            }
           }
         },
         "transition": {

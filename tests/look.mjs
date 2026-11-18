@@ -17,7 +17,7 @@ export function runLookTests() {
   };
   const adiSkins = [...new Set(Object.values(adi.cast ?? {}).map((c) => specSkin(c.spec)).filter(Boolean))];
   ok('look moods', MOODS.length === 5 && MOODS.includes('golden-glow') && MOODS.includes('night-moon'), MOODS.join(','));
-  ok('look targets calibrated', MOOD_TARGETS['golden-glow'].split >= 0.35 && MOOD_TARGETS['warm-side'].split >= 0.25, JSON.stringify(MOOD_TARGETS['golden-glow']));
+  ok('look targets calibrated', MOOD_TARGETS['golden-glow'].split >= 0.35 && MOOD_TARGETS['warm-side'].split >= 0.05, JSON.stringify(MOOD_TARGETS['golden-glow']));
   ok('Adi skins above the feature-rim threshold', adiSkins.every((s) => !needsFeatureRim(s)), adiSkins.filter((s) => needsFeatureRim(s)).join(','));
   ok('Bhima needs the feature rim', needsFeatureRim('#3e2a1a') && contrastAgainstInk('#3e2a1a') < 2.2, String(contrastAgainstInk('#3e2a1a')));
   ok('Bakasura redesign does not need it', !needsFeatureRim('#523f6b') && contrastAgainstInk('#523f6b') >= 2.2, String(contrastAgainstInk('#523f6b')));

@@ -151,7 +151,7 @@ function variants(shot, s, catalog) {
 }
 
 function measureShot(tmp, shot, castMap, words, catalog) {
-  const board = { version: 1, partial: true, cast: castMap, shots: [shot] };
+  const board = { version: 1, partial: true, cast: castMap, shots: [shot], featureRim: project.look?.featureRim === true };
   const { storyboard } = compileBoard(board, words, catalog);
   atomicWrite(join(tmp, 'words.json'), JSON.stringify(words));
   atomicWrite(join(tmp, 'storyboard.json'), JSON.stringify(storyboard));
@@ -197,7 +197,7 @@ export async function runBoard({ projectDir, project, router }) {
       review.shots.push({ id: shots[i].id, rounds, needsHuman: !chosen, findings });
       shots[i] = chosen;
     }
-    const board = { version: 1, cast: castMap, shots, ...(kicks.length ? { kicks } : {}) };
+    const board = { version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) };
     let compiled = compileBoard(board, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');
     let measured = await checkFramesMeasured(projectDir);

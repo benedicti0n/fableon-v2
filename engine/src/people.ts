@@ -237,8 +237,8 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   faceFront(p, 300, hc, W, o.blindfold ? "neutral" : expr, facing, look, lid, brim, skin, o.moustache ?? undefined, o.build === "stout" || o.build === "big", readable);
   if (o.beard) { // redraw the mouth over the beard
     const mx = 300 + 8 * u * facing, my = hc + 20 * u;
-    if (readable) p.ell(mx, my, 10 * u, 6 * u, mix(skin, "#ffe6c0", 0.58), 0);
-    if (expr === "shock") p.ell(mx, my + 2 * u, 8 * u, 10 * u, "#5a1e28", 3 * u); else p.stroke([[mx - 7 * u, my], [mx + 7 * u, my]], 3.6 * u);
+    const mcol = readable ? mix("#5a1e28", "#c76a72", 0.55) : "#5a1e28";
+    if (expr === "shock") p.ell(mx, my + 2 * u, 8 * u, 10 * u, mcol, 3 * u); else p.stroke([[mx - 7 * u, my], [mx + 7 * u, my]], 3.6 * u);
   }
   if (o.blindfold) {
     p.band([[300 - 1.02 * H.a, hc - 2 * u], [300 + 1.02 * H.a, hc - 4 * u]], o.blindfold, 0.16 * HH, 1.8 * u);

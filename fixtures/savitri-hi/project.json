@@ -94,5 +94,8 @@
       "maxTokens": 24000
     }
   },
-  "autopilot": false
+  "autopilot": false,
+  "look": {
+    "featureRim": false
+  }
 }
