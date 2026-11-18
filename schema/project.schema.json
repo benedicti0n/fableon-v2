@@ -144,7 +144,7 @@
       "additionalProperties": false,
       "required": ["provider"],
       "properties": {
-        "provider": { "enum": ["deepseek", "openai-compatible", "mock"] },
+        "provider": { "enum": ["deepseek", "openai", "gemini", "sarvam", "openrouter", "openai-compatible", "mock"] },
         "model": { "type": ["string", "null"] },
         "baseUrl": { "type": "string" },
         "keyEnv": { "type": "string" },
@@ -158,7 +158,7 @@
           "additionalProperties": false,
           "required": ["provider"],
           "properties": {
-            "provider": { "enum": ["deepseek", "openai-compatible", "mock"] },
+            "provider": { "enum": ["deepseek", "openai", "gemini", "sarvam", "openrouter", "openai-compatible", "mock"] },
             "model": { "type": ["string", "null"] },
             "baseUrl": { "type": "string" },
             "keyEnv": { "type": "string" },
