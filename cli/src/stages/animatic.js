@@ -1,7 +1,7 @@
 // Animatic stage: preview segments + voice only, then the same short_qa report.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync as writeFile } from 'node:fs';
 import { join } from 'node:path';
-import { findPython, ROOT, run } from '../env.js';
+import { capture, findPython, ROOT, run } from '../env.js';
 import { renderCommand, shotsCommand } from '../pipeline.js';
 import { makeContext } from '../frames.js';
 
@@ -19,26 +19,52 @@ export async function runAnimatic({ projectDir }) {
   await run('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', noaudio], { cwd: ROOT });
   const video = join(projectDir, 'animatic.mp4');
   const mix = join(projectDir, 'audio', 'mix.wav');
-  await run('ffmpeg', ['-y', '-v', 'error', '-i', noaudio, '-i', existsSync(mix) ? mix : join(projectDir, 'voice.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', '-shortest', video], { cwd: ROOT });
+  const audioPath = existsSync(mix) ? mix : join(projectDir, 'voice.wav');
+  const duration = (file) => Number(capture('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', file]));
+  // The concatenated clips start at the first shot frame, so the last word can run past the video. Render the missing
+  // tail frames (the last shot keeps its push) rather than freezing or cutting the last word.
+  let videoFile = noaudio;
+  const fromF = Math.round(duration(noaudio) * 30), toF = Math.round(duration(audioPath) * 30);
+  if (toF > fromF + 1) {
+    const tail = join(render, `tail-${fromF}-${toF}.mp4`);
+    if (!existsSync(tail)) {
+      const jobs = join(render, 'tail_jobs.json');
+      writeFile(jobs, JSON.stringify([[fromF, toF, tail]]));
+      await run(process.execPath, [join(ROOT, 'engine', 'scripts', 'render.cjs'), 'segments', '--jobs', jobs, '--project', projectDir, '--size', '540x960', '--msaa', '0'], { cwd: ROOT });
+    }
+    const fullList = join(render, 'animatic-full.txt');
+    writeFileSync(fullList, rows.map(([id]) => `file 'seg_${String(id).padStart(2, '0')}.mp4'\n`).join('') + `file '${tail.split('/').pop()}'\n`);
+    videoFile = join(render, 'animatic_full.mp4');
+    await run('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', fullList, '-c', 'copy', videoFile], { cwd: ROOT });
+  }
+  await run('ffmpeg', ['-y', '-v', 'error', '-i', videoFile, '-i', audioPath, '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', '-shortest', video], { cwd: ROOT });
   const py = findPython();
   if (!py) throw new Error('animatic QA needs Python/Pillow (set FABLEON_PYTHON or create .venv)');
   const qaDir = join(projectDir, 'animatic-qa');
   mkdirSync(qaDir, { recursive: true });
   const metaRaw = JSON.parse(readFileSync(join(projectDir, 'qa_meta.json'), 'utf8'));
   const ctx = makeContext(projectDir);
-  const planned = [...(metaRaw.planned ?? [])];
-  const xfade = [...(metaRaw.xfade ?? [])];
+  // QA runs on the concatenated video, which starts at frame 0; qa_meta uses storyboard frames (first shot a).
+  const off = metaRaw.shots?.[0]?.a ?? 0;
+  const shiftPair = (p) => [Math.max(0, Math.round(p[0] - off)), Math.max(0, Math.round(p[1] - off))];
+  const shiftFrame = (f) => Math.max(0, Math.round(f - off));
+  const planned = (metaRaw.planned ?? []).map(shiftPair);
+  const xfade = (metaRaw.xfade ?? []).map(shiftPair);
   const eventsPath = existsSync(join(projectDir, 'events.json')) ? join(projectDir, 'events.json') : join(projectDir, 'cuts.json');
-  const events = existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : [];
+  const events = (existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : []).map(shiftFrame);
+  // The tail slice starts exactly on a storyboard beat (line 20:0); it is a planned visual change, not a pop.
+  if (toF > fromF + 1) events.push(fromF);
   for (const e of events) if (e > 10) xfade.push([e - 10, e]);
   for (const shot of ctx.sb.shots ?? []) {
     const start = ctx.anchor(shot.start);
-    for (const k of shot.camera ?? []) if (k.cut) { const f = ctx.anchor(k.at, start); planned.push([f, f]); }
-    if (start > 10) xfade.push([start - 10, start]);
+    for (const k of shot.camera ?? []) if (k.cut) { const f = shiftFrame(ctx.anchor(k.at, start)); planned.push([f, f]); }
+    if (start > 10) xfade.push(shiftPair([start - 10, start]));
   }
   const meta = join(projectDir, 'animatic-qa-meta.json');
   const ints = (list) => list.map(([a, b]) => [Math.round(a), Math.round(b)]);
-  writeFile(meta, JSON.stringify({ ...metaRaw, planned: ints(planned), xfade: ints(xfade) }, null, 2) + '\n');
+  const shiftedShots = (metaRaw.shots ?? []).map((x) => ({ ...x, a: Math.max(0, x.a - off), b: x.b - off }));
+  const shiftedFlash = metaRaw.flash ? shiftPair(metaRaw.flash) : undefined;
+  writeFile(meta, JSON.stringify({ ...metaRaw, ...(metaRaw.shots ? { shots: shiftedShots } : {}), ...(shiftedFlash ? { flash: shiftedFlash } : {}), planned: ints(planned), xfade: ints(xfade) }, null, 2) + '\n');
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), video, qaDir, meta], { cwd: ROOT });
   const report = readFileSync(join(qaDir, 'report.md'), 'utf8');
   const lines = report.split('\n');
