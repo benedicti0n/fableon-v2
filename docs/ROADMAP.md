@@ -35,11 +35,16 @@ Also: the renderer only has the 8 Adi Parva set kits; new set kits are a later p
 ## Phase 3D — Reference direction, pace and sound (done)
 Scenes and per-boundary transitions (crossfade/flash/cut), burst easing, punch/impact/drama/reveal/foreground marks, walking and follow paths, low full/wide heights, DOF per size, a cue-driven original score + SFX mix, the 1.20 Savitri pace, the reference script formula and the first complete 1440×2560 AI-made film. The board/animatic checkpoints are in `docs/reports/phase-3d.md`.
 
-## Phase 3E — Model bake-off and voice depth
-- Per-stage model bake-off across OpenRouter models and direct providers (DeepSeek, others), with the flash defaults kept as the baseline and every fallback measured.
-- Sarvam Bulbul + a local forced aligner; draft/final voice and a credit meter. The user's Sarvam Nachiket request from the Savitri v2 review is the first target.
-- Keep the deterministic board writer; use `models.board` / `models.boardEscalate` only in the bake-off.
-- Later: whip pans with motion blur, new set kits, semantic fx placement, UI for the shot plan/board/animatic checkpoints.
+## Phase 3E — Model routing, voice depth, continuous scenes (done)
+- Direct-provider registry and routing (DeepSeek, OpenAI, Gemini, Sarvam; OpenRouter kept but unused), script bake-off, blind ranking, per-stage fallbacks and cost logging.
+- Sarvam Bulbul v4 Flash with Nachiket, whole-line natural rendering, 48 kHz, local MMS forced aligner, voice QA and a credit meter.
+- The model chooses content, the allocator fills DOF/foreground/hold shares; consecutive shots merge into continuous scenes. Savitri and Bakasura both end at the animatic checkpoint; see `docs/reports/phase-3e.md`.
+
+## Phase 3F — Context-aware sound and lighting design
+- Sound: replace the repeating cue map with context-aware selection from licensed SFX libraries (CC0 packs plus commercially licensed generative fill); an LLM picks sounds per event and a per-scene ambience bed, with no-repeat rules, a licence ledger for every sound, and music variation.
+- Lighting: a directional key per scene (side or three-quarter light, golden backlight with rim, moon key at night) instead of flat ambient; add a measured flat-lighting check calibrated on the reference (luma std, p2/p98).
+- Whip pans with motion blur; new set kits (e.g., a cart of food / forest clearing); UI for the shot plan, board and animatic checkpoints.
+- Carry-over: lock an approved script before factcheck (no autopilot revision of an approved script); add per-stage bake-offs for research, factcheck, cast, shotplan, performance and sound.
 
 ## Phase 4 — Backend API
 Node server: projects, artifacts, stages, jobs (REST + WebSocket progress), file serving for audio/video/stills.

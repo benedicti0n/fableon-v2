@@ -89,7 +89,7 @@ Cost is computed only when `models.json` has a price for the resolved model:
 
 ### Stage defaults
 
-`models.json` `stageDefaults` (Phase 3E routing): brief/research/cast/shotplan/sound use `deepseek-flash`; factcheck uses
+`models.json` `stageDefaults` (Phase 3E routing): brief/research/performance/cast/shotplan/sound use `deepseek-flash`; factcheck uses
 `deepseek-flash` with thinking enabled at effort `low`; script uses `gemini-3.1-flash-lite` after the blind ranking, with
 Gemini 3.1 Pro, Sarvam 105B and DeepSeek Flash as explicit fallbacks. A project-level
 `models.default.model` or `models.<stage>.model` overrides these. `models.board` / `models.boardEscalate` are kept
@@ -97,11 +97,11 @@ but unused (the board writer is deterministic; Phase 3E bake-off).
 
 ### Fallback
 
-Each stage has an explicit `fallback` entry (`deepseek-v4-pro`; factcheck uses thinking enabled, effort `high`).
-The router tries the primary model with its normal repair rounds, then runs the same validation loop once with the
-fallback. Every fallback attempt is written to `logs/calls.jsonl` as `"fallback": true` with `fallbackFrom`, and the
-stage usage records a `fallbacks` count. An explicit project model choice is honoured without a fallback unless the
-project also sets `models.<stage>.fallback`; mock projects never fall back.
+Each stage has a `fallbacks` list (primary first; see the table above). The router tries the primary model with its
+normal repair rounds, then runs the same validation loop on each fallback in order. Every fallback attempt is written to
+`logs/calls.jsonl` as `"fallback": true` with `fallbackFrom`, and the stage usage records a `fallbacks` count. An
+explicit project model choice is honoured without fallbacks unless the project also sets
+`models.<stage>.fallback`/`fallbacks`; mock projects never fall back.
 
 ## Provider registry (Phase 3E)
 
@@ -128,6 +128,27 @@ the user ranked it, the labels resolved to: Savitri **B = Gemini 3.1 Flash-Lite*
 cheapest passing Savitri script; the Bakasura project will override `models.script` to Gemini 3.1 Pro for its top
 choice. Fallbacks are Gemini 3.1 Pro, Sarvam 105B and DeepSeek Flash. Full results and the seeded factcheck test are in
 `docs/reports/phase-3e.md` and `bakeoff/script/results.json`.
+
+### Phase 3E script bake-off
+
+Fixed cases: `fixtures/savitri-hi` and `work/bakasura-hi`. Spend **$0.15208** (DeepSeek $0.00450, Sarvam $0.05183,
+Gemini $0.09576; OpenAI failed validation before billing). No candidate passed first try; every passing script needed
+repairs.
+
+| case | model | result | repairs | cost USD |
+|---|---|---|---:|---:|
+| Savitri | Sarvam 105B | PASS | 5 | 0.040011 |
+| Savitri | Gemini 3.1 Flash-Lite | PASS | 2 | 0.010058 |
+| Savitri | DeepSeek Flash / V4 Pro / GPT-5.4 nano / mini / Gemini Pro | FAIL | — | 0 |
+| Bakasura | DeepSeek Flash | PASS | 1 | 0.004496 |
+| Bakasura | Sarvam 105B | PASS | 1 | 0.011820 |
+| Bakasura | Gemini 3.1 Flash-Lite | PASS | 1 | 0.005567 |
+| Bakasura | Gemini 3.1 Pro | PASS | 1 | 0.080132 |
+| Bakasura | DeepSeek V4 Pro / GPT-5.4 nano / mini | FAIL | — | 0 |
+
+The user ranked Savitri **B = Gemini 3.1 Flash-Lite** and Bakasura **D = Gemini 3.1 Pro**; those are the script routes.
+Only the script stage has a full bake-off; the other stages are routed but not yet head-to-head. Full tables, latencies
+and failure reasons are in `docs/reports/phase-3e.md` and `bakeoff/script/results.json`.
 
 ## Provider contract
 
