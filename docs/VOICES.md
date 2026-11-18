@@ -179,6 +179,13 @@ Verified against <https://docs.sarvam.ai/api/api-guides-tutorials/text-to-speech
   catalog has no Nachiket; closest v3 male narrators are Shubh, Ashutosh, Ratan and Mani.
 - `fableon voice budget` reads the ElevenLabs subscription and prints Sarvam's logged Phase 3E spend (Sarvam exposes no
   balance/quota endpoint); the phase budget is ₹200.
+- Natural rendering (Phase 3E fix): one request per whole line, never phrase fragments. 48 kHz native
+  (`speech_sample_rate: 48000`); sentence gaps 0.2-0.3 s and at most three dramatic pauses (hook, लेकिन, twist) of
+  0.6 s. Short internal pauses are capped at 100 ms, and every gap is filled with -60 dBFS pink noise with 15 ms
+  crossfades, so there are no digital-zero runs. The voice stem is trimmed to <=0.1 s lead-in / <=0.3 s tail and
+  normalized to -16 LUFS with a -1.5 dBTP ceiling, and a final guard pass removes pauses before auxiliaries/postpositions or after determiners/intensifiers. `fableon qa` writes `voice-qa.md` (digital/perceptual silence,
+  guard, clipping, bandwidth, lead/tail, pitch falls).
+
 
 ### Reference pace (Phase 3D)
 

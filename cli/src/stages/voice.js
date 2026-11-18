@@ -1,7 +1,7 @@
 // Voice stage: provider dispatch, then natural/exact length fitting with local pauses, speed and atempo.
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { capture, loadDotEnv, ROOT } from '../env.js';
+import { capture, findPython, loadDotEnv, ROOT } from '../env.js';
 import { historyPath, readJson, writeJsonArtifact } from '../core/artifacts.js';
 import { run } from '../env.js';
 import { synthesize } from '../voice/index.js';
@@ -109,6 +109,61 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
       steps.push({ step: `atempo ${atempo.toFixed(4)}`, seconds: target });
     }
   }
+  let words = result.words?.length ? result.words : readJson(wordsPath);
+  let alignment = null;
+  let timesAreFinal = false;
+  const wantAlign = script && provider !== 'elevenlabs' && voice.align !== false;
+  if (wantAlign) {
+    try {
+      const aligned = await alignWords({ projectDir, wavPath: voicePath, script, method: voice.alignMethod ?? 'auto' });
+      words = aligned.words;
+      alignment = { method: aligned.method, wordCount: words.length, warnings: aligned.warnings ?? [] };
+      timesAreFinal = true;
+      steps.push({ step: `forced aligner ${aligned.method}`, words: words.length });
+    } catch (e) {
+      alignment = { method: 'provider-fallback', error: String(e.message ?? e).split('\n').slice(0, 4).join(' ') };
+      steps.push({ step: 'forced aligner failed; provider timings kept', error: alignment.error });
+    }
+  }
+  if (provider === 'sarvam' && voice.trim !== false && words.length) {
+    const first = Math.min(...words.map((w) => w.a));
+    const last = Math.max(...words.map((w) => w.b));
+    const start = Math.max(0, first - 0.05);
+    const end = Math.min(probe(voicePath), last + 0.20);
+    if (start > 0.005 || end < probe(voicePath) - 0.005) {
+      const tmp = join(projectDir, 'voice.trim.wav');
+      await run('ffmpeg', ['-y', '-loglevel', 'error', '-i', voicePath, '-af', `atrim=start=${start.toFixed(3)}:end=${end.toFixed(3)},asetpts=PTS-STARTPTS`, tmp], { cwd: ROOT });
+      copyFileSync(tmp, voicePath);
+      words = words.map((w) => ({ ...w, a: +Math.max(0, w.a - start).toFixed(3), b: +Math.max(0, w.b - start).toFixed(3) }));
+      timesAreFinal = true;
+      steps.push({ step: 'trim lead/tail', lead: +start.toFixed(3), tail: +(probe(voicePath) - (last - start)).toFixed(3) });
+    }
+  }
+  if (provider === 'sarvam' && words.length) {
+    const py = findPython();
+    if (py) {
+      writeJsonArtifact(projectDir, 'voice', 'words.json', words, 'words');
+      try {
+        const out = capture(py, [join(ROOT, 'cli', 'src', 'voice', 'guard_pauses.py'), voicePath, wordsPath], { cwd: ROOT });
+        const guard = JSON.parse(out.trim().split('\n').at(-1));
+        words = readJson(wordsPath);
+        steps.push({ step: 'hindi pause guard', ...guard });
+        alignment = { ...(alignment ?? {}), guard };
+        timesAreFinal = true;
+      } catch (e) {
+        steps.push({ step: 'hindi pause guard failed', error: String(e.message ?? e).slice(0, 200) });
+      }
+    }
+  }
+  if (provider === 'sarvam' && voice.normalize !== false && words.length) {
+    const py = findPython();
+    if (py) {
+      const out = capture(py, [join(ROOT, 'cli', 'src', 'voice', 'normalize_voice.py'), voicePath], { cwd: ROOT });
+      const metrics = JSON.parse(out.trim().split('\n').at(-1));
+      steps.push({ step: 'normalize voice', ...metrics });
+      alignment = { ...(alignment ?? {}), normalize: metrics };
+    }
+  }
   const finalDuration = probe(voicePath);
   const deliveredWords = script ? script.lines.reduce((n, l) => n + countWords(l.text), 0) : 0;
   const deliveredChars = script ? script.lines.reduce((n, l) => n + Array.from(l.text).length, 0) : 0;
@@ -117,21 +172,8 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
     project.voice.rate = { ...(project.voice.rate ?? {}), delivered: { wordsPerSecond: +(deliveredWords / finalDuration).toFixed(3), charactersPerSecond: +(deliveredChars / finalDuration).toFixed(3) } };
     writeJsonArtifact(projectDir, 'voice', 'project.json', project, 'project');
   }
-  let words = result.words?.length ? result.words : readJson(wordsPath);
-  let alignment = null;
-  const wantAlign = script && provider !== 'elevenlabs' && voice.align !== false;
-  if (wantAlign) {
-    try {
-      const aligned = await alignWords({ projectDir, wavPath: voicePath, script, method: voice.alignMethod ?? 'auto' });
-      words = aligned.words;
-      alignment = { method: aligned.method, words: words.length, warnings: aligned.warnings ?? [] };
-      steps.push({ step: `forced aligner ${aligned.method}`, words: words.length });
-    } catch (e) {
-      alignment = { method: 'provider-fallback', error: String(e.message ?? e).split('\n').slice(0, 4).join(' ') };
-      steps.push({ step: 'forced aligner failed; provider timings kept', error: alignment.error });
-    }
-  }
-  writeJsonArtifact(projectDir, 'voice', 'words.json', alignment && alignment.words ? words : scaleWords(words, atempo !== 1 ? 1 / atempo : 1), 'words');
+  writeJsonArtifact(projectDir, 'voice', 'words.json', timesAreFinal ? words : scaleWords(words, atempo !== 1 ? 1 / atempo : 1), 'words');
+  natural = finalDuration;
   return {
     natural,
     target,

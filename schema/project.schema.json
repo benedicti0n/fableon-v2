@@ -71,6 +71,10 @@
         "performance": { "type": "boolean" },
         "align": { "type": "boolean" },
         "alignMethod": { "enum": ["auto", "mms", "whisper"] },
+        "sampleRate": { "type": "integer", "minimum": 8000, "maximum": 48000 },
+        "normalize": { "type": "boolean" },
+        "trim": { "type": "boolean" },
+        "maxInternalPause": { "type": "number", "minimum": 0, "maximum": 0.3 },
         "pace": { "type": "number", "minimum": 0.5, "maximum": 2 },
         "paceApplied": { "enum": ["local", "provider"] },
         "pauses": {

@@ -201,6 +201,11 @@ export async function qaCommand(dirArg) {
   const metaVideo = join(out, 'qa_meta.video.json');
   writeFileSync(metaVideo, JSON.stringify(meta, null, 2) + '\n');
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT });
+  let voiceOk = true;
+  if (existsSync(join(dir, 'voice.wav')) && existsSync(join(dir, 'words.json'))) {
+    try { await run(py, [join(ROOT, 'tools', 'qa', 'voice_qa.py'), dir], { cwd: ROOT }); }
+    catch { voiceOk = false; }
+  }
   const report = readFileSync(join(out, 'report.md'), 'utf8').split('\n');
   const line = (p) => report.find((l) => l.startsWith(p)) || '';
   const specs = line('SPECS '), loudness = line('LOUDNESS '), framesLine = line('FRAMES '), popsLine = line('POPS ');
@@ -212,7 +217,7 @@ export async function qaCommand(dirArg) {
   const white = listOf((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const spanList = (t) => { const out = []; const re = /\((\d+)\s*,\s*(\d+)\)/g; let m; while ((m = re.exec(t))) out.push([Number(m[1]), Number(m[2])]); return out; };
   const frozen = spanList(framesLine);
-  const ok = !black.length && !white.length && !frozen.length && !unexplained.length;
+  const ok = !black.length && !white.length && !frozen.length && !unexplained.length && voiceOk;
   const md = [
     '# QA summary',
     '',
@@ -223,7 +228,8 @@ export async function qaCommand(dirArg) {
     `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`,
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
     '',
-    `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length})`,
+    `- voice QA: ${voiceOk ? 'PASS' : 'FAIL'} (${join(dir, 'voice-qa.md')})`,
+    `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length}, voice ${voiceOk ? 'pass' : 'fail'})`,
   ].join('\n');
   writeFileSync(join(out, 'summary.md'), md + '\n');
   console.log(md);

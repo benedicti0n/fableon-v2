@@ -176,14 +176,14 @@ function chooseAlignment(blockText, block) {
   return { alignment: original ? block.alignment : block.normalizedAlignment ?? block.alignment, normalized: !original && !!block.normalizedAlignment };
 }
 
-export async function decodePcm(audioBase64, projectDir, index) {
+export async function decodePcm(audioBase64, projectDir, index, sampleRate = VOICE_SR) {
   const dir = join(projectDir, '.fableon', 'voice-tmp');
   mkdirSync(dir, { recursive: true });
   const raw = join(dir, `block-${index}-${randomBytes(3).toString('hex')}.mp3`);
   const out = raw.replace(/\.mp3$/, '.raw');
   writeFileSync(raw, Buffer.from(audioBase64, 'base64'));
   try {
-    await run('ffmpeg', ['-y', '-loglevel', 'error', '-i', raw, '-f', 's16le', '-acodec', 'pcm_s16le', '-ac', '1', '-ar', String(VOICE_SR), out]);
+    await run('ffmpeg', ['-y', '-loglevel', 'error', '-i', raw, '-f', 's16le', '-acodec', 'pcm_s16le', '-ac', '1', '-ar', String(sampleRate), out]);
     return readFileSync(out);
   } finally {
     rmSync(raw, { force: true });

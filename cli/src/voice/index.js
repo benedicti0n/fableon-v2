@@ -16,8 +16,8 @@ export function scriptBlocks(projectDir) {
     const blocks = [];
     for (const line of script.lines ?? []) {
       const last = blocks[blocks.length - 1];
-      if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text, delivery: line.delivery });
-      else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text, delivery: line.delivery }] });
+      if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text, delivery: line.delivery, beat: line.beat });
+      else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text, delivery: line.delivery, beat: line.beat }] });
     }
     const perfPath = join(projectDir, 'performance.json');
     if (existsSync(perfPath)) {
@@ -25,7 +25,7 @@ export function scriptBlocks(projectDir) {
       for (const b of blocks) for (const line of b.lines) {
         const p = perf.get(line.n);
         if (!p) continue;
-        line.delivery = { ...(line.delivery ?? {}), tone: p.tone, pauses: p.pauses ?? [], emphasis: p.stress ?? [] };
+        line.delivery = { ...(line.delivery ?? {}), tone: p.tone, pace: p.pace ?? 1, pauses: p.pauses ?? [], emphasis: p.stress ?? [] };
       }
     }
     return blocks;

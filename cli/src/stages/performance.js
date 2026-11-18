@@ -24,12 +24,27 @@ export function performanceErrors(data, script, project) {
   return errs;
 }
 
+/** Keep at most one pause on each of the three dramatic lines; drop all other model pauses. */
+export function limitDramaticPauses(data, script) {
+  const lines = script.lines ?? [];
+  const hook = lines.find((l) => l.beat === 'hook')?.n;
+  const turn = (lines.find((l) => /^लेकिन/.test(String(l.text).trim())) ?? lines.find((l) => l.beat === 'deadpan'))?.n;
+  const twist = (lines.find((l) => l.beat === 'twist') ?? lines.find((l) => l.beat === 'payoff'))?.n;
+  const allowed = new Set([hook, turn, twist].filter((n) => n !== undefined));
+  for (const line of data.lines ?? []) {
+    if (!allowed.has(line.n)) line.pauses = [];
+    else line.pauses = (line.pauses ?? []).slice(0, 1);
+  }
+  return data;
+}
+
 export async function runPerformance({ projectDir, project, router }) {
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const { data } = await router.callJson('performance', [
     { role: 'system', content: PERFORMANCE },
     { role: 'user', content: `DATA:\n${JSON.stringify({ seconds: project.seconds, language: project.language, lines: script.lines.map((l) => ({ n: l.n, beat: l.beat, text: l.text, gloss: l.gloss, delivery: l.delivery })) }, null, 2)}\nMark every line. Return json only.` },
   ], { validate: (d) => performanceErrors(d, script, project), repairHint: 'Every line exactly once; pace 0.9-1.2; <=2 stress words; pauses 0.15-0.6 s and <=8% of the film.' });
+  limitDramaticPauses(data, script);
   writeJsonArtifact(projectDir, 'performance', 'performance.json', data, 'performance');
   const md = ['# Performance direction', '', '| line | tone | pace | pauses | stress |', '|---|---|---:|---|---|', ...data.lines.map((l) => `| ${l.n} | ${l.tone} | ${l.pace.toFixed(2)} | ${(l.pauses ?? []).map((p) => `${p.after} ${p.s}s`).join(', ')} | ${(l.stress ?? []).join(', ')} |`), ''].join('\n');
   writeTextArtifact(projectDir, 'performance', 'performance.md', md);

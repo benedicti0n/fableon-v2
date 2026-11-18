@@ -39,6 +39,8 @@ import { runBakeoffTests } from './bakeoff.mjs';
 import { runSarvamTests } from './voice_sarvam.mjs';
 import { runPerformanceTests } from './performance.mjs';
 import { runAlignerTests } from './aligner.mjs';
+import { runVoiceQaTests } from './voice_qa.mjs';
+import { runGuardPauseTests } from './guard_pauses.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -160,6 +162,10 @@ try {
   check('performance direction', performance.ok, `${performance.checks.filter((c) => c.ok).length}/${performance.checks.length} checks`);
   const aligner = runAlignerTests();
   check('forced aligner', aligner.ok, aligner.skipped ? aligner.checks[0].detail : `${aligner.checks.filter((c) => c.ok).length}/${aligner.checks.length} checks; ${aligner.checks.find((c) => c.name === 'aligner numbers')?.detail ?? ''}`);
+  const voiceQa = runVoiceQaTests();
+  check('voice QA', voiceQa.ok, `${voiceQa.checks.filter((c) => c.ok).length}/${voiceQa.checks.length} checks`);
+  const guard = runGuardPauseTests();
+  check('hindi pause guard', guard.ok, `${guard.checks.filter((c) => c.ok).length}/${guard.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();
