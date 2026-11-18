@@ -206,6 +206,9 @@ export async function qaCommand(dirArg) {
     try { await run(py, [join(ROOT, 'tools', 'qa', 'voice_qa.py'), dir], { cwd: ROOT }); }
     catch { voiceOk = false; }
   }
+  let look = null;
+  try { const { lookcheckCommand } = await import('./lookcheck.js'); look = await lookcheckCommand(dir, 'final'); }
+  catch { /* lookcheck needs frames.json; the short QA still runs */ }
   const report = readFileSync(join(out, 'report.md'), 'utf8').split('\n');
   const line = (p) => report.find((l) => l.startsWith(p)) || '';
   const specs = line('SPECS '), loudness = line('LOUDNESS '), framesLine = line('FRAMES '), popsLine = line('POPS ');
@@ -229,6 +232,7 @@ export async function qaCommand(dirArg) {
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
     '',
     `- voice QA: ${voiceOk ? 'PASS' : 'FAIL'} (${join(dir, 'voice-qa.md')})`,
+    `- look QA: ${look ? `${look.warnings.length} warning(s)` : 'not run'} (${join(dir, 'look-qa.md')})`,
     `Verdict: ${ok ? 'PASS' : 'FAIL'} (black ${black.length}, unplanned white ${white.length}, frozen spans ${frozen.length}, unexplained pops ${unexplained.length}, voice ${voiceOk ? 'pass' : 'fail'})`,
   ].join('\n');
   writeFileSync(join(out, 'summary.md'), md + '\n');

@@ -42,6 +42,7 @@ import { runAlignerTests } from './aligner.mjs';
 import { runVoiceQaTests } from './voice_qa.mjs';
 import { runGuardPauseTests } from './guard_pauses.mjs';
 import { runLookTests } from './look.mjs';
+import { runLookQaTests } from './lookqa.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -169,6 +170,8 @@ try {
   check('hindi pause guard', guard.ok, `${guard.checks.filter((c) => c.ok).length}/${guard.checks.length} checks`);
   const look = runLookTests();
   check('look rules', look.ok, `${look.checks.filter((c) => c.ok).length}/${look.checks.length} checks`);
+  const lookqa = runLookQaTests();
+  check('look QA', lookqa.ok, `${lookqa.checks.filter((c) => c.ok).length}/${lookqa.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

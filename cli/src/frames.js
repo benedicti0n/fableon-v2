@@ -684,6 +684,14 @@ export async function framesCommand(dirArg, fast = false) {
   for (const e of r.errors) console.log(`ERROR ${e.shot} key ${e.key} frame ${e.frame} ${e.subject}: ${e.message}`);
   for (const w of r.warnings) console.log(`WARN  ${w.shot} key ${w.key} frame ${w.frame} ${w.subject}: ${w.message}`);
   console.log(`frames: ${r.keys?.length ?? r.rows.length} keys, ${r.errors.length} error(s), ${r.warnings.length} warning(s)${r.coverageMs ? `, ${r.coverageMs} ms/frame coverage` : ''} — ${r.file}`);
+  if (existsSync(join(dirArg, 'animatic.mp4')) || existsSync(join(dirArg, 'final.mp4'))) {
+    try {
+      const { lookcheckCommand } = await import('./lookcheck.js');
+      const video = existsSync(join(dirArg, 'animatic.mp4')) ? 'animatic' : 'final';
+      const look = await lookcheckCommand(dirArg, video);
+      console.log(`look: ${look.warnings.length} warning(s); ${look.file}`);
+    } catch (e) { console.log(`look: skipped (${e.message})`); }
+  }
   if (!r.ok) throw new Error(`${r.errors.length} in-frame error(s)`);
   return r;
 }

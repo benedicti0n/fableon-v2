@@ -16,6 +16,7 @@ import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
 import { lookdevCommand } from './lookdev.js';
+import { lookcheckCommand } from './lookcheck.js';
 import { modelsCommand } from './models-command.js';
 import { voiceBudgetCommand, voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -94,6 +95,18 @@ export function main(argv = process.argv) {
     .option('--shot <id>', 're-render only this shot segment after the board run')
     .option('--notes <text>', 'director notes; reruns the board stage')
     .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('lookcheck')
+    .description('measure warm/cool split, glow, luma stats, face brightness and crowding per scene')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--video <name>', 'animatic (default), final, or a path')
+    .action(async (opts) => {
+      try {
+        const r = await lookcheckCommand(opts.project, opts.video ?? 'animatic');
+        console.log(`lookcheck: ${r.warnings.length} warning(s); ${r.file}`);
+      } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+    });
 
   program
     .command('lookdev')
