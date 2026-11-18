@@ -29,23 +29,17 @@ export function allocatePlan(plan, { script, words, catalog, policy = {} }) {
   for (const s of shots) s.scene = s.scene ?? `${s.set}-${s.light ?? 'day'}`;
   const hook = script.lines.find((l) => formulaBeat(l.beat) === 'hook');
   const hookEnd = hook ? Math.max(...words.filter((w) => w.line === hook.n).map((w) => w.b), 0) : 0;
-  let flashUsed = shots.some((s) => s.transition?.type === 'flash');
   shots.forEach((s, i) => {
     if (i === 0) return;
-    const prev = shots[i - 1];
-    const place = prev.set !== s.set || prev.light !== s.light;
-    s.transition = s.transition ?? { type: place ? 'crossfade' : 'crossfade', frames: place ? 7 : 7 };
-    if (place) s.transition = { type: 'crossfade', frames: 7 };
-    const at = T(s.start, words) ?? 0;
-    if (!flashUsed && at >= hookEnd) { s.transition = { type: 'flash', frames: 4 }; flashUsed = true; }
+    s.transition = { type: 'crossfade', frames: 7 };
   });
+  // A flash after the hook goes on the next scene boundary, so merging a scene into one continuous shot cannot drop it.
+  const afterHook = shots.map((s, i) => ({ s, i, at: T(s.start, words) ?? 0 })).filter((x) => x.i > 0 && x.at >= hookEnd);
+  const flashAt = afterHook.find((x) => x.s.scene !== shots[x.i - 1].scene) ?? afterHook[0];
+  if (flashAt) flashAt.s.transition = { type: 'flash', frames: 4 };
   // At most two hard cuts; keep the two strongest same-scene boundaries if the model asked for cuts.
   const cutIdx = shots.map((s, i) => (s.transition?.type === 'cut' ? i : -1)).filter((i) => i > 0);
   for (const i of cutIdx.slice(2)) shots[i].transition = { type: 'crossfade', frames: 7 };
-  if (!shots.some((s) => s.transition?.type === 'flash')) {
-    const i = shots.findIndex((s, j) => j > 0 && (T(s.start, words) ?? 0) >= hookEnd);
-    if (i > 0) shots[i].transition = { type: 'flash', frames: 4 };
-  }
 
   // Low heights and foreground props: every third key, from the set's own marks.
   let keyIndex = 0;
@@ -57,6 +51,12 @@ export function allocatePlan(plan, { script, words, catalog, policy = {} }) {
     }
     keyIndex++;
   }
+
+  // Foreground is a film-level share too: trim the longest optional foregrounds if the plan overfills it.
+  const fgKeys = flat.filter((x) => x.k.foreground).sort((a, b) => b.dur - a.dur);
+  let fgCount = fgKeys.length;
+  const fgMax = Math.floor(flat.length * (policy.fgMax ?? 0.40));
+  for (const x of fgKeys) { if (fgCount <= fgMax) break; delete x.k.foreground; fgCount--; }
 
   // Shares: make close/medium screen time 25-40% and push/hold 70-85%.
   const dof = () => flat.filter((x) => ['close', 'medium', 'insert'].includes(x.k.size)).reduce((n, x) => n + x.dur, 0) / total;
