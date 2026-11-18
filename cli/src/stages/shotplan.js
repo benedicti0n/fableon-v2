@@ -6,6 +6,7 @@ import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/
 import { buildCatalogCard } from '../catalog-card.js';
 import { SHOTPLAN_SKELETON, SHOTPLAN_KEYS } from './prompts.js';
 import { formulaBeat } from './script.js';
+import { moodForLight } from '../look.js';
 import { allocatePlan } from '../allocator.js';
 
 const PLAN_ANCHOR = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/;
@@ -162,9 +163,9 @@ export function renderShotplanMd(data, { script, words, cast }) {
   const rows = (data.shots ?? []).map((s, i) => {
     const lines = (s.lines ?? []).map((n) => `${script.lines[n]?.text ?? ''} / ${script.lines[n]?.gloss ?? ''}`).join('<br>');
     const keys = (s.keys ?? []).map((k) => `${k.at} ${k.size} ${asArray(k.on).join('+')}${k.with?.length ? ` with ${k.with.join('+')}` : ''} (${k.side ?? 'front'}/${k.angle ?? 'eye'}/${k.move ?? 'push'})${k.note ? ` — ${k.note}` : ''}`).join('<br>');
-    return `| ${s.id} | ${times[i]} | ${lines} | ${esc(s.action)}<br>${esc((s.mustShow ?? []).join(', '))} | ${keys} |`;
+    return `| ${s.id} | ${s.mood ?? moodForLight(s.light)} | ${times[i]} | ${lines} | ${esc(s.action)}<br>${esc((s.mustShow ?? []).join(', '))} | ${keys} |`;
   });
-  return `# Shot plan — ${esc(script.title ?? data.title ?? '')}\n\n| shot | time | Hindi / gloss | what we see | keys |\n|---|---|---|---|---|\n${rows.join('\n')}\n`;
+  return `# Shot plan — ${esc(script.title ?? data.title ?? '')}\n\n| shot | mood | time | Hindi / gloss | what we see | keys |\n|---|---|---|---|---|---|\n${rows.join('\n')}\n`;
 }
 
 
@@ -339,7 +340,7 @@ export async function runShotplan({ projectDir, project, router }) {
   const keysSchema = JSON.parse(readFileSync(join(ROOT, 'schema', 'shotplan-keys.schema.json'), 'utf8'));
   const keysSystem = `${SHOTPLAN_KEYS}\n\nDIRECTOR GUIDE\n${guide}\n\nDIRECTOR CRAFT\n${craft}\n\nCATALOG CARD\n${card.text}\n\nKEYS SCHEMA\n${JSON.stringify(keysSchema, null, 2)}`;
   const keyData = {
-    skeleton: skeleton.shots.map((s) => ({ id: s.id, lines: s.lines, start: s.start, set: s.set, light: s.light, characters: s.characters, mustShow: s.mustShow, action: s.action, hold: s.hold })),
+    skeleton: skeleton.shots.map((s) => ({ id: s.id, lines: s.lines, start: s.start, set: s.set, light: s.light, mood: s.mood, characters: s.characters, mustShow: s.mustShow, action: s.action, hold: s.hold })),
     words: wordsByLine,
     cast: data.cast,
     assets: data.assets,
@@ -381,6 +382,7 @@ function sideForJump(cur) {
 }
 function normalizePlan(plan) {
   for (const shot of plan.shots) {
+    shot.mood = shot.mood ?? moodForLight(shot.light);
     for (const b of shot.beats ?? []) {
       if (b.pose && POSE_ALIASES[b.pose]) b.pose = POSE_ALIASES[b.pose];
       if (b.expr && EXPR_ALIASES[b.expr]) b.expr = EXPR_ALIASES[b.expr];

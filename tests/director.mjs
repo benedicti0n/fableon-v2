@@ -69,13 +69,14 @@ export async function runDirectorTests() {
     ok('film checks fire', filmErrors(stats, { words, script }).length > 0, JSON.stringify(filmErrors(stats, { words, script })));
 
     const scenePlan = { version: 1, shots: [
-      { id: 'S1', scene: 'village-day', set: 'village', light: 'day', start: '0:0', lines: [0], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:0', size: 'wide', on: ['savitri'], angle: 'low', side: 'front', move: 'push' }], beats: [], fx: [] },
-      { id: 'S2', scene: 'village-day', set: 'village', light: 'day', start: '0:3', lines: [1], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:3', size: 'medium', on: ['savitri'], angle: 'eye', side: 'left', move: 'push' }], beats: [], fx: [] },
+      { id: 'S1', scene: 'village-day', set: 'village', light: 'day', mood: 'golden-glow', start: '0:0', lines: [0], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:0', size: 'wide', on: ['savitri'], angle: 'low', side: 'front', move: 'push' }], beats: [], fx: [] },
+      { id: 'S2', scene: 'village-day', set: 'village', light: 'day', mood: 'golden-glow', start: '0:3', lines: [1], characters: ['savitri'], mustShow: ['village.front'], keys: [{ at: '0:3', size: 'medium', on: ['savitri'], angle: 'eye', side: 'left', move: 'push' }], beats: [], fx: [] },
     ] };
     const groups = groupPlan(scenePlan);
     const mergedShot = baseShot(groups[0], 0, groups, { characters: [{ id: 'savitri' }] }, catalog);
     ok('scene grouping', groups.length === 1 && groups[0].keys.length === 2 && mergedShot.camera.length === 2, JSON.stringify({ groups: groups.length, keys: groups[0].keys.length }));
     ok('continuous scene keys', mergedShot.camera[1].cut !== true && mergedShot.camera[1].move === 'push' && mergedShot.camera[1].ease === 'glide', JSON.stringify(mergedShot.camera[1]));
+    ok('scene mood becomes a look block', mergedShot.look?.mood === 'golden-glow', JSON.stringify(mergedShot.look));
     const mergedCompiled = compileBoard({ version: 1, cast, shots: [mergedShot] }, words, catalog).storyboard;
     ok('merged scene compiles', mergedCompiled.shots.length === 1 && mergedCompiled.shots[0].camera.length === 2, JSON.stringify(mergedCompiled.shots.length));
 

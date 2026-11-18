@@ -15,6 +15,7 @@ import { shotplanCommand } from './shotplan-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
+import { lookdevCommand } from './lookdev.js';
 import { modelsCommand } from './models-command.js';
 import { voiceBudgetCommand, voiceCheckCommand, voicePaceCommand } from './voice-command.js';
 import { runAuditions } from './voice/auditions.js';
@@ -93,6 +94,18 @@ export function main(argv = process.argv) {
     .option('--shot <id>', 're-render only this shot segment after the board run')
     .option('--notes <text>', 'director notes; reruns the board stage')
     .action(async (opts) => { try { await boardCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('lookdev')
+    .description('render a look-dev sheet for every scene (planner pick + 2 alternatives)')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--out <dir>', 'output directory (default docs/reports/phase-3f)')
+    .action(async (opts) => {
+      try {
+        const r = await lookdevCommand(opts.project, opts.out ?? null);
+        console.log(`lookdev: ${r.scenes.length} scene(s) × 3 moods; ${r.out}`);
+      } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
+    });
 
   program
     .command('bakeoff')
