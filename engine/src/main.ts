@@ -380,6 +380,17 @@ const renderComposite = (f: number) => {
   g2.globalAlpha = 1;
   return out;
 };
+// Solo shot render for the final segment cache: one shot only, no crossfade layers and no flash.
+// The final assembler supplies transitions as separate globally-composited clips.
+(window as unknown as Record<string, unknown>).renderShot = (id: number, f: number, quality = 0.94) => {
+  const t1 = performance.now();
+  drawShot(id, f);
+  g2.globalAlpha = 1;
+  g2.drawImage(renderer.domElement, 0, 0);
+  const url = out.toDataURL("image/jpeg", quality);
+  PROF.encode = performance.now() - t1;
+  return url;
+};
 (window as unknown as Record<string, unknown>).renderFrame = (f: number, quality = 0.94) => {
   const t1 = performance.now();
   const url = renderComposite(f).toDataURL("image/jpeg", quality);

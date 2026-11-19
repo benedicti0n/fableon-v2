@@ -6,7 +6,7 @@ import { allStatuses, approve, assertWritable, isApprovedLocked, loadState, reco
 import { STAGES, stageByName, stageOrder } from './stages.js';
 import { FableonError, ERROR_CODES, asFableonError } from './errors.js';
 import { emitStage, emitProgress, emitStatus, emitError, emitLog } from './events.js';
-const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js' };
+const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js', final: 'final.js', publish: 'publish.js' };
 
 export class PipelineRunner extends EventEmitter {
   constructor(projectDir, project, opts = {}) {

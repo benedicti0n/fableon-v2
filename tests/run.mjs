@@ -55,6 +55,7 @@ import { runStateTests } from './state.mjs';
 import { runEventsTests } from './events.mjs';
 import { runServerTests } from './server.mjs';
 import { runStudioTests } from './studio.mjs';
+import { runFinalTests } from './final.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -208,6 +209,8 @@ try {
   check('server API', sv.ok, `${sv.checks.filter((c) => c.ok).length}/${sv.checks.length} checks`);
   const studio = await runStudioTests();
   check('studio read models', studio.ok, `${studio.checks.filter((c) => c.ok).length}/${studio.checks.length} checks`);
+  const final = await runFinalTests();
+  check('final cache plan', final.ok, `${final.checks.filter((c) => c.ok).length}/${final.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

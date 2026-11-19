@@ -9,6 +9,7 @@ import { ROOT } from '../../cli/src/env.js';
 import { atomicWrite } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { newToken, installAuth, inside } from './security.js';
+import { finalPlan } from '../../cli/src/final.js';
 import { acquireLock } from '../../cli/src/core/lock.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
@@ -293,6 +294,7 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   app.get('/api/projects/:id/timeline', async (req) => timeline(ctxOf(req.params.id)));
   app.get('/api/projects/:id/peaks', async (req) => peaks(ctxOf(req.params.id), String(req.query?.path ?? ''), Number(req.query?.buckets ?? 1200)));
   app.get('/api/projects/:id/list', async (req) => listFiles(ctxOf(req.params.id), String(req.query?.dir ?? '')));
+  app.get('/api/projects/:id/final/plan', async (req) => finalPlan(ctxOf(req.params.id).dir));
   app.post('/api/projects/:id/estimate', async (req) => estimate(ctxOf(req.params.id), req.body ?? {}));
 
   app.get('/api/settings/keys', async () => Object.fromEntries(KEY_ALLOWLIST.map((name) => [name, keySet(name) ? 'set' : 'unset'])));

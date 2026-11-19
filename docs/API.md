@@ -43,6 +43,7 @@ fableon serve --root work
 | POST | `/api/projects/:id/sources` | multipart source upload |
 | GET | `/api/projects/:id/history?path=` | `.fableon/history` versions |
 | POST | `/api/projects/:id/history/restore` | restore `{version}` |
+| GET | `/api/projects/:id/final/plan` | final segment cache plan: reasons, frames, time, disk |
 | GET | `/api/projects/:id/timeline` | resolved scenes/shots/keys, script words, needsHuman |
 | GET | `/api/projects/:id/peaks?path=` | waveform peaks, cached by file hash |
 | GET | `/api/projects/:id/list?dir=` | safe stills/cast/auditions/pace/review/qa/sources listing |

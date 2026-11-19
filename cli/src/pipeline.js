@@ -218,9 +218,15 @@ const listOf = (text) => {
 
 
 
-export async function qaCommand(...args) { return withProjectLock(projectDir(args[0]), 'qa', () => qaCommandInner(...args)); }
+export async function qaCommand(...args) {
+  return withProjectLock(projectDir(args[0]), 'qa', async () => {
+    const r = await runQa(...args);
+    if (!r.ok) process.exitCode = 1;
+    return r;
+  });
+}
 
-async function qaCommandInner(dirArg) {
+export async function runQa(dirArg) {
   const dir = projectDir(dirArg);
   const project = basename(dir);
   emitStage(project, 'qa', { op: 'qa', status: 'running' });
@@ -298,7 +304,7 @@ async function qaCommandInner(dirArg) {
   console.log(md);
   console.log(`\nqa: wrote ${join(out, 'summary.md')}`);
   emitStage(project, 'qa', { op: 'qa', status: ok ? 'done' : 'failed' });
-  if (!ok) process.exitCode = 1;
+  return { ok, md: md + '\n' };
 }
 
 export async function voiceCommand(dirArg, speed, voice) {

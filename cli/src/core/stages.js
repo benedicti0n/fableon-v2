@@ -64,6 +64,18 @@ export const STAGES = [
     projectKeys: ['seconds', 'voice'],
     outputs: ['animatic-qa.md'],
   },
+  {
+    name: 'final', version: 1, deps: ['animatic', 'sound'], prompt: '',
+    inputs: ['board.json', 'storyboard.json', 'shots.json', 'look.json', 'cues.json', 'audio/mix.wav', 'voice.wav', 'words.json'],
+    projectKeys: ['seconds', 'language'],
+    outputs: ['final.mp4', 'final-qa.md', 'render/final/manifest.json'],
+  },
+  {
+    name: 'publish', version: 1, deps: ['final'], prompt: '',
+    inputs: ['final.mp4', 'script.json', 'research/facts.json'],
+    projectKeys: ['seconds', 'language', 'voice'],
+    outputs: ['publish/publish.json', 'publish/cover.jpg', 'publish/subtitles.hi.srt'],
+  },
 ];
 
 export const stageByName = (name) => STAGES.find((s) => s.name === name);

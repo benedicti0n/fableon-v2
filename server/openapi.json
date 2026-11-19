@@ -1763,6 +1763,94 @@
           }
         }
       }
+    },
+    "/api/projects/{id}/final/plan": {
+      "get": {
+        "summary": "Plan the final render: cached/dirty shot segments, frames, time and disk",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "engine": {
+                      "type": "string"
+                    },
+                    "quality": {
+                      "type": "string"
+                    },
+                    "size": {
+                      "type": "string"
+                    },
+                    "totalFrames": {
+                      "type": "number"
+                    },
+                    "framesToRender": {
+                      "type": "number"
+                    },
+                    "audioOnly": {
+                      "type": "boolean"
+                    },
+                    "estMinutes": {
+                      "type": "number"
+                    },
+                    "diskNeedMB": {
+                      "type": "number"
+                    },
+                    "segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "shot": {
+                            "type": "string"
+                          },
+                          "scene": {
+                            "type": "string"
+                          },
+                          "frames": {
+                            "type": "number"
+                          },
+                          "cached": {
+                            "type": "boolean"
+                          },
+                          "reason": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "file": {
+                            "type": "string"
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "transitions": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

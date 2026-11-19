@@ -54,8 +54,8 @@ export const OPS = [
     argsSchema: obj({ ...proj }, ['project']), outputs: ['animatic.mp4', 'animatic-qa.md'],
   },
   {
-    name: 'final', description: 'final render -> mix -> assemble -> QA -> lookcheck', kind: 'job', heavy: true, cancellable: true,
-    argsSchema: obj({ ...proj, workers: num }, ['project']), outputs: ['final.mp4', 'qa/summary.md'],
+    name: 'final', description: 'partial final render -> assemble -> QA -> lookcheck', kind: 'stage', heavy: true, cancellable: true,
+    argsSchema: obj({ ...proj, workers: num }, ['project']), outputs: ['final.mp4', 'final-qa.md', 'render/final/manifest.json'],
   },
   {
     name: 'lookdev', description: 'render the look-dev sheet', kind: 'job', heavy: true, cancellable: true,
@@ -131,7 +131,7 @@ export function opArgv(name, args = {}) {
     case 'assemble': return ['assemble', ...addProject([])];
     case 'qa': return ['qa', ...addProject([])];
     case 'animatic': return ['run', ...addProject(['--to', 'animatic', '--only', 'animatic', '--force'])];
-    case 'final': return ['all', ...addProject(['--quality', 'final', '--workers', String(args.workers ?? 2)])];
+    case 'final': return ['run', ...addProject(['--to', 'final', '--only', 'final', '--force'])];
     case 'lookdev': return ['lookdev', ...addProject([...(args.out ? ['--out', args.out] : [])])];
     case 'lookcheck': return ['lookcheck', ...addProject([...(args.video ? ['--video', args.video] : [])])];
     case 'review': return ['review', ...addProject([...(args.compare ? ['--compare', args.compare] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.out ? ['--out', args.out] : []), ...(args.coverage ? ['--coverage'] : []), ...(args.split ? ['--split'] : [])])];

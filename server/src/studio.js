@@ -8,6 +8,7 @@ import { fileHash, atomicWrite } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { repoModels, modelForStage, modelId } from '../../cli/src/core/model-config.js';
 import { contentType } from './artifacts.js';
+import { finalPlan } from '../../cli/src/final.js';
 
 const read = (p, fallback = null) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return fallback; } };
 const seconds = (f, fps) => +(f / fps).toFixed(3);
@@ -119,6 +120,20 @@ export function estimate(ctx, body = {}) {
   const repo = repoModels();
   const stage = op === 'run' ? (args.to ?? args.only ?? 'voice') : op;
   const out = { ...V, op, project: ctx.id, provider: null, calls: 0, characters: 0, cachedCharacters: 0, usd: 0, notes: [] };
+  if (stage === 'final') {
+    try {
+      const plan = finalPlan(ctx.dir);
+      out.provider = null; out.calls = 0; out.characters = 0; out.cachedCharacters = 0; out.usd = 0;
+      out.frameCount = plan.framesToRender; out.seconds = +(plan.estMinutes * 60).toFixed(1);
+      out.diskNeedMB = plan.diskNeedMB; out.audioOnly = plan.audioOnly; out.totalFrames = plan.totalFrames;
+      out.notes.push(`${plan.segments.filter((s) => s.cached).length}/${plan.segments.length} shot segments cached; ${plan.framesToRender}/${plan.totalFrames} frames to render${plan.audioOnly ? '; audio-only re-mux' : ''}.`);
+      out.notes.push(`About ${plan.estMinutes} min at ${(plan.framesToRender ? (plan.estMinutes * 60 / plan.framesToRender) : 0).toFixed(2)} s/frame; needs about ${plan.diskNeedMB} MB plus 3 GB headroom.`);
+      return out;
+    } catch (e) {
+      out.notes.push(`final plan unavailable: ${e.message}`);
+      return out;
+    }
+  }
   const scriptLines = script?.lines ?? [];
   const textChars = scriptLines.reduce((n, l) => n + Array.from(String(l.text)).length, 0);
   if ((op === 'run' && ['voice', 'factcheck', 'script', 'brief', 'research', 'performance', 'cast', 'shotplan', 'board', 'sound', 'animatic'].includes(stage)) || ['voice-audition', 'voice-pace', 'cast', 'shotplan', 'board', 'lookdev', 'lookcheck', 'review', 'stills', 'animatic', 'final', 'script-lines'].includes(op)) {

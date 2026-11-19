@@ -118,7 +118,7 @@ export function main(argv = process.argv) {
     .command('run')
     .description('run pipeline stages in dependency order')
     .requiredOption('--project <dir>', 'project folder')
-    .option('--to <stage>', 'last stage to run', 'voice')
+    .option('--to <stage>', 'last stage to run', 'animatic')
     .option('--only <stage>', 'run only this stage')
     .option('--force', 'overwrite hand-edited outputs')
     .option('--autopilot', 'do not stop for approvals')

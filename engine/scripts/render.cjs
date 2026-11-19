@@ -4,6 +4,7 @@
 //   node engine/scripts/render.cjs stills   --out <prefix> --frames 60,640 [--size 540x960] [--msaa 0] [--off ink,lens]
 //   node engine/scripts/render.cjs video    --out <out.mp4> --from 0 --to 90 [--size 1440x2560] [--msaa 0]
 //   node engine/scripts/render.cjs segments --jobs <jobs.json> [--size …] [--msaa …]
+//   node engine/scripts/render.cjs shotsegments --jobs <jobs.json> [--size …] [--crf 8]
 //   node engine/scripts/render.cjs list     --out <shots.json>
 //   node engine/scripts/render.cjs qa       --out <qa_meta.json>
 //   node engine/scripts/render.cjs cuts     --out <cuts.json>
@@ -33,7 +34,7 @@ const opt = parse(process.argv.slice(2));
 const mode = opt._[0];
 if (!mode || opt.help) { console.log(usage); process.exit(mode ? 0 : 1); }
 const [W, H] = String(opt.size || '1440x2560').split(/[x:]/).map(Number);
-const MS = +(opt.msaa ?? 4), OFF = String(opt.off || ''), JPEG = +(opt.jpeg ?? 0.94), HIDE = String(opt.hide || '');
+const MS = +(opt.msaa ?? 4), OFF = String(opt.off || ''), JPEG = +(opt.jpeg ?? 0.94), HIDE = String(opt.hide || ''), CRF = +(opt.crf ?? 16);
 const PROJECT = opt.project ? path.resolve(String(opt.project)) : null;
 const need = (k) => { if (opt[k] === undefined || opt[k] === true) { console.error(`render.cjs ${mode}: missing --${k}\n\n${usage}`); process.exit(1); } return String(opt[k]); };
 const port = 8800 + Math.floor(Math.random() * 900);
@@ -52,7 +53,7 @@ const srv = http.createServer((q, s) => {
 const { launchOptions, glInfo, isSoftware } = require('./browser.cjs');
 const framesCsv = ['stills', 'coverage'].includes(mode) ? String(opt.frames || '') : '';
 const out = ['stills', 'video', 'list', 'qa', 'cuts', 'events', 'catalog', 'coverage'].includes(mode) ? need('out') : '';
-const jobsFile = mode === 'segments' ? need('jobs') : '';
+const jobsFile = mode === 'segments' || mode === 'shotsegments' ? need('jobs') : '';
 (async () => {
   const b = await chromium.launch(launchOptions());
   const pg = await b.newPage({ viewport: { width: 400, height: 400 } });
@@ -69,13 +70,30 @@ const jobsFile = mode === 'segments' ? need('jobs') : '';
   if (!process.env.RENDER_GL || process.env.RENDER_GL === 'gpu') {
     if (isSoftware(gl.renderer)) console.warn('WARNING GPU request fell back to software WebGL:', gl.renderer, '— see docs/BENCHMARKS.md; set RENDER_GL=swiftshader to silence');
   }
-  if (mode === 'segments') {
+  if (mode === 'shotsegments') {
+    // one browser, many solo-shot clips: jobs are { id, from, to, file }
+    const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
+    for (const job of jobs) {
+      const { id, from, to, file } = job;
+      if (fs.existsSync(file)) { console.log('skip', file); continue; }
+      const tmp = file + '.part.mp4', ts = Date.now();
+      const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', String(CRF), '-pix_fmt', 'yuv420p', '-r', '30', tmp], { stdio: ['pipe', 'inherit', 'inherit'] });
+      for (let f = from; f < to; f++) {
+        const d = await pg.evaluate(([shot, frame]) => window.renderShot(shot, frame, 0.95), [id, f]);
+        if (!ff.stdin.write(Buffer.from(d.split(',')[1], 'base64'))) await new Promise((r) => ff.stdin.once('drain', r));
+      }
+      ff.stdin.end(); await new Promise((r) => ff.on('close', r));
+      fs.renameSync(tmp, file);
+      console.log(new Date().toISOString().slice(11, 19), 'shot', id, file, to - from, 'frames', ((Date.now() - ts) / 1000 / (to - from)).toFixed(2) + ' s/f');
+    }
+  }
+  else if (mode === 'segments') {
     // one browser, many clips (skips clips that already exist)
     const jobs = JSON.parse(fs.readFileSync(jobsFile, 'utf8'));
     for (const [from, to, file] of jobs) {
       if (fs.existsSync(file)) { console.log('skip', file); continue; }
       const tmp = file + '.part.mp4', ts = Date.now();
-      const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', '30', tmp], { stdio: ['pipe', 'inherit', 'inherit'] });
+      const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', String(CRF), '-pix_fmt', 'yuv420p', '-r', '30', tmp], { stdio: ['pipe', 'inherit', 'inherit'] });
       for (let f = from; f < to; f++) {
         const d = await pg.evaluate((f) => window.renderFrame(f, 0.95), f);
         if (!ff.stdin.write(Buffer.from(d.split(',')[1], 'base64'))) await new Promise((r) => ff.stdin.once('drain', r));
