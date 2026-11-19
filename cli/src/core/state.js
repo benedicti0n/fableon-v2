@@ -109,20 +109,20 @@ export function statusOf(projectDir, project, stage, state = loadState(projectDi
   else if (st.hash !== hash) status = 'stale';
   else if (st.approvedHash === hash) status = 'approved';
   else status = 'fresh';
-  return { ...stage, hash, outHash, status, approved: !!st?.approvedHash && st.approvedHash === hash && st.outputHash === outHash, state: st };
+  return { ...stage, hash, outHash, status, by: st?.by ?? null, approved: !!st?.approvedHash && st.approvedHash === hash && st.outputHash === outHash, state: st };
 }
 
 export function allStatuses(projectDir, project, state = loadState(projectDir), hashFn = computeHash) {
   return STAGES.map((s) => statusOf(projectDir, project, s, state, hashFn));
 }
 
-export function approve(projectDir, project, name) {
+export function approve(projectDir, project, name, opts = {}) {
   const stage = stageByName(name);
   if (!stage) throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown stage "${name}" (choose ${STAGES.map((s) => s.name).join(', ')})`, { stage: name });
   const state = loadState(projectDir);
   const s = statusOf(projectDir, project, stage, state);
   if (!outputsExist(projectDir, stage)) throw new FableonError(ERROR_CODES.NOT_FOUND, `${name} has no output to approve`, { stage: name });
-  state.stages[name] = { ...(state.stages[name] ?? {}), hash: s.hash, outputHash: s.outHash, approvedHash: s.hash, status: 'approved', lastRun: state.stages[name]?.lastRun ?? new Date().toISOString(), usage: state.stages[name]?.usage ?? { calls: 0, cached: 0, promptTokens: 0, completionTokens: 0, costUsd: null } };
+  state.stages[name] = { ...(state.stages[name] ?? {}), hash: s.hash, outputHash: s.outHash, approvedHash: s.hash, status: 'approved', ...(opts.by ? { by: opts.by } : {}), lastRun: state.stages[name]?.lastRun ?? new Date().toISOString(), usage: state.stages[name]?.usage ?? { calls: 0, cached: 0, promptTokens: 0, completionTokens: 0, costUsd: null } };
   saveState(projectDir, state);
   return s;
 }

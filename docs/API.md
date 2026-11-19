@@ -43,6 +43,13 @@ fableon serve --root work
 | POST | `/api/projects/:id/sources` | multipart source upload |
 | GET | `/api/projects/:id/history?path=` | `.fableon/history` versions |
 | POST | `/api/projects/:id/history/restore` | restore `{version}` |
+| GET/POST | `/api/presets` | built-in and user production presets |
+| PUT/DELETE | `/api/presets/:id` | edit/delete a user preset |
+| GET | `/api/library` | shared research library files |
+| GET | `/api/queue` | production queue state |
+| POST | `/api/queue/from-preset` | create a batch of projects and queue items |
+| POST | `/api/queue/start`, `/api/queue/pause` | queue controls |
+| POST | `/api/queue/:id/:action` | retry, remove or reorder |
 | GET | `/api/projects/overview` | projects with stage dots, cover, spend and published state |
 | GET | `/api/projects/:id/exports` | export folders for the film |
 | GET/PUT | `/api/settings/channel` | channel profile used by the publish prompt |

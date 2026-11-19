@@ -22,7 +22,8 @@
         "artifact",
         "status",
         "budget",
-        "error"
+        "error",
+        "queue"
       ]
     },
     "project": {

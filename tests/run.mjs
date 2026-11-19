@@ -58,6 +58,7 @@ import { runStudioTests } from './studio.mjs';
 import { runFinalTests } from './final.mjs';
 import { runFinishLookTests } from './look-finish.mjs';
 import { runPublishTests } from './publish.mjs';
+import { runQueueTests } from './queue.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -217,6 +218,8 @@ try {
   check('world-only finish look', finishLook.ok, `${finishLook.checks.filter((c) => c.ok).length}/${finishLook.checks.length} checks`);
   const publish = await runPublishTests();
   check('publish package', publish.ok, `${publish.checks.filter((c) => c.ok).length}/${publish.checks.length} checks`);
+  const queue = await runQueueTests();
+  check('production queue', queue.ok, `${queue.checks.filter((c) => c.ok).length}/${queue.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

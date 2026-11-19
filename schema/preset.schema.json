@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/preset.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "name", "format", "seconds", "language", "voice", "models", "research", "render", "gates", "budgetUsd", "publish"],
+  "properties": {
+    "version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "format": { "enum": ["short-vertical", "long-16x9"] },
+    "seconds": { "type": "number", "minimum": 10, "maximum": 600 },
+    "language": { "enum": ["hi", "en"] },
+    "voice": { "type": "object" },
+    "models": { "type": "object" },
+    "research": { "type": "object", "additionalProperties": false, "properties": { "web": { "type": "boolean" }, "library": { "type": "array", "items": { "type": "string" } } } },
+    "mix": { "type": "object", "additionalProperties": { "type": "number" } },
+    "render": { "type": "object", "additionalProperties": false, "properties": { "quality": { "enum": ["preview", "final"] }, "workers": { "type": "integer", "minimum": 1, "maximum": 16 } } },
+    "gates": { "type": "array", "items": { "enum": ["brief", "research", "script", "factcheck", "performance", "cast", "voice", "shotplan", "board", "sound", "animatic", "final", "publish"] } },
+    "budgetUsd": { "type": "number", "minimum": 0 },
+    "publish": { "type": "object", "additionalProperties": false, "properties": { "enabled": { "type": "boolean" }, "profiles": { "type": "array", "items": { "enum": ["youtube-short", "reels"] } }, "subtitles": { "type": "object", "additionalProperties": false, "properties": { "hi": { "type": "boolean" }, "en": { "type": "boolean" } } }, "coverTemplate": { "enum": ["clean", "title"] } } }
+  }
+}

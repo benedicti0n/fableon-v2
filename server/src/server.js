@@ -22,6 +22,7 @@ import { JobManager } from './jobs.js';
 import { STAGES } from '../../cli/src/core/stages.js';
 import { repoModels, modelForStage, fallbackConfigsForStage, modelId } from '../../cli/src/core/model-config.js';
 import { collectUsage, summarize } from '../../cli/src/usage.js';
+import { ProductionQueue, listPresets, savePreset, deletePreset, listLibrary } from './queue.js';
 import { SARVAM_V4, NACHIKET } from '../../cli/src/voice/sarvam.js';
 
 export const KEY_ALLOWLIST = ['DEEPSEEK_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'SARVAM_API_KEY', 'ELEVENLABS_API_KEY', 'OPENROUTER_API_KEY', 'TAVILY_API_KEY'];
@@ -117,6 +118,7 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   const ctxOf = (id) => P.resolveProject(projectRoot, id);
   const hub = new EventHub();
   const jobs = new JobManager(projectRoot, (event) => hub.broadcast(event));
+  const queue = new ProductionQueue(projectRoot, jobs, hub);
   installAuth(app, { token, port, dev });
 
   app.setErrorHandler((err, req, reply) => {
@@ -391,8 +393,24 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     return reply.type(type).header('cache-control', 'public, max-age=31536000, immutable').send(createReadStream(file));
   });
 
-  app.addHook('onClose', async () => { await jobs.close(); });
-  return { app, token, port, root: projectRoot, jobs, hub };
+  app.get('/api/presets', async () => ({ presets: listPresets(projectRoot) }));
+  app.post('/api/presets', async (req) => savePreset(projectRoot, req.body ?? {}));
+  app.put('/api/presets/:id', async (req) => savePreset(projectRoot, { ...(req.body ?? {}), id: String(req.params.id) }));
+  app.delete('/api/presets/:id', async (req) => ({ deleted: deletePreset(projectRoot, String(req.params.id)) }));
+  app.get('/api/library', async () => ({ files: listLibrary(projectRoot) }));
+  app.get('/api/queue', async () => queue.list());
+  app.post('/api/queue/from-preset', async (req) => queue.createBatch({ presetId: String(req.body?.presetId ?? ''), topics: req.body?.topics ?? [], library: req.body?.library ?? [], to: req.body?.to ?? null }));
+  app.post('/api/queue/start', async () => { queue.setPaused(false); return queue.list(); });
+  app.post('/api/queue/pause', async (req) => { if (req.body?.now) await queue.pauseNow(); else queue.setPaused(true); return queue.list(); });
+  app.post('/api/queue/:id/:action', async (req) => {
+    const id = String(req.params.id), action = String(req.params.action);
+    if (action === 'retry') return queue.retry(id);
+    if (action === 'remove') return { removed: queue.remove(id) };
+    if (action === 'reorder') return { items: queue.reorder(req.body?.ids ?? []) };
+    throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown queue action ${action}`);
+  });
+  app.addHook('onClose', async () => { queue.stop(); await jobs.close(); });
+  return { app, token, port, root: projectRoot, jobs, hub, queue };
 }
 
 export async function startServer({ port = 4317, root = join(ROOT, 'work'), open = false, dev = false } = {}) {
