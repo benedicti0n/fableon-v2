@@ -143,6 +143,15 @@ export class ProductionQueue {
         this.save(); this.emit(item, item.note ?? 'stage done');
       }
     }
+    // A waiting item resumes as soon as its gate stage is approved.
+    for (const i of this.items.filter((x) => x.status === 'waiting')) {
+      const gate = /waiting for (\w+)/.exec(i.note ?? '')?.[1];
+      if (!gate) continue;
+      try {
+        const p = json(join(i.projectDir, 'project.json'));
+        if (statusOf(i.projectDir, p, stageByName(gate)).approved) { i.status = 'queued'; i.note = `resuming after ${gate}`; i.updatedAt = new Date().toISOString(); this.save(); this.emit(i, i.note); }
+      } catch { /* ignore */ }
+    }
     if (this.items.some((i) => i.status === 'running')) return;
     // Interactive or other jobs run first.
     if (this.jobs.list().some((j) => j.status === 'running' || j.status === 'queued')) return;
@@ -155,6 +164,7 @@ export class ProductionQueue {
     for (const stage of STAGES.slice(0, to + 1)) {
       const status = statusOf(item.projectDir, ctx.project, stage);
       if (status.status === 'approved') continue;
+      if (status.status === 'stale' && status.state?.approvedHash) { try { approve(item.projectDir, ctx.project, stage.name, { by: 'autopilot' }); } catch { /* fall through */ } continue; }
       if (status.status === 'fresh') {
         if ((item.gates ?? []).includes(stage.name)) {
           item.status = 'waiting'; item.note = `waiting for ${stage.name} approval`; item.updatedAt = new Date().toISOString();
@@ -164,7 +174,7 @@ export class ProductionQueue {
         continue;
       }
       try {
-        const job = this.jobs.create(ctx, 'run', { to: stage.name, only: stage.name, autopilot: true, force: true });
+        const job = this.jobs.create(ctx, 'run', { to: stage.name, only: stage.name, autopilot: true, force: true, project: item.projectDir });
         item.status = 'running'; item.jobId = job.id; item.note = `running ${stage.name}`; item.updatedAt = new Date().toISOString();
         this.save(); this.emit(item, item.note);
       } catch (e) {

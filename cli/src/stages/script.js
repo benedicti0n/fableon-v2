@@ -269,9 +269,25 @@ function cleanHindiDelivery(data) {
   }
 }
 
+const TONE_ALIAS = {
+  neutral: 'matter-of-fact', stern: 'tense', shock: 'awe', pained: 'tense', nervous: 'tense',
+  smile: 'warm', sad: 'whisper', angry: 'tense', determined: 'matter-of-fact', sleepy: 'whisper', smirk: 'deadpan', calm: 'warm',
+};
 export function normalizeHindiScript(data, catalog, { split = true } = {}) {
+  for (const l of data.lines) {
+    if (!l.delivery?.tone) continue;
+    const allowed = new Set(['deadpan', 'mock-serious', 'matter-of-fact', 'warm', 'excited', 'tense', 'awe', 'whisper']);
+    if (!allowed.has(l.delivery.tone) && TONE_ALIAS[l.delivery.tone]) {
+      logNormalizer(data, 'tone alias', l.n, `${l.delivery.tone} -> ${TONE_ALIAS[l.delivery.tone]}`);
+      l.delivery.tone = TONE_ALIAS[l.delivery.tone];
+    }
+  }
   for (const n of data.names ?? []) { if (n.phonemes === undefined) n.phonemes = null; if (n.suggested === undefined) n.suggested = true; }
   for (const l of data.lines) normalizeLook(l, catalog);
+  const escalations = data.lines.filter((l) => l.beat === 'escalation');
+  if (escalations.length > 6) {
+    for (const l of escalations.slice(6)) { l.beat = 'action'; logNormalizer(data, 'escalation overflow', l.n); }
+  }
   // A setting line that only reacts can inherit the fact of the previous/next factual line.
   for (let i = 0; i < data.lines.length; i++) {
     const l = data.lines[i];

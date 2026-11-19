@@ -461,8 +461,9 @@ const addFacingBeat = (a, f, target, cam, ctx) => {
   let facing = dir, mirror = false;
   if (prop === 'bow' || prop === 'bowDrawn' || prop === 'bigbow') { facing = dir ? -1 : 0; mirror = dir > 0; }
   else if (prop === 'spear' || prop === 'net' || prop === 'axe' || prop === 'torch') { facing = dir ? 1 : 0; mirror = dir < 0; }
-  const beat = { at: { frame: f }, facing, mirror, look: dir };
-  const same = (a.beats ?? []).find((b) => !b.at.shot && b.at.frame === f);
+  const fb = Math.max(0, Math.round(f));
+  const beat = { at: { frame: fb }, facing, mirror, look: dir };
+  const same = (a.beats ?? []).find((b) => !b.at.shot && b.at.frame === fb);
   if (same) Object.assign(same, beat); else (a.beats ??= []).push(beat);
   a.beats.sort((x, y) => ctx.anchorFrame(x.at) - ctx.anchorFrame(y.at));
 };
