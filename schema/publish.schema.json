@@ -3,17 +3,169 @@
   "$id": "https://fableon.local/schema/publish.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "titles", "description", "hashtags", "tags", "thumbnailText", "pinnedComment", "recommendations"],
+  "required": [
+    "version",
+    "titles",
+    "description",
+    "hashtags",
+    "tags",
+    "thumbnailText",
+    "pinnedComment",
+    "recommendations"
+  ],
   "properties": {
-    "version": { "const": 1 },
-    "titles": { "type": "array", "minItems": 5, "maxItems": 5, "items": { "type": "object", "additionalProperties": false, "required": ["hi", "en", "combined"], "properties": { "hi": { "type": "string", "minLength": 1 }, "en": { "type": "string", "minLength": 1 }, "combined": { "type": "string", "minLength": 1 } } } },
-    "description": { "type": "object", "additionalProperties": false, "required": ["hi", "en"], "properties": { "hi": { "type": "string" }, "en": { "type": "string" } } },
-    "hashtags": { "type": "array", "minItems": 3, "maxItems": 8, "items": { "type": "string", "minLength": 2 } },
-    "tags": { "type": "string" },
-    "thumbnailText": { "type": "object", "additionalProperties": false, "required": ["hi", "alternatives"], "properties": { "hi": { "type": "string", "minLength": 1 }, "alternatives": { "type": "array", "items": { "type": "string" } } } },
-    "pinnedComment": { "type": "string", "minLength": 1 },
-    "recommendations": { "type": "object", "additionalProperties": false, "required": ["madeForKids", "madeForKidsReason", "alteredContent", "alteredContentReason", "category"], "properties": { "madeForKids": { "type": "boolean" }, "madeForKidsReason": { "type": "string" }, "alteredContent": { "type": "boolean" }, "alteredContentReason": { "type": "string" }, "category": { "type": "string" } } },
-    "selection": { "type": "object", "additionalProperties": false, "properties": { "title": { "type": "string" }, "cover": { "type": "string" }, "template": { "enum": ["clean", "title"] }, "thumbnailText": { "type": "string" } } },
-    "cover": { "type": "object", "additionalProperties": false, "properties": { "candidate": { "type": "string" }, "template": { "enum": ["clean", "title"] }, "thumbnailText": { "type": "string" } } }
+    "version": {
+      "const": 1
+    },
+    "titles": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "hi",
+          "en",
+          "combined"
+        ],
+        "properties": {
+          "hi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "en": {
+            "type": "string",
+            "minLength": 1
+          },
+          "combined": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "description": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hi",
+        "en"
+      ],
+      "properties": {
+        "hi": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      }
+    },
+    "hashtags": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 2
+      }
+    },
+    "tags": {
+      "type": "string"
+    },
+    "thumbnailText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hi",
+        "alternatives"
+      ],
+      "properties": {
+        "hi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pinnedComment": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recommendations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "madeForKids",
+        "madeForKidsReason",
+        "alteredContent",
+        "alteredContentReason",
+        "category"
+      ],
+      "properties": {
+        "madeForKids": {
+          "type": "boolean"
+        },
+        "madeForKidsReason": {
+          "type": "string"
+        },
+        "alteredContent": {
+          "type": "boolean"
+        },
+        "alteredContentReason": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "cover": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "template": {
+          "enum": [
+            "clean",
+            "title"
+          ]
+        },
+        "thumbnailText": {
+          "type": "string"
+        }
+      }
+    },
+    "cover": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "candidate": {
+          "type": "string"
+        },
+        "template": {
+          "enum": [
+            "clean",
+            "title"
+          ]
+        },
+        "thumbnailText": {
+          "type": "string"
+        }
+      }
+    }
   }
 }

@@ -94,3 +94,26 @@ provider picker.
 The final render queue and export, look/sound controls beyond the scene mood, autopilot presets, a wider cost
 dashboard and a desktop wrapper are Phase 6 work. The studio deliberately edits `shotplan.json` and then
 re-runs the deterministic board rather than editing `board.json`.
+
+## Phase 6 screens
+
+- **Finish** (step 9): per-scene look cards (mood, exposure, warmth, glow, haze, shafts, vignette) with a before/after
+  look preview; sound timeline with voice waveform, music, stingers and SFX, click-to-add/drag, keyboard move/delete,
+  gain/seed inspector and one-effect preview; mix sliders and Rebuild mix; final segment strip, plan, estimate, player
+  with A/B and final QA. `Save look`/`Save cues` must be pressed before Render final; edited cues leave the sound stage
+  unapproved, so use **Approve sound** before final.
+- **Publish** (step 10): generate the package, pick one of five titles, edit description/hashtags/tags/pinned comment
+  with Copy buttons, choose a cover candidate/template and recompose, preview subtitles against the final, review the
+  fact flags/checklist, export profiles, reveal the latest export in Finder and record a manual publish.
+- **Queue**: batch from a preset, drag reorder, Start/Pause after current/Pause now, waiting-item links to the gate
+  stage, retry/remove and spend vs estimate.
+- **Presets**: built-in and user presets, duplicate, edit gates/budget/profiles, delete user presets.
+- **Costs**: month picker, spend/effective/budget left/forecast/per-film/per-minute/cache tiles, stacked day chart
+  with a table, stage/film tables, provider balances, CSV and budget editor.
+- **Projects**: cover/status/duration/ten stage dots/spend cards, search/status filter, hide test projects, mark test,
+  bulk archive.
+- **Settings**: channel profile used only by the publish prompt; API keys, routing, usage and doctor remain.
+
+Keyboard: the same Tab/Enter/Escape conventions as Phase 5. On the Finish sound lane, select an SFX marker and use
+Left/Right to move one word, Shift+Left/Right to move one frame, and Delete/Backspace to remove it. Ctrl/Cmd+C is not
+overridden; the Copy buttons use the clipboard API.

@@ -1,7 +1,7 @@
 // End-to-end studio journey against a temp server and the mock providers.
 // Run with: npm run web:e2e  (builds web/dist first).
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import pw from '../../engine/node_modules/playwright/index.js';
@@ -22,6 +22,8 @@ const waitFor = async (fn, label, timeout = 45000) => {
 
 const root = mkdtempSync(join(tmpdir(), 'fableon-e2e-'));
 process.env.FABLEON_MOCK_DIR = join(ROOT, 'tests', 'fixtures', 'llm');
+process.env.FABLEON_FINAL_SIZE = '540x960';
+process.env.FABLEON_SECONDS_PER_FRAME = '0.02';
 const token = 'e2e-studio-token';
 let app, browser;
 try {
@@ -150,6 +152,66 @@ try {
   await page.getByRole('heading', { name: 'Animatic' }).waitFor();
   assert.ok(await page.getByRole('button', { name: /^Jump to / }).count() >= 1, 'shot markers render');
 
+  // Sound supplies the final mix; the board UI is already open, so run it before animatic.
+  const soundJob = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/run`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to: 'sound', only: 'sound', autopilot: true, force: true }) })).json(), id);
+  await waitFor(async () => {
+    const j = await page.evaluate(async (job) => (await fetch(`/api/jobs/${job}`)).json(), soundJob.id);
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`sound job ${j.status}: ${j.error}`);
+    return j.status === 'done';
+  }, 'sound job done', 120000);
+
+  // The animatic stage owns shots.json and the preview QA; run it before the final compiler.
+  const animaticJob = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/run`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to: 'animatic', only: 'animatic', autopilot: true, force: true }) })).json(), id);
+  await waitFor(async () => {
+    const j = await page.evaluate(async (job) => (await fetch(`/api/jobs/${job}`)).json(), animaticJob.id);
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`animatic job ${j.status}: ${j.error}`);
+    return j.status === 'done';
+  }, 'animatic job done', 180000);
+
+  // Finish: a full final at the test render size, then the publish package and export.
+  const finalJob = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/run`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to: 'final', only: 'final', autopilot: true, force: true }) })).json(), id);
+  assert.ok(finalJob.id, 'final job queued');
+  await waitFor(async () => {
+    const j = await page.evaluate(async (job) => (await fetch(`/api/jobs/${job}`)).json(), finalJob.id);
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`final job ${j.status}: ${j.error}`);
+    return j.status === 'done';
+  }, 'final job done', 180000);
+  const publishJob = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/run`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to: 'publish', only: 'publish', autopilot: true, force: true }) })).json(), id);
+  assert.ok(publishJob.id, 'publish job queued');
+  await waitFor(async () => {
+    const j = await page.evaluate(async (job) => (await fetch(`/api/jobs/${job}`)).json(), publishJob.id);
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`publish job ${j.status}: ${j.error}`);
+    return j.status === 'done';
+  }, 'publish job done', 180000);
+  await page.goto(`${projectUrl}/publish`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('heading', { name: 'Publish' }).waitFor();
+  await page.getByText('Upload checklist').waitFor();
+  assert.ok((await page.getByText(/चाँद का पनीर/).count()) >= 1, 'publish title renders');
+  const flags = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/files/publish/facts.json`)).json(), id);
+  if (flags?.flags?.length) await page.evaluate(async (pid) => fetch(`/api/projects/${pid}/publish/override`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ reason: 'reviewed in the e2e journey' }) }), id);
+  const exportJob = await page.evaluate(async (pid) => (await fetch(`/api/projects/${pid}/ops/export`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profiles: 'youtube-short' }) })).json(), id);
+  await waitFor(async () => {
+    const j = await page.evaluate(async (job) => (await fetch(`/api/jobs/${job}`)).json(), exportJob.id);
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`export job ${j.status}: ${j.error}`);
+    return j.status === 'done';
+  }, 'export job done', 120000);
+  const exportSecrets = readdirSync(join(root, 'exports')).filter((x) => x.endsWith(`-${id}`)).flatMap((d) => readdirSync(join(root, 'exports', d)).filter((f) => /\.(md|json|srt|txt)$/.test(f)).map((f) => readFileSync(join(root, 'exports', d, f), 'utf8'))).join('\n');
+  assert.ok(!exportSecrets.includes(token) && !/sk-[a-z0-9]/i.test(exportSecrets), 'export package contains no token or key');
+  const exportDirs = readdirSync(join(root, 'exports')).filter((x) => x.endsWith(`-${id}`));
+  assert.ok(exportDirs.length >= 1, 'export folder exists');
+  const exportDir = join(root, 'exports', exportDirs[0]);
+  assert.ok(existsSync(join(exportDir, 'cover.jpg')) && existsSync(join(exportDir, 'subtitles.hi.srt')) && existsSync(join(exportDir, 'export-qa.md')), 'export package contents');
+
+  // Costs: add one paid row so the tiny monthly cap crosses a threshold.
+  appendFileSync(join(root, id, 'logs', 'calls.jsonl'), JSON.stringify({ ts: new Date().toISOString(), stage: 'e2e', provider: 'deepseek', model: 'mock-v1', promptTokens: 10, completionTokens: 10, costUsd: 0.01, cached: false, ok: true }) + '\n');
+  // Costs: a tiny monthly cap crosses a threshold and the shell banner is live.
+  await page.evaluate(async () => {
+    await fetch('/api/costs/budgets', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ monthlyUsd: 0.005, thresholds: [50, 80, 100] }) });
+    await fetch(`/api/costs?month=${new Date().toISOString().slice(0, 7)}`);
+  });
+  await page.waitForTimeout(1200);
+  assert.ok((await page.getByText(/Budget:/).count()) >= 1, 'budget banner');
+
   // No token in any storage or URL after bootstrap.
   assert.ok(!page.url().includes('token'), 'token never returns to the URL');
   const after = await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage), url: location.href }));
@@ -163,8 +225,10 @@ try {
   console.log('PASS token bootstrap  cookie HttpOnly  no storage  CSP active');
   console.log('PASS create → brief → research → script edit → script-lines → voice → timeline note → animatic');
   console.log('PASS live activity  mock-sleep running and cancelled');
+  console.log('PASS finish → final → publish → export  cover and hi SRT in the package');
+  console.log('PASS costs  threshold banner from a tiny monthly cap');
 } finally {
   try { await browser?.close(); } catch { /* closed */ }
   try { await app?.close(); } catch { /* closed */ }
-  rmSync(root, { recursive: true, force: true });
+  if (!process.env.FABLEON_E2E_KEEP) rmSync(root, { recursive: true, force: true }); else console.log('KEEP', root);
 }

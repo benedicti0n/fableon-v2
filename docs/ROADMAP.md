@@ -56,10 +56,20 @@ the same stage registry and state; see `docs/API.md` and `docs/reports/phase-4.m
 ## Phase 5 — Frontend: stages 1-6
 Brief, research, script editor (per-line regenerate, fact flags), voice (player, word timeline, pronunciation editor, per-stage voice selection), storyboard shot timeline editor, animatic player.
 
-## Phase 6 — Frontend: stages 7-9 + autopilot
-Look & sound controls, render queue with per-shot re-render, QA report + export, presets and autopilot with checkpoints, per-stage model/voice selection and cost estimates.
+## Phase 6 — Finishing and production (done)
+
+Look/sound finishing with partial final renders, the segment cache, the publish package and export QA, presets
+and the production queue, and the cost ledger/budgets dashboard. Checkpoints 1 and 2 were deferred by the user
+("continue; we will polish later").
+
+## Phase 7 — Sets and characters
+New set kits and character specs, then long-form 16:9 projects. The later backlog is direct upload, a context-aware SFX library with a licence ledger, bake-offs for the remaining stages, and motion-blur whip pans.
 
 ## Later
+
+- Long-form 16:9 projects.
+- Direct upload/scheduling (OAuth), burned-in captions are explicitly excluded.
+- A context-aware SFX library with a licence ledger.
 - Context-aware SFX libraries (CC0 packs plus licensed generative fill), a licence ledger and a per-scene ambience bed.
 - Per-stage bake-offs for research, fact-check, cast, shot plan, performance and sound.
 - Whip pans with motion blur; new set kits (e.g. a cart of food / forest clearing).

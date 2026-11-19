@@ -161,3 +161,38 @@ After synthesis the stage applies the same length fit: if the natural duration i
 `project.seconds`, pitch-preserving `ffmpeg atempo` goes to the exact target and `words.json` is scaled; outside the
 band it stops with the measured length and a suggested word count. `--fit off` keeps the natural length. Kokoro can
 report a small negative start for the first word; the stage clamps timings at zero before validating `words.json`.
+
+## Final picture and the segment cache (Phase 6)
+
+`final` is a real stage after `animatic`/`sound`. The renderer still owns each shot, but the final compiler stores
+one solo segment per storyboard shot plus one global composite per boundary transition (crossfade/flash) under
+`render/final/segments/` and `render/final/transitions/`. The manifest keys each segment by the compiled shot
+description, its resolved range, the cast/look/board hashes, quality/size and an engine build id (engine source +
+three.js + the known ANGLE string). A changed shot re-renders its own segment and the boundary composites that
+contain it; its neighbours' shot segments stay cached. Assembly trims each piece frame-exactly, re-encodes once to
+BT.709 yuv420p and muxes `audio/mix.wav`; audio-only changes take the remux path and render zero frames.
+
+`GET /api/projects/:id/final/plan` returns the segment strip, dirty reasons (`new`, `board`, `look`, `engine`,
+`quality`, `transition`), frames, estimated minutes and disk need. The final renderer checks `DISK_LOW` (need + 3 GB),
+runs `short_qa` and `lookcheck`, writes `final-qa.md`, keeps `final.prev.mp4` for A/B, and uses `caffeinate` on macOS.
+`fableon clean` can remove unreferenced `render/final` segments.
+
+## Publishing package (Phase 6)
+
+`publish` depends on `final`. It asks the publish route for five Hindi/English titles, descriptions, hashtags, tags,
+thumbnail text, pinned comment and recommendations; the deterministic validator and a fact pass against the
+verified facts and factchecked script are blocking. Covers come from scored `final.mp4` frame grabs (head/face,
+sharpness, contrast, saturation, beat, cast count) composed by the engine's headless browser with bundled Noto
+Sans Devanagari; sidecar Hindi/English SRTs stay outside the video. `export` writes
+`<root>/exports/<date>-<project>/` with the video profiles, cover, SRTs, `publish.md`, `publish.json` and
+`export-qa.md`. See `docs/PUBLISHING.md`.
+
+## Production queue (Phase 6)
+
+Presets in `presets/` (built-in) and `<root>/.fableon/presets/` (user) define seconds, language, voice, routing,
+library sources, mix offsets, gates, budget and publish profiles. A batch creates collision-safe projects and queue
+items in `<root>/.fableon/queue.json`; one estimate confirms the batch. The queue runs one stage per existing job,
+never pre-empts a running item, waits at gates (`script`, `animatic`, `publish` by default), auto-approves non-gate
+stages with `by: "autopilot"`, and stops on QA failure, fact flags, `DISK_LOW`, budget overrun or an exhausted
+provider. Restart turns a running item into paused. Controls: start, pause after current, pause now, retry, remove,
+reorder.

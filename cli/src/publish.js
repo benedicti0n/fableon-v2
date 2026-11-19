@@ -245,8 +245,10 @@ function exportQa(out, videos) {
     const v = (p.streams ?? []).find((s) => s.codec_type === 'video') ?? {};
     const a = (p.streams ?? []).find((s) => s.codec_type === 'audio') ?? {};
     const loud = spawnSync('ffmpeg', ['-hide_banner', '-i', file, '-af', 'ebur128=peak=true', '-f', 'null', '-'], { encoding: 'utf8' });
-    const lufs = Number((/I:\s*(-?\d+(?:\.\d+)?)\s*LUFS/.exec(loud.stderr) ?? [])[1]);
-    const tp = Number((/Peak:\s*(-?\d+(?:\.\d+)?)\s*dBFS/.exec(loud.stderr) ?? [])[1]);
+    const lufsMatches = [...String(loud.stderr).matchAll(/I:\s*(-?\d+(?:\.\d+)?)\s*LUFS/g)];
+    const peakMatches = [...String(loud.stderr).matchAll(/Peak:\s*(-?\d+(?:\.\d+)?)\s*dBFS/g)];
+    const lufs = Number(lufsMatches.at(-1)?.[1] ?? NaN);
+    const tp = Number(peakMatches.at(-1)?.[1] ?? NaN);
     const bytes = readFileSync(file);
     const faststart = bytes.indexOf(Buffer.from('moov')) >= 0 && (bytes.indexOf(Buffer.from('mdat')) < 0 || bytes.indexOf(Buffer.from('moov')) < bytes.indexOf(Buffer.from('mdat')));
     const fps = v.r_frame_rate === '30/1';

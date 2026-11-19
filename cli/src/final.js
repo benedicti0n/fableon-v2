@@ -102,7 +102,8 @@ export function shotRanges(projectDir) {
 
 export function finalPlan(projectDir) {
   const { rows, transitions, board, storyboard, words } = shotRanges(projectDir);
-  const quality = 'final', size = '1440x2560';
+  const size = process.env.FABLEON_FINAL_SIZE || '1440x2560';
+  const quality = size === '1440x2560' ? 'final' : 'test';
   const engine = engineBuildId(projectDir);
   const manifestPath = join(projectDir, 'render', 'final', 'manifest.json');
   const manifest = existsSync(manifestPath) ? json(manifestPath) : null;

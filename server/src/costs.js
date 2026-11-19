@@ -66,6 +66,12 @@ export function summary(root, month = new Date().toISOString().slice(0, 7)) {
   const spend = rows.reduce((n, r) => n + r.costUsd, 0);
   const effective = rows.reduce((n, r) => n + eff(r), 0);
   const cached = rows.filter((r) => r.cached).length;
+  const avg = new Map();
+  for (const r of rows.filter((x) => !x.cached)) { const a = avg.get(r.provider) ?? { n: 0, cost: 0 }; a.n++; a.cost += r.costUsd; avg.set(r.provider, a); }
+  const cacheSavings = rows.filter((r) => r.cached).reduce((n, r) => n + (avg.get(r.provider)?.n ? avg.get(r.provider).cost / avg.get(r.provider).n : 0), 0);
+  const jobsFile = join(root, '.fableon-server', 'jobs.jsonl');
+  const machine = new Map();
+  if (existsSync(jobsFile)) for (const line of readFileSync(jobsFile, 'utf8').split('\n')) { if (!line.trim()) continue; try { const j = JSON.parse(line); if (j.project && j.startedAt && j.finishedAt) machine.set(j.project, (machine.get(j.project) ?? 0) + (Date.parse(j.finishedAt) - Date.parse(j.startedAt)) / 60000); } catch { /* skip */ } }
   const deep = summarize(collectUsage(resolve(root), { since: `${month}-01` }));
   const day = Math.max(1, new Date().getDate());
   const days = new Date(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0).getDate();
@@ -85,9 +91,9 @@ export function summary(root, month = new Date().toISOString().slice(0, 7)) {
   }
   return {
     month, rows, spend: +spend.toFixed(6), effective: +effective.toFixed(6), budget: budgets.monthlyUsd, budgetLeft: +(budgets.monthlyUsd - spend).toFixed(6), forecast: +forecast.toFixed(4),
-    cacheSavings: +(deep.deep.cost ? 0 : 0).toFixed(4), cacheCalls: cached,
+    cacheSavings: +cacheSavings.toFixed(4), cacheCalls: cached,
     byProvider: [...byProvider.values()].sort((a, b) => b.usd - a.usd), byStage: [...byStage.values()].sort((a, b) => b.usd - a.usd), byDay: [...byDay.values()].sort((a, b) => a.day.localeCompare(b.day)),
-    byProject: [...byProject.values()].sort((a, b) => b.usd - a.usd).map((p) => ({ ...p, minutes: (Number((json(join(root, p.project, 'project.json'), {}).seconds ?? 0)) / 60), machineMinutes: 0 })),
+    byProject: [...byProject.values()].sort((a, b) => b.usd - a.usd).map((p) => ({ ...p, minutes: (Number((json(join(root, p.project, 'project.json'), {}).seconds ?? 0)) / 60), machineMinutes: +(machine.get(p.project) ?? 0).toFixed(2) })),
     averages: { perFilm: +(spend / Math.max(1, filmCount)).toFixed(4), perMinute: +(spend / Math.max(0.01, minutes)).toFixed(4) },
     budgets, alerts, totals: { films: filmCount, minutes: +minutes.toFixed(2), rows: rows.length },
   };

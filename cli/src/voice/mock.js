@@ -11,7 +11,7 @@ export function synthesizeMock({ projectDir, project }) {
   const seconds = Math.max(1, Number(project.seconds ?? 20));
   const lines = (script.lines ?? []).map((l) => ({ n: l.n, words: splitWords(l) })).filter((l) => l.words.length);
   const totalChars = lines.reduce((n, l) => n + l.words.reduce((m, w) => m + Array.from(w).length, 0), 0) || 1;
-  const lead = Math.min(0.4, seconds * 0.02);
+  const lead = Math.min(0.05, seconds * 0.004);
   const usable = seconds - lead * 2;
   const words = [];
   let cursor = lead;
