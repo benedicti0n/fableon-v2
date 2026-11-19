@@ -104,12 +104,18 @@ music = np.zeros((2, N))
 score = {"drone": np.zeros((2, N)), "lead": np.zeros((2, N)), "flute": np.zeros((2, N)), "tabla": np.zeros((2, N)), "fx": np.zeros((2, N))}
 
 
+CUR_GAIN = 1.0
+
+
 def add(bus, x, at, p=0.0, gain=1.0):
     y = pan(x, p) if np.asarray(x).ndim == 1 else x
-    place(bus, y * gain, at)
+    place(bus, y * gain * CUR_GAIN, at)
 
 
 for sec in CUES.get("music", []):
+    if sec.get("muted"):
+        continue
+    CUR_GAIN = 10 ** (float(sec.get("gainDb", 0)) / 20)
     a, b = scene_span(sec["scene"])
     if b <= a:
         continue
@@ -170,6 +176,7 @@ for sec in CUES.get("music", []):
         while t < b - 0.4:
             add(score["fx"], I.timpani(m2f(SA - 12), 0.35 * vel, R), t, 0.0)
             t += (60 / tempo) * 4
+    CUR_GAIN = 1.0
 
 # stingers: short, story-shaped motifs at the model's anchors
 STING = {
@@ -177,7 +184,11 @@ STING = {
     "mystery": ([4, 3, 2, 0], 0.42, "box"),
     "payoff": ([0, 4, 7, 12], 0.5, "glock"),
 }
+STING_GAIN = 10 ** (float((CUES.get("mix") or {}).get("stingerDb", 0)) / 20)
+CUR_GAIN = STING_GAIN
 for s in CUES.get("stingers", []):
+    if s.get("muted"):
+        continue
     t = anchor(s["at"])
     if t >= DUR:
         continue
@@ -197,6 +208,7 @@ for s in CUES.get("stingers", []):
         add(score["tabla"], pan(bayan(0.5, R), 0), t)
     if s["kind"] == "payoff":
         add(score["fx"], I.timpani(m2f(SA - 12), 0.45, R), t)
+CUR_GAIN = 1.0
 
 music = score["drone"] + score["lead"] + score["flute"] + score["tabla"] + score["fx"]
 

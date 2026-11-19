@@ -16,6 +16,7 @@ N = ns(float(CUES["duration"]))
 OUT = os.path.join(PROJECT, "audio")
 os.makedirs(OUT, exist_ok=True)
 
+MIX = CUES.get("mix") or {}
 v, sr = read_wav(os.path.join(PROJECT, "voice.wav"))
 v = signal.resample_poly(v[0], 2, 1) if sr == 24000 else v[0]
 voice = np.zeros((2, N))
@@ -29,10 +30,10 @@ sfx = cues_sfx.render()[:, :N]
 # speech mask: duck 4 dB under speech (40 ms attack / 250 ms release) so the bed sits 9 LU under the voice
 duck = np.ones(N)
 for a, b in [(w["a"], w["b"]) for w in WORDS]:
-    duck[ns(a): ns(b)] = dbg(-4)
+    duck[ns(a): ns(b)] = dbg(float(MIX.get("duckDb", -4)))
 duck = lp(np.minimum(duck, 1.0), 4.0, 1)
-music = norm_to(music * duck[None, :], Lv - 12 + 3, "integrated")
-sfx = norm_to(sfx, Lvm, "momentary") * dbg(-6)
+music = norm_to(music * duck[None, :], Lv - 12 + 3, "integrated") * dbg(float(MIX.get("musicDb", 0)))
+sfx = norm_to(sfx, Lvm, "momentary") * dbg(-6 + float(MIX.get("sfxDb", 0)))
 
 mix = voice + music + sfx
 mix = norm_to(mix, -14.0, "integrated")

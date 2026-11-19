@@ -17,7 +17,7 @@ const MIME = {
   '.woff2': 'font/woff2', '.woff': 'font/woff', '.ico': 'image/x-icon', '.map': 'application/json; charset=utf-8',
 };
 const BLOCK = /(^|\/)(\.env|\.fableon|logs|node_modules|\.git)(\/|$)/;
-const EDITABLE = new Set(['brief.md', 'script.json', 'pronunciations.json', 'shotplan.json', 'look.json', 'cast.notes.json', 'shotplan.notes.json']);
+const EDITABLE = new Set(['brief.md', 'script.json', 'pronunciations.json', 'shotplan.json', 'look.json', 'cues.json', 'cast.notes.json', 'shotplan.notes.json']);
 
 export function contentType(p) { return MIME[String(p).slice(String(p).lastIndexOf('.')).toLowerCase()] ?? 'application/octet-stream'; }
 
@@ -48,8 +48,8 @@ export function filePath(ctx, rel) {
   return p;
 }
 
-const stageFor = (rel) => rel === 'brief.md' ? 'brief' : rel === 'script.json' ? 'script' : rel === 'shotplan.json' ? 'shotplan' : rel === 'look.json' ? 'final' : null;
-const schemaFor = (rel) => rel === 'script.json' ? 'script' : rel === 'pronunciations.json' ? 'pronunciations' : rel === 'shotplan.json' ? 'shotplan' : rel === 'look.json' ? 'look' : rel === 'cast.notes.json' ? 'cast-notes' : rel === 'shotplan.notes.json' ? 'shotplan-notes' : null;
+const stageFor = (rel) => rel === 'brief.md' ? 'brief' : rel === 'script.json' ? 'script' : rel === 'shotplan.json' ? 'shotplan' : rel === 'look.json' ? 'final' : rel === 'cues.json' ? 'sound' : null;
+const schemaFor = (rel) => rel === 'script.json' ? 'script' : rel === 'pronunciations.json' ? 'pronunciations' : rel === 'shotplan.json' ? 'shotplan' : rel === 'look.json' ? 'look' : rel === 'cues.json' ? 'cues' : rel === 'cast.notes.json' ? 'cast-notes' : rel === 'shotplan.notes.json' ? 'shotplan-notes' : null;
 
 export function putFile(ctx, rel, body) {
   if (ctx.readOnly) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'fixtures are read-only', { project: ctx.id });

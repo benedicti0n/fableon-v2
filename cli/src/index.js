@@ -18,6 +18,7 @@ import { runCommand } from './run-command.js';
 import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
 import { scriptLinesCommand } from './script-lines-command.js';
+import { sfxPreviewCommand } from './sfx-preview.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
@@ -140,6 +141,15 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--notes <text>', 'director notes; reruns the shot-plan stage with them')
     .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('sfx-preview')
+    .description('render one 1.5 s SFX preview with a seed and gain')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--kind <kind>', 'poof, shimmer, thud, whoosh, flashHit, pop, arrow or steps')
+    .option('--seed <n>', 'synthesis seed', '1')
+    .option('--gain-db <n>', 'gain in dB', '0')
+    .action((opts) => { try { console.log(JSON.stringify(sfxPreviewCommand(opts.project, { kind: opts.kind, seed: Number(opts.seed), gainDb: Number(opts.gainDb) }))); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('script-lines')

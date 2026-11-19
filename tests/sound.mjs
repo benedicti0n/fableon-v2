@@ -1,5 +1,6 @@
 // Sound stage: deterministic board SFX map and the cue-driven mix (duration, -14 LUFS, true peak).
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { capture, findPython, ROOT, run } from '../cli/src/env.js';
@@ -27,6 +28,8 @@ export async function runSoundTests() {
   const cueWords = [{ w: 'a', a: 0, b: 0.3, line: 0 }, { w: 'b', a: 1.5, b: 1.8, line: 1 }, { w: 'c', a: 3, b: 3.3, line: 2 }];
   const good = { version: 1, music: [{ scene: 's', mood: 'warm', tempo: 90, intensity: 0.5, instruments: ['tanpura'] }], stingers: [{ kind: 'hook', at: '0:0' }, { kind: 'mystery', at: '1:0' }, { kind: 'payoff', at: '2:0' }], sfx: [{ kind: 'poof', at: '0:0' }, { kind: 'thud', at: '1:0' }] };
   ok('cue sheet valid', validateCues(good, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).length === 0, validateCues(good, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).join('; '));
+  const fielded = structuredClone(good); fielded.music[0].gainDb = -3; fielded.music[0].muted = false; fielded.stingers[0].gainDb = 2; fielded.sfx[0].seed = 7; fielded.sfx[0].gainDb = -2; fielded.mix = { musicDb: -1, sfxDb: 1, stingerDb: 0, ambienceDb: 0, duckDb: -4 };
+  ok('cue sheet optional sound fields', validateCues(fielded, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).length === 0, validateCues(fielded, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).join('; '));
   const close = structuredClone(good); close.sfx = [{ kind: 'poof', at: '0:0' }, { kind: 'thud', at: '0:1' }];
   ok('cue sheet 1.2 s gap', validateCues(close, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).some((e) => /within 1.2 s/.test(e)), validateCues(close, { scenes: ['s'], words: cueWords, punchTimes: [], script: cueScript }).join('; '));
   const punch = structuredClone(good); punch.sfx = [{ kind: 'poof', at: '0:0' }];
@@ -47,6 +50,20 @@ export async function runSoundTests() {
     ok('mix exact length', Math.abs(m.duration - 3) <= 0.02, String(m.duration));
     ok('mix loudness', Math.abs(m.loudness + 14) <= 0.5, String(m.loudness));
     ok('mix true peak', m.true_peak <= -1.3, String(m.true_peak));
+    const baseCues = JSON.parse(readFileSync(join(dir, 'cues.json'), 'utf8'));
+    const zeroCues = structuredClone(baseCues); zeroCues.mix = { musicDb: 0, sfxDb: 0, stingerDb: 0, ambienceDb: 0, duckDb: -4 }; zeroCues.music[0].gainDb = 0; zeroCues.music[0].muted = false; zeroCues.sfx.forEach((x) => { x.gainDb = 0; x.muted = false; });
+    writeFileSync(join(dir, 'cues.json'), JSON.stringify(zeroCues));
+    await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+    const zeroHash = createHash('sha256').update(readFileSync(mix)).digest('hex');
+    writeFileSync(join(dir, 'cues.json'), JSON.stringify(baseCues));
+    await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+    const baseHash = createHash('sha256').update(readFileSync(mix)).digest('hex');
+    ok('absent fields rebuild byte-identically', baseHash === zeroHash, `${baseHash} vs ${zeroHash}`);
+    const varied = structuredClone(baseCues); varied.sfx[0].seed = 9; varied.sfx[0].gainDb = -6;
+    writeFileSync(join(dir, 'cues.json'), JSON.stringify(varied));
+    await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+    const variedHash = createHash('sha256').update(readFileSync(mix)).digest('hex');
+    ok('sfx seed/gain changes the mix', variedHash !== baseHash, `${variedHash} vs ${baseHash}`);
   } finally { rmSync(dir, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

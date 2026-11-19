@@ -89,11 +89,18 @@ def flash_hit():
 GEN = {"poof": poof, "shimmer": shimmer, "thud": thud, "whoosh": whoosh, "flashHit": flash_hit, "pop": pop, "arrow": arrow, "steps": steps}
 PAN = {"poof": 0.0, "shimmer": 0.2, "thud": -0.1, "whoosh": 0.15, "flashHit": 0.0, "pop": 0.1, "arrow": 0.18, "steps": -0.15}
 for cue in CUES.get("sfx", []):
+    if cue.get("muted"):
+        continue
     fn = GEN.get(cue["kind"])
     if not fn:
         continue
+    old = R
+    if cue.get("seed") is not None:
+        R = rng(int(cue["seed"]))
     x = fn()
-    place(bus, pan(x, PAN.get(cue["kind"], 0.0)), anchor(cue["at"]), 0.9)
+    R = old
+    gain = 10 ** (float(cue.get("gainDb", 0)) / 20)
+    place(bus, pan(x, PAN.get(cue["kind"], 0.0)), anchor(cue["at"]), 0.9 * gain)
 
 
 def render():
