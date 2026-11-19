@@ -143,7 +143,11 @@ export function estimate(ctx, body = {}) {
     return out;
   }
   if (['lookdev', 'lookcheck', 'audio', 'animatic'].includes(op)) {
-    out.notes.push(op === 'audio' ? 'Local audio synthesis and mastering; no provider call.' : `${op} is a local render/check; no provider call.`);
+    if (op === 'animatic') {
+      const frameCount = Math.max(1, ...words.map((w) => Math.round((w.b ?? 0) * 30)));
+      out.frameCount = frameCount; out.seconds = +(frameCount * 0.12).toFixed(1);
+      out.notes.push(`Local preview render, ~${out.seconds}s on the M1; no provider call.`);
+    } else out.notes.push(op === 'audio' ? 'Local audio synthesis and mastering; no provider call.' : `${op} is a local render/check; no provider call.`);
     return out;
   }
   const scriptLines = script?.lines ?? [];

@@ -402,6 +402,31 @@
           "type": "boolean"
         }
       }
+    },
+    "published": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "url",
+        "publishedAt"
+      ],
+      "properties": {
+        "platform": {
+          "enum": [
+            "youtube",
+            "instagram"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publishedAt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   },
   "$defs": {

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/channel.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "footer": { "type": "string" },
+    "links": { "type": "array", "items": { "type": "string" } },
+    "hashtags": { "type": "array", "items": { "type": "string" } },
+    "category": { "type": "string" },
+    "madeForKids": { "type": "boolean" }
+  }
+}

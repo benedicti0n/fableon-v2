@@ -1,4 +1,6 @@
-// Publishing package stage. The upload itself stays manual; F6 implements the package.
-export async function runPublish() {
-  throw new Error('publish stage is implemented in Phase 6 F6');
+// Publishing package stage: validated metadata, fact flags, cover candidates, sidecar SRT and copy-ready sheet.
+import { runPublish } from '../publish.js';
+
+export async function runPublishStage({ projectDir, project, router, progress = null }) {
+  return runPublish({ projectDir, project, router, progress });
 }

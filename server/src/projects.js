@@ -73,7 +73,7 @@ export function createProject(rootDir, body = {}) {
   return resolveProject(rootDir, slug);
 }
 
-const PATCH_KEYS = new Set(['voice', 'models', 'autopilot', 'budget', 'look']);
+const PATCH_KEYS = new Set(['voice', 'models', 'autopilot', 'budget', 'look', 'published']);
 export function patchProject(ctx, patch = {}) {
   if (ctx.readOnly) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'fixtures are read-only', { project: ctx.id });
   const next = { ...ctx.project };

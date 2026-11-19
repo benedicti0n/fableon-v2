@@ -57,6 +57,7 @@ import { runServerTests } from './server.mjs';
 import { runStudioTests } from './studio.mjs';
 import { runFinalTests } from './final.mjs';
 import { runFinishLookTests } from './look-finish.mjs';
+import { runPublishTests } from './publish.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -214,6 +215,8 @@ try {
   check('final cache plan', final.ok, `${final.checks.filter((c) => c.ok).length}/${final.checks.length} checks`);
   const finishLook = await runFinishLookTests();
   check('world-only finish look', finishLook.ok, `${finishLook.checks.filter((c) => c.ok).length}/${finishLook.checks.length} checks`);
+  const publish = await runPublishTests();
+  check('publish package', publish.ok, `${publish.checks.filter((c) => c.ok).length}/${publish.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

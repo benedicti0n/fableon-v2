@@ -6,10 +6,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT } from '../../cli/src/env.js';
-import { atomicWrite } from '../../cli/src/core/artifacts.js';
+import { atomicWrite, validate } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { newToken, installAuth, inside } from './security.js';
 import { finalPlan } from '../../cli/src/final.js';
+import { recomposeCover } from '../../cli/src/publish.js';
 import { acquireLock } from '../../cli/src/core/lock.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
@@ -308,6 +309,49 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     const name = String(req.params.name);
     deleteKey(name);
     return { name, status: keySet(name) ? 'set' : 'unset' };
+  });
+
+  const channelFile = () => join(projectRoot, '.fableon', 'channel.json');
+  app.get('/api/settings/channel', async () => {
+    try { return JSON.parse(readFileSync(channelFile(), 'utf8')); } catch { return { name: 'Fableon', footer: 'Fableon — stories from the epics, one short at a time.', links: [], hashtags: ['#shorts'], category: 'Film & Animation', madeForKids: false }; }
+  });
+  app.put('/api/settings/channel', async (req) => {
+    validate('channel', req.body ?? {});
+    atomicWrite(channelFile(), JSON.stringify(req.body, null, 2) + '\n');
+    return req.body;
+  });
+  app.post('/api/projects/:id/published', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const platform = String(req.body?.platform ?? '');
+    const url = String(req.body?.url ?? '').trim();
+    const publishedAt = String(req.body?.publishedAt ?? new Date().toISOString());
+    if (!['youtube', 'instagram'].includes(platform)) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'platform must be youtube or instagram');
+    if (platform === 'youtube' && !/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url)) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'not a YouTube URL');
+    if (platform === 'instagram' && !/^https?:\/\/(www\.)?instagram\.com\//.test(url)) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'not an Instagram URL');
+    if (Number.isNaN(Date.parse(publishedAt))) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'publishedAt is not a date');
+    return P.patchProject(ctx, { published: { platform, url, publishedAt } });
+  });
+  app.post('/api/projects/:id/publish/cover', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const data = existsSync(join(ctx.dir, 'publish', 'publish.json')) ? JSON.parse(readFileSync(join(ctx.dir, 'publish', 'publish.json'), 'utf8')) : {};
+    const selection = { ...(data.selection ?? {}), ...(req.body?.selection ?? req.body ?? {}) };
+    return recomposeCover(ctx.dir, { ...data, selection });
+  });
+  app.post('/api/projects/:id/exports/open', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const target = String(req.body?.path ?? '');
+    const rootExports = presolve(projectRoot, 'exports');
+    const full = presolve(ctx.dir, target);
+    if (!full.startsWith(rootExports + '/') || !existsSync(full)) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'export path is not in the exports root');
+    if (process.platform === 'darwin') spawnSync('open', ['-R', full]);
+    return { path: full, opened: process.platform === 'darwin' };
+  });
+  app.post('/api/projects/:id/publish/override', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const reason = String(req.body?.reason ?? '').trim();
+    if (!reason) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'reason is required');
+    atomicWrite(join(ctx.dir, 'publish', 'override.json'), JSON.stringify({ reason, at: new Date().toISOString() }, null, 2) + '\n');
+    return { project: ctx.id, reason };
   });
 
   const webDist = pjoin(ROOT, 'web', 'dist');

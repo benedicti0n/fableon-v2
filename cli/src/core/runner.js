@@ -70,7 +70,7 @@ export class PipelineRunner extends EventEmitter {
     try {
       let result;
       const mod = await import(`../stages/${STAGE_MODULE[stage.name]}`);
-      const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`];
+      const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`] ?? mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}Stage`];
       if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly, progress });
       else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot, progress });
       if (stage.name === 'factcheck') this.log(`factcheck reviewed ${result.reviewed ?? 0} line(s); factual flags ${result.failures?.length ?? 0}; craft weak ${result.craft?.length ?? 0}`);

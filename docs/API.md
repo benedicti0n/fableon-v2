@@ -43,6 +43,11 @@ fableon serve --root work
 | POST | `/api/projects/:id/sources` | multipart source upload |
 | GET | `/api/projects/:id/history?path=` | `.fableon/history` versions |
 | POST | `/api/projects/:id/history/restore` | restore `{version}` |
+| GET/PUT | `/api/settings/channel` | channel profile used by the publish prompt |
+| POST | `/api/projects/:id/published` | record a manual YouTube/Instagram publish |
+| POST | `/api/projects/:id/publish/cover` | recompose the cover from a candidate/template |
+| POST | `/api/projects/:id/publish/override` | accept publish fact flags with a reason |
+| POST | `/api/projects/:id/exports/open` | reveal an export folder in Finder |
 | GET | `/api/projects/:id/final/plan` | final segment cache plan: reasons, frames, time, disk |
 | GET | `/api/projects/:id/timeline` | resolved scenes/shots/keys, script words, needsHuman |
 | GET | `/api/projects/:id/peaks?path=` | waveform peaks, cached by file hash |
@@ -81,7 +86,7 @@ stderr, and SIGTERM ends with a `cancelled` job event. This is exactly what the 
 `fableon ops --list --json` prints the registry. Every long action is reachable as
 `POST /api/projects/:id/ops/:op` (or `/run` for the common case):
 
-`run`, `approve`, `script-lines`, `cast`, `shotplan`, `board`, `render`, `audio`, `assemble`, `qa`, `animatic`, `final`, `lookdev`,
+`run`, `approve`, `script-lines`, `export`, `sfx-preview`, `cast`, `shotplan`, `board`, `render`, `audio`, `assemble`, `qa`, `animatic`, `final`, `lookdev`,
 `lookcheck`, `review`, `stills`, `voice-audition`, `voice-pace`, `voice-budget`, `clean`, `usage`,
 `models-check`, `models-catalog`, `doctor` (plus the test-only `mock-sleep`). `script-lines` rewrites only selected lines with a note and keeps the other line objects unchanged.
 

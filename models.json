@@ -1,20 +1,246 @@
 {
-  "default": { "provider": "deepseek", "model": null },
+  "default": {
+    "provider": "deepseek",
+    "model": null
+  },
   "stageDefaults": {
-    "brief": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.7 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.7 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.7 } ] },
-    "research": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.4 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4 } ] },
-    "script": { "primary": { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.8, "maxTokens": 12000, "maxRepairs": 5 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.8, "maxTokens": 12000 }, { "provider": "sarvam", "model": "sarvam-105b", "temperature": 0.8, "maxTokens": 32000, "jsonMode": false }, { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.8, "maxTokens": 12000 } ] },
-    "factcheck": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "enabled", "reasoningEffort": "low", "temperature": 0.2, "maxTokens": 24000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.2, "maxTokens": 24000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "enabled", "reasoningEffort": "high", "temperature": 0.2, "maxTokens": 24000 } ] },
-    "performance": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.4, "maxTokens": 8000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4, "maxTokens": 8000 } ] },
-    "cast": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 8000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.4, "maxTokens": 8000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4, "maxTokens": 8000 } ] },
-    "shotplan": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 32000, "maxRepairs": 4 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-pro-preview", "temperature": 0.4, "maxTokens": 32000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.4, "maxTokens": 32000 } ] },
-    "board": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.4, "maxTokens": 16000, "unused": "deterministic board writer; Phase 3E bake-off" },
-    "sound": { "primary": { "provider": "deepseek", "model": "deepseek-flash", "thinking": "disabled", "temperature": 0.3, "maxTokens": 6000 }, "fallbacks": [ { "provider": "gemini", "model": "gemini-3.1-flash-lite", "temperature": 0.3, "maxTokens": 6000 }, { "provider": "deepseek", "model": "deepseek-v4-pro", "temperature": 0.3, "maxTokens": 6000 } ] },
-    "boardEscalate": { "provider": "deepseek", "model": "deepseek-v4-pro", "thinking": "disabled", "temperature": 0.2, "maxTokens": 24000, "unused": "deterministic board writer; Phase 3E bake-off" }
+    "brief": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.7
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.7
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.7
+        }
+      ]
+    },
+    "research": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.4
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.4
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.4
+        }
+      ]
+    },
+    "script": {
+      "primary": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-lite",
+        "temperature": 0.8,
+        "maxTokens": 12000,
+        "maxRepairs": 5
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "temperature": 0.8,
+          "maxTokens": 12000
+        },
+        {
+          "provider": "sarvam",
+          "model": "sarvam-105b",
+          "temperature": 0.8,
+          "maxTokens": 32000,
+          "jsonMode": false
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "thinking": "disabled",
+          "temperature": 0.8,
+          "maxTokens": 12000
+        }
+      ]
+    },
+    "factcheck": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "enabled",
+        "reasoningEffort": "low",
+        "temperature": 0.2,
+        "maxTokens": 24000
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "temperature": 0.2,
+          "maxTokens": 24000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "thinking": "enabled",
+          "reasoningEffort": "high",
+          "temperature": 0.2,
+          "maxTokens": 24000
+        }
+      ]
+    },
+    "performance": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.4,
+        "maxTokens": 8000
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.4,
+          "maxTokens": 8000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.4,
+          "maxTokens": 8000
+        }
+      ]
+    },
+    "cast": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.4,
+        "maxTokens": 8000
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.4,
+          "maxTokens": 8000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.4,
+          "maxTokens": 8000
+        }
+      ]
+    },
+    "shotplan": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.4,
+        "maxTokens": 32000,
+        "maxRepairs": 4
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "temperature": 0.4,
+          "maxTokens": 32000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.4,
+          "maxTokens": 32000
+        }
+      ]
+    },
+    "board": {
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "thinking": "disabled",
+      "temperature": 0.4,
+      "maxTokens": 16000,
+      "unused": "deterministic board writer; Phase 3E bake-off"
+    },
+    "sound": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.3,
+        "maxTokens": 6000
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.3,
+          "maxTokens": 6000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.3,
+          "maxTokens": 6000
+        }
+      ]
+    },
+    "boardEscalate": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinking": "disabled",
+      "temperature": 0.2,
+      "maxTokens": 24000,
+      "unused": "deterministic board writer; Phase 3E bake-off"
+    },
+    "publish": {
+      "primary": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-lite",
+        "temperature": 0.7,
+        "maxTokens": 12000
+      },
+      "fallbacks": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "thinking": "disabled",
+          "temperature": 0.7,
+          "maxTokens": 12000
+        },
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "temperature": 0.7,
+          "maxTokens": 12000
+        }
+      ]
+    }
   },
   "timeoutMs": 120000,
   "maxRepairs": 2,
-  "providers": { "openrouter": { "unused": "Phase 3E user decision: no credits; data_collection deny blocks free endpoints" } },
+  "providers": {
+    "openrouter": {
+      "unused": "Phase 3E user decision: no credits; data_collection deny blocks free endpoints"
+    }
+  },
   "prices": {
     "deepseek-flash": {
       "input": 0.3,
@@ -102,7 +328,10 @@
       "unit": "per 1M tokens",
       "rate": "standard",
       "originalCurrency": "INR",
-      "original": { "input": 10, "output": 25 },
+      "original": {
+        "input": 10,
+        "output": 25
+      },
       "inrPerUsd": 88,
       "source": "https://docs.sarvam.ai/api/token-factory/models",
       "date": "2026-11-18"
@@ -114,15 +343,23 @@
       "unit": "per 1M tokens",
       "rate": "standard",
       "originalCurrency": "INR",
-      "original": { "input": 10, "output": 25 },
+      "original": {
+        "input": 10,
+        "output": 25
+      },
       "inrPerUsd": 88,
       "source": "https://docs.sarvam.ai/api/token-factory/models",
       "date": "2026-11-18"
     }
-
   },
   "voicePrices": {
-    "sarvam": { "bulbul:v4-flash": 2, "bulbul:v3": 3, "unit": "INR per 1k characters", "source": "https://docs.sarvam.ai/api/getting-started/pricing", "date": "2026-11-18" },
+    "sarvam": {
+      "bulbul:v4-flash": 2,
+      "bulbul:v3": 3,
+      "unit": "INR per 1k characters",
+      "source": "https://docs.sarvam.ai/api/getting-started/pricing",
+      "date": "2026-11-18"
+    },
     "elevenlabs": {
       "eleven_multilingual_v2": 0.08,
       "eleven_v3": 0.08,

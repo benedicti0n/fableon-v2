@@ -19,6 +19,7 @@ import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
 import { scriptLinesCommand } from './script-lines-command.js';
 import { sfxPreviewCommand } from './sfx-preview.js';
+import { exportCommand } from './export-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
@@ -141,6 +142,13 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--notes <text>', 'director notes; reruns the shot-plan stage with them')
     .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('export')
+    .description('copy the publish package and transcode upload profiles')
+    .requiredOption('--project <dir>', 'project folder')
+    .option('--profiles <list>', 'youtube-short,reels', 'youtube-short')
+    .action((opts) => { try { const r = exportCommand(opts.project, { profiles: opts.profiles }); console.log(JSON.stringify(r)); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('sfx-preview')
