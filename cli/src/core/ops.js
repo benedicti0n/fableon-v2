@@ -29,6 +29,11 @@ export const OPS = [
     argsSchema: obj({ ...proj, notes: str, shot: str }, ['project']), outputs: ['board.json', 'board.review.json', 'storyboard.json'],
   },
   {
+    name: 'script-lines', description: 'rewrite only selected script lines with director notes', kind: 'stage', heavy: true, cancellable: true,
+    argsSchema: obj({ ...proj, lines: { type: 'array', items: { type: 'integer', minimum: 0 }, minItems: 1 }, notes: str, force: bool, noCache: bool }, ['project', 'lines']),
+    outputs: ['script.json', 'SCRIPT.md'],
+  },
+  {
     name: 'render', description: 'render all shot segments', kind: 'job', heavy: true, cancellable: true,
     argsSchema: obj({ ...proj, quality: str, workers: num, shots: str }, ['project']), outputs: ['render/seg_*.mp4'],
   },
@@ -117,6 +122,7 @@ export function opArgv(name, args = {}) {
   switch (name) {
     case 'run': return ['run', ...addProject([...(args.to ? ['--to', args.to] : []), ...(args.only ? ['--only', args.only] : []), ...(args.force ? ['--force'] : []), ...(args.autopilot ? ['--autopilot'] : []), ...(args.noCache ? ['--no-cache'] : []), ...(args.fit ? ['--fit', args.fit] : []), ...(args.cachedOnly ? ['--cached-only'] : [])])];
     case 'approve': return ['approve', ...addProject(['--stage', args.stage, ...(args.override ? ['--override', args.override] : [])])];
+    case 'script-lines': return ['script-lines', ...addProject(['--lines', (args.lines ?? []).join(','), ...(args.notes ? ['--notes', args.notes] : []), ...(args.force ? ['--force'] : []), ...(args.noCache ? ['--no-cache'] : [])])];
     case 'cast': return ['cast', ...addProject([...(args.notes ? ['--notes', args.notes] : [])])];
     case 'shotplan': return ['shotplan', ...addProject([...(args.notes ? ['--notes', args.notes] : [])])];
     case 'board': return ['board', ...addProject([...(args.shot ? ['--shot', args.shot] : []), ...(args.notes ? ['--notes', args.notes] : [])])];

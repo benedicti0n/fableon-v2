@@ -9,6 +9,7 @@ import { repoModels } from '../core/model-config.js';
 import { normalizeWord } from '../../../shared/words.mjs';
 import { silencePcm, VOICE_SR, wavFromPcm } from './wav.js';
 import { isV3, renderDeliveryBlock } from './delivery.js';
+import { restoreWords } from './pronounce.js';
 
 export const ELEVENLABS_BASE = 'https://api.elevenlabs.io';
 export const DEFAULT_MODEL = 'eleven_multilingual_v2';
@@ -255,7 +256,8 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks, pauseS
     const { alignment } = chooseAlignment(single.spokenText, res);
     const mapped = wordsFromAlignment({ blockText: single.spokenText, lines: single.lines, alignment, blockStart: 0, blockDuration: blockPcm.length / (2 * VOICE_SR) });
     if (!mapped.words.length) throw new Error('ElevenLabs returned no character alignment');
-    const inserted = applyPauseCuts(blockPcm, mapped.words, pauseCuts(mapped.words, allLines, pauseScale));
+    const restored = restoreWords(mapped.words, allLines);
+    const inserted = applyPauseCuts(blockPcm, restored, pauseCuts(restored, allLines, pauseScale));
     pcm = [inserted.pcm];
     words.push(...inserted.words);
     warnings.push(...mapped.warnings, ...inserted.warnings);
@@ -279,7 +281,7 @@ export async function synthesizeElevenLabs({ projectDir, project, blocks, pauseS
     const { alignment } = chooseAlignment(rendered.spokenText, blockRes);
     const mapped = wordsFromAlignment({ blockText: rendered.spokenText, lines: rendered.lines, alignment, blockStart, blockDuration: pcmBlock.length / (2 * VOICE_SR) });
     if (!mapped.words.length) throw new Error(`ElevenLabs returned no character alignment for block ${i + 1}`);
-    words.push(...mapped.words);
+    words.push(...restoreWords(mapped.words, lines));
     warnings.push(...mapped.warnings.map((w) => `block ${i + 1}: ${w}`));
     pcm.push(pcmBlock);
     if (i + 1 < blocks.length) pcm.push(silencePcm(BEAT_GAP * pauseScale));

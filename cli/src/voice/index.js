@@ -5,6 +5,7 @@ import { findPython, ROOT, run } from '../env.js';
 import { readJson } from '../core/artifacts.js';
 import { synthesizeElevenLabs } from './elevenlabs.js';
 import { synthesizeSarvam } from './sarvam.js';
+import { readPronunciations, withPronunciation } from './pronounce.js';
 
 export { synthesizeElevenLabs } from './elevenlabs.js';
 export { synthesizeSarvam } from './sarvam.js';
@@ -14,10 +15,12 @@ export function scriptBlocks(projectDir) {
   if (existsSync(scriptPath)) {
     const script = JSON.parse(readFileSync(scriptPath, 'utf8'));
     const blocks = [];
+    const pronunciations = readPronunciations(projectDir);
     for (const line of script.lines ?? []) {
       const last = blocks[blocks.length - 1];
-      if (last && last.beat === line.beat) last.lines.push({ n: line.n, text: line.text, delivery: line.delivery, beat: line.beat });
-      else blocks.push({ beat: line.beat, lines: [{ n: line.n, text: line.text, delivery: line.delivery, beat: line.beat }] });
+      const spoken = withPronunciation([{ n: line.n, text: line.text, delivery: line.delivery, beat: line.beat }], pronunciations)[0];
+      if (last && last.beat === line.beat) last.lines.push(spoken);
+      else blocks.push({ beat: line.beat, lines: [spoken] });
     }
     const perfPath = join(projectDir, 'performance.json');
     if (existsSync(perfPath)) {

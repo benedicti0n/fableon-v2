@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { loadDotEnv } from '../env.js';
 import { atomicWrite } from '../core/artifacts.js';
 import { decodePcm } from './elevenlabs.js';
+import { restoreWords } from './pronounce.js';
 import { wavFromPcm } from './wav.js';
 
 export const SARVAM_BASE = 'https://api.sarvam.ai';
@@ -243,6 +244,8 @@ export async function synthesizeSarvam({ projectDir, project, blocks = null, lin
     parts.push(pcm);
     offset += duration;
   }
+  const restored = restoreWords(words, units.flatMap((u) => u.lines));
+  words.length = 0; words.push(...restored);
   const wav = wavFromPcm(addRoomFloor(concatCrossfade(parts, sr), sr), sr);
   atomicWrite(join(projectDir, 'voice.wav'), wav);
   const total = wav.length > 44 ? (wav.length - 44) / (2 * sr) : offset;

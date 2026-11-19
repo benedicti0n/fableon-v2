@@ -159,9 +159,9 @@ export function assertWritable(projectDir, project, name, { autopilot = false, f
   if (!force) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, `${name} output is approved; review the new inputs and rerun with --force to replace it, or approve the new output`, { stage: name });
 }
 
-export function markScriptRevised(projectDir) {
+export function markScriptRevised(projectDir, { force = false } = {}) {
   const project = readJson(join(projectDir, 'project.json'), 'project');
-  if (isApprovedLocked(projectDir, project, 'script')) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'script output is approved and read-only; rerun with --force without autopilot to revise it', { stage: 'script' });
+  if (isApprovedLocked(projectDir, project, 'script') && !force) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'script output is approved and read-only; rerun with --force without autopilot to revise it', { stage: 'script' });
   const stage = stageByName('script');
   const state = loadState(projectDir);
   const hash = computeHash(projectDir, project, stage);

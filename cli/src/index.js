@@ -17,6 +17,7 @@ import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
 import { castCommand } from './cast-command.js';
 import { shotplanCommand } from './shotplan-command.js';
+import { scriptLinesCommand } from './script-lines-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
@@ -50,10 +51,11 @@ export function main(argv = process.argv) {
     .option('--port <n>', 'port', '4317')
     .option('--root <dir>', 'project root', 'work')
     .option('--open', 'open the token URL in the browser')
+    .option('--dev', 'accept the Vite dev origin')
     .action(async (opts) => {
       try {
         const { startServer } = await import('@fableon/server');
-        await startServer({ port: Number(opts.port), root: opts.root, open: !!opts.open });
+        await startServer({ port: Number(opts.port), root: opts.root, open: !!opts.open, dev: !!opts.dev });
       } catch (e) { printError(e); process.exit(1); }
     });
 
@@ -138,6 +140,16 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--notes <text>', 'director notes; reruns the shot-plan stage with them')
     .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('script-lines')
+    .description('rewrite only selected script lines with director notes')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--lines <list>', 'comma-separated line numbers')
+    .option('--notes <text>', 'director notes')
+    .option('--force', 'rewrite even if the script is approved')
+    .option('--no-cache', 'bypass the model cache')
+    .action(async (opts) => { try { await scriptLinesCommand(opts.project, opts); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('board')

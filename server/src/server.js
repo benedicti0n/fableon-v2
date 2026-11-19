@@ -12,6 +12,9 @@ import { newToken, installAuth } from './security.js';
 import { acquireLock } from '../../cli/src/core/lock.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
+import { timeline, peaks, listFiles, estimate } from './studio.js';
+import { createReadStream, statSync } from 'node:fs';
+import { join as pjoin, resolve as presolve } from 'node:path';
 import { EventHub } from './hub.js';
 import { JobManager } from './jobs.js';
 import { STAGES } from '../../cli/src/core/stages.js';
@@ -89,7 +92,7 @@ function budgetCheck(ctx, op, body) {
   return { ok: true, spent: +cost.toFixed(4), estimate, limit };
 }
 
-export async function createServer({ root = join(ROOT, 'work'), token = newToken(), port = 4317, logger = false } = {}) {
+export async function createServer({ root = join(ROOT, 'work'), token = newToken(), port = 4317, logger = false, dev = false } = {}) {
   const projectRoot = resolve(root);
   const app = Fastify({ logger, bodyLimit: 2 * 1024 * 1024, trustProxy: false });
   app.addContentTypeParser(['text/plain', 'text/markdown'], { parseAs: 'string' }, (_req, body, done) => done(null, body));
@@ -112,7 +115,7 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   const ctxOf = (id) => P.resolveProject(projectRoot, id);
   const hub = new EventHub();
   const jobs = new JobManager(projectRoot, (event) => hub.broadcast(event));
-  installAuth(app, { token, port });
+  installAuth(app, { token, port, dev });
 
   app.setErrorHandler((err, req, reply) => {
     const code = err instanceof FableonError ? err.code : err.statusCode === 413 ? ERROR_CODES.BAD_REQUEST : ERROR_CODES.INTERNAL;
@@ -288,6 +291,11 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     return A.restore(ctx, version);
   });
 
+  app.get('/api/projects/:id/timeline', async (req) => timeline(ctxOf(req.params.id)));
+  app.get('/api/projects/:id/peaks', async (req) => peaks(ctxOf(req.params.id), String(req.query?.path ?? ''), Number(req.query?.buckets ?? 1200)));
+  app.get('/api/projects/:id/list', async (req) => listFiles(ctxOf(req.params.id), String(req.query?.dir ?? '')));
+  app.post('/api/projects/:id/estimate', async (req) => estimate(ctxOf(req.params.id), req.body ?? {}));
+
   app.get('/api/settings/keys', async () => Object.fromEntries(KEY_ALLOWLIST.map((name) => [name, keySet(name) ? 'set' : 'unset'])));
   app.put('/api/settings/keys/:name', async (req) => {
     const name = String(req.params.name);
@@ -301,13 +309,28 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     return { name, status: keySet(name) ? 'set' : 'unset' };
   });
 
+  const webDist = pjoin(ROOT, 'web', 'dist');
+  const csp = `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' ws://127.0.0.1:${port} ws://localhost:${port}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`;
+  app.get('/*', async (req, reply) => {
+    if (req.raw.url?.startsWith('/api/')) throw new FableonError(ERROR_CODES.NOT_FOUND, 'API route not found');
+    const rel = String(req.params['*'] ?? '').replace(/^\/+/, '');
+    let file = '';
+    try { file = inside(webDist, rel || 'index.html'); } catch { throw new FableonError(ERROR_CODES.BAD_REQUEST, 'path traversal'); }
+    if (!file || !existsSync(file) || !statSync(file).isFile()) file = pjoin(webDist, 'index.html');
+    if (!existsSync(file)) throw new FableonError(ERROR_CODES.NOT_FOUND, 'web/dist is missing; run npm run web:build');
+    const type = A.contentType(file);
+    reply.header('content-security-policy', csp);
+    if (type.startsWith('text/html')) return reply.header('cache-control', 'no-store').type(type).send(createReadStream(file));
+    return reply.type(type).header('cache-control', 'public, max-age=31536000, immutable').send(createReadStream(file));
+  });
+
   app.addHook('onClose', async () => { await jobs.close(); });
   return { app, token, port, root: projectRoot, jobs, hub };
 }
 
-export async function startServer({ port = 4317, root = join(ROOT, 'work'), open = false } = {}) {
+export async function startServer({ port = 4317, root = join(ROOT, 'work'), open = false, dev = false } = {}) {
   const token = newToken();
-  const { app } = await createServer({ root, token, port });
+  const { app } = await createServer({ root, token, port, dev });
   await app.listen({ host: '127.0.0.1', port });
   const actualPort = app.server.address().port;
   app.fableonAuthPort?.(actualPort);

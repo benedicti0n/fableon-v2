@@ -27,11 +27,11 @@ export function bearerToken(req) {
   return '';
 }
 
-export function installAuth(app, { token, port }) {
+export function installAuth(app, { token, port, dev = false }) {
   const state = { port };
   app.fableonAuthPort = (p) => { state.port = Number(p); };
   const allowedHosts = () => new Set([`127.0.0.1:${state.port}`, `localhost:${state.port}`]);
-  const allowedOrigins = () => new Set([`http://127.0.0.1:${state.port}`, `http://localhost:${state.port}`]);
+  const allowedOrigins = () => new Set([`http://127.0.0.1:${state.port}`, `http://localhost:${state.port}`, ...(dev ? ['http://127.0.0.1:5173', 'http://localhost:5173'] : [])]);
   app.addHook('onRequest', async (req, reply) => {
     const host = String(req.headers.host ?? '');
     if (!allowedHosts().has(host)) return reply.code(403).send({ error: 'forbidden host', code: 'BAD_REQUEST' });

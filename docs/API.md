@@ -43,6 +43,10 @@ fableon serve --root work
 | POST | `/api/projects/:id/sources` | multipart source upload |
 | GET | `/api/projects/:id/history?path=` | `.fableon/history` versions |
 | POST | `/api/projects/:id/history/restore` | restore `{version}` |
+| GET | `/api/projects/:id/timeline` | resolved scenes/shots/keys, script words, needsHuman |
+| GET | `/api/projects/:id/peaks?path=` | waveform peaks, cached by file hash |
+| GET | `/api/projects/:id/list?dir=` | safe stills/cast/auditions/pace/review/qa/sources listing |
+| POST | `/api/projects/:id/estimate` | pre-run calls/characters/usd/time estimate |
 | GET | `/api/jobs` | filter with `?project=` |
 | GET | `/api/jobs/:id` | job + last 80 log lines |
 | POST | `/api/jobs/:id/cancel` | SIGTERM, SIGKILL after 10 s |
@@ -76,9 +80,9 @@ stderr, and SIGTERM ends with a `cancelled` job event. This is exactly what the 
 `fableon ops --list --json` prints the registry. Every long action is reachable as
 `POST /api/projects/:id/ops/:op` (or `/run` for the common case):
 
-`run`, `approve`, `cast`, `shotplan`, `board`, `render`, `audio`, `assemble`, `qa`, `animatic`, `final`, `lookdev`,
+`run`, `approve`, `script-lines`, `cast`, `shotplan`, `board`, `render`, `audio`, `assemble`, `qa`, `animatic`, `final`, `lookdev`,
 `lookcheck`, `review`, `stills`, `voice-audition`, `voice-pace`, `voice-budget`, `clean`, `usage`,
-`models-check`, `models-catalog`, `doctor` (plus the test-only `mock-sleep`).
+`models-check`, `models-catalog`, `doctor` (plus the test-only `mock-sleep`). `script-lines` rewrites only selected lines with a note and keeps the other line objects unchanged.
 
 Jobs run as isolated children. At most one **heavy** job runs at a time; light jobs may run in parallel, but a
 project has at most one writer (`PROJECT_LOCKED`, `409`). Jobs persist in `work/.fableon-server/jobs.jsonl` with a

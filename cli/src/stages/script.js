@@ -5,6 +5,7 @@ import { ROOT } from '../env.js';
 import { validationErrors, writeJsonArtifact, writeTextArtifact } from '../core/artifacts.js';
 import { buildCatalogCard } from '../catalog-card.js';
 import { isApprovedLocked, markScriptRevised } from '../core/state.js';
+import { FableonError, ERROR_CODES } from '../core/errors.js';
 import { SCRIPT, SCRIPT_HI, REVISE } from './prompts.js';
 import { voiceRate } from '../voice/rate.js';
 import { countWords, normalizedText, normalizedTokens, normalizeWord } from '../../../shared/words.mjs';
@@ -438,9 +439,54 @@ export async function runScript({ projectDir, project, router, progress = null }
   return { usage, normalizer: normalizerLog.get(data) ?? null };
 }
 
+/** Rewrite selected script lines with director notes; every other line object stays unchanged. */
+export async function reviseScriptLines({ projectDir, project, router, lines = [], notes = '', force = false }) {
+  if (isApprovedLocked(projectDir, project, 'script') && !force) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'script output is approved and read-only; pass --force without autopilot to rewrite lines', { stage: 'script' });
+  const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
+  const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
+  const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
+  const selected = [...new Set((lines ?? []).map(Number).filter((n) => Number.isInteger(n)))];
+  if (!selected.length) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'script-lines needs at least one line number', { lines });
+  const known = new Set((script.lines ?? []).map((l) => l.n));
+  const missing = selected.filter((n) => !known.has(n));
+  if (missing.length) throw new FableonError(ERROR_CODES.BAD_REQUEST, `script-lines has unknown line(s): ${missing.join(', ')}`, { lines: missing });
+  const failN = new Set(selected);
+  const sourceTexts = (() => {
+    const dir = join(projectDir, 'research', 'sources');
+    if (!existsSync(dir)) return [];
+    return readdirSync(dir).filter((f) => /\.(md|txt|html?)$/i.test(f)).map((f) => readFileSync(join(dir, f), 'utf8'));
+  })();
+  const full = script.lines.map((l) => ({ n: l.n, beat: l.beat, text: l.text, gloss: l.gloss, facts: l.facts, delivery: l.delivery, look: l.look }));
+  const selectedData = full.filter((l) => failN.has(l.n));
+  const { data, usage } = await router.callJson('script', [
+    { role: 'system', content: REVISE },
+    { role: 'user', content: `Rewrite only these line numbers: ${selected.join(', ')}.\nDirector notes: ${String(notes || '(none)')}\n\nDATA:\n<selected_lines>\n${JSON.stringify(selectedData, null, 2)}\n</selected_lines>\n<full_script>\n${JSON.stringify(full, null, 2)}\n</full_script>\n<verified_facts>\n${(facts.facts ?? []).filter((f) => f.verified).map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nCatalog sets: ${catalog.sets.map((s) => s.name).join(', ')}. Return json only.` },
+  ], {
+    validate: (d) => {
+      const errs = [];
+      if (!Array.isArray(d.lines)) return ['/lines must be an array'];
+      for (const l of d.lines) if (!failN.has(l.n)) errs.push(`/lines/${l.n} was not requested for revision`);
+      if (new Set(d.lines.map((l) => l.n)).size !== d.lines.length) errs.push('/lines has duplicate n values');
+      if (errs.length) return errs;
+      const next = { ...script, lines: script.lines.map((l) => failN.has(l.n) ? { ...l, ...d.lines.find((x) => x.n === l.n) } : l) };
+      return validateScript(next, { project, facts, catalog, sourceTexts });
+    },
+  });
+  const before = script.lines.filter((l) => failN.has(l.n));
+  const revised = { ...script, lines: script.lines.map((l) => failN.has(l.n) ? { ...l, ...data.lines.find((x) => x.n === l.n) } : l) };
+  const after = revised.lines.filter((l) => failN.has(l.n));
+  const changed = before.some((l, i) => JSON.stringify(l) !== JSON.stringify(after[i]));
+  if (changed) {
+    writeJsonArtifact(projectDir, 'script', 'script.json', revised, 'script');
+    writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, revised, facts));
+    markScriptRevised(projectDir, { force });
+  }
+  return { usage, changed, lines: selected, notes: String(notes || '') };
+}
+
 /** Rewrite only the failing lines; every other line stays byte-identical. */
 export async function reviseScript({ projectDir, project, router, failures }) {
-  if (isApprovedLocked(projectDir, project, 'script')) throw new Error('script output is approved and read-only; the factcheck revision loop will not modify it');
+  if (isApprovedLocked(projectDir, project, 'script')) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'script output is approved and read-only; the factcheck revision loop will not modify it', { stage: 'script' });
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
