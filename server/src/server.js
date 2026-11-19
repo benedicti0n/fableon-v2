@@ -1,6 +1,7 @@
 // Fableon local backend API. Binds 127.0.0.1, prints a per-launch token URL, and shares the CLI stage registry.
 import Fastify from 'fastify';
 import multipart from '@fastify/multipart';
+import websocket from '@fastify/websocket';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -10,6 +11,8 @@ import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { newToken, installAuth } from './security.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
+import { EventHub } from './hub.js';
+import { JobManager } from './jobs.js';
 
 export const KEY_ALLOWLIST = ['DEEPSEEK_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'SARVAM_API_KEY', 'ELEVENLABS_API_KEY', 'OPENROUTER_API_KEY', 'TAVILY_API_KEY'];
 
@@ -48,7 +51,10 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   const app = Fastify({ logger, bodyLimit: 2 * 1024 * 1024, trustProxy: false });
   app.addContentTypeParser(['text/plain', 'text/markdown'], { parseAs: 'string' }, (_req, body, done) => done(null, body));
   await app.register(multipart, { limits: { fileSize: 10 * 1024 * 1024, files: 1 } });
+  await app.register(websocket);
   const ctxOf = (id) => P.resolveProject(projectRoot, id);
+  const hub = new EventHub();
+  const jobs = new JobManager(projectRoot, (event) => hub.broadcast(event));
   installAuth(app, { token, port });
 
   app.setErrorHandler((err, req, reply) => {
@@ -79,6 +85,36 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     const text = String(req.body?.text ?? '').trim();
     if (!text) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'notes text is required');
     return P.stageNotes(ctxOf(req.params.id), String(req.params.stage), text);
+  });
+
+  app.post('/api/projects/:id/run', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const job = jobs.create(ctx, 'run', { ...(req.body ?? {}), project: ctx.dir });
+    return reply.code(202).send(job);
+  });
+  app.post('/api/projects/:id/ops/:op', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const job = jobs.create(ctx, String(req.params.op), { ...(req.body ?? {}), project: ctx.dir });
+    return reply.code(202).send(job);
+  });
+  app.get('/api/jobs', async (req) => ({ jobs: jobs.list(req.query?.project ? String(req.query.project) : null) }));
+  app.get('/api/jobs/:id', async (req) => jobs.get(String(req.params.id)));
+  app.post('/api/jobs/:id/cancel', async (req) => jobs.cancel(String(req.params.id)));
+
+  app.get('/api/events', { websocket: true }, (socket, req) => {
+    const ws = socket.socket ?? socket;
+    const send = (e) => { try { ws.send(JSON.stringify(e)); } catch { /* closed */ } };
+    const remove = hub.add({ kind: 'ws', socket: ws }, req.query?.project ?? null);
+    send({ ts: new Date().toISOString(), type: 'log', message: 'connected' });
+    ws.on('close', remove);
+    ws.on('error', remove);
+  });
+  app.get('/api/events/sse', async (req, reply) => {
+    reply.raw.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', connection: 'keep-alive' });
+    reply.raw.write(`data: ${JSON.stringify({ ts: new Date().toISOString(), type: 'log', message: 'connected' })}\n\n`);
+    const remove = hub.add({ kind: 'sse', res: reply.raw }, req.query?.project ?? null);
+    req.raw.on('close', remove);
+    return reply;
   });
 
   app.get('/api/projects/:id/files/*', async (req, reply) => {
@@ -128,7 +164,8 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     return { name, status: keySet(name) ? 'set' : 'unset' };
   });
 
-  return { app, token, port, root: projectRoot };
+  app.addHook('onClose', async () => { await jobs.close(); });
+  return { app, token, port, root: projectRoot, jobs, hub };
 }
 
 export async function startServer({ port = 4317, root = join(ROOT, 'work'), open = false } = {}) {
