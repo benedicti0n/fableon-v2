@@ -9,6 +9,7 @@ import { FableonError, ERROR_CODES } from './core/errors.js';
 import { fileHash, sha256, atomicWrite } from './core/artifacts.js';
 import { runQa } from './pipeline.js';
 import { lookcheckCommand } from './lookcheck.js';
+import { applyLook } from './look-adjust.js';
 
 const json = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const walk = (dir, out = []) => {
@@ -58,7 +59,8 @@ function load(projectDir) {
   const wordsPath = join(projectDir, 'words.json');
   for (const p of [boardPath, storyPath, shotsPath, wordsPath]) if (!existsSync(p)) throw new Error(`final: ${p} is missing (run the animatic stage first)`);
   const board = json(boardPath), storyboard = json(storyPath), shots = json(shotsPath), words = json(wordsPath);
-  return { board, storyboard, shots, words, fps: storyboard.fps ?? 30 };
+  const look = existsSync(join(projectDir, 'look.json')) ? json(join(projectDir, 'look.json')) : null;
+  return { board, storyboard: applyLook(storyboard, look), shots, words, look, fps: storyboard.fps ?? 30 };
 }
 
 const freeBytes = (dir) => {
@@ -81,7 +83,7 @@ export const secondsPerFrame = (projectDir) => {
 
 /** Resolve every shot to frames and derive the exact boundary transition map. */
 export function shotRanges(projectDir) {
-  const { board, storyboard, shots, words, fps } = load(projectDir);
+  const { board, storyboard, shots, words, fps, look } = load(projectDir);
   const end = Math.round(((words[words.length - 1]?.b ?? 0) * fps));
   const rows = shots.map(([id, a, b], i) => ({ id: String(id), a, b, index: i, board: board.shots?.[i] ?? {}, story: storyboard.shots?.[i] ?? {} }));
   const transitions = [];
@@ -95,7 +97,7 @@ export function shotRanges(projectDir) {
     else if (!explicit && prev.story.light !== cur.story.light) transitions.push({ index: i, type: 'crossfade', frames: Math.max(1, Math.round(storyboard.crossfade ?? 10)), at: cur.a });
     else transitions.push({ index: i, type: 'cut', frames: 0, at: cur.a });
   }
-  return { rows, transitions, end, fps, board, storyboard, words };
+  return { rows, transitions, end, fps, board, storyboard, words, look };
 }
 
 export function finalPlan(projectDir) {
@@ -109,7 +111,8 @@ export function finalPlan(projectDir) {
   const lookHash = fileHash(join(projectDir, 'look.json')) ?? 'none';
   const mixHash = fileHash(join(projectDir, 'audio', 'mix.wav')) ?? 'none';
   const segments = rows.map((row, i) => {
-    const payload = { shot: row.story, range: [row.a, row.b], cast: castHash, look: lookHash, board: boardHash, engine, quality, size };
+    const shotLookHash = hash12(row.story.look ?? null);
+    const payload = { shot: row.story, range: [row.a, row.b], cast: castHash, look: shotLookHash, board: boardHash, engine, quality, size };
     const hash = hash12(payload);
     const file = join('render', 'final', 'segments', `${row.id}.${hash}.mp4`);
     const prev = manifest?.segments?.[row.id];
@@ -117,10 +120,10 @@ export function finalPlan(projectDir) {
     let reason = 'new';
     if (prev?.hash === hash && exists) reason = null;
     else if (prev?.engine && prev.engine !== engine) reason = 'engine';
-    else if (prev?.lookHash && prev.lookHash !== lookHash) reason = 'look';
+    else if (prev?.lookHash !== shotLookHash) reason = 'look';
     else if (prev?.boardHash && prev.boardHash !== boardHash) reason = 'board';
     else if (prev && prev.size !== size) reason = 'quality';
-    return { shot: row.id, scene: row.board.scene ?? row.id, frames: row.b - row.a, cached: !reason, reason, file, hash };
+    return { shot: row.id, scene: row.board.scene ?? row.id, frames: row.b - row.a, cached: !reason, reason, file, hash, lookHash: shotLookHash };
   });
   const transitionPlans = transitions.map((t, i) => {
     const prev = segments[t.index - 1], next = segments[t.index];
@@ -160,9 +163,9 @@ function caffeinate() {
   try { return spawn('caffeinate', ['-i', '-w', String(process.pid)], { stdio: 'ignore' }); } catch { return null; }
 }
 
-function tempProject(projectDir) {
+function tempProject(projectDir, storyboard) {
   const dir = mkdtempSync(join(tmpdir(), 'fableon-final-'));
-  copyFileSync(join(projectDir, 'storyboard.json'), join(dir, 'storyboard.json'));
+  writeFileSync(join(dir, 'storyboard.json'), JSON.stringify(storyboard, null, 2) + '\n');
   copyFileSync(join(projectDir, 'words.json'), join(dir, 'words.json'));
   return dir;
 }
@@ -189,12 +192,13 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
       if (r.status !== 0) throw new Error('final audio-only remux failed');
       renameSync(tmp, final);
     } else {
-      const tmp = tempProject(projectDir);
+      const current = shotRanges(projectDir);
+      const tmp = tempProject(projectDir, current.storyboard);
       try {
         const dirtyShots = plan.segments.filter((s) => !s.cached);
         if (dirtyShots.length) {
           const jobs = dirtyShots.map((s) => {
-            const row = shotRanges(projectDir).rows.find((r) => r.id === s.shot);
+            const row = current.rows.find((r) => r.id === s.shot);
             return { id: Number(s.shot) || row.index + 1, from: row.a, to: row.b, file: join(projectDir, s.file) };
           });
           mkdirSync(join(projectDir, 'render', 'final', 'segments'), { recursive: true });
@@ -216,7 +220,7 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
           progress?.({ step: 'final:transitions', done: jobs.length, total: jobs.length });
         }
       } finally { rmSync(tmp, { recursive: true, force: true }); }
-      const { rows, transitions } = shotRanges(projectDir);
+      const { rows, transitions } = current;
       const segmentFor = (i) => plan.segments[i];
       const pieces = [];
       for (let i = 0; i < rows.length; i++) {
@@ -243,7 +247,7 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
   const manifest = {
     version: 1, engine: plan.engine, quality: plan.quality, size: plan.size, audioHash: plan.audioHash, finalHash,
     finalBytes: existsSync(final) ? statSync(final).size : 0, createdAt: new Date().toISOString(),
-    segments: Object.fromEntries(plan.segments.map((s) => [s.shot, { hash: s.hash, file: s.file, frames: s.frames, scene: s.scene, boardHash: fileHash(join(projectDir, 'board.json')), lookHash: fileHash(join(projectDir, 'look.json')), engine: plan.engine, size: plan.size }])),
+    segments: Object.fromEntries(plan.segments.map((s) => [s.shot, { hash: s.hash, file: s.file, frames: s.frames, scene: s.scene, boardHash: fileHash(join(projectDir, 'board.json')), lookHash: s.lookHash, engine: plan.engine, size: plan.size }])),
     transitions: Object.fromEntries(plan.transitions.map((t, i) => [String(i), { hash: t.hash, file: t.file, from: t.start, to: t.end }])),
   };
   atomicWrite(join(projectDir, 'render', 'final', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');

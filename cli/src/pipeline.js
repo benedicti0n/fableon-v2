@@ -65,12 +65,25 @@ export async function initCommand(name, from) {
 
 export async function stillsCommand(...args) { return withProjectLock(projectDir(args[0]), 'stills', () => stillsCommandInner(...args)); }
 
-async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv) {
+async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv, lookJson = null) {
   const dir = projectDir(dirArg);
   const project = basename(dir);
   emitStage(project, 'stills', { op: 'stills', status: 'running' });
   prepare(dir);
   const q = quality(qualityName);
+  let renderDir = dir;
+  let temp = null;
+  if (lookJson) {
+    const { applyLook } = await import('./look-adjust.js');
+    const { mkdtempSync, copyFileSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    temp = mkdtempSync(join(tmpdir(), 'fableon-look-preview-'));
+    renderDir = temp;
+    copyFileSync(join(dir, 'storyboard.json'), join(temp, 'storyboard.json'));
+    copyFileSync(join(dir, 'words.json'), join(temp, 'words.json'));
+    writeFileSync(join(temp, 'storyboard.json'), JSON.stringify(applyLook(JSON.parse(readFileSync(join(dir, 'storyboard.json'), 'utf8')), typeof lookJson === 'string' ? JSON.parse(lookJson) : lookJson), null, 2) + '\n');
+  }
+  const size = qualityName === 'preview' ? '720x1280' : q.size;
   let frames = framesCsv;
   if (shotsCsv) {
     const wanted = new Set(shotsCsv.split(',').map((s) => s.trim()).filter(Boolean));
@@ -86,7 +99,9 @@ async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv) {
     frames = [...new Set(list)].join(',');
   }
   if (!frames) throw new Error('missing --frames 60,640');
-  await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', frames, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
+  try {
+    await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', frames, '--project', renderDir, '--size', size, '--msaa', '0'], { cwd: ROOT });
+  } finally { if (temp) rmSync(temp, { recursive: true, force: true }); }
   console.log(`stills: wrote ${join(dir, 'stills')}`);
   emitStage(project, 'stills', { op: 'stills', status: 'done' });
 }

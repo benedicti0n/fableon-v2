@@ -36,6 +36,10 @@ uniform vec3 legacyTintH;
 uniform vec2 legacyVig;
 uniform float legacyAmount;
 uniform float gradeMaskOn;
+uniform float lookExposure;
+uniform float lookWarmth;
+uniform float lookVignette;
+uniform float lookHaze;
 ${maskFn("g")}
 
 vec3 gradeEncode(vec3 c) {
@@ -88,7 +92,14 @@ vec3 gradeFinish(vec3 src, vec3 c, vec3 sat, vec3 tintS, vec3 tintM, vec3 tintH,
 }
 vec3 gradeMood(vec3 src, vec2 uv) {
   vec3 c = vec3(gradeCurve(src.r), gradeCurve(src.g), gradeCurve(src.b));
-  return gradeFinish(src, c, gradeSat, gradeTintS, gradeTintM, gradeTintH, gradeVig, uv, 1.0, gradeAmount);
+  vec3 outC = gradeFinish(src, c, gradeSat, gradeTintS, gradeTintM, gradeTintH, gradeVig, uv, 1.0, gradeAmount);
+  outC *= pow(2.0, lookExposure);
+  outC *= vec3(1.0 + lookWarmth * 0.08, 1.0, 1.0 - lookWarmth * 0.08);
+  vec2 p = uv * 2.0 - 1.0;
+  float r = length(p) * 0.70710678;
+  outC *= max(0.0, 1.0 - (lookVignette - 1.0) * 0.22 * smoothstep(0.15, 1.0, r));
+  outC = mix(outC, vec3(0.72, 0.70, 0.66), clamp(lookHaze * 0.18, 0.0, 0.35));
+  return clamp(outC, 0.0, 1.0);
 }
 vec3 gradeLegacy(vec3 src, vec2 uv) {
   vec3 c = vec3(legacyCurve(src.r), legacyCurve(src.g), legacyCurve(src.b));
@@ -196,6 +207,10 @@ export class GradeEffect extends Effect {
         ["legacyVig", new Uniform(new Vector2(...p.vig))],
         ["legacyAmount", new Uniform(1)],
         ["gradeMaskOn", new Uniform(0)],
+        ["lookExposure", new Uniform(0)],
+        ["lookWarmth", new Uniform(0)],
+        ["lookVignette", new Uniform(1)],
+        ["lookHaze", new Uniform(0)],
         ...Object.entries(mask),
       ]),
     });
@@ -213,6 +228,14 @@ export class GradeEffect extends Effect {
     // cards stay flat: no screen-space vignette on the character grade
     (u.get("legacyVig")!.value as Vector2).set(0, 0);
     u.get("legacyAmount")!.value = amount;
+  }
+  /** World-only finishing controls from look.json. Characters still take the legacy branch. */
+  setLook({ exposure = 0, warmth = 0, vignette = 1, haze = 0 }: { exposure?: number; warmth?: number; vignette?: number; haze?: number }) {
+    const u = this.uniforms;
+    u.get("lookExposure")!.value = exposure;
+    u.get("lookWarmth")!.value = warmth;
+    u.get("lookVignette")!.value = vignette;
+    u.get("lookHaze")!.value = haze;
   }
   setCharMask(tex: Texture, width: number, height: number, on: boolean) {
     maskSet(this.mask, "g", tex, width, height, on);

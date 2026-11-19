@@ -297,8 +297,9 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--frames <list>', 'frame numbers or start,mid,end', 'start,mid,end')
     .option('--shots <ids>', 'only these shot ids, e.g. S14,S27')
-    .option('--quality <quality>', 'preview (540x960) or final (1440x2560)', 'preview')
-    .action((opts) => stillsCommand(opts.project, opts.frames, opts.quality, opts.shots));
+    .option('--quality <quality>', 'preview (720x1280) or final (1440x2560)', 'preview')
+    .option('--look <json>', 'draft look.json for the preview')
+    .action((opts) => stillsCommand(opts.project, opts.frames, opts.quality, opts.shots, opts.look ?? null));
 
   program
     .command('render')

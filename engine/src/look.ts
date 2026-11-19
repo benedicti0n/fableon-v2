@@ -11,6 +11,12 @@ export type Look = {
   sun?: boolean;
   halo?: boolean;
   glow?: number;
+  glowScale?: number;
+  exposure?: number;
+  warmth?: number;
+  haze?: number;
+  vignette?: number;
+  shaftsStrength?: number;
   rim?: number;
   fill?: number;
   grade?: string;

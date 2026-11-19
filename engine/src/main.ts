@@ -346,7 +346,7 @@ const drawShot = (id: number, f: number) => {
   preP.enabled = mainP.enabled = d.cInf > 0.25;
   const rig = moodRig(s.look?.mood);
   if (s.look && rig) {
-    halationLook.intensity = s.look.glow ?? rig.glow.intensity;
+    halationLook.intensity = (s.look.glow ?? rig.glow.intensity) * (s.look.glowScale ?? 1);
     halationLook.threshold = rig.glow.threshold;
     halationLook.tint = rig.glow.tint;
     halationLook.radius = Math.max(4, Math.round(rig.glow.radius * H / 1080));
@@ -356,6 +356,7 @@ const drawShot = (id: number, f: number) => {
   gradeLegacy.protect = 0;
   gradeFor(gradeLook, s.look && rig ? rig.grade : s.light);
   gradeLook.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
+  gradeLook.setLook({ exposure: s.look?.exposure ?? 0, warmth: s.look?.warmth ?? 0, vignette: s.look?.vignette ?? 1, haze: s.look?.haze ?? 0 });
   gradeLook.setCharMask(charMaskRT.texture, W, H, lookOn);
   gradeLook.protect = lookOn ? 1 : 0;
   composer.render();

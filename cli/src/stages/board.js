@@ -1,4 +1,5 @@
 // Board writer: shot plan -> authoring board shots, with compile/measured repair and review.
+import { lookFor } from '../look-adjust.js';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -89,7 +90,7 @@ export function groupPlan(plan) {
       fx: g.shots.flatMap((s) => s.fx ?? []),
       moves: g.shots.flatMap((s) => s.moves ?? []),
       transition: first.transition,
-      look: first.look ?? (first.mood ? { mood: first.mood } : undefined),
+      look: lookFor({ look: first.look }, first.mood, null),
     };
   });
 }
