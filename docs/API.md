@@ -50,6 +50,10 @@ fableon serve --root work
 | POST | `/api/queue/from-preset` | create a batch of projects and queue items |
 | POST | `/api/queue/start`, `/api/queue/pause` | queue controls |
 | POST | `/api/queue/:id/:action` | retry, remove or reorder |
+| GET | `/api/costs?month=YYYY-MM` | monthly ledger summary, budgets and alerts |
+| GET | `/api/costs.csv?month=` | monthly ledger CSV (no prompts or keys) |
+| GET/PUT | `/api/costs/budgets` | caps, thresholds, INR rate, fees and display currency |
+| GET | `/api/costs/balances` | DeepSeek/ElevenLabs balances where keys exist |
 | GET | `/api/projects/overview` | projects with stage dots, cover, spend and published state |
 | GET | `/api/projects/:id/exports` | export folders for the film |
 | GET/PUT | `/api/settings/channel` | channel profile used by the publish prompt |

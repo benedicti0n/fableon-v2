@@ -23,6 +23,8 @@ import { STAGES } from '../../cli/src/core/stages.js';
 import { repoModels, modelForStage, fallbackConfigsForStage, modelId } from '../../cli/src/core/model-config.js';
 import { collectUsage, summarize } from '../../cli/src/usage.js';
 import { ProductionQueue, listPresets, savePreset, deletePreset, listLibrary } from './queue.js';
+import { getBudgets, saveBudgets, summary as costSummary, csv as costCsv, balances as costBalances } from './costs.js';
+import { dirname as pdirname } from 'node:path';
 import { SARVAM_V4, NACHIKET } from '../../cli/src/voice/sarvam.js';
 
 export const KEY_ALLOWLIST = ['DEEPSEEK_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'SARVAM_API_KEY', 'ELEVENLABS_API_KEY', 'OPENROUTER_API_KEY', 'TAVILY_API_KEY'];
@@ -84,6 +86,11 @@ function spentUsd(ctx) {
 }
 
 function budgetCheck(ctx, op, body) {
+  const budgets = getBudgets(pdirname(ctx.dir));
+  const month = new Date().toISOString().slice(0, 7);
+  const monthSpend = costSummary(pdirname(ctx.dir), month).spend;
+  const monthly = Number(budgets.monthlyUsd ?? 0);
+  if (monthly > 0 && monthSpend >= monthly) return { ok: false, spent: +monthSpend.toFixed(4), estimate: 0.05, limit: monthly, message: `monthly budget ${monthly} USD is exhausted (spent ${monthSpend.toFixed(2)})` };
   const modelOps = new Set(['run', 'cast', 'shotplan', 'board', 'sound', 'factcheck', 'script']);
   const cost = spentUsd(ctx);
   const estimate = modelOps.has(op) ? 0.05 : 0;
@@ -398,6 +405,21 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   app.put('/api/presets/:id', async (req) => savePreset(projectRoot, { ...(req.body ?? {}), id: String(req.params.id) }));
   app.delete('/api/presets/:id', async (req) => ({ deleted: deletePreset(projectRoot, String(req.params.id)) }));
   app.get('/api/library', async () => ({ files: listLibrary(projectRoot) }));
+  app.get('/api/costs', async (req) => {
+    const month = String(req.query?.month ?? new Date().toISOString().slice(0, 7));
+    const s = costSummary(projectRoot, month);
+    for (const a of s.alerts) hub.broadcast({ ts: new Date().toISOString(), type: 'budget', project: null, threshold: a.threshold, spentUsd: a.spend, limitUsd: a.limit, message: `monthly budget ${a.pct}%` });
+    return s;
+  });
+  app.get('/api/costs.csv', async (req, reply) => {
+    const month = String(req.query?.month ?? new Date().toISOString().slice(0, 7));
+    const s = costSummary(projectRoot, month);
+    reply.header('content-type', 'text/csv; charset=utf-8').header('content-disposition', `attachment; filename="fableon-costs-${month}.csv"`);
+    return costCsv(s.rows);
+  });
+  app.get('/api/costs/budgets', async () => getBudgets(projectRoot));
+  app.put('/api/costs/budgets', async (req) => saveBudgets(projectRoot, req.body ?? {}));
+  app.get('/api/costs/balances', async () => costBalances(projectRoot));
   app.get('/api/queue', async () => queue.list());
   app.post('/api/queue/from-preset', async (req) => queue.createBatch({ presetId: String(req.body?.presetId ?? ''), topics: req.body?.topics ?? [], library: req.body?.library ?? [], to: req.body?.to ?? null }));
   app.post('/api/queue/start', async () => { queue.setPaused(false); return queue.list(); });
