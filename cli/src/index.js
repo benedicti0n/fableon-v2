@@ -134,7 +134,7 @@ export function main(argv = process.argv) {
     .action(async (opts) => {
       try {
         const r = await lookdevCommand(opts.project, opts.out ?? null);
-        console.log(`lookdev: ${r.scenes.length} scene(s) × 3 moods; ${r.out}`);
+        console.log(`lookdev: ${r.scenes.length} scene(s) × 3 moods; ${r.outs.join(', ')}`);
       } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); }
     });
 

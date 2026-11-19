@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { findPython, ROOT, run } from './env.js';
 import { makeContext } from './frames.js';
+import { parseAnchor } from './authoring.js';
 import { moodForLight } from './look.js';
 
 const ALTS = {
@@ -32,9 +33,10 @@ export async function lookdevCommand(dirArg, outArg = null) {
     const counts = (board.shots ?? []).reduce((m, s) => m.set(s.id, (m.get(s.id) ?? 0) + 1), new Map());
     for (const [idx, shot] of (board.shots ?? []).entries()) {
       const sceneLabel = counts.get(shot.id) > 1 ? `${shot.id} @ ${shot.start}` : shot.id;
-      const start = ctx.anchor(shot.start);
-      const end = shot.end && shot.end !== 'end' ? ctx.anchor(shot.end, start) : ctx.anchor({ end: true });
-      const first = ctx.anchor(shot.camera?.[0]?.at ?? shot.start, start);
+      const A = (a, base = 0) => typeof a === 'string' ? ctx.anchor(parseAnchor(a, 30), base) : ctx.anchor(a, base);
+      const start = A(shot.start);
+      const end = shot.end && shot.end !== 'end' ? A(shot.end, start) : ctx.anchor({ end: true });
+      const first = A(shot.camera?.[0]?.at ?? shot.start, start);
       const frame = Math.min(Math.max(start, first + 30), Math.max(start, end - 2));
       const pick = shot.look?.mood ?? moodForLight(shot.light);
       const moods = [pick, ...(ALTS[pick] ?? [])].filter((m, i, a) => a.indexOf(m) === i).slice(0, 3);
@@ -54,7 +56,9 @@ export async function lookdevCommand(dirArg, outArg = null) {
     const py = findPython();
     if (!py) throw new Error('lookdev sheet needs Python/Pillow');
     await run(py, [join(ROOT, 'tools', 'qa', 'lookdev_sheet.py'), manifest], { cwd: ROOT });
-    const out = join(outDir, `lookdev-${project.id}.jpg`);
-    return { out, cells, scenes: [...new Set(cells.map((c) => c.scene))] };
+    const sceneList = [...new Set(cells.map((c) => c.scene))];
+    const pages = Math.max(1, Math.ceil(sceneList.length / 3));
+    const outs = Array.from({ length: pages }, (_, i) => join(outDir, `lookdev-${project.id}${i ? `-${i + 1}` : ''}.jpg`));
+    return { out: outs[0], outs, cells, scenes: sceneList };
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 }
