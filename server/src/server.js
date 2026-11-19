@@ -13,6 +13,10 @@ import * as P from './projects.js';
 import * as A from './artifacts.js';
 import { EventHub } from './hub.js';
 import { JobManager } from './jobs.js';
+import { STAGES } from '../../cli/src/core/stages.js';
+import { repoModels, modelForStage, fallbackConfigsForStage, modelId } from '../../cli/src/core/model-config.js';
+import { collectUsage, summarize } from '../../cli/src/usage.js';
+import { SARVAM_V4, NACHIKET } from '../../cli/src/voice/sarvam.js';
 
 export const KEY_ALLOWLIST = ['DEEPSEEK_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'SARVAM_API_KEY', 'ELEVENLABS_API_KEY', 'OPENROUTER_API_KEY', 'TAVILY_API_KEY'];
 
@@ -44,6 +48,44 @@ function doctor() {
     return m ? { ok: m[1] === 'OK', label: m[2].trim(), detail: m[3] ?? '' } : null;
   }).filter(Boolean);
   return { ok: r.status === 0, checks, output };
+}
+
+let voiceCache = { at: 0, eleven: [], credit: null };
+async function voiceInfo() {
+  if (Date.now() - voiceCache.at < 60000) return voiceCache;
+  let eleven = [], credit = null;
+  const key = process.env.ELEVENLABS_API_KEY;
+  if (key) {
+    try {
+      const r = await fetch('https://api.elevenlabs.io/v2/voices?page_size=100', { headers: { 'xi-api-key': key, accept: 'application/json' }, signal: AbortSignal.timeout(5000) });
+      if (r.ok) { const j = await r.json(); eleven = (j.voices ?? []).map((v) => ({ id: v.voice_id, name: v.name, category: v.category ?? null, labels: v.labels ?? null })); }
+    } catch { /* offline is fine */ }
+    try {
+      const r = await fetch('https://api.elevenlabs.io/v1/user/subscription', { headers: { 'xi-api-key': key, accept: 'application/json' }, signal: AbortSignal.timeout(5000) });
+      if (r.ok) { const j = await r.json(); credit = { elevenlabs: { plan: j.tier ?? j.status ?? null, used: j.character_count ?? null, limit: j.character_limit ?? null, remaining: j.character_limit != null && j.character_count != null ? j.character_limit - j.character_count : null, reset: j.next_character_count_reset_unix ? new Date(j.next_character_count_reset_unix * 1000).toISOString() : null } }; }
+    } catch { /* offline is fine */ }
+  }
+  voiceCache = { at: Date.now(), eleven, credit };
+  return voiceCache;
+}
+
+function spentUsd(ctx) {
+  try {
+    const state = JSON.parse(readFileSync(join(ctx.dir, '.fableon', 'state.json'), 'utf8'));
+    return Object.values(state.stages ?? {}).reduce((n, s) => n + Number(s.usage?.costUsd ?? 0), 0);
+  } catch { return 0; }
+}
+
+function budgetCheck(ctx, op, body) {
+  const modelOps = new Set(['run', 'cast', 'shotplan', 'board', 'sound', 'factcheck', 'script']);
+  const cost = spentUsd(ctx);
+  const estimate = modelOps.has(op) ? 0.05 : 0;
+  const limit = ctx.project?.budget?.maxUsd ?? null;
+  if (limit != null && cost + estimate > limit) return { ok: false, spent: +cost.toFixed(4), estimate, limit, message: `budget ${limit} USD would be exceeded (spent ${cost.toFixed(2)}, estimate ${estimate.toFixed(2)})` };
+  const provider = ctx.project?.models?.default?.provider ?? 'deepseek';
+  const providerLimit = ctx.project?.budget?.providers?.[provider] ?? null;
+  if (providerLimit != null && cost + estimate > providerLimit) return { ok: false, spent: +cost.toFixed(4), estimate, limit: providerLimit, provider, message: `provider budget ${provider} ${providerLimit} USD would be exceeded` };
+  return { ok: true, spent: +cost.toFixed(4), estimate, limit };
 }
 
 export async function createServer({ root = join(ROOT, 'work'), token = newToken(), port = 4317, logger = false } = {}) {
@@ -89,14 +131,72 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
 
   app.post('/api/projects/:id/run', async (req, reply) => {
     const ctx = ctxOf(req.params.id);
+    const budget = budgetCheck(ctx, 'run', req.body ?? {});
+    if (!budget.ok && !req.body?.confirmBudget) {
+      const event = { ts: new Date().toISOString(), type: 'budget', project: ctx.id, op: 'run', estimateUsd: budget.estimate, spentUsd: budget.spent, limitUsd: budget.limit, message: budget.message };
+      hub.broadcast(event);
+      return reply.code(409).send({ error: budget.message, code: ERROR_CODES.BUDGET_EXCEEDED, ...event });
+    }
     const job = jobs.create(ctx, 'run', { ...(req.body ?? {}), project: ctx.dir });
     return reply.code(202).send(job);
   });
   app.post('/api/projects/:id/ops/:op', async (req, reply) => {
     const ctx = ctxOf(req.params.id);
-    const job = jobs.create(ctx, String(req.params.op), { ...(req.body ?? {}), project: ctx.dir });
+    const op = String(req.params.op);
+    const budget = budgetCheck(ctx, op, req.body ?? {});
+    if (!budget.ok && !req.body?.confirmBudget) {
+      const event = { ts: new Date().toISOString(), type: 'budget', project: ctx.id, op, estimateUsd: budget.estimate, spentUsd: budget.spent, limitUsd: budget.limit, message: budget.message };
+      hub.broadcast(event);
+      return reply.code(409).send({ error: budget.message, code: ERROR_CODES.BUDGET_EXCEEDED, ...event });
+    }
+    const job = jobs.create(ctx, op, { ...(req.body ?? {}), project: ctx.dir });
     return reply.code(202).send(job);
   });
+  app.get('/api/models', async () => {
+    const repo = repoModels();
+    const keys = Object.fromEntries(KEY_ALLOWLIST.map((name) => [name, keySet(name) ? 'set' : 'unset']));
+    const stages = STAGES.filter((s) => s.prompt).map((s) => {
+      const primary = modelForStage({ models: {} }, s.name, repo);
+      const fallbacks = fallbackConfigsForStage({ models: {} }, s.name, repo);
+      const id = modelId(primary);
+      const price = repo.prices?.[id] ?? null;
+      return { stage: s.name, primary: { ...primary, id }, fallbacks: fallbacks.map((f) => ({ ...f, id: modelId(f) })), price };
+    });
+    return { stages, keys, prices: repo.prices ?? {}, source: 'models.json', date: repo.date ?? null };
+  });
+  app.post('/api/models/check', async (req, reply) => {
+    const job = jobs.create({ id: 'server', dir: projectRoot, project: {}, readOnly: false }, 'models-check', req.body ?? {});
+    return reply.code(202).send(job);
+  });
+  app.get('/api/voices', async () => {
+    const keys = { elevenlabs: keySet('ELEVENLABS_API_KEY'), sarvam: keySet('SARVAM_API_KEY') };
+    const live = await voiceInfo();
+    const cached = P.listProjects(projectRoot).map((p) => {
+      const f = join(p.path, 'voice', 'auditions', 'auditions.md');
+      if (!existsSync(f)) return null;
+      const lines = readFileSync(f, 'utf8').split('\n').filter((l) => l.startsWith('| ') && !l.includes('---') && !l.startsWith('| file'));
+      return { project: p.id, auditions: lines.slice(0, 40) };
+    }).filter(Boolean);
+    return {
+      providers: [
+        { name: 'kokoro', configured: true, model: 'kokoro', speakers: ['am_michael'] },
+        { name: 'elevenlabs', configured: keys.elevenlabs, model: 'eleven_multilingual_v2', speakers: live.eleven },
+        { name: 'sarvam', configured: keys.sarvam, model: SARVAM_V4, speakers: ['anushka', 'abhilash', 'manisha', 'vidya', 'arya', 'karun', NACHIKET] },
+      ],
+      cached,
+      credit: live.credit ?? { elevenlabs: { available: false, note: 'set ELEVENLABS_API_KEY or run fableon voice budget' }, sarvam: { budgetInr: 200, note: 'logged spend is in fableon usage' } },
+    };
+  });
+  app.get('/api/usage', async (req) => {
+    const since = req.query?.from ? String(req.query.from) : null;
+    const project = req.query?.project ? String(req.query.project) : null;
+    const usage = collectUsage(ROOT, { since });
+    const deep = project ? usage.deep.filter((r) => String(r.project).includes(project)) : usage.deep;
+    const eleven = project ? usage.eleven.filter((r) => String(r.project).includes(project)) : usage.eleven;
+    const totals = summarize({ deep, eleven });
+    return { since, project, totals, deep, eleven, mock: usage.mock };
+  });
+
   app.get('/api/jobs', async (req) => ({ jobs: jobs.list(req.query?.project ? String(req.query.project) : null) }));
   app.get('/api/jobs/:id', async (req) => jobs.get(String(req.params.id)));
   app.post('/api/jobs/:id/cancel', async (req) => jobs.cancel(String(req.params.id)));

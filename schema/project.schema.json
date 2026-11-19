@@ -375,6 +375,17 @@
         "maxTokensPerRun": {
           "type": "integer",
           "minimum": 1
+        },
+        "maxUsd": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "providers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
         }
       }
     },
