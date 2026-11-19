@@ -19,6 +19,9 @@
     "catalog": "node engine/scripts/render.cjs catalog --project fixtures/adi-parva --out schema/catalog.runtime.json && node engine/scripts/export-catalog.mjs",
     "web:dev": "npm --workspace @fableon/web run dev",
     "web:build": "npm --workspace @fableon/web run build",
-    "web:types": "npm --workspace @fableon/web run types"
+    "web:types": "npm --workspace @fableon/web run types",
+    "web:test": "npm --workspace @fableon/web test",
+    "web:e2e": "npm run web:build && node tests/e2e/studio.mjs",
+    "web:screens": "npm run web:build && node tests/e2e/screenshots.mjs"
   }
 }

@@ -462,6 +462,7 @@ export async function reviseScriptLines({ projectDir, project, router, lines = [
     { role: 'system', content: REVISE },
     { role: 'user', content: `Rewrite only these line numbers: ${selected.join(', ')}.\nDirector notes: ${String(notes || '(none)')}\n\nDATA:\n<selected_lines>\n${JSON.stringify(selectedData, null, 2)}\n</selected_lines>\n<full_script>\n${JSON.stringify(full, null, 2)}\n</full_script>\n<verified_facts>\n${(facts.facts ?? []).filter((f) => f.verified).map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nCatalog sets: ${catalog.sets.map((s) => s.name).join(', ')}. Return json only.` },
   ], {
+    mockKey: 'script-lines',
     validate: (d) => {
       const errs = [];
       if (!Array.isArray(d.lines)) return ['/lines must be an array'];

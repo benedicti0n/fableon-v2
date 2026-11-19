@@ -544,5 +544,318 @@
         }
       ]
     }
+  ],
+  "performance": [
+    {
+      "version": 1,
+      "lines": [
+        {
+          "n": 0,
+          "tone": "deadpan",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "cheese"
+          ]
+        },
+        {
+          "n": 1,
+          "tone": "matter-of-fact",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "ladder"
+          ]
+        },
+        {
+          "n": 2,
+          "tone": "warm",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "cloths"
+          ]
+        },
+        {
+          "n": 3,
+          "tone": "warm",
+          "pace": 1.05,
+          "pauses": [],
+          "stress": [
+            "silver"
+          ]
+        },
+        {
+          "n": 4,
+          "tone": "tense",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "cloud"
+          ]
+        },
+        {
+          "n": 5,
+          "tone": "deadpan",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "story"
+          ]
+        },
+        {
+          "n": 6,
+          "tone": "deadpan",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "loud"
+          ]
+        },
+        {
+          "n": 7,
+          "tone": "matter-of-fact",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "unsend"
+          ]
+        },
+        {
+          "n": 8,
+          "tone": "warm",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "truth"
+          ]
+        },
+        {
+          "n": 9,
+          "tone": "deadpan",
+          "pace": 1.0,
+          "pauses": [],
+          "stress": [
+            "never"
+          ]
+        }
+      ]
+    }
+  ],
+  "shotplan": [
+    {
+      "version": 1,
+      "shots": [
+        {
+          "id": "moon-1",
+          "lines": [
+            0,
+            1
+          ],
+          "start": "0:0",
+          "set": "village",
+          "light": "night",
+          "mood": "night-moon",
+          "characters": [
+            "mira"
+          ],
+          "mustShow": [
+            "village.front"
+          ],
+          "action": "Mira looks up at the moon while the village gathers."
+        },
+        {
+          "id": "moon-2",
+          "lines": [
+            2,
+            3
+          ],
+          "start": "2:0",
+          "set": "village",
+          "light": "night",
+          "mood": "night-moon",
+          "characters": [
+            "mira"
+          ],
+          "mustShow": [
+            "village.palms"
+          ],
+          "action": "The villagers polish the moon and children count the crumbs."
+        },
+        {
+          "id": "moon-3",
+          "lines": [
+            4,
+            5
+          ],
+          "start": "4:0",
+          "set": "village",
+          "light": "night",
+          "mood": "night-moon",
+          "characters": [
+            "mira"
+          ],
+          "mustShow": [
+            "village.boats"
+          ],
+          "action": "A cloud swallows the light; Mira shrugs."
+        },
+        {
+          "id": "moon-4",
+          "lines": [
+            6,
+            7
+          ],
+          "start": "6:0",
+          "set": "village",
+          "light": "night",
+          "mood": "night-moon",
+          "characters": [
+            "mira"
+          ],
+          "mustShow": [
+            "village.hut"
+          ],
+          "action": "The story finds a loud voice; Mira holds an envelope."
+        },
+        {
+          "id": "moon-5",
+          "lines": [
+            8,
+            9
+          ],
+          "start": "8:0",
+          "set": "village",
+          "light": "night",
+          "mood": "night-moon",
+          "characters": [
+            "mira"
+          ],
+          "mustShow": [
+            "village.palms"
+          ],
+          "action": "The ladder comes home; Mira winks at the cheese moon."
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "shots": [
+        {
+          "id": "moon-1",
+          "keys": [
+            {
+              "at": "0:0",
+              "size": "wide",
+              "on": [
+                "mira"
+              ],
+              "with": [
+                "village.front"
+              ],
+              "angle": "eye",
+              "side": "front",
+              "move": "push",
+              "note": "Establish the village under the moon."
+            }
+          ]
+        },
+        {
+          "id": "moon-2",
+          "keys": [
+            {
+              "at": "2:0",
+              "size": "full",
+              "on": [
+                "mira"
+              ],
+              "with": [
+                "village.palms"
+              ],
+              "angle": "low",
+              "side": "left",
+              "move": "glide",
+              "note": "Follow Mira toward the palms."
+            }
+          ]
+        },
+        {
+          "id": "moon-3",
+          "keys": [
+            {
+              "at": "4:0",
+              "size": "medium",
+              "on": [
+                "mira"
+              ],
+              "with": [
+                "village.boats"
+              ],
+              "angle": "eye",
+              "side": "right",
+              "move": "push",
+              "note": "Push in as the cloud crosses the moon."
+            }
+          ]
+        },
+        {
+          "id": "moon-4",
+          "keys": [
+            {
+              "at": "6:0",
+              "size": "close",
+              "on": [
+                "mira"
+              ],
+              "angle": "high",
+              "side": "frontLeft",
+              "move": "hold",
+              "note": "Hold on Mira's face as the story speaks."
+            }
+          ]
+        },
+        {
+          "id": "moon-5",
+          "keys": [
+            {
+              "at": "8:0",
+              "size": "wide",
+              "on": [
+                "mira"
+              ],
+              "with": [
+                "village.palms"
+              ],
+              "angle": "low",
+              "side": "front",
+              "move": "crane",
+              "note": "Crane up to the moon and the village."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "script-lines": [
+    {
+      "lines": [
+        {
+          "n": 1,
+          "text": "Every spring, villagers climbed the hill with one long ladder and a lantern.",
+          "gloss": "The whole village made the climb together.",
+          "beat": "setting",
+          "facts": [
+            "F1"
+          ],
+          "look": {
+            "set": "village",
+            "who": [
+              "mira"
+            ],
+            "note": "The village gathers below the hill with a lantern."
+          }
+        }
+      ]
+    }
   ]
 }

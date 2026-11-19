@@ -5,6 +5,7 @@ import { findPython, ROOT, run } from '../env.js';
 import { readJson } from '../core/artifacts.js';
 import { synthesizeElevenLabs } from './elevenlabs.js';
 import { synthesizeSarvam } from './sarvam.js';
+import { synthesizeMock } from './mock.js';
 import { readPronunciations, withPronunciation } from './pronounce.js';
 
 export { synthesizeElevenLabs } from './elevenlabs.js';
@@ -55,6 +56,7 @@ export async function synthesizeKokoro({ projectDir, project }) {
 
 export async function synthesize({ provider, projectDir, project, pauseScale = 1 }) {
   if (provider === 'kokoro') return synthesizeKokoro({ projectDir, project });
+  if (provider === 'mock') return synthesizeMock({ projectDir, project });
   if (provider === 'elevenlabs') {
     if (!project.voice?.voiceId) throw new Error('elevenlabs needs project.voice.voiceId (run: fableon voice audition --project ...)');
     const blocks = scriptBlocks(projectDir);

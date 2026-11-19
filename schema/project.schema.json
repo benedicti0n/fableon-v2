@@ -62,14 +62,16 @@
           "enum": [
             "kokoro",
             "elevenlabs",
-            "sarvam"
+            "sarvam",
+            "mock"
           ]
         },
         "engine": {
           "enum": [
             "kokoro",
             "elevenlabs",
-            "sarvam"
+            "sarvam",
+            "mock"
           ]
         },
         "model": {
