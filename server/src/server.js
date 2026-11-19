@@ -123,7 +123,6 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     reply.code(err.statusCode ?? status).send({ error: err.message, code, details: err.details ?? undefined });
   });
 
-  app.get('/', async () => ({ name: 'Fableon server', ok: true, hint: 'Use the token URL printed by `fableon serve`.' }));
   app.get('/api/health', async () => ({ ok: true, pid: process.pid, uptime: process.uptime(), root: projectRoot, version: '0.1.0' }));
   app.get('/api/doctor', async () => doctor());
 
@@ -311,6 +310,12 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
 
   const webDist = pjoin(ROOT, 'web', 'dist');
   const csp = `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' ws://127.0.0.1:${port} ws://localhost:${port}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`;
+  app.get('/', async (req, reply) => {
+    const index = pjoin(webDist, 'index.html');
+    if (!existsSync(index)) return { name: 'Fableon server', ok: true, hint: 'Use the token URL printed by `fableon serve`.' };
+    reply.header('content-security-policy', csp).header('cache-control', 'no-store').type('text/html; charset=utf-8');
+    return reply.send(createReadStream(index));
+  });
   app.get('/*', async (req, reply) => {
     if (req.raw.url?.startsWith('/api/')) throw new FableonError(ERROR_CODES.NOT_FOUND, 'API route not found');
     const rel = String(req.params['*'] ?? '').replace(/^\/+/, '');
