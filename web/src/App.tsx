@@ -13,15 +13,16 @@ import { getProject } from './api/client';
 import { ActivityPanel, LeftRail, Stepper } from './components/layout';
 import { Badge } from './components/ui';
 import { useEvents } from './hooks/useEvents';
-import Projects from './screens/Projects';
-import Settings from './screens/Settings';
-import Brief from './screens/Brief';
-import Research from './screens/Research';
-import Script from './screens/Script';
-import Voice from './screens/Voice';
-import Cast from './screens/Cast';
-import Board from './screens/Board';
-import Animatic from './screens/Animatic';
+
+const Projects = React.lazy(() => import('./screens/Projects'));
+const Settings = React.lazy(() => import('./screens/Settings'));
+const Brief = React.lazy(() => import('./screens/Brief'));
+const Research = React.lazy(() => import('./screens/Research'));
+const Script = React.lazy(() => import('./screens/Script'));
+const Voice = React.lazy(() => import('./screens/Voice'));
+const Cast = React.lazy(() => import('./screens/Cast'));
+const Board = React.lazy(() => import('./screens/Board'));
+const Animatic = React.lazy(() => import('./screens/Animatic'));
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: true } } });
 
@@ -57,13 +58,13 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  return <BrowserRouter><Routes>
+  return <BrowserRouter><React.Suspense fallback={<div className="flex h-full items-center justify-center text-sm text-studio-muted">Loading studio…</div>}><Routes>
     <Route path="/" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Projects /></main></div>} />
     <Route path="/settings" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Settings /></main></div>} />
     <Route path="/p/:id" element={<Navigate to="brief" replace />} />
     {['brief', 'research', 'script', 'voice', 'cast', 'shotplan', 'board', 'animatic'].map((stage) => <Route key={stage} path={`/p/:id/${stage}`} element={<ProjectFrame>{stage === 'brief' ? <Brief /> : stage === 'research' ? <Research /> : stage === 'script' ? <Script /> : stage === 'voice' ? <Voice /> : stage === 'cast' ? <Cast /> : stage === 'board' || stage === 'shotplan' ? <Board /> : <Animatic />}</ProjectFrame>} />)}
     <Route path="*" element={<div className="p-10 text-studio-muted">Not found.</div>} />
-  </Routes></BrowserRouter>;
+  </Routes></React.Suspense></BrowserRouter>;
 }
 
 export default function Root() { return <QueryClientProvider client={qc}><App /></QueryClientProvider>; }

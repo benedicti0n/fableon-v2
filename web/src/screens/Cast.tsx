@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { approveStage, fileUrl, getProject, json } from '../api/client';
-import { Badge, Button, DialogShell, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge } from '../components/ui';
+import { Badge, Button, DialogShell, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { EstimateDialog } from '../components/EstimateDialog';
 
 type Character = { id: string; name: string; spec?: Record<string, unknown>; cast?: string; mustHave?: string[]; notes?: string; scale?: number };
@@ -25,7 +25,7 @@ export default function Cast() {
   const stage = project.data?.stages.find((s) => s.stage === 'cast');
   const approve = useMutation({ mutationFn: () => approveStage(id, 'cast'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   const characters = castQ.data?.characters ?? [];
-  return <div className="mx-auto max-w-5xl space-y-4">
+  return <div className={stageFrame + ' space-y-4'}>
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.18em] text-studio-amber">Stage 5</div><h1 className="mt-1 text-xl font-semibold">Cast</h1><p className="mt-1 text-sm text-studio-muted">Design the characters, verify the sheet and fill asset gaps before the shot plan.</p></div><div className="flex items-center gap-2">{stage ? <StatusBadge status={stage.status} /> : null}<Button onClick={() => setEstimateOpen(true)} disabled={readOnly}>Re-run cast</Button><Button variant="primary" onClick={() => approve.mutate()} disabled={readOnly || stage?.status === 'approved'}>{stage?.status === 'approved' ? 'Approved' : 'Approve'}</Button></div></div>
     {error ? <ErrorNotice error={error} onDismiss={() => setError(null)} /> : null}
     <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">

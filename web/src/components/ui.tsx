@@ -4,6 +4,7 @@ import * as Select from '@radix-ui/react-select';
 import { ApiError } from '../api/client';
 
 export const cn = (...x: Array<string | false | null | undefined>) => x.filter(Boolean).join(' ');
+export const stageFrame = 'mx-auto max-w-6xl';
 
 export function Button({ variant = 'secondary', size = 'md', className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'secondary' | 'ghost' | 'danger'; size?: 'sm' | 'md' }) {
   const v = variant === 'primary' ? 'bg-studio-amber text-studio-bg hover:brightness-110 font-semibold'

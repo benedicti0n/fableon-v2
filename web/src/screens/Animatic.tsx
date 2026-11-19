@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { approveStage, fileUrl, getProject, getTimeline, runOp, text, waitJob } from '../api/client';
-import { Badge, Button, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge } from '../components/ui';
+import { Badge, Button, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { Markdown } from '../lib/markdown';
 
 export default function Animatic() {
@@ -26,7 +26,7 @@ export default function Animatic() {
   const dur = tl.duration;
   const verdict = /Verdict:\s*(PASS|FAIL)/i.exec(qaQ.data ?? '')?.[1]?.toUpperCase();
   const warnings = (qaQ.data ?? '').split('\n').filter((l) => /warning|fail|unexplained|flat light|dark face/i.test(l) && !l.includes('##')).slice(0, 12);
-  return <div className="mx-auto max-w-6xl space-y-4">
+  return <div className={stageFrame + ' space-y-4'}>
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.18em] text-studio-amber">Stage 7</div><h1 className="mt-1 text-xl font-semibold">Animatic</h1><p className="mt-1 text-sm text-studio-muted">Watch the cut, jump to a shot, and send notes back to one shot.</p></div><div className="flex items-center gap-2">{stage ? <StatusBadge status={stage.status} /> : null}<Button onClick={() => { video.current?.play(); }}>Play</Button><Button variant="primary" onClick={() => approve.mutate()} disabled={readOnly || stage?.status === 'approved'}>{stage?.status === 'approved' ? 'Approved' : 'Approve animatic'}</Button></div></div>
     {error ? <ErrorNotice error={error} onDismiss={() => setError(null)} /> : null}
     <div className="grid gap-4 lg:grid-cols-[1.45fr_1fr]">

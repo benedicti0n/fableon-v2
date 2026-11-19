@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { approveStage, fileUrl, getPeaks, getProject, getTimeline, json, putFile } from '../api/client';
-import { Badge, Button, DialogShell, ErrorNotice, Field, inputClass, Panel, SelectBox, Spinner, StatusBadge } from '../components/ui';
+import { Badge, Button, DialogShell, ErrorNotice, Field, inputClass, Panel, SelectBox, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { EstimateDialog } from '../components/EstimateDialog';
 
 type PlanKey = Record<string, unknown> & { at?: string };
@@ -43,7 +43,7 @@ export default function Board() {
   if (timelineQ.isLoading || project.isLoading || !tl) return <div className="flex items-center gap-2 text-sm text-studio-muted"><Spinner /> Loading timeline…</div>;
   const pct = (s: number) => `${Math.max(0, Math.min(100, (s / tl.duration) * 100))}%`;
   const bars = peaksQ.data?.peaks ?? [];
-  return <div className="mx-auto max-w-6xl space-y-4">
+  return <div className={stageFrame + ' space-y-4'}>
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.18em] text-studio-amber">Stage 6</div><h1 className="mt-1 text-xl font-semibold">Shot plan &amp; board</h1><p className="mt-1 text-sm text-studio-muted">Shape the scenes over the voice, then let the deterministic board compile and measure.</p></div><div className="flex items-center gap-2">{stage ? <StatusBadge status={stage.status} /> : null}<Button onClick={() => setEstimate({ op: 'shotplan', args: { force: true }, title: 'Run the shot plan' })} disabled={readOnly}>Run shot plan</Button><Button onClick={() => setEstimate({ op: 'board', args: { force: true }, title: 'Run the board' })} disabled={readOnly}>Run board</Button><Button variant="primary" onClick={() => approve.mutate('shotplan')} disabled={readOnly || stage?.status === 'approved'}>{stage?.status === 'approved' ? 'Shot plan approved' : 'Approve shot plan'}</Button>{boardStage && boardStage.status !== 'approved' ? <Button onClick={() => approve.mutate('board')} disabled={readOnly}>Approve board</Button> : null}</div></div>
     {error ? <ErrorNotice error={error} onDismiss={() => setError(null)} /> : null}
     <Panel className="p-3"><div className="relative h-28 overflow-hidden rounded-lg border border-studio-line bg-studio-bg">

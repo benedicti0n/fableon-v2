@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { approveStage, fileUrl, getList, getProject, json, patchProject, text } from '../api/client';
-import { Badge, Button, Empty, ErrorNotice, Panel, Spinner, StatusBadge } from '../components/ui';
+import { Badge, Button, Empty, ErrorNotice, Panel, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { EstimateDialog } from '../components/EstimateDialog';
 
 type Fact = { id: string; claim: string; kind?: string; supports?: string; verified?: boolean; sources?: Array<{ source: string; quote: string }> };
@@ -27,7 +27,7 @@ export default function Research() {
   const approve = useMutation({ mutationFn: () => approveStage(id, 'research'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   const onDrop = (e: React.DragEvent) => { e.preventDefault(); if (!readOnly && e.dataTransfer.files.length) upload.mutate(e.dataTransfer.files); };
   const rows = (facts.data?.facts ?? []).filter((f) => !onlyUsable || f.verified !== false);
-  return <div className="mx-auto max-w-5xl space-y-4">
+  return <div className={stageFrame + ' space-y-4'}>
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.18em] text-studio-amber">Stage 2</div><h1 className="mt-1 text-xl font-semibold">Research</h1><p className="mt-1 text-sm text-studio-muted">Upload source material, then extract only quotes you can verify.</p></div><div className="flex items-center gap-2">{stage ? <StatusBadge status={stage.status} /> : null}<Button variant="primary" onClick={() => setEstimateOpen(true)} disabled={readOnly}>Run research</Button><Button onClick={() => approve.mutate()} disabled={readOnly || stage?.status === 'approved'}>{stage?.status === 'approved' ? 'Approved' : 'Approve'}</Button></div></div>
     {error ? <ErrorNotice error={error} onDismiss={() => setError(null)} /> : null}
     <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">

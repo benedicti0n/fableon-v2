@@ -19,9 +19,15 @@ export function LeftRail() {
     <div className="mt-4 flex-1 overflow-auto px-2">
       <div className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-[.16em] text-studio-faint">Projects</div>
       {q.isLoading ? <div className="px-2 py-2 text-xs text-studio-muted">Loading…</div> : null}
-      {(() => { const { work, fixtures } = splitProjects(q.data?.projects ?? []); return [...work, ...fixtures]; })().map((p) => <NavLink key={`${p.source}:${p.id}`} to={`/p/${encodeURIComponent(p.id)}/brief`} className={({ isActive }) => `mb-0.5 flex items-center gap-2 rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${p.readOnly ? 'bg-studio-teal' : 'bg-studio-amber'}`} /><span className="min-w-0 flex-1 truncate">{p.title}</span>{p.readOnly ? <span className="text-[9px] uppercase text-studio-faint">fix</span> : null}
-      </NavLink>)}
+      {(() => {
+        const { work, fixtures } = splitProjects(q.data?.projects ?? []);
+        const list = [...work, ...fixtures];
+        const counts = new Map<string, number>();
+        for (const p of list) counts.set(p.title, (counts.get(p.title) ?? 0) + 1);
+        return list.map((p) => <NavLink key={`${p.source}:${p.id}`} to={`/p/${encodeURIComponent(p.id)}/brief`} className={({ isActive }) => `mb-0.5 flex items-center gap-2 rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>
+          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${p.readOnly ? 'bg-studio-teal' : 'bg-studio-amber'}`} /><span className="min-w-0 flex-1"><span className="block truncate">{p.title}</span>{(counts.get(p.title) ?? 0) > 1 ? <span className="block truncate font-mono text-[9px] text-studio-faint">{p.id}</span> : null}</span>{p.readOnly ? <span className="text-[9px] uppercase text-studio-faint">fix</span> : null}
+        </NavLink>);
+      })()}
     </div>
     <div className="border-t border-studio-line p-2"><NavLink to="/settings" className={({ isActive }) => `block rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>Settings &amp; usage</NavLink></div>
   </aside>;

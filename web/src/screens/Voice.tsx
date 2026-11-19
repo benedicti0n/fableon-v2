@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import WaveSurfer from 'wavesurfer.js';
 import { approveStage, fileUrl, getKeys, getList, getPeaks, getProject, getVoices, json, patchProject, putFile, runOp, text } from '../api/client';
-import { Badge, Button, Empty, ErrorNotice, Field, inputClass, Panel, SelectBox, Spinner, StatusBadge } from '../components/ui';
+import { Badge, Button, Empty, ErrorNotice, Field, inputClass, Panel, SelectBox, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { EstimateDialog } from '../components/EstimateDialog';
 import { Markdown } from '../lib/markdown';
 
@@ -60,7 +60,7 @@ export default function Voice() {
   const approve = useMutation({ mutationFn: () => approveStage(id, 'voice'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   const choosePace = useMutation({ mutationFn: (pace: number) => runOp(id, 'voice-pace', { choose: pace }), onSuccess: () => { qc.invalidateQueries({ queryKey: ['project', id] }); qc.invalidateQueries({ queryKey: ['file', id, 'voice.wav'] }); }, onError: setError });
   const credit = voicesQ.data?.credit;
-  return <div className="mx-auto max-w-6xl space-y-4">
+  return <div className={stageFrame + ' space-y-4'}>
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.18em] text-studio-amber">Stage 4</div><h1 className="mt-1 text-xl font-semibold">Voice</h1><p className="mt-1 text-sm text-studio-muted">Cast the narration, hear every word against the timeline, and approve.</p></div><div className="flex items-center gap-2">{stage ? <StatusBadge status={stage.status} /> : null}<Button variant="primary" onClick={() => setEstimateOpen(true)} disabled={readOnly}>Run voice</Button><Button onClick={() => approve.mutate()} disabled={readOnly || stage?.status === 'approved'}>{stage?.status === 'approved' ? 'Approved' : 'Approve'}</Button></div></div>
     {error ? <ErrorNotice error={error} onDismiss={() => setError(null)} /> : null}
     <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
