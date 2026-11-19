@@ -25,6 +25,9 @@ const Board = React.lazy(() => import('./screens/Board'));
 const Animatic = React.lazy(() => import('./screens/Animatic'));
 const Finish = React.lazy(() => import('./screens/Finish'));
 const Publish = React.lazy(() => import('./screens/Publish'));
+const Queue = React.lazy(() => import('./screens/Queue'));
+const Presets = React.lazy(() => import('./screens/Presets'));
+const Costs = React.lazy(() => import('./screens/Costs'));
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: true } } });
 
@@ -33,9 +36,12 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
   const q = useQueryClient();
   const loc = useLocation();
   const [activity, setActivity] = React.useState(true);
+  const [budgetAlert, setBudgetAlert] = React.useState<string | null>(null);
   const current = loc.pathname.split('/').pop() ?? 'brief';
   const project = useQuery({ queryKey: ['project', id], queryFn: () => getProject(id), enabled: !!id });
   useEvents(id, (e) => {
+    if (e.type === 'budget') { setBudgetAlert(e.message ?? 'A budget threshold was crossed.'); q.invalidateQueries({ queryKey: ['costs'] }); }
+    if (e.type === 'queue') { q.invalidateQueries({ queryKey: ['queue'] }); return; }
     if (e.type === 'progress') { q.invalidateQueries({ queryKey: ['jobs', id] }); return; }
     if (e.type === 'status' || (e.type === 'job' && ['done', 'failed', 'cancelled', 'interrupted'].includes(e.status ?? ''))) {
       q.invalidateQueries({ queryKey: ['project', id] }); q.invalidateQueries({ queryKey: ['stages', id] }); q.invalidateQueries({ queryKey: ['jobs', id] });
@@ -53,6 +59,7 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
         </div>
         <div className="mt-3"><Stepper project={id} current={current} /></div>
       </header>
+      {budgetAlert ? <div role="alert" className="flex items-center justify-between border-b border-studio-amber/40 bg-studio-amber/10 px-5 py-2 text-xs text-studio-amber"><span>Budget: {budgetAlert}</span><button onClick={() => setBudgetAlert(null)} className="text-studio-muted hover:text-studio-text">Dismiss</button></div> : null}
       <main className="min-h-0 flex-1 overflow-auto px-5 py-5">{children}</main>
     </div>
     <ActivityPanel project={id} open={activity} onToggle={() => setActivity((v) => !v)} />
@@ -62,6 +69,9 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
 function App() {
   return <BrowserRouter><React.Suspense fallback={<div className="flex h-full items-center justify-center text-sm text-studio-muted">Loading studio…</div>}><Routes>
     <Route path="/" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Projects /></main></div>} />
+    <Route path="/queue" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Queue /></main></div>} />
+    <Route path="/costs" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Costs /></main></div>} />
+    <Route path="/presets" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Presets /></main></div>} />
     <Route path="/settings" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Settings /></main></div>} />
     <Route path="/p/:id" element={<Navigate to="brief" replace />} />
     {['brief', 'research', 'script', 'voice', 'cast', 'shotplan', 'board', 'animatic', 'finish', 'publish'].map((stage) => <Route key={stage} path={`/p/:id/${stage}`} element={<ProjectFrame>{stage === 'brief' ? <Brief /> : stage === 'research' ? <Research /> : stage === 'script' ? <Script /> : stage === 'voice' ? <Voice /> : stage === 'cast' ? <Cast /> : stage === 'publish' ? <Publish /> : stage === 'finish' ? <Finish /> : stage === 'board' || stage === 'shotplan' ? <Board /> : <Animatic />}</ProjectFrame>} />)}

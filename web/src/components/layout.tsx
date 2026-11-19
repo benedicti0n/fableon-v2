@@ -29,7 +29,7 @@ export function LeftRail() {
         </NavLink>);
       })()}
     </div>
-    <div className="border-t border-studio-line p-2"><NavLink to="/settings" className={({ isActive }) => `block rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>Settings &amp; usage</NavLink></div>
+    <div className="border-t border-studio-line p-2 space-y-0.5"><NavLink to="/queue" className={({ isActive }) => `block rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>Production queue</NavLink><NavLink to="/costs" className={({ isActive }) => `block rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>Costs</NavLink><NavLink to="/settings" className={({ isActive }) => `block rounded-md px-2.5 py-2 text-xs ${isActive ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>Settings &amp; usage</NavLink></div>
   </aside>;
 }
 

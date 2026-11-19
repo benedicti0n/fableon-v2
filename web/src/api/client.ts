@@ -106,3 +106,22 @@ export const openExport = (id: string, path: string) => json<{ path: string; ope
 export const recomposeCover = (id: string, selection: Record<string, unknown>) => json<{ cover: string; candidate: string }>(`/api/projects/${encodeURIComponent(id)}/publish/cover`, { method: 'POST', body: JSON.stringify({ selection }) });
 export const overridePublish = (id: string, reason: string) => json<{ project: string; reason: string }>(`/api/projects/${encodeURIComponent(id)}/publish/override`, { method: 'POST', body: JSON.stringify({ reason }) });
 export const markPublished = (id: string, body: { platform: string; url: string; publishedAt: string }) => json<unknown>(`/api/projects/${encodeURIComponent(id)}/published`, { method: 'POST', body: JSON.stringify(body) });
+
+export type Preset = { version: 1; id: string; name: string; format: 'short-vertical' | 'long-16x9'; seconds: number; language: 'hi' | 'en'; voice: Record<string, unknown>; models: Record<string, unknown>; research: { web?: boolean; library?: string[] }; mix?: Record<string, number>; render: { quality: 'preview' | 'final'; workers: number }; gates: string[]; budgetUsd: number; publish: { enabled: boolean; profiles: string[]; subtitles?: { hi?: boolean; en?: boolean }; coverTemplate?: string }; builtIn?: boolean };
+export type QueueItem = { id: string; project: string; projectDir?: string; presetId: string; action: string; to: string; status: string; gates: string[]; budgetUsd: number; estimate: { lowUsd: number; highUsd: number }; spent: number; jobId: string | null; note: string | null; createdAt: string };
+export const getPresets = () => json<{ presets: Preset[] }>('/api/presets');
+export const savePreset = (p: Preset) => json<Preset>(`/api/presets/${encodeURIComponent(p.id)}`, { method: 'PUT', body: JSON.stringify(p) });
+export const deletePreset = (id: string) => json<{ deleted: boolean }>(`/api/presets/${encodeURIComponent(id)}`, { method: 'DELETE' });
+export const getLibrary = () => json<{ files: Array<{ name: string; size: number }> }>('/api/library');
+export const getQueue = () => json<{ paused: boolean; items: QueueItem[] }>('/api/queue');
+export const queueFromPreset = (body: { presetId: string; topics: string[]; library?: string[] }) => json<{ preset: Preset; items: Array<{ item: QueueItem; project: unknown }>; estimate: { lowUsd: number; highUsd: number } }>('/api/queue/from-preset', { method: 'POST', body: JSON.stringify(body) });
+export const queueStart = () => json<{ paused: boolean }>('/api/queue/start', { method: 'POST', body: '{}' });
+export const queuePause = (now = false) => json<{ paused: boolean }>('/api/queue/pause', { method: 'POST', body: JSON.stringify({ now }) });
+export const queueAction = (id: string, action: string, body: Record<string, unknown> = {}) => json<unknown>(`/api/queue/${encodeURIComponent(id)}/${action}`, { method: 'POST', body: JSON.stringify(body) });
+
+export type CostRow = { ts: string; project: string; stage: string; provider: string; model: string; costUsd: number; cached: boolean; estimated: boolean; characters: number };
+export type CostSummary = { month: string; spend: number; effective: number; budget: number; budgetLeft: number; forecast: number; cacheCalls: number; cacheSavings: number; byProvider: Array<{ provider: string; usd: number; effectiveUsd: number; calls: number; cached: number; characters: number }>; byStage: Array<{ stage: string; usd: number; calls: number }>; byDay: Array<{ day: string; usd: number; providers: Record<string, number> }>; byProject: Array<{ project: string; usd: number; stages: Record<string, number>; providers: Record<string, number>; auditions: number; minutes: number; machineMinutes: number }>; averages: { perFilm: number; perMinute: number }; budgets: Record<string, unknown>; alerts: Array<{ threshold: number; pct: number }>; totals: { films: number; minutes: number; rows: number } };
+export const getCosts = (month: string) => json<CostSummary>(`/api/costs?month=${encodeURIComponent(month)}`);
+export const getBudgets = () => json<Record<string, unknown>>('/api/costs/budgets');
+export const saveBudgets = (data: Record<string, unknown>) => json<Record<string, unknown>>('/api/costs/budgets', { method: 'PUT', body: JSON.stringify(data) });
+export const getBalances = () => json<{ deepseek?: Record<string, unknown>; elevenlabs?: Record<string, unknown> }>('/api/costs/balances');
