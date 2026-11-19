@@ -1,0 +1,13 @@
+{
+  "name": "@fableon/server",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local backend API for the Fableon pipeline",
+  "type": "module",
+  "main": "src/server.js",
+  "dependencies": {
+    "@fastify/multipart": "^10.1.9",
+    "@fastify/websocket": "^11.3.7",
+    "fastify": "^5.12.8"
+  }
+}

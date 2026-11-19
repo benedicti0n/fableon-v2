@@ -5,7 +5,8 @@
   "description": "Fableon: local, stage-wise generator for vertical cartoon story shorts",
   "workspaces": [
     "engine",
-    "cli"
+    "cli",
+    "server"
   ],
   "engines": {
     "node": ">=20"

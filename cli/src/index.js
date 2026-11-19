@@ -43,6 +43,19 @@ export function main(argv = process.argv) {
     .version('0.1.0');
 
   program
+    .command('serve')
+    .description('start the local backend API on 127.0.0.1')
+    .option('--port <n>', 'port', '4317')
+    .option('--root <dir>', 'project root', 'work')
+    .option('--open', 'open the token URL in the browser')
+    .action(async (opts) => {
+      try {
+        const { startServer } = await import('@fableon/server');
+        await startServer({ port: Number(opts.port), root: opts.root, open: !!opts.open });
+      } catch (e) { printError(e); process.exit(1); }
+    });
+
+  program
     .command('doctor')
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
