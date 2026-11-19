@@ -121,7 +121,7 @@ export function estimate(ctx, body = {}) {
   const out = { ...V, op, project: ctx.id, provider: null, calls: 0, characters: 0, cachedCharacters: 0, usd: 0, notes: [] };
   const scriptLines = script?.lines ?? [];
   const textChars = scriptLines.reduce((n, l) => n + Array.from(String(l.text)).length, 0);
-  if ((op === 'run' && ['voice', 'factcheck', 'script', 'cast', 'shotplan', 'board', 'sound', 'animatic'].includes(stage)) || ['voice-audition', 'voice-pace', 'cast', 'shotplan', 'board', 'lookdev', 'lookcheck', 'review', 'stills', 'animatic', 'final', 'script-lines'].includes(op)) {
+  if ((op === 'run' && ['voice', 'factcheck', 'script', 'brief', 'research', 'performance', 'cast', 'shotplan', 'board', 'sound', 'animatic'].includes(stage)) || ['voice-audition', 'voice-pace', 'cast', 'shotplan', 'board', 'lookdev', 'lookcheck', 'review', 'stills', 'animatic', 'final', 'script-lines'].includes(op)) {
     if (stage === 'voice' || op === 'voice-audition' || op === 'voice-pace' || (op === 'run' && stage === 'voice')) {
       const provider = project.voice?.provider ?? project.voice?.engine ?? 'kokoro';
       const model = project.voice?.model ?? (provider === 'kokoro' ? 'kokoro' : provider === 'sarvam' ? 'bulbul:v4-flash' : 'eleven_multilingual_v2');
@@ -138,7 +138,8 @@ export function estimate(ctx, body = {}) {
         out.cachedCharacters = 0;
         out.notes.push('Cache hits are subtracted at run time from the provider cache.');
       }
-      if (provider === 'kokoro') { out.usd = 0; out.notes.push('Local Kokoro: no per-character bill.'); }
+      if (provider === 'mock') { out.usd = 0; out.notes.push('Test voice provider: no request, no bill.'); }
+      else if (provider === 'kokoro') { out.usd = 0; out.notes.push('Local Kokoro: no per-character bill.'); }
       else if (provider === 'sarvam') {
         const inr = (out.characters / 1000) * (repo.voicePrices?.sarvam?.[model] ?? 2);
         out.inr = +inr.toFixed(2); out.usd = +(inr / (repo.voicePrices?.inrPerUsd ?? 88)).toFixed(4);
