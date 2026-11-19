@@ -9,7 +9,10 @@ from PIL import Image
 glow, noglow, mask_path = sys.argv[1], sys.argv[2], sys.argv[3]
 a = np.asarray(Image.open(glow).convert("RGB"), dtype=np.int16)
 b = np.asarray(Image.open(noglow).convert("RGB"), dtype=np.int16)
-m = np.asarray(Image.open(mask_path).convert("L")) >= 250
+raw = np.asarray(Image.open(mask_path).convert("L")) == 255
+# The 2x soft mask has a 1 px coverage edge; SMAA can blend the world into that edge. Test the solid interior.
+p = np.pad(raw, 1, mode="constant", constant_values=False)
+m = p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:] & p[:-2, :-2] & p[:-2, 2:] & p[2:, :-2] & p[2:, 2:]
 d = np.abs(a - b).max(2)
 l = (0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]) / 255.0
 print(json.dumps({
