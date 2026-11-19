@@ -7,7 +7,7 @@ import { Badge, Button, IconButton, Progress, StatusBadge } from './ui';
 export const STAGE_ROUTES = [
   { key: 'brief', label: 'Brief' }, { key: 'research', label: 'Research' }, { key: 'script', label: 'Script' },
   { key: 'voice', label: 'Voice' }, { key: 'cast', label: 'Cast' }, { key: 'shotplan', label: 'Shot plan' },
-  { key: 'board', label: 'Board' }, { key: 'animatic', label: 'Animatic' }, { key: 'finish', label: 'Finish' },
+  { key: 'board', label: 'Board' }, { key: 'animatic', label: 'Animatic' }, { key: 'finish', label: 'Finish' }, { key: 'publish', label: 'Publish' },
 ];
 
 export function LeftRail() {

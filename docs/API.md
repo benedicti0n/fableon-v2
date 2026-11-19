@@ -43,6 +43,8 @@ fableon serve --root work
 | POST | `/api/projects/:id/sources` | multipart source upload |
 | GET | `/api/projects/:id/history?path=` | `.fableon/history` versions |
 | POST | `/api/projects/:id/history/restore` | restore `{version}` |
+| GET | `/api/projects/overview` | projects with stage dots, cover, spend and published state |
+| GET | `/api/projects/:id/exports` | export folders for the film |
 | GET/PUT | `/api/settings/channel` | channel profile used by the publish prompt |
 | POST | `/api/projects/:id/published` | record a manual YouTube/Instagram publish |
 | POST | `/api/projects/:id/publish/cover` | recompose the cover from a candidate/template |

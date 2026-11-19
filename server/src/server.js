@@ -2,7 +2,7 @@
 import Fastify from 'fastify';
 import multipart from '@fastify/multipart';
 import websocket from '@fastify/websocket';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT } from '../../cli/src/env.js';
@@ -132,6 +132,13 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   app.post('/api/projects', async (req, reply) => {
     const ctx = P.createProject(projectRoot, req.body ?? {});
     return reply.code(201).send(P.details(ctx));
+  });
+  app.get('/api/projects/overview', async () => {
+    return { projects: P.listProjects(projectRoot).map((p) => {
+      const d = P.details(P.resolveProject(projectRoot, p.id));
+      const cover = existsSync(join(p.path, 'publish', 'cover.jpg')) ? `/api/projects/${encodeURIComponent(p.id)}/files/publish/cover.jpg` : null;
+      return { ...p, stages: d.stages, usage: d.usage, project: { seconds: d.project.seconds, language: d.project.language, published: d.project.published ?? null, tags: d.project.tags ?? [] }, cover };
+    }) };
   });
   app.get('/api/projects/:id', async (req) => P.details(ctxOf(req.params.id)));
   app.patch('/api/projects/:id', async (req) => P.patchProject(ctxOf(req.params.id), req.body ?? {}));
@@ -335,7 +342,16 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     const ctx = ctxOf(req.params.id);
     const data = existsSync(join(ctx.dir, 'publish', 'publish.json')) ? JSON.parse(readFileSync(join(ctx.dir, 'publish', 'publish.json'), 'utf8')) : {};
     const selection = { ...(data.selection ?? {}), ...(req.body?.selection ?? req.body ?? {}) };
-    return recomposeCover(ctx.dir, { ...data, selection });
+    const result = await recomposeCover(ctx.dir, { ...data, selection });
+    atomicWrite(join(ctx.dir, 'publish', 'publish.json'), JSON.stringify({ ...data, selection }, null, 2) + '\n');
+    return result;
+  });
+  app.get('/api/projects/:id/exports', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const rootExports = join(projectRoot, 'exports');
+    const prefix = `-${ctx.id}`;
+    const dirs = existsSync(rootExports) ? readdirSync(rootExports, { withFileTypes: true }).filter((e) => e.isDirectory() && e.name.endsWith(prefix)).map((e) => ({ name: e.name, path: join(rootExports, e.name) })).sort((a, b) => b.name.localeCompare(a.name)) : [];
+    return { exports: dirs };
   });
   app.post('/api/projects/:id/exports/open', async (req) => {
     const ctx = ctxOf(req.params.id);

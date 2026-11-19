@@ -96,3 +96,13 @@ export function splitProjects<T extends { id: string; source: string }>(projects
 export type FinalPlanSegment = { shot: string; scene: string; frames: number; cached: boolean; reason: string | null; file: string; hash: string; lookHash?: string };
 export type FinalPlan = { project: string; engine: string; quality: string; size: string; totalFrames: number; framesToRender: number; audioOnly: boolean; assembleOnly: boolean; estMinutes: number; diskNeedMB: number; segments: FinalPlanSegment[]; transitions: Array<{ index: number; type: string; frames: number; at: number; start: number; end: number; file: string; cached: boolean; reason: string | null }> };
 export const getFinalPlan = (id: string) => json<FinalPlan>(`/api/projects/${encodeURIComponent(id)}/final/plan`);
+
+export type Channel = { name: string; footer?: string; links?: string[]; hashtags?: string[]; category?: string; madeForKids?: boolean };
+export const getChannel = () => json<Channel>('/api/settings/channel');
+export const putChannel = (data: Channel) => json<Channel>('/api/settings/channel', { method: 'PUT', body: JSON.stringify(data) });
+export const getOverview = () => json<{ projects: Array<{ id: string; title: string; readOnly: boolean; source: string; cover: string | null; stages: StageRow[]; usage: { costUsd: number; calls: number; cached: number }; project: { seconds: number; language: string; published?: { platform: string; url: string; publishedAt: string } | null; tags?: string[] } }> }>('/api/projects/overview');
+export const getExports = (id: string) => json<{ exports: Array<{ name: string; path: string }> }>(`/api/projects/${encodeURIComponent(id)}/exports`);
+export const openExport = (id: string, path: string) => json<{ path: string; opened: boolean }>(`/api/projects/${encodeURIComponent(id)}/exports/open`, { method: 'POST', body: JSON.stringify({ path }) });
+export const recomposeCover = (id: string, selection: Record<string, unknown>) => json<{ cover: string; candidate: string }>(`/api/projects/${encodeURIComponent(id)}/publish/cover`, { method: 'POST', body: JSON.stringify({ selection }) });
+export const overridePublish = (id: string, reason: string) => json<{ project: string; reason: string }>(`/api/projects/${encodeURIComponent(id)}/publish/override`, { method: 'POST', body: JSON.stringify({ reason }) });
+export const markPublished = (id: string, body: { platform: string; url: string; publishedAt: string }) => json<unknown>(`/api/projects/${encodeURIComponent(id)}/published`, { method: 'POST', body: JSON.stringify(body) });
