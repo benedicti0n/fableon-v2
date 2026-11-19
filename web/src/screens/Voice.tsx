@@ -22,7 +22,7 @@ export default function Voice() {
   const keysQ = useQuery({ queryKey: ['settings', 'keys'], queryFn: getKeys });
   const auditionsQ = useQuery({ queryKey: ['list', id, 'voice/auditions'], queryFn: () => getList(id, 'voice/auditions').catch(() => ({ dir: '', files: [] })) });
   const paceQ = useQuery({ queryKey: ['list', id, 'voice/pace'], queryFn: () => getList(id, 'voice/pace').catch(() => ({ dir: '', files: [] })) });
-  const peaksQ = useQuery({ queryKey: ['peaks', id, 'voice.wav'], queryFn: () => getPeaks(id, 'voice.wav', 1200).catch(() => null) });
+  const peaksQ = useQuery({ queryKey: ['peaks', id, 'voice.wav'], queryFn: () => getPeaks(id, 'voice.wav', 420).catch(() => null) });
   const [error, setError] = React.useState<unknown>(null);
   const [estimateOpen, setEstimateOpen] = React.useState(false);
   const [voice, setVoice] = React.useState<ProjectVoice>({});
@@ -40,7 +40,7 @@ export default function Voice() {
   React.useEffect(() => {
     if (!container || !peaksQ.data) return;
     const values = peaksQ.data.peaks.map((p) => Math.max(Math.abs(p.min), Math.abs(p.max)));
-    const w = WaveSurfer.create({ container, height: 86, waveColor: '#3a4658', progressColor: '#f5a524', cursorColor: '#e7e9ee', barWidth: 2, barGap: 1, barRadius: 1, normalize: true, url: fileUrl(id, 'voice.wav') });
+    const w = WaveSurfer.create({ container, height: 86, waveColor: '#3a4658', progressColor: '#f5a524', cursorColor: '#e7e9ee', barWidth: 2, barGap: 1, barRadius: 1, normalize: true });
     w.load(fileUrl(id, 'voice.wav'), [values], peaksQ.data.duration).catch(() => {});
     w.on('ready', () => setDuration(w.getDuration()));
     w.on('timeupdate', (t) => { setTime(t); if (loop.current && t >= loop.current.end) { w.setTime(loop.current.start); w.play(); } });

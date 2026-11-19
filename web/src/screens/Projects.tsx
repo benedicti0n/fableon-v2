@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, DialogShell, Empty, ErrorNotice, Field, inputClass, Panel, SelectBox } from '../components/ui';
-import { json } from '../api/client';
+import { json, splitProjects } from '../api/client';
 
 type P = { id: string; title: string; path: string; readOnly: boolean; source: string; updatedAt: string };
 const list = () => json<{ projects: P[] }>('/api/projects');
@@ -23,8 +23,7 @@ export default function Projects() {
   const a = useMutation({ mutationFn: archive, onSuccess: () => qc.invalidateQueries({ queryKey: ['projects'] }), onError: setError });
   const open = params.get('new') === '1';
   const projects = q.data?.projects ?? [];
-  const work = projects.filter((p) => p.source === 'work');
-  const fixtures = projects.filter((p) => p.source === 'fixture');
+  const { work, fixtures } = splitProjects(projects);
   const submit = (e: React.FormEvent) => { e.preventDefault(); setError(null); m.mutate({ topic, seconds: Number(seconds), language, voice }); };
   return <div className="mx-auto max-w-5xl">
     <div className="flex items-end justify-between"><div><div className="text-[10px] font-semibold uppercase tracking-[.2em] text-studio-amber">Studio</div><h1 className="mt-1 text-2xl font-semibold">Projects</h1><p className="mt-1 text-sm text-studio-muted">Local films, from a brief to an animatic.</p></div><Button variant="primary" onClick={() => setParams({ new: '1' })}>+ New project</Button></div>
