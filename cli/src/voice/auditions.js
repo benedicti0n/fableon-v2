@@ -3,6 +3,8 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { dirname, join } from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { capture, loadDotEnv } from '../env.js';
+import { basename } from 'node:path';
+import { emitStage } from '../core/events.js';
 import { atomicWrite } from '../core/artifacts.js';
 import { voiceApiKey, voicePricePer1k } from './elevenlabs.js';
 
@@ -98,6 +100,8 @@ async function take({ projectDir, key, model, voiceId, text }) {
 
 export async function runAuditions(projectDir, { voices = 4, models = null } = {}) {
   loadDotEnv();
+  const projectId = basename(projectDir);
+  emitStage(projectId, 'voice-audition', { op: 'voice-audition', status: 'running' });
   const key = voiceApiKey();
   if (!key) {
     console.log('provider: elevenlabs');
@@ -152,5 +156,6 @@ export async function runAuditions(projectDir, { voices = 4, models = null } = {
   ];
   writeFileSync(join(out, 'auditions.md'), lines.join('\n'));
   console.log(`auditions: ${out} (${rows.length} takes, ${totalChars} chars, $${totalCost.toFixed(4)})`);
+  emitStage(projectId, 'voice-audition', { op: 'voice-audition', status: rows.length ? 'done' : 'failed' });
   return { ok: rows.length > 0, dir: out, rows, errors, characters: totalChars, costUsd: totalCost, models: chosenModels, voices: found.candidates };
 }

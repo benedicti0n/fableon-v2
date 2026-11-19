@@ -2,8 +2,9 @@
 // assemble, qa, all).
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
+import { listOps } from './core/ops.js';
 import { printError } from './core/errors.js';
-import { takeEventsFlag, eventsEnabled, emitJob, setCurrentJob } from './core/events.js';
+import { takeEventsFlag, eventsEnabled, emitJob, finishJob, setCurrentJob } from './core/events.js';
 import { validateCommand } from './validate.js';
 import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
@@ -31,7 +32,10 @@ import {
 
 export function main(argv = process.argv) {
   const { argv: cleanArgv, events } = takeEventsFlag(argv);
-  if (events) setCurrentJob(process.env.FABLEON_JOB_ID ?? null);
+  if (events) {
+    setCurrentJob(process.env.FABLEON_JOB_ID ?? null);
+    process.once('SIGTERM', () => { if (!finishJob('cancelled', { message: 'cancelled' })) return; setTimeout(() => process.exit(143), 250); });
+  }
   const program = new Command();
   program
     .name('fableon')
@@ -42,6 +46,25 @@ export function main(argv = process.argv) {
     .command('doctor')
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
+
+  program
+    .command('ops')
+    .description('list the shared operations registry')
+    .option('--list', 'list operations')
+    .option('--json', 'machine-readable json')
+    .action((opts) => {
+      const rows = listOps();
+      if (opts.json) { process.stdout.write(JSON.stringify(rows, null, 2) + '\n'); return; }
+      console.log('name              kind   heavy  cancellable  description');
+      console.log('----------------  -----  -----  -----------  -----------');
+      for (const o of rows) console.log(`${o.name.padEnd(16)} ${o.kind.padEnd(6)} ${String(o.heavy).padEnd(6)} ${String(o.cancellable).padEnd(12)} ${o.description}`);
+    });
+
+  program
+    .command('mock-sleep')
+    .description('test-only heavy job')
+    .option('--ms <n>', 'sleep duration', '1000')
+    .action(async (opts) => { await new Promise((r) => setTimeout(r, Number(opts.ms ?? 1000))); console.log('mock-sleep done'); });
 
   program
     .command('new <dir>')

@@ -2,7 +2,8 @@
 // The glow share is measured on background pixels only: the coverage pass gives the actor/special mask for each sample.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { basename, join, resolve } from 'node:path';
+import { emitStage } from './core/events.js';
 import { findPython, RENDER_CJS, ROOT, run } from './env.js';
 
 const sampleFrames = (board, qa) => {
@@ -19,6 +20,8 @@ const sampleFrames = (board, qa) => {
 
 export async function lookcheckCommand(dirArg, videoArg = 'animatic') {
   const dir = resolve(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'lookcheck', { op: 'lookcheck', status: 'running' });
   const video = videoArg === 'final' ? join(dir, 'final.mp4') : videoArg === 'animatic' ? join(dir, 'animatic.mp4') : resolve(videoArg);
   if (!existsSync(video)) throw new Error(`lookcheck: ${video} is missing`);
   if (!existsSync(join(dir, 'frames.json')) || !existsSync(join(dir, 'board.json')) || !existsSync(join(dir, 'qa_meta.json'))) {
@@ -50,5 +53,6 @@ export async function lookcheckCommand(dirArg, videoArg = 'animatic') {
   if (masks) args.push(join(dir, 'look-masks.json'));
   await run(py, args, { cwd: process.cwd() });
   const report = JSON.parse(readFileSync(join(dir, 'look-qa.json'), 'utf8'));
+  emitStage(project, 'lookcheck', { op: 'lookcheck', status: 'done', data: { warnings: (report.warnings ?? []).length } });
   return { report, warnings: report.warnings ?? [], file: join(dir, 'look-qa.md') };
 }

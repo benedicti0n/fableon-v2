@@ -1,7 +1,8 @@
 // Look-dev sheet: render each scene's key frame in three candidate moods so the user can choose the lighting.
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, relative } from 'node:path';
+import { basename, join, relative } from 'node:path';
+import { emitStage } from './core/events.js';
 import { findPython, ROOT, run } from './env.js';
 import { makeContext } from './frames.js';
 import { parseAnchor } from './authoring.js';
@@ -16,6 +17,8 @@ const ALTS = {
 };
 
 export async function lookdevCommand(dirArg, outArg = null) {
+  const projectId = basename(resolve(dirArg));
+  emitStage(projectId, 'lookdev', { op: 'lookdev', status: 'running' });
   const dir = dirArg;
   const boardPath = join(dir, 'board.json');
   const sbPath = join(dir, 'storyboard.json');
@@ -59,6 +62,7 @@ export async function lookdevCommand(dirArg, outArg = null) {
     const sceneList = [...new Set(cells.map((c) => c.scene))];
     const pages = Math.max(1, Math.ceil(sceneList.length / 3));
     const outs = Array.from({ length: pages }, (_, i) => join(outDir, `lookdev-${project.id}${i ? `-${i + 1}` : ''}.jpg`));
+    emitStage(projectId, 'lookdev', { op: 'lookdev', status: 'done', data: { scenes: sceneList.length } });
     return { out: outs[0], outs, cells, scenes: sceneList };
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 }

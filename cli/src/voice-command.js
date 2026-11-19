@@ -8,6 +8,8 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join as pjoin } from 'node:path';
 import { ROOT } from './env.js';
 import { buildPaceVariants, choosePace, DEFAULT_PACES } from './voice/pace.js';
+import { basename } from 'node:path';
+import { emitStage } from './core/events.js';
 
 export async function voiceCheckCommand(opts = {}) {
   loadDotEnv();
@@ -31,6 +33,8 @@ export async function voiceCheckCommand(opts = {}) {
 
 export async function voicePaceCommand(projectDirArg, opts = {}) {
   const projectDir = resolve(projectDirArg);
+  const projectId = basename(projectDir);
+  emitStage(projectId, 'voice-pace', { op: 'voice-pace', status: 'running' });
   const project = readJson(join(projectDir, 'project.json'));
   const script = readJson(join(projectDir, 'script.json'));
   const lines = script.lines ?? [];
@@ -39,6 +43,7 @@ export async function voicePaceCommand(projectDirArg, opts = {}) {
     const r = await choosePace({ projectDir, project, lines, pace: Number(opts.choose) });
     console.log(`voice pace: chose ${r.pace.toFixed(2)}; wrote voice.wav (${r.duration.toFixed(2)} s), words.json (${r.words.length} words) and voice.pace in project.json`);
     console.log(`  pauses: ${r.cuts.dramatic} dramatic, ${r.cuts.other} other, ${r.cuts.beatGaps} beat; base take ${r.base.hash.slice(0, 12)}`);
+    emitStage(projectId, 'voice-pace', { op: 'voice-pace', status: 'done' });
     return r;
   }
   const paces = opts.paces ? String(opts.paces).split(',').map((x) => Number(x.trim())).filter((x) => Number.isFinite(x)) : DEFAULT_PACES;
@@ -46,6 +51,7 @@ export async function voicePaceCommand(projectDirArg, opts = {}) {
   console.log(`voice pace: base take ${r.base.hash.slice(0, 12)} is ${r.base.duration.toFixed(2)} s, ${r.base.words.length} words; no provider request`);
   for (const v of r.variants) console.log(`  ${v.pace.toFixed(2)}  ${v.duration.toFixed(2)} s  ${v.wordsPerSecond.toFixed(3)} words/s  voice/pace/${v.pace.toFixed(2)}.wav`);
   console.log(`voice pace: wrote voice/pace/pace.md; choose one with --choose <pace>`);
+  emitStage(projectId, 'voice-pace', { op: 'voice-pace', status: 'done' });
   return r;
 }
 

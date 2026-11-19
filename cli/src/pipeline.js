@@ -1,12 +1,13 @@
 // Phase 1 pipeline: init -> voice -> shots -> stills/render -> audio -> assemble -> qa (all against one project folder).
 import { existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { assertProjectInputs, initProject, projectDir, quality, requireFile } from './project.js';
 import { validateStoryboard } from './validate.js';
 import { balance } from './jobs.js';
 import { withProjectLock } from './core/lock.js';
+import { emitStage, emitProgress, emitLog, finishJob } from './core/events.js';
 import { makeContext } from './frames.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -66,6 +67,8 @@ export async function stillsCommand(...args) { return withProjectLock(projectDir
 
 async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'stills', { op: 'stills', status: 'running' });
   prepare(dir);
   const q = quality(qualityName);
   let frames = framesCsv;
@@ -85,6 +88,7 @@ async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv) {
   if (!frames) throw new Error('missing --frames 60,640');
   await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', frames, '--project', dir, '--size', q.size, '--msaa', '0'], { cwd: ROOT });
   console.log(`stills: wrote ${join(dir, 'stills')}`);
+  emitStage(project, 'stills', { op: 'stills', status: 'done' });
 }
 
 function worker(dir, jobsFile, q, i) {
@@ -113,22 +117,32 @@ async function workers(dir, segs, q, n) {
   console.log(`render: ${segs.length} clips, ${frames(segs)} frames, ${n} worker(s) [${load.join(' + ')} frames]`);
   const total = frames(segs), doneAtStart = segs.filter((s) => existsSync(s[2])).reduce((a, s) => a + s[1] - s[0], 0);
   const t0 = Date.now();
+  const project = basename(dir);
+  emitStage(project, 'render', { op: 'render', status: 'running' });
   const kids = jobs.map((f, i) => worker(dir, f, q, i));
   const timer = setInterval(() => {
     const done = segs.filter((s) => existsSync(s[2])).reduce((a, s) => a + s[1] - s[0], 0);
     const made = done - doneAtStart, elapsed = (Date.now() - t0) / 1000;
-    const eta = made > 0 && done < total ? ` ETA ${Math.round((elapsed / made) * (total - done))}s` : '';
+    const etaMs = made > 0 && done < total ? Math.round((elapsed / made) * (total - done) * 1000) : 0;
+    const eta = etaMs ? ` ETA ${Math.round(etaMs / 1000)}s` : '';
+    emitProgress(project, 'render', 'frames', done, total, { op: 'render', etaMs, message: `${done}/${total} frames` });
     console.log(`render: ${done}/${total} frames (${Math.round((100 * done) / total)}%), ${Math.round(elapsed)}s elapsed${eta}`);
-  }, 5000);
+  }, 1000);
   const kill = () => kids.forEach((k) => { try { k.kill(); } catch {} });
-  const onInt = () => { kill(); clearInterval(timer); console.error('\nrender: interrupted (start with --detach to survive)'); process.exit(130); };
+  const stop = (signal) => { kill(); clearInterval(timer); emitStage(project, 'render', { op: 'render', status: 'cancelled', message: signal }); finishJob('cancelled', { project, op: 'render' }); console.error('\nrender: interrupted (start with --detach to survive)'); process.exit(signal === 'SIGTERM' ? 143 : 130); };
+  const onInt = () => stop('SIGINT');
+  const onTerm = () => stop('SIGTERM');
   process.once('SIGINT', onInt);
+  process.once('SIGTERM', onTerm);
   const codes = await Promise.all(kids.map((k) => new Promise((r) => k.on('close', r))));
   clearInterval(timer);
   process.removeListener('SIGINT', onInt);
+  process.removeListener('SIGTERM', onTerm);
   if (codes.some((c) => c !== 0)) { kill(); throw new Error(`render worker failed (exit ${codes.join(', ')})`); }
   const missing = segs.filter((s) => !existsSync(s[2]));
   if (missing.length) throw new Error(`render finished but ${missing.length} clip(s) are missing: ${missing.map((s) => s[2]).join(', ')}`);
+  emitProgress(project, 'render', 'frames', total, total, { op: 'render', etaMs: 0 });
+  emitStage(project, 'render', { op: 'render', status: 'done' });
 }
 
 export async function renderCommand(...args) { return withProjectLock(projectDir(args[0]), 'render', () => renderCommandInner(...args)); }
@@ -168,6 +182,8 @@ export async function audioCommand(...args) { return withProjectLock(projectDir(
 
 async function audioCommandInner(dirArg) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'audio', { op: 'audio', status: 'running' });
   assertProjectInputs(dir);
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
@@ -175,12 +191,15 @@ async function audioCommandInner(dirArg) {
   await run(py, [join(ROOT, 'audio', script)], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
   if (!existsSync(join(dir, 'audio', 'mix.wav'))) throw new Error(`audio: ${join(dir, 'audio', 'mix.wav')} was not written`);
   console.log(`audio: wrote ${join(dir, 'audio', 'mix.wav')}`);
+  emitStage(project, 'audio', { op: 'audio', status: 'done' });
 }
 
 export async function assembleCommand(...args) { return withProjectLock(projectDir(args[0]), 'assemble', () => assembleCommandInner(...args)); }
 
 async function assembleCommandInner(dirArg) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'assemble', { op: 'assemble', status: 'running' });
   requireFile(dir, 'shots.json');
   requireFile(join(dir, 'audio'), 'mix.wav', 'run: fableon audio --project <dir>');
   const shots = readShots(dir);
@@ -188,6 +207,7 @@ async function assembleCommandInner(dirArg) {
   if (missing.length) throw new Error(`assemble: ${missing.length} clip(s) missing (run: fableon render --project ${dir}); first: ${missing[0][2]}`);
   await run(process.execPath, [ASSEMBLE_MJS, '--project', dir], { cwd: ROOT });
   console.log(`assemble: wrote ${join(dir, 'final.mp4')}`);
+  emitStage(project, 'assemble', { op: 'assemble', status: 'done' });
 }
 
 const listOf = (text) => {
@@ -202,6 +222,8 @@ export async function qaCommand(...args) { return withProjectLock(projectDir(arg
 
 async function qaCommandInner(dirArg) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'qa', { op: 'qa', status: 'running' });
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
   requireFile(dir, 'final.mp4', 'run: fableon assemble --project <dir>');
@@ -275,6 +297,7 @@ async function qaCommandInner(dirArg) {
   writeFileSync(join(out, 'summary.md'), md + '\n');
   console.log(md);
   console.log(`\nqa: wrote ${join(out, 'summary.md')}`);
+  emitStage(project, 'qa', { op: 'qa', status: ok ? 'done' : 'failed' });
   if (!ok) process.exitCode = 1;
 }
 
@@ -290,6 +313,8 @@ export async function allCommand(...args) { return withProjectLock(projectDir(ar
 
 async function allCommandInner(dirArg, { qualityName = 'preview', workers: n = 2 } = {}) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'final', { op: 'final', status: 'running', message: qualityName });
   console.log(`all: ${dir} (${qualityName}, ${n} workers)\n>> shots`);
   await shotsCommand(dir);
   console.log('\n>> render');
@@ -301,4 +326,5 @@ async function allCommandInner(dirArg, { qualityName = 'preview', workers: n = 2
   console.log('\n>> qa');
   await qaCommand(dir);
   console.log(`\nall: done — ${join(dir, 'final.mp4')}`);
+  emitStage(project, 'final', { op: 'final', status: 'done' });
 }

@@ -1,12 +1,15 @@
 // `fableon review`: per-camera-key, settled stills with optional compare and coverage ID images.
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
+import { emitStage } from './core/events.js';
 import { RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { projectDir } from './project.js';
 import { checkFramesMeasured, makeContext, sampleKeyFrames } from './frames.js';
 
 export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts = {}) {
   const dir = projectDir(dirArg);
+  const project = basename(dir);
+  emitStage(project, 'review', { op: 'review', status: 'running' });
   const compare = compareArg ? projectDir(compareArg) : null;
   const ctx = makeContext(dir);
   const shots = ctx.sb.shots ?? [];
@@ -62,5 +65,6 @@ export async function reviewCommand(dirArg, compareArg, shotsCsv, outArg, opts =
   if (!py) throw new Error('review needs Python/Pillow (set FABLEON_PYTHON or create .venv)');
   await run(py, [join(ROOT, 'tools', 'qa', 'review_sheet.py'), manifest], { cwd: ROOT });
   console.log(`review: ${sheet}${split ? ` (+ per-shot images in ${out})` : ''}`);
+  emitStage(project, 'review', { op: 'review', status: 'done' });
   return { out: sheet, manifest, rows };
 }

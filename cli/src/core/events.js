@@ -7,6 +7,7 @@ let enabled = false;
 let stream = null;
 let currentJob = null;
 let exitInstalled = false;
+let terminal = false;
 
 export function eventsEnabled() { return enabled; }
 export function currentJobId() { return currentJob; }
@@ -25,7 +26,7 @@ export function enableEvents(job = null) {
   if (!exitInstalled) {
     exitInstalled = true;
     process.once('exit', (code) => {
-      if (!enabled) return;
+      if (!enabled || terminal) return;
       emit({ type: 'job', status: code === 0 ? 'done' : 'failed', message: code === 0 ? 'done' : `exit ${code}` });
     });
   }
@@ -51,6 +52,8 @@ export function emit(fields) {
 }
 
 export const emitJob = (status, fields = {}) => emit({ type: 'job', status, ...fields });
+/** Emit the one terminal job event; the process exit handler then stays silent. */
+export function finishJob(status, fields = {}) { if (terminal) return null; terminal = true; return emitJob(status, fields); }
 export const emitStage = (project, stage, fields = {}) => emit({ type: 'stage', project, stage, ...fields });
 export const emitProgress = (project, stage, step, done, total, fields = {}) => emit({ type: 'progress', project, stage, step, done, total, ...fields });
 export const emitLog = (project, message, fields = {}) => emit({ type: 'log', project, message, ...fields });

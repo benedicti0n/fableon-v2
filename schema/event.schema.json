@@ -4,25 +4,119 @@
   "title": "Fableon event",
   "type": "object",
   "additionalProperties": true,
-  "required": ["ts", "type"],
+  "required": [
+    "ts",
+    "type"
+  ],
   "properties": {
-    "ts": { "type": "string", "format": "date-time" },
-    "type": { "enum": ["job", "stage", "progress", "log", "artifact", "status", "budget", "error"] },
-    "project": { "type": ["string", "null"] },
-    "job": { "type": ["string", "null"] },
-    "stage": { "type": ["string", "null"] },
-    "op": { "type": ["string", "null"] },
-    "step": { "type": ["string", "null"] },
-    "done": { "type": ["number", "null"] },
-    "total": { "type": ["number", "null"] },
-    "etaMs": { "type": ["number", "null"] },
-    "status": { "enum": ["queued", "running", "done", "failed", "cancelled", "interrupted"] },
-    "message": { "type": "string" },
-    "data": { "type": ["object", "array", "string", "number", "boolean", "null"] },
-    "code": { "type": "string" },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "type": {
+      "enum": [
+        "job",
+        "stage",
+        "progress",
+        "log",
+        "artifact",
+        "status",
+        "budget",
+        "error"
+      ]
+    },
+    "project": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "job": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "op": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "step": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "done": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "total": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "etaMs": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "done",
+        "failed",
+        "cancelled",
+        "interrupted",
+        "fresh",
+        "stale",
+        "edited",
+        "approved",
+        "missing"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "data": {
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "code": {
+      "type": "string"
+    },
     "error": {
       "type": "object",
-      "properties": { "code": { "type": "string" }, "message": { "type": "string" }, "details": { "type": "object" } }
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object"
+        }
+      }
     }
   }
 }

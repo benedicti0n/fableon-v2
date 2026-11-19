@@ -3,6 +3,8 @@
 import { existsSync, readdirSync, rmSync, statfsSync, statSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { ROOT } from './env.js';
+import { basename } from 'node:path';
+import { emitStage } from './core/events.js';
 
 const REMOVE = [
   /\/render\/(seg_\d+\.mp4|tail-[\d-]+\.mp4|animatic_noaudio\.mp4|animatic_full\.mp4|.*\.part\.mp4|jobs_\d+\.json|tail_jobs\.json|.*concat.*\.txt|animatic-full\.txt)$/,
@@ -37,7 +39,10 @@ export function cleanCommand(projectArg = null, { dryRun = true } = {}) {
   const dirs = projectArg ? [resolve(projectArg)] : (existsSync(join(ROOT, 'work')) ? readdirSync(join(ROOT, 'work'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => join(ROOT, 'work', e.name)) : []);
   const all = { files: [], bytes: 0, dryRun };
   for (const dir of dirs) {
+    const project = basename(dir);
+    emitStage(project, 'clean', { op: 'clean', status: 'running' });
     const r = cleanProject(dir, { dryRun });
+    emitStage(project, 'clean', { op: 'clean', status: 'done', data: { files: r.files.length, bytes: r.bytes } });
     all.files.push(...r.files);
     all.bytes += r.bytes;
   }
