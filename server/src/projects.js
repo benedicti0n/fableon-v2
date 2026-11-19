@@ -59,9 +59,15 @@ export function createProject(rootDir, body = {}) {
   const slug = String(body.id ?? topic).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'project';
   const dir = join(projectRoot(rootDir), slug);
   if (existsSync(dir)) throw new FableonError(ERROR_CODES.BAD_REQUEST, `project ${slug} already exists`, { id: slug });
-  const created = newProject(dir, { topic, seconds: Number(body.seconds ?? 90), voice: body.voice ?? 'am_michael', language: body.language ?? 'en' });
-  if (body.voice && typeof body.voice === 'object') {
-    created.project.voice = body.voice;
+  const created = newProject(dir, { topic, seconds: Number(body.seconds ?? 90), voice: typeof body.voice === 'string' ? body.voice : 'am_michael', language: body.language ?? 'en' });
+  if (body.voice) {
+    if (typeof body.voice === 'string' && ['sarvam', 'elevenlabs', 'kokoro'].includes(body.voice)) {
+      created.project.voice = body.voice === 'sarvam'
+        ? { provider: 'sarvam', model: 'bulbul:v4-flash', voiceId: 'nachiket_hi_devotional', language: 'hi', performance: true, pace: 1.1, fit: 'natural', maxCharsPerRun: 10000 }
+        : body.voice === 'elevenlabs'
+          ? { provider: 'elevenlabs', model: 'eleven_multilingual_v2', voiceId: null, language: body.language ?? 'hi', settings: { stability: 0.5, similarity_boost: 0.75, style: 0, use_speaker_boost: true, speed: 1 }, maxCharsPerRun: 10000 }
+          : { engine: 'kokoro', voice: 'am_michael', speed: 1.35, language: 'en' };
+    } else if (typeof body.voice === 'object') created.project.voice = body.voice;
     writeJsonArtifact(dir, 'api', 'project.json', created.project, 'project');
   }
   return resolveProject(rootDir, slug);
