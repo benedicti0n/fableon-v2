@@ -71,7 +71,7 @@ export const OPS = [
   },
   {
     name: 'stills', description: 'render selected frames as stills', kind: 'job', heavy: true, cancellable: true,
-    argsSchema: obj({ ...proj, frames: str, shots: str, quality: str, look: { type: 'object' } }, ['project']), outputs: ['stills/'],
+    argsSchema: obj({ ...proj, frames: str, shots: str, quality: str, look: { type: 'object' }, tag: str, compare: bool }, ['project']), outputs: ['stills/'],
   },
   {
     name: 'sfx-preview', description: 'render one 1.5 s SFX preview', kind: 'job', heavy: false, cancellable: true,
@@ -139,7 +139,7 @@ export function opArgv(name, args = {}) {
     case 'lookdev': return ['lookdev', ...addProject([...(args.out ? ['--out', args.out] : [])])];
     case 'lookcheck': return ['lookcheck', ...addProject([...(args.video ? ['--video', args.video] : [])])];
     case 'review': return ['review', ...addProject([...(args.compare ? ['--compare', args.compare] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.out ? ['--out', args.out] : []), ...(args.coverage ? ['--coverage'] : []), ...(args.split ? ['--split'] : [])])];
-    case 'stills': return ['stills', ...addProject([...(args.frames ? ['--frames', args.frames] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.quality ? ['--quality', args.quality] : []), ...(args.look ? ['--look', typeof args.look === 'string' ? args.look : JSON.stringify(args.look)] : [])])];
+    case 'stills': return ['stills', ...addProject([...(args.frames ? ['--frames', args.frames] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.quality ? ['--quality', args.quality] : []), ...(args.look ? ['--look', typeof args.look === 'string' ? args.look : JSON.stringify(args.look)] : []), ...(args.tag ? ['--tag', args.tag] : []), ...(args.compare ? ['--compare'] : [])])];
     case 'sfx-preview': return ['sfx-preview', ...addProject(['--kind', args.kind, '--seed', String(args.seed ?? 1), '--gain-db', String(args.gainDb ?? 0)])];
     case 'voice-audition': return ['voice', 'audition', ...addProject([...(args.voices != null ? ['--voices', String(args.voices)] : []), ...(args.models ? ['--models', args.models] : []), ...(args.round != null ? ['--round', String(args.round)] : [])])];
     case 'voice-pace': return ['voice', 'pace', ...addProject([...(args.paces ? ['--paces', args.paces] : []), ...(args.choose != null ? ['--choose', String(args.choose)] : [])])];

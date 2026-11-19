@@ -23,6 +23,7 @@ const Voice = React.lazy(() => import('./screens/Voice'));
 const Cast = React.lazy(() => import('./screens/Cast'));
 const Board = React.lazy(() => import('./screens/Board'));
 const Animatic = React.lazy(() => import('./screens/Animatic'));
+const Finish = React.lazy(() => import('./screens/Finish'));
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: true } } });
 
@@ -62,7 +63,7 @@ function App() {
     <Route path="/" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Projects /></main></div>} />
     <Route path="/settings" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Settings /></main></div>} />
     <Route path="/p/:id" element={<Navigate to="brief" replace />} />
-    {['brief', 'research', 'script', 'voice', 'cast', 'shotplan', 'board', 'animatic'].map((stage) => <Route key={stage} path={`/p/:id/${stage}`} element={<ProjectFrame>{stage === 'brief' ? <Brief /> : stage === 'research' ? <Research /> : stage === 'script' ? <Script /> : stage === 'voice' ? <Voice /> : stage === 'cast' ? <Cast /> : stage === 'board' || stage === 'shotplan' ? <Board /> : <Animatic />}</ProjectFrame>} />)}
+    {['brief', 'research', 'script', 'voice', 'cast', 'shotplan', 'board', 'animatic', 'finish'].map((stage) => <Route key={stage} path={`/p/:id/${stage}`} element={<ProjectFrame>{stage === 'brief' ? <Brief /> : stage === 'research' ? <Research /> : stage === 'script' ? <Script /> : stage === 'voice' ? <Voice /> : stage === 'cast' ? <Cast /> : stage === 'finish' ? <Finish /> : stage === 'board' || stage === 'shotplan' ? <Board /> : <Animatic />}</ProjectFrame>} />)}
     <Route path="*" element={<div className="p-10 text-studio-muted">Not found.</div>} />
   </Routes></React.Suspense></BrowserRouter>;
 }

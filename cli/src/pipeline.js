@@ -65,24 +65,12 @@ export async function initCommand(name, from) {
 
 export async function stillsCommand(...args) { return withProjectLock(projectDir(args[0]), 'stills', () => stillsCommandInner(...args)); }
 
-async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv, lookJson = null) {
+async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv, lookJson = null, tag = '', compare = false) {
   const dir = projectDir(dirArg);
   const project = basename(dir);
   emitStage(project, 'stills', { op: 'stills', status: 'running' });
   prepare(dir);
   const q = quality(qualityName);
-  let renderDir = dir;
-  let temp = null;
-  if (lookJson) {
-    const { applyLook } = await import('./look-adjust.js');
-    const { mkdtempSync, copyFileSync } = await import('node:fs');
-    const { tmpdir } = await import('node:os');
-    temp = mkdtempSync(join(tmpdir(), 'fableon-look-preview-'));
-    renderDir = temp;
-    copyFileSync(join(dir, 'storyboard.json'), join(temp, 'storyboard.json'));
-    copyFileSync(join(dir, 'words.json'), join(temp, 'words.json'));
-    writeFileSync(join(temp, 'storyboard.json'), JSON.stringify(applyLook(JSON.parse(readFileSync(join(dir, 'storyboard.json'), 'utf8')), typeof lookJson === 'string' ? JSON.parse(lookJson) : lookJson), null, 2) + '\n');
-  }
   const size = qualityName === 'preview' ? '720x1280' : q.size;
   let frames = framesCsv;
   if (shotsCsv) {
@@ -99,8 +87,25 @@ async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv, look
     frames = [...new Set(list)].join(',');
   }
   if (!frames) throw new Error('missing --frames 60,640');
+  const { applyLook } = await import('./look-adjust.js');
+  const { mkdtempSync, copyFileSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  let temp = null;
   try {
-    await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, 'stills', 'f_'), '--frames', frames, '--project', renderDir, '--size', size, '--msaa', '0'], { cwd: ROOT });
+    const passes = compare && lookJson ? [['before', null], ['after', lookJson]] : [[tag || '', lookJson]];
+    for (const [suffix, draft] of passes) {
+      let renderDir = dir;
+      if (draft) {
+        temp = mkdtempSync(join(tmpdir(), 'fableon-look-preview-'));
+        copyFileSync(join(dir, 'storyboard.json'), join(temp, 'storyboard.json'));
+        copyFileSync(join(dir, 'words.json'), join(temp, 'words.json'));
+        writeFileSync(join(temp, 'storyboard.json'), JSON.stringify(applyLook(JSON.parse(readFileSync(join(dir, 'storyboard.json'), 'utf8')), typeof draft === 'string' ? JSON.parse(draft) : draft), null, 2) + '\n');
+        renderDir = temp;
+      }
+      const prefix = !tag && !compare ? 'stills/f_' : `stills/${tag}${suffix}${suffix ? '-' : ''}`;
+      await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, prefix), '--frames', frames, '--project', renderDir, '--size', size, '--msaa', '0'], { cwd: ROOT });
+      if (temp) { rmSync(temp, { recursive: true, force: true }); temp = null; }
+    }
   } finally { if (temp) rmSync(temp, { recursive: true, force: true }); }
   console.log(`stills: wrote ${join(dir, 'stills')}`);
   emitStage(project, 'stills', { op: 'stills', status: 'done' });

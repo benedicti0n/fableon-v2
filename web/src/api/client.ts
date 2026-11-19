@@ -92,3 +92,7 @@ export function splitProjects<T extends { id: string; source: string }>(projects
   const workIds = new Set(work.map((p) => p.id));
   return { work, fixtures: projects.filter((p) => p.source === 'fixture' && !workIds.has(p.id)) };
 }
+
+export type FinalPlanSegment = { shot: string; scene: string; frames: number; cached: boolean; reason: string | null; file: string; hash: string; lookHash?: string };
+export type FinalPlan = { project: string; engine: string; quality: string; size: string; totalFrames: number; framesToRender: number; audioOnly: boolean; assembleOnly: boolean; estMinutes: number; diskNeedMB: number; segments: FinalPlanSegment[]; transitions: Array<{ index: number; type: string; frames: number; at: number; start: number; end: number; file: string; cached: boolean; reason: string | null }> };
+export const getFinalPlan = (id: string) => json<FinalPlan>(`/api/projects/${encodeURIComponent(id)}/final/plan`);

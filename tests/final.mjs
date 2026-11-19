@@ -40,6 +40,10 @@ export async function runFinalTests() {
     for (const t of p1.transitions) { mkdirSync(join(dir, 'render', 'final', 'transitions'), { recursive: true }); writeFileSync(join(dir, t.file), 'transition'); }
     const p2 = finalPlan(dir);
     ok('unchanged inputs report zero dirty frames', p2.framesToRender === 0 && p2.segments.every((s) => s.cached), JSON.stringify({ frames: p2.framesToRender, reasons: p2.segments.map((s) => s.reason) }));
+    write('look.json', { version: 1, scenes: { one: { exposure: 0.5 } } });
+    const pl = finalPlan(dir);
+    ok('one scene look dirties only that shot segment', pl.segments[0].reason === 'look' && pl.segments[1].cached, JSON.stringify(pl.segments.map((s) => [s.cached, s.reason])));
+    rmSync(join(dir, 'look.json'));
     write('audio/mix.wav', 'mix-b');
     const p3 = finalPlan(dir);
     ok('audio-only change reports audioOnly', p3.audioOnly === true && p3.framesToRender === 0, JSON.stringify({ audioOnly: p3.audioOnly, frames: p3.framesToRender }));

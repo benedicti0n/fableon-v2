@@ -7,7 +7,7 @@ import { Badge, Button, IconButton, Progress, StatusBadge } from './ui';
 export const STAGE_ROUTES = [
   { key: 'brief', label: 'Brief' }, { key: 'research', label: 'Research' }, { key: 'script', label: 'Script' },
   { key: 'voice', label: 'Voice' }, { key: 'cast', label: 'Cast' }, { key: 'shotplan', label: 'Shot plan' },
-  { key: 'board', label: 'Board' }, { key: 'animatic', label: 'Animatic' },
+  { key: 'board', label: 'Board' }, { key: 'animatic', label: 'Animatic' }, { key: 'finish', label: 'Finish' },
 ];
 
 export function LeftRail() {
@@ -42,7 +42,7 @@ export function Stepper({ project, current }: { project: string; current: string
   const status = new Map((q.data?.stages ?? []).map((s) => [s.stage, s.status]));
   return <nav aria-label="Stage progress" className="flex min-w-0 items-center gap-0.5 overflow-x-auto pb-1">
     {STAGE_ROUTES.map((s, i) => {
-      const st = s.key === 'shotplan' ? status.get('shotplan') ?? status.get('board') : status.get(s.key) ?? 'missing';
+      const st = s.key === 'shotplan' ? status.get('shotplan') ?? status.get('board') : s.key === 'finish' ? status.get('final') ?? 'missing' : status.get(s.key) ?? 'missing';
       const active = current === s.key || (current === 'board' && s.key === 'board');
       return <React.Fragment key={s.key}><NavLink to={`/p/${encodeURIComponent(project)}/${s.key}`} aria-current={active ? 'step' : undefined} className={`group flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] ${active ? 'bg-studio-amber/10 text-studio-text' : 'text-studio-muted hover:bg-white/5 hover:text-studio-text'}`}>
         <span className={`flex h-5 w-5 items-center justify-center rounded-full border text-[10px] ${st === 'approved' ? 'border-studio-green/50 text-studio-green' : active ? 'border-studio-amber text-studio-amber' : 'border-studio-line text-studio-faint'}`}>{st === 'approved' ? '✓' : i + 1}</span><span>{s.label}</span>
