@@ -70,11 +70,13 @@ export default function Finish() {
   const words = React.useMemo(() => (timeline?.script ?? []).flatMap((l) => l.words.map((w, index) => ({ line: l.n, index, a: w.a, b: w.b }))), [timeline]);
   const duration = timeline?.duration ?? cues.duration ?? 1;
   const finalStage = project.data?.stages.find((s) => s.stage === 'final');
+  const soundStage = project.data?.stages.find((s) => s.stage === 'sound');
   const readOnly = !!project.data?.readOnly;
   const sceneList = timeline?.scenes ?? [];
   const saveLook = useMutation({ mutationFn: () => putFile(id, 'look.json', look), onSuccess: () => { qc.invalidateQueries({ queryKey: ['file', id, 'look.json'] }); qc.invalidateQueries({ queryKey: ['final-plan', id] }); qc.invalidateQueries({ queryKey: ['project', id] }); }, onError: setError });
   const saveCues = useMutation({ mutationFn: () => putFile(id, 'cues.json', cues), onSuccess: () => { qc.invalidateQueries({ queryKey: ['file', id, 'cues.json'] }); qc.invalidateQueries({ queryKey: ['project', id] }); }, onError: setError });
   const previewCue = useMutation({ mutationFn: (c: Cue) => runOp(id, 'sfx-preview', { kind: c.kind, seed: c.seed ?? 1, gainDb: c.gainDb ?? 0 }), onSuccess: (job) => setAudioPreview(`${fileUrl(id, `qa/previews/${(selected?.lane === 'sfx' ? cues.sfx[selected.index]?.kind : 'thud')}-${cues.sfx[selected?.index ?? 0]?.seed ?? 1}.wav`)}?t=${Date.now()}`), onError: setError });
+  const approveSound = useMutation({ mutationFn: () => approveStage(id, 'sound'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   const approve = useMutation({ mutationFn: () => approveStage(id, 'final'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   const saveBoth = async () => { try { await saveLook.mutateAsync(); await saveCues.mutateAsync(); return true; } catch { return false; } };
   const saveSound = async () => { try { await saveCues.mutateAsync(); return true; } catch { return false; } };
@@ -137,7 +139,7 @@ export default function Finish() {
       })}</div>
     </Panel>
 
-    <Panel className="p-4"><div className="mb-2 flex flex-wrap items-center justify-between gap-2"><div><h2 className="text-sm font-semibold">Sound</h2><div className="text-[11px] text-studio-muted">Click the SFX lane to add; Alt-click places on a frame. Drag markers, or select and use ←/→ and Delete.</div></div><div className="flex gap-2"><Button size="sm" onClick={() => saveCues.mutate()} disabled={readOnly || saveCues.isPending}>{saveCues.isPending ? 'Saving…' : 'Save cues'}</Button><Button size="sm" onClick={async () => { if (await saveSound()) setMixOpen(true); }} disabled={readOnly}>Rebuild mix</Button></div></div>
+    <Panel className="p-4"><div className="mb-2 flex flex-wrap items-center justify-between gap-2"><div><div className="flex items-center gap-2"><h2 className="text-sm font-semibold">Sound</h2>{soundStage ? <StatusBadge status={soundStage.status} /> : null}</div><div className="text-[11px] text-studio-muted">Click the SFX lane to add; Alt-click places on a frame. Drag markers, or select and use ←/→ and Delete.</div></div><div className="flex gap-2"><Button size="sm" onClick={() => saveCues.mutate()} disabled={readOnly || saveCues.isPending}>{saveCues.isPending ? 'Saving…' : 'Save cues'}</Button><Button size="sm" onClick={async () => { if (await saveSound()) setMixOpen(true); }} disabled={readOnly}>Rebuild mix</Button>{soundStage && soundStage.status !== 'approved' ? <Button size="sm" variant="primary" onClick={() => approveSound.mutate()} disabled={readOnly || approveSound.isPending}>{approveSound.isPending ? 'Approving…' : 'Approve sound'}</Button> : null}</div></div>
       <div className="text-[10px] text-studio-amber">Re-running the Sound stage replaces these cue edits. Rebuild mix keeps them.</div>
       <div className="mt-3 select-none" ref={laneRef}>
         <div className="relative h-16 overflow-hidden rounded border border-studio-line bg-studio-bg">{(voicePeaksQ.data?.peaks ?? []).map((p, i) => <div key={i} className="absolute bottom-0 w-px bg-studio-muted/50" style={{ left: `${(i / Math.max(1, (voicePeaksQ.data?.peaks.length ?? 1))) * 100}%`, height: `${Math.max(3, Math.abs(p.max) * 100)}%` }} />)}<div className="absolute left-1 top-1 text-[9px] text-studio-faint">voice</div></div>
