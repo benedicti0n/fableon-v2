@@ -6,6 +6,7 @@ import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { assertProjectInputs, initProject, projectDir, quality, requireFile } from './project.js';
 import { validateStoryboard } from './validate.js';
 import { balance } from './jobs.js';
+import { makeContext } from './frames.js';
 
 const pad = (n) => String(n).padStart(2, '0');
 const frames = (segs) => segs.reduce((n, s) => n + s[1] - s[0], 0);
@@ -197,7 +198,28 @@ export async function qaCommand(dirArg) {
   const rawMeta = JSON.parse(readFileSync(metaPath, 'utf8'));
   const off = rawMeta.shots?.[0]?.a ?? 0;
   const shiftPair = (p) => [Math.max(0, Math.round(p[0] - off)), Math.max(0, Math.round(p[1] - off))];
-  const meta = { ...rawMeta, shots: (rawMeta.shots ?? []).map((s) => ({ ...s, a: Math.max(0, s.a - off), b: s.b - off })), ...(rawMeta.flash ? { flash: shiftPair(rawMeta.flash) } : {}), xfade: (rawMeta.xfade ?? []).map(shiftPair), planned: (rawMeta.planned ?? []).map(shiftPair) };
+  // The storyboard's own planned cuts/flashes are not enough: the board adds punches, impacts and kicks that
+  // short_qa would otherwise report as pops. The animatic stage subtracts them; the final QA must do the same.
+  const ctx = makeContext(dir);
+  const boardPath = join(dir, 'board.json');
+  const boardPlanned = [];
+  if (existsSync(boardPath)) {
+    const board = JSON.parse(readFileSync(boardPath, 'utf8'));
+    const anchorFrame = (a) => {
+      const m = /^(\d+):(\d+)(?:([+-])(\d+(?:\.\d+)?)([fs]))?$/.exec(String(a));
+      if (!m) return null;
+      const o = m[3] ? (m[5] === 's' ? Number(m[4]) * 30 : Number(m[4])) : 0;
+      return ctx.anchor({ line: Number(m[1]), wordIndex: Number(m[2]), offset: (m[3] === '-' ? -1 : 1) * o });
+    };
+    for (const k of board.kicks ?? []) { const f = anchorFrame(k.at); if (f !== null) boardPlanned.push([f, f + 7]); }
+    for (const s of board.shots ?? []) for (const k of s.camera ?? []) {
+      if (k.cut) { const f = anchorFrame(k.at); if (f !== null) boardPlanned.push([f, f]); }
+      if (k.punch) { const f = anchorFrame(k.punch); if (f !== null) boardPlanned.push([f, f + 30]); }
+      if (k.impact) { const f = anchorFrame(k.impact); if (f !== null) boardPlanned.push([f, f + 7]); }
+    }
+  }
+  const planned = [...(rawMeta.planned ?? []), ...boardPlanned].map(shiftPair);
+  const meta = { ...rawMeta, shots: (rawMeta.shots ?? []).map((s) => ({ ...s, a: Math.max(0, s.a - off), b: s.b - off })), ...(rawMeta.flash ? { flash: shiftPair(rawMeta.flash) } : {}), xfade: (rawMeta.xfade ?? []).map(shiftPair), planned };
   const metaVideo = join(out, 'qa_meta.video.json');
   writeFileSync(metaVideo, JSON.stringify(meta, null, 2) + '\n');
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT });
@@ -214,8 +236,10 @@ export async function qaCommand(dirArg) {
   const specs = line('SPECS '), loudness = line('LOUDNESS '), framesLine = line('FRAMES '), popsLine = line('POPS ');
   const eventsPath = existsSync(join(dir, 'events.json')) ? join(dir, 'events.json') : join(dir, 'cuts.json');
   const events = (existsSync(eventsPath) ? JSON.parse(readFileSync(eventsPath, 'utf8')) : []).map((f) => Math.max(0, f - off));
+  const eventFrames = new Set(events);
+  for (const [a, b] of planned) for (let f = a; f <= b; f++) eventFrames.add(f);
   const pops = listOf(popsLine);
-  const unexplained = pops.filter((p) => !events.some((c) => Math.abs(c - p) <= 3));
+  const unexplained = pops.filter((p) => ![...eventFrames].some((c) => Math.abs(c - p) <= 3));
   const black = listOf((/black (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const white = listOf((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const spanList = (t) => { const out = []; const re = /\((\d+)\s*,\s*(\d+)\)/g; let m; while ((m = re.exec(t))) out.push([Number(m[1]), Number(m[2])]); return out; };
@@ -227,7 +251,7 @@ export async function qaCommand(dirArg) {
     `- ${specs}`,
     `- ${loudness}`,
     `- ${framesLine}`,
-    `- planned events ignored (±3 frames; concat/encode has a 2-frame start offset): ${events.length} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'}`,
+    `- planned events ignored (±3 frames; concat/encode has a 2-frame start offset): ${eventFrames.size} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'} + board punches/kicks`,
     `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`,
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
     '',
