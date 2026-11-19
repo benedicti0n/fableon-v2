@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { approveStage, fileUrl, getProject, getTimeline, json, runOp, text } from '../api/client';
+import { approveStage, fileUrl, getProject, getTimeline, runOp, text, waitJob } from '../api/client';
 import { Badge, Button, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge } from '../components/ui';
 import { Markdown } from '../lib/markdown';
 
@@ -19,7 +19,7 @@ export default function Animatic() {
   const readOnly = !!project.data?.readOnly;
   const scene = timelineQ.data?.scenes.find((s) => s.id === selected) ?? timelineQ.data?.scenes.find((s) => time >= s.start && time < s.end);
   const stage = project.data?.stages.find((s) => s.stage === 'animatic');
-  const rerun = useMutation({ mutationFn: async () => { await runOp(id, 'board', { shot: scene?.id, notes: note, force: true }); return runOp(id, 'animatic', {}); }, onSuccess: () => { setNote(''); qc.invalidateQueries({ queryKey: ['project', id] }); qc.invalidateQueries({ queryKey: ['timeline', id] }); qc.invalidateQueries({ queryKey: ['file', id, 'animatic-qa.md'] }); }, onError: setError });
+  const rerun = useMutation({ mutationFn: async () => { const b = await runOp(id, 'board', { shot: scene?.id, notes: note, force: true }); const done = await waitJob(b.id); if (done.status !== 'done') throw new Error(done.error ?? 'board re-run failed'); return runOp(id, 'animatic', {}); }, onSuccess: () => { setNote(''); qc.invalidateQueries({ queryKey: ['project', id] }); qc.invalidateQueries({ queryKey: ['timeline', id] }); qc.invalidateQueries({ queryKey: ['file', id, 'animatic-qa.md'] }); }, onError: setError });
   const approve = useMutation({ mutationFn: () => approveStage(id, 'animatic'), onSuccess: () => qc.invalidateQueries({ queryKey: ['project', id] }), onError: setError });
   if (timelineQ.isLoading || !timelineQ.data) return <div className="flex items-center gap-2 text-sm text-studio-muted"><Spinner /> Loading animatic…</div>;
   const tl = timelineQ.data;

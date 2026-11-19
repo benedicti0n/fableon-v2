@@ -75,3 +75,20 @@ export const cancelJob = (id: string) => json<Job>(`/api/jobs/${encodeURICompone
 export type Voices = { providers: Array<{ name: string; configured: boolean; model: string; speakers: Array<string | { id?: string; name?: string }> }>; cached: Array<{ project: string; auditions: string[] }>; credit: { elevenlabs?: { plan?: string; used?: number; limit?: number; remaining?: number; reset?: string; available?: boolean; note?: string }; sarvam?: { budgetInr?: number; note?: string } } };
 export const getVoices = () => json<Voices>('/api/voices');
 export const getKeys = () => json<Record<string, 'set' | 'unset'>>('/api/settings/keys');
+
+export async function waitJob(id: string, timeoutMs = 30 * 60 * 1000): Promise<Job> {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    const j = await getJob(id);
+    if (['done', 'failed', 'cancelled', 'interrupted'].includes(j.status)) return j;
+    await new Promise((r) => setTimeout(r, 900));
+  }
+  throw new ApiError('Timed out waiting for the job', 'STAGE_FAILED', 504);
+}
+
+/** A work copy shadows the read-only fixture with the same id, because the API addresses projects by id alone. */
+export function splitProjects<T extends { id: string; source: string }>(projects: T[]) {
+  const work = projects.filter((p) => p.source === 'work');
+  const workIds = new Set(work.map((p) => p.id));
+  return { work, fixtures: projects.filter((p) => p.source === 'fixture' && !workIds.has(p.id)) };
+}
