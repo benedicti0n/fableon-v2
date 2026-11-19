@@ -6,7 +6,8 @@
   "workspaces": [
     "engine",
     "cli",
-    "server"
+    "server",
+    "web"
   ],
   "engines": {
     "node": ">=20"
@@ -15,6 +16,9 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "test": "node tests/run.mjs",
-    "catalog": "node engine/scripts/render.cjs catalog --project fixtures/adi-parva --out schema/catalog.runtime.json && node engine/scripts/export-catalog.mjs"
+    "catalog": "node engine/scripts/render.cjs catalog --project fixtures/adi-parva --out schema/catalog.runtime.json && node engine/scripts/export-catalog.mjs",
+    "web:dev": "npm --workspace @fableon/web run dev",
+    "web:build": "npm --workspace @fableon/web run build",
+    "web:types": "npm --workspace @fableon/web run types"
   }
 }
