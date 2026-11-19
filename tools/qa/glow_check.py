@@ -9,7 +9,7 @@ from PIL import Image
 glow, noglow, mask_path = sys.argv[1], sys.argv[2], sys.argv[3]
 a = np.asarray(Image.open(glow).convert("RGB"), dtype=np.int16)
 b = np.asarray(Image.open(noglow).convert("RGB"), dtype=np.int16)
-m = np.asarray(Image.open(mask_path).convert("L")) > 127
+m = np.asarray(Image.open(mask_path).convert("L")) >= 250
 d = np.abs(a - b).max(2)
 l = (0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]) / 255.0
 print(json.dumps({

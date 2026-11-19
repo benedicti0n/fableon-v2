@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { ctex, cloudHD, waterNear, waterFar } from "./paint";
 import { LIGHTS, LOOK, LightName } from "./lights";
 import { Look, moodRig } from "./look";
-import { makeMaskUniforms, maskFn, maskSet } from "./charMask";
 import { TONE, CHAR, LFB, untone } from "./shade";
 import { NOINK } from "./ink";
 import { Pool, Actor, Fx, Stage, CamInfo, FPS, Place, setLookFlat } from "./cast";
@@ -57,6 +56,8 @@ export class World {
   sets: Sets;
   coverageCards: { places: Place[]; actors: Actor[]; fxs: { p: any; mesh: THREE.Mesh }[] } = { places: [], actors: [], fxs: [] };
   noShafts = false;
+  msaa = 0;
+  hideActor = "";
   private pool = new Pool();
   private actors: Actor[] = [];
   private fxs: Fx[] = [];
@@ -66,8 +67,7 @@ export class World {
   private fog = new THREE.Fog("#bccbec", 25, 420);
   private WU: Record<string, THREE.IUniform>;
   private water: THREE.Mesh;
-  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite; private shafts: THREE.Mesh; private shaftMat: THREE.ShaderMaterial;
-  private shaftMask = makeMaskUniforms("s");
+  private sunDisc: THREE.Sprite; private sunHalo: THREE.Sprite; private shafts: THREE.Mesh;
   private sunCache = new Map<number, THREE.Vector3>();
   private charSunCache = new Map<number, THREE.Vector3>();
   private cloudMaps: Record<string, THREE.Texture[]>;
@@ -100,14 +100,7 @@ export class World {
     this.sunHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex(), color: new THREE.Color(1, 1, 1), fog: false, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending }));
     this.sunDisc.renderOrder = -0.5; this.sunHalo.renderOrder = 5;
     for (const m of [this.sunDisc, this.sunHalo]) { m.frustumCulled = false; m.layers.set(NOINK); R.add(m); }
-    this.shaftMat = new THREE.ShaderMaterial({
-      uniforms: { map: { value: shaftTex() }, opacity: { value: 0.55 }, color: { value: new THREE.Color(1, 1, 1) }, ...this.shaftMask },
-      vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
-      fragmentShader: `uniform sampler2D map; uniform float opacity; uniform vec3 color; varying vec2 vUv; ${maskFn("s")}
-        void main(){ vec4 t = texture2D(map, vUv); float m = sMaskAt(vUv); gl_FragColor = vec4(t.rgb * color * opacity * (1.0 - m), t.a * opacity * (1.0 - m)); }`,
-      transparent: true, blending: THREE.AdditiveBlending, depthTest: true, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide,
-    });
-    this.shafts = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.shaftMat);
+    this.shafts = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shaftTex(), transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthTest: true, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide }));
     this.shafts.frustumCulled = false; this.shafts.renderOrder = 3; this.shafts.layers.set(NOINK); R.add(this.shafts);
     this.hemi = new THREE.HemisphereLight("#cfe6ff", "#6c5c8c", 1.1);
     this.sun = new THREE.DirectionalLight("#fff0d6", 2.6);
@@ -176,11 +169,6 @@ export class World {
   private actor(i: number) { while (this.actors.length <= i) this.actors.push(new Actor(this.root)); return this.actors[i]; }
   private fx(i: number) { while (this.fxs.length <= i) this.fxs.push(new Fx(this.root)); return this.fxs[i]; }
 
-  /** the shaft card is a screen-space additive plane: keep it off the actor/special cards even where depth leaks */
-  setShaftMask(tex: THREE.Texture, width: number, height: number, on: boolean) {
-    maskSet(this.shaftMask, "s", tex, width, height, on);
-  }
-
   update(s: ShotDef, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene, pxH: number, kick: (f: number, c: Cam) => Cam) {
     setLookFlat(!!s.look);
     const t = f / FPS, rig = moodRig(s.look?.mood), L = rig?.light ?? LIGHTS[s.light], K = rig?.world ?? LOOK[s.light];
@@ -227,7 +215,8 @@ export class World {
     untone(L.fog, this.fog.color); this.fog.near = L.fogNear; this.fog.far = L.fogFar;
     scene.fog = this.fog; scene.background = null;
     const showSun = rig ? rig.sun : s.light === "golden";
-    this.sunDisc.visible = this.sunHalo.visible = showSun;
+    this.sunDisc.visible = showSun;
+    this.sunHalo.visible = showSun && s.look?.halo !== false;
     if (showSun) {
       this.sunDisc.position.copy(cam.position).addScaledVector(sunDir, 900);
       this.sunDisc.scale.setScalar(2 * 900 * Math.tan(THREE.MathUtils.degToRad(1.7)));
@@ -242,7 +231,7 @@ export class World {
       this.shafts.quaternion.copy(cam.quaternion);
       const h = 2 * 90 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
       this.shafts.scale.set(h * 1.15, h, 1);
-      (this.shaftMat.uniforms.color.value as THREE.Color).set(rig!.glow.tint).multiplyScalar(0.85);
+      (this.shafts.material as THREE.MeshBasicMaterial).color.set(rig!.glow.tint).multiplyScalar(0.85);
     }
     const maps = this.cloudMaps[s.light];
     for (let i = 0; i < this.clouds.length; i++) {
@@ -272,6 +261,7 @@ export class World {
       const sc2 = p.scale ?? 1;
       if (!this.frustum.intersectsSphere(this.sph.set(this.v.set(p.x, p.y + 1.1 * sc2, p.z), 3.5 * sc2))) continue;
       const a = this.actor(ai++);
+      if (p.id === this.hideActor) { a.mesh.visible = false; continue; }
       const [w, h, k] = p.size;
       a.r = this.pool.req(p.key, w, h, k, p.draw, false, !!s.look, true);
       a.geo(p.geo ?? "body");
@@ -281,6 +271,17 @@ export class World {
       a.mesh.scale.set(p.mirror ? -sc2 : sc2, sc2, sc2);
       a.mesh.castShadow = L.actorShadow;
       used.push({ a, p });
+    }
+    // The card keeps the legacy alphaTest cut (MSAA at 4x makes it as smooth as the old film); the soft character
+    // mask samples the texture's real alpha separately, so it covers the card edge without changing the drawn edge.
+    for (const { a } of used) {
+      if (a.mat.alphaToCoverage !== false || a.mat.alphaTest !== 0.5) {
+        a.mat.transparent = false;
+        a.mat.alphaToCoverage = false;
+        a.mat.alphaTest = 0.5;
+        a.dmat.alphaTest = 0.5;
+        a.mat.needsUpdate = true; a.dmat.needsUpdate = true;
+      }
     }
     for (let i = ai; i < this.actors.length; i++) this.actors[i].mesh.visible = false;
     let fi = 0;

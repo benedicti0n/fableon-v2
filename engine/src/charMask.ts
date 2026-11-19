@@ -1,5 +1,5 @@
 // Character-coverage mask shared by the glow passes. The world renders actor/special cards (never effects) into a
-// full-res target; the glow source and the final glow are both multiplied by (1 - mask), dilated by one pixel at 1080.
+// 2x supersampled target; the glow source and the final glow are both multiplied by (1 - mask).
 import { Uniform, Vector2, Texture } from "three";
 
 // Names are prefixed per effect: postprocessing merges all effects in one EffectPass by uniform name.
@@ -20,24 +20,12 @@ export const maskSet = (u: MaskUniforms, p: string, tex: Texture, width: number,
   u[`${p}MaskOn`].value = on ? 1 : 0;
 };
 
-// 3x3 max dilation: one pixel at 1080, scaled by the output height. The mask itself is NearestFilter and binary.
+// The mask is the cards' real anti-aliased alpha, 2x supersampled and downsampled to the frame resolution; no dilation.
 export const maskFn = (p: string) => /* glsl */ `
 uniform sampler2D ${p}CharMask;
-uniform vec2 ${p}MaskTexel;
-uniform float ${p}MaskRadius;
 uniform float ${p}MaskOn;
 float ${p}MaskAt(vec2 uv) {
   if (${p}MaskOn < 0.5) return 0.0;
-  vec2 r = ${p}MaskTexel * ${p}MaskRadius;
-  float m = texture2D(${p}CharMask, uv).r;
-  m = max(m, texture2D(${p}CharMask, uv + vec2(r.x, 0.0)).r);
-  m = max(m, texture2D(${p}CharMask, uv - vec2(r.x, 0.0)).r);
-  m = max(m, texture2D(${p}CharMask, uv + vec2(0.0, r.y)).r);
-  m = max(m, texture2D(${p}CharMask, uv - vec2(0.0, r.y)).r);
-  m = max(m, texture2D(${p}CharMask, uv + r).r);
-  m = max(m, texture2D(${p}CharMask, uv - r).r);
-  m = max(m, texture2D(${p}CharMask, uv + vec2(r.x, -r.y)).r);
-  m = max(m, texture2D(${p}CharMask, uv + vec2(-r.x, r.y)).r);
-  return step(0.5, m);
+  return clamp(texture2D(${p}CharMask, uv).r, 0.0, 1.0);
 }
 `;

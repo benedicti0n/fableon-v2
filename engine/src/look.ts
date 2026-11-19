@@ -9,6 +9,7 @@ export type Look = {
   mood: Mood;
   shafts?: boolean;
   sun?: boolean;
+  halo?: boolean;
   glow?: number;
   rim?: number;
   fill?: number;

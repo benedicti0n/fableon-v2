@@ -1184,6 +1184,9 @@
             },
             "grade": {
               "type": "string"
+            },
+            "halo": {
+              "type": "boolean"
             }
           }
         },

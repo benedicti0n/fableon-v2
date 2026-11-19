@@ -446,6 +446,21 @@ export async function checkFramesMeasured(dirArg, opts = {}) {
         else if (area < 0.01) push('foreground prop', k.over, `foreground prop ${k.over}: covers only ${(area * 100).toFixed(1)}% (a blob)`, FIX.foregroundProp);
         else if (area > 0.55) push('foreground prop', k.over, `foreground prop ${k.over}: covers ${(area * 100).toFixed(0)}% (too much)`, FIX.foregroundProp);
       }
+      // A foreground prop may not cover more than 10% of a subject's silhouette.
+      if (k.over) {
+        const overId = idsById.has(`mark:${k.over}`) ? `mark:${k.over}` : k.over;
+        const ob = idsById.get(overId)?.bbox;
+        if (ob) {
+          const oa = Math.max(0, (ob.x1 - ob.x0) * (ob.y1 - ob.y0));
+          for (const id of subjects) {
+            const sb = idsById.get(id)?.bbox; if (!sb) continue;
+            const w = Math.max(0, Math.min(ob.x1, sb.x1) - Math.max(ob.x0, sb.x0));
+            const h = Math.max(0, Math.min(ob.y1, sb.y1) - Math.max(ob.y0, sb.y0));
+            const sa = Math.max(0, (sb.x1 - sb.x0) * (sb.y1 - sb.y0));
+            if (sa > 0 && (w * h) / sa > 0.10) push('foreground overlap', k.over, `foreground ${k.over} covers ${((w * h) / sa * 100).toFixed(0)}% of ${id} (max 10%)`, FIX.foregroundProp ?? '');
+          }
+        }
+      }
       const markBox = primary ? findMark(ctx, primary)?.box : null;
       if (primary && size === 'insert' && markBox) {
         const fill = projectBoxFill(ctx, keyForProjection(k, m.f, m.start), markBox, m.f);

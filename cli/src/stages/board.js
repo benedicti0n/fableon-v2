@@ -7,6 +7,7 @@ import { atomicWrite, writeJsonArtifact } from '../core/artifacts.js';
 import { compileBoard } from '../authoring.js';
 import { checkFramesMeasured } from '../frames.js';
 import { compileFilmCheck } from '../film.js';
+import { trimForegroundMarks } from '../allocator.js';
 
 const DEFAULTS = { palace: 'courtyard', hermitage: 'clearing', village: 'front', deer: 'clearing', arena: 'floor', city: 'clearing', lac: 'stage', naga: 'floor' };
 const seedOf = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) % 1000; };
@@ -58,7 +59,7 @@ export function shotSchema(planShot, cast, catalog) {
       sets: { type: 'array', items: { enum: [planShot.set] }, minItems: 1, maxItems: 1 },
       actors: { type: 'array', items: actor }, camera: { type: 'array', items: camera, minItems: 1 },
       transition: { type: 'object', additionalProperties: false, required: ['type'], properties: { type: { enum: ['crossfade', 'flash', 'cut'] }, frames: { type: 'number', minimum: 1, maximum: 24 } } },
-      look: { type: 'object', additionalProperties: false, required: ['mood'], properties: { mood: { enum: ['golden-glow', 'warm-side', 'dusk', 'night-moon', 'noon'] }, shafts: { type: 'boolean' }, sun: { type: 'boolean' }, glow: { type: 'number' }, rim: { type: 'number' }, grade: { type: 'string' } } },
+      look: { type: 'object', additionalProperties: false, required: ['mood'], properties: { mood: { enum: ['golden-glow', 'warm-side', 'dusk', 'night-moon', 'noon'] }, shafts: { type: 'boolean' }, sun: { type: 'boolean' }, halo: { type: 'boolean' }, glow: { type: 'number' }, rim: { type: 'number' }, grade: { type: 'string' } } },
     },
   };
 }
@@ -150,8 +151,8 @@ function variants(shot, s, catalog) {
   return out;
 }
 
-function measureShot(tmp, shot, castMap, words, catalog) {
-  const board = { version: 1, partial: true, cast: castMap, shots: [shot], featureRim: project.look?.featureRim === true };
+function measureShot(tmp, shot, castMap, words, catalog, featureRim = false) {
+  const board = { version: 1, partial: true, cast: castMap, shots: [shot], featureRim };
   const { storyboard } = compileBoard(board, words, catalog);
   atomicWrite(join(tmp, 'words.json'), JSON.stringify(words));
   atomicWrite(join(tmp, 'storyboard.json'), JSON.stringify(storyboard));
@@ -181,7 +182,11 @@ export async function runBoard({ projectDir, project, router }) {
   const castMap = Object.fromEntries(cast.characters.map((c) => [c.id, { spec: c.spec ?? c.cast, seed: seedOf(c.id) }]));
   const kicks = (plan.shots ?? []).flatMap((s) => [...(s.keys ?? []).map((k) => k.impact), ...(s.beats ?? []).map((b) => b.impact)].filter(Boolean).map((at) => ({ at, amp: 0.6 })));
   const groups = groupPlan(plan);
-  let shots = groups.map((s, i) => baseShot(s, i, groups, cast, catalog));
+  let shots = groups.map((s, i) => {
+    const set = catalog.sets.find((x) => x.name === s.set);
+    const marks = (set?.marks ?? []).map((m) => `${s.set}.${m.name}`);
+    return trimForegroundMarks(baseShot(s, i, groups, cast, catalog), marks);
+  });
   const review = { version: 1, model: 'deterministic base + measured variants', shots: [] };
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-board-'));
   try {
@@ -216,7 +221,7 @@ export async function runBoard({ projectDir, project, router }) {
       for (const v of variants(shots[idx], groups[idx], catalog).slice(1, 16)) {
         rounds++;
         try {
-          const r = await measureShot(tmp, v, castMap, words, catalog);
+          const r = await measureShot(tmp, v, castMap, words, catalog, project.look?.featureRim === true);
           if (r.errors.length < bestErrors.length) { best = v; bestErrors = r.errors; }
           if (!bestErrors.length) break;
         } catch (e) { /* keep the previous best */ }
@@ -224,7 +229,18 @@ export async function runBoard({ projectDir, project, router }) {
       shots[idx] = best;
       if (rec) { rec.rounds += rounds; rec.findings = bestErrors.map((e) => e.message); rec.needsHuman = bestErrors.length > 0; }
     }
-    const finalBoard = { version: 1, cast: castMap, shots, ...(kicks.length ? { kicks } : {}) };
+    // Measured foreground rule: a prop that covers >10% of a subject's silhouette is dropped, then re-measured.
+    const fgErrors = measured.errors.filter((e) => e.code === 'foreground overlap');
+    if (fgErrors.length) {
+      for (const e of fgErrors) {
+        const shot = shots.find((s) => s.id === e.shot);
+        for (const k of shot?.camera ?? []) if (k.foreground === e.subject) delete k.foreground;
+      }
+      compiled = compileBoard({ version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) }, words, catalog).storyboard;
+      atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');
+      measured = await checkFramesMeasured(projectDir);
+    }
+    const finalBoard = { version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) };
 
     compiled = compileBoard(finalBoard, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');

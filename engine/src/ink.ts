@@ -219,6 +219,9 @@ void main() {
 }`;
 
 export class InkPass extends Pass {
+  /** world-only normals + depth written by the last render (NOINK disabled); used by the character mask */
+  get depthTexture(): THREE.DepthTexture | null { return this.rt.depthTexture; }
+
   /** 0 = normal, 1 = show the ink mask, 2 = show the world normal buffer */
   debug = 0;
   private world: THREE.Scene;

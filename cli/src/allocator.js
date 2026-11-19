@@ -13,6 +13,18 @@ const T = (anchor, words) => {
 const asArray = (v) => (Array.isArray(v) ? v : v == null ? [] : [v]);
 const marksFor = (catalog, set) => catalog.sets.find((s) => s.name === set)?.marks.map((m) => `${set}.${m.name}`) ?? [];
 
+/** A foreground mark that is also an actor's standing mark will sit on that actor: re-pick another set mark, else drop. */
+export function trimForegroundMarks(shot, allMarks = null) {
+  const actorMarks = new Set((shot.actors ?? []).map((a) => (typeof a.at === 'string' ? a.at : null)).filter(Boolean));
+  // Buildings and open locations are not foreground props: a hut post/clearing card sits on the actors.
+  const BAD = /\.(hut|clearing|door)$/;
+  for (const k of shot.camera ?? []) if (k.foreground && (actorMarks.has(k.foreground) || BAD.test(k.foreground))) {
+    const alt = (allMarks ?? []).find((m) => !actorMarks.has(m) && !BAD.test(m) && m !== k.foreground);
+    if (alt) k.foreground = alt; else delete k.foreground;
+  }
+  return shot;
+}
+
 /** Fill scene ids, transitions, marks and shares; content (lines, who, what) stays the model's. */
 export function allocatePlan(plan, { script, words, catalog, policy = {} }) {
   const shots = plan.shots ?? [];

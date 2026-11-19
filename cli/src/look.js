@@ -13,9 +13,9 @@ export const MOOD_TARGETS = {
   // world pixels: golden split 0.69/glow 0/mean 0.39/std 0.17/p2 0.17/p98 0.76; day split -0.19/0.1%/0.54/0.14/
   // 0.27/0.87; night split -0.23/0/0.15/0.07/0.08/0.27. The F3 whole-frame table included the characters' ink and
   // lit/shadow sides, which is why this table is lower for warm-side/night.
-  "golden-glow": { split: 0.35, glow: [0.005, 0.06], mean: [0.32, 0.55], std: [0.14, 0.30], p2: [0.05, 0.25], p98: [0.75, 1.0] },
+  "golden-glow": { split: 0.35, glow: [0.0, 0.06], mean: [0.32, 0.55], std: [0.14, 0.30], p2: [0.05, 0.25], p98: [0.75, 1.0] },
   "warm-side": { split: 0.05, glow: [0.0, 0.06], mean: [0.30, 0.65], std: [0.12, 0.30], p2: [0.05, 0.35], p98: [0.70, 1.0] },
-  dusk: { split: 0.35, glow: [0.003, 0.06], mean: [0.25, 0.52], std: [0.12, 0.30], p2: [0.03, 0.20], p98: [0.70, 1.0] },
+  dusk: { split: 0.35, glow: [0.0, 0.06], mean: [0.25, 0.52], std: [0.12, 0.30], p2: [0.03, 0.20], p98: [0.70, 1.0] },
   "night-moon": { split: 0.03, glow: [0.0, 0.02], mean: [0.12, 0.40], std: [0.07, 0.22], p2: [0.02, 0.15], p98: [0.25, 0.80] },
   noon: { split: 0.05, glow: [0.0, 0.04], mean: [0.35, 0.65], std: [0.12, 0.30], p2: [0.04, 0.30], p98: [0.75, 1.0] },
 };

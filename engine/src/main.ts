@@ -3,13 +3,14 @@
 // Post chain (bridge short): InkPass (world ink, own pass) -> lens blur pre + main -> [bloom + NEUTRAL tone map + grade],
 // MSAA 4. Every pixel-sized parameter is specified at 1080x1920 and scaled with the output height.
 import * as THREE from "three";
-import { EffectComposer, RenderPass, EffectPass, BlendFunction, ToneMappingEffect, ToneMappingMode, SMAAEffect, SMAAPreset, EdgeDetectionMode } from "postprocessing";
+import { EffectComposer, RenderPass, EffectPass, Pass, BlendFunction, ToneMappingEffect, ToneMappingMode, SMAAEffect, SMAAPreset, EdgeDetectionMode } from "postprocessing";
 import { World } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur } from "./lensblur";
 import { GradeEffect, GRADES, GRADE_STRENGTH, gradeFor } from "./grade";
 import { HalationEffect } from "./halation";
 import { MaskedBloomEffect } from "./glow";
+import { LegacyHalationEffect } from "./legacyHalation";
 import { moodRig } from "./look";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
@@ -57,26 +58,31 @@ const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(40, W / H, 0.15, 1500);
 const world = new World();
 world.noShafts = OFF.has("shafts");
+world.msaa = MS;
+world.hideActor = q.get("hide") || "";
 scene.add(world.root);
 noInkFallback(world.root);
 
 const MEASURE = measureSubjects();
 
-// ---------- character mask: actor/special cards only, flat alpha coverage ----------
-// This is the same alpha-cut as the coverage pass, at full output resolution. The glow passes multiply their source
-// and their added light by (1 - mask), dilated by one pixel at 1080, so world glow never crosses a character.
-const charMaskRT = new THREE.WebGLRenderTarget(W, H, { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType, depthBuffer: true });
+const ink = new InkPass(scene, cam);
+
+// ---------- character mask: actor/special cards only, soft alpha coverage, tested against world depth ----------
+// The mask is the cards' real alpha at 2x supersampling (downsampled by LinearFilter), so its edge matches the
+// MSAA frame without a binary cut or a dilation ring. It is tested against the world-only depth so a card behind a
+// trunk has mask 0. The glow passes multiply their source and their added light by (1 - mask).
+const MASK_SS = 2;
+const charMaskRT = new THREE.WebGLRenderTarget(W * MASK_SS, H * MASK_SS, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, type: THREE.UnsignedByteType, depthBuffer: false });
 const charMaskScene = new THREE.Scene();
 const charMaskGroup = new THREE.Group(); charMaskScene.add(charMaskGroup);
 const charMaskMat = (tex: THREE.Texture) => new THREE.ShaderMaterial({
-  uniforms: { map: { value: tex } },
+  uniforms: { map: { value: tex }, tDepth: { value: null }, uRes: { value: new THREE.Vector2(W * MASK_SS, H * MASK_SS) } },
   vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
-  fragmentShader: "uniform sampler2D map; varying vec2 vUv; void main(){ if (texture2D(map, vUv).a < 0.5) discard; gl_FragColor = vec4(1.0); }",
-  depthTest: true, depthWrite: true, side: THREE.DoubleSide, toneMapped: false, fog: false,
+  fragmentShader: "uniform sampler2D map; uniform sampler2D tDepth; uniform vec2 uRes; varying vec2 vUv; void main(){ float sceneD = texture2D(tDepth, gl_FragCoord.xy / uRes).x; if (gl_FragCoord.z > sceneD + 0.0008) discard; float a = texture2D(map, vUv).a; gl_FragColor = vec4(a, a, a, a); }",
+  depthTest: false, depthWrite: false, side: THREE.DoubleSide, toneMapped: false, fog: false, blending: THREE.NoBlending, transparent: false,
 });
 const maskMeshes: THREE.Mesh[] = [];
-function renderCharMask(active: boolean) {
-  if (!active) return;
+function renderCharMask(depthTex: THREE.Texture | null) {
   let n = 0;
   for (const a of world.coverageCards.actors) {
     const tex = a.r?.tex;
@@ -85,17 +91,28 @@ function renderCharMask(active: boolean) {
     if (!m) { m = new THREE.Mesh(a.mesh.geometry, charMaskMat(tex)); maskMeshes[n] = m; charMaskGroup.add(m); }
     m.geometry = a.mesh.geometry;
     (m.material as THREE.ShaderMaterial).uniforms.map.value = tex;
+    (m.material as THREE.ShaderMaterial).uniforms.tDepth.value = depthTex;
     m.position.copy(a.mesh.position); m.quaternion.copy(a.mesh.quaternion); m.scale.copy(a.mesh.scale);
     m.visible = true; n++;
   }
   for (let i = n; i < maskMeshes.length; i++) maskMeshes[i].visible = false;
   const oldTarget = renderer.getRenderTarget();
   const oldClear = new THREE.Color(); renderer.getClearColor(oldClear); const oldAlpha = renderer.getClearAlpha();
-  const oldSpace = renderer.outputColorSpace;
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-  renderer.setRenderTarget(charMaskRT); renderer.setClearColor(0x000000, 1); renderer.clear(); renderer.render(charMaskScene, cam);
-  renderer.setRenderTarget(oldTarget); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace;
+  const oldSpace = renderer.outputColorSpace, oldAuto = renderer.autoClear;
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace; renderer.autoClear = false;
+  renderer.setRenderTarget(charMaskRT); renderer.setClearColor(0x000000, 1); renderer.clear(true, false, false); renderer.render(charMaskScene, cam);
+  renderer.setRenderTarget(oldTarget); renderer.setClearColor(oldClear, oldAlpha); renderer.outputColorSpace = oldSpace; renderer.autoClear = oldAuto;
 }
+
+class CharMaskPass extends Pass {
+  active = false;
+  constructor() { super("CharMaskPass"); this.needsSwap = false; }
+  render(_renderer: THREE.WebGLRenderer, inputBuffer: THREE.WebGLRenderTarget) {
+    if (!this.active) return;
+    renderCharMask(ink.depthTexture ?? inputBuffer.depthTexture ?? null);
+  }
+}
+const maskPass = new CharMaskPass();
 
 // ---------- coverage pass: the same frame as flat object IDs ----------
 // Separate scene, separate unlit material, no post chain. This path is only used by `fableon frames` and
@@ -283,21 +300,24 @@ const makeBloom = () => {
   return b;
 };
 const composer = new EffectComposer(renderer, { multisampling: MS, frameBufferType: THREE.HalfFloatType });
-const ink = new InkPass(scene, cam);
 const lens = new LensBlur({ maxCoC: 24, nearScale: 1.2 });
-const grade = new GradeEffect(GRADES.day, 1);
-const halation = new HalationEffect();
-const bloom = OFF.has("bloom") ? null : makeBloom();
+const gradeLegacy = new GradeEffect(GRADES.day, 1), gradeLook = new GradeEffect(GRADES.day, 1);
+const halationLegacy = new LegacyHalationEffect(), halationLook = new HalationEffect();
+const bloomLegacy = OFF.has("bloom") ? null : makeBloom(), bloomLook = OFF.has("bloom") ? null : makeBloom();
 const preP = new EffectPass(cam, lens.pre), mainP = new EffectPass(cam, lens.main);
 composer.addPass(new RenderPass(scene, cam));
 if (!OFF.has("ink")) composer.addPass(ink);
+composer.addPass(maskPass);
 if (!OFF.has("lens")) { composer.addPass(preP); composer.addPass(mainP); }
-composer.addPass(new EffectPass(cam, ...(bloom ? [bloom] : []), ...(OFF.has("halation") ? [] : [halation]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [grade])));
+const legacyPass = new EffectPass(cam, ...(bloomLegacy ? [bloomLegacy] : []), ...(OFF.has("halation") ? [] : [halationLegacy]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [gradeLegacy]));
+const lookPass = new EffectPass(cam, ...(bloomLook ? [bloomLook] : []), ...(OFF.has("halation") ? [] : [halationLook]), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }), ...(OFF.has("grade") ? [] : [gradeLook]));
+composer.addPass(legacyPass);
+composer.addPass(lookPass);
 // MSAA is the costliest part on the CPU renderer (~3 s/frame at 2K): without it, SMAA on the final image smooths the
 // card cut-outs and remaining geometry edges (the world ink lines are already anti-aliased by the ink pass)
 if (MS === 0 && !OFF.has("smaa")) { const smaa = new SMAAEffect({ preset: SMAAPreset.HIGH, edgeDetectionMode: EdgeDetectionMode.COLOR }); composer.addPass(new EffectPass(cam, smaa)); }
 composer.setSize(W, H);
-halation.setSize(W, H);
+halationLegacy.setSize(W, H); halationLook.setSize(W, H);
 
 const out = document.createElement("canvas"); out.width = W; out.height = H;
 const g2 = out.getContext("2d")!;
@@ -311,29 +331,33 @@ const drawShot = (id: number, f: number) => {
   const target = world.update(s, f, cam, scene, H, RT.kickCam);
   PROF.update = performance.now() - t0; t0 = performance.now();
   const lookOn = !!s.look;
-  renderCharMask(lookOn);
-  if (bloom) bloom.setCharMask(charMaskRT.texture, W, H, lookOn);
-  halation.setCharMask(charMaskRT.texture, W, H, lookOn);
-  world.setShaftMask(charMaskRT.texture, W, H, lookOn);
+  maskPass.active = lookOn;
+  legacyPass.enabled = !lookOn; lookPass.enabled = lookOn;
+  if (bloomLegacy) bloomLegacy.setCharMask(charMaskRT.texture, W, H, false);
+  if (bloomLook) bloomLook.setCharMask(charMaskRT.texture, W, H, lookOn);
+  halationLook.on = lookOn;
+  halationLook.setCharMask(charMaskRT.texture, W, H, lookOn);
   noInkFallback(world.root);
   const d = RT.dofAt(f);
   cam.getWorldDirection(fwd);
   if (d.focus) fpt.set(...d.focus(f)); else fpt.copy(target);
   lens.focus = Math.max(0.3, fpt.sub(cam.position).dot(fwd));
   lens.cInf = d.cInf;
-  // the lens passes cost a lot on the CPU renderer: skip them on sharp shots
   preP.enabled = mainP.enabled = d.cInf > 0.25;
   const rig = moodRig(s.look?.mood);
   if (s.look && rig) {
-    halation.intensity = s.look.glow ?? rig.glow.intensity;
-    halation.threshold = rig.glow.threshold;
-    halation.tint = rig.glow.tint;
-    halation.radius = Math.max(4, Math.round(rig.glow.radius * H / 1080));
-  } else halation.intensity = 0;
-  gradeFor(grade, s.look && rig ? rig.grade : s.light);
-  grade.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
-  grade.setCharMask(charMaskRT.texture, W, H, lookOn);
-  grade.protect = s.look ? 1 : 0;
+    halationLook.intensity = s.look.glow ?? rig.glow.intensity;
+    halationLook.threshold = rig.glow.threshold;
+    halationLook.tint = rig.glow.tint;
+    halationLook.radius = Math.max(4, Math.round(rig.glow.radius * H / 1080));
+  } else halationLook.intensity = 0;
+  gradeFor(gradeLegacy, s.light);
+  gradeLegacy.setCharMask(charMaskRT.texture, W, H, false);
+  gradeLegacy.protect = 0;
+  gradeFor(gradeLook, s.look && rig ? rig.grade : s.light);
+  gradeLook.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
+  gradeLook.setCharMask(charMaskRT.texture, W, H, lookOn);
+  gradeLook.protect = lookOn ? 1 : 0;
   composer.render();
   { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); }
   PROF.render = performance.now() - t0;
@@ -371,15 +395,20 @@ const renderComposite = (f: number) => {
 (window as unknown as Record<string, unknown>).renderMask = (f: number) => {
   const shot = RT.SHOTS.find((s) => f >= s.a && f < s.b);
   if (!shot) return "";
-  world.update(shot, f, cam, scene, H, RT.kickCam);
-  renderCharMask(true);
-  const raw = new Uint8Array(W * H * 4);
-  renderer.readRenderTargetPixels(charMaskRT, 0, 0, W, H, raw);
+  drawShot(shot.id, f);
+  const RW = W * MASK_SS, RH = H * MASK_SS;
+  const raw = new Uint8Array(RW * RH * 4);
+  renderer.readRenderTargetPixels(charMaskRT, 0, 0, RW, RH, raw);
   const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
   const ctx = cv.getContext("2d")!; const img = ctx.createImageData(W, H);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const o = ((H - 1 - y) * W + x) * 4, q = (y * W + x) * 4;
-    const v = raw[o]; img.data[q] = v; img.data[q + 1] = v; img.data[q + 2] = v; img.data[q + 3] = 255;
+    let sum = 0;
+    for (let sy = 0; sy < MASK_SS; sy++) for (let sx = 0; sx < MASK_SS; sx++) {
+      const ix = x * MASK_SS + sx, iy = (H - 1 - y) * MASK_SS + sy;
+      sum += raw[(iy * RW + ix) * 4];
+    }
+    const v = Math.round(sum / (MASK_SS * MASK_SS));
+    const q = (y * W + x) * 4; img.data[q] = v; img.data[q + 1] = v; img.data[q + 2] = v; img.data[q + 3] = 255;
   }
   ctx.putImageData(img, 0, 0);
   return cv.toDataURL("image/png");
