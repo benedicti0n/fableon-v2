@@ -71,3 +71,7 @@ export const notes = (id: string, stage: string, body: string) => json<{ stage: 
 export const putFile = (id: string, path: string, body: unknown) => json<{ path: string; stage: string | null; status: string }>(`/api/projects/${encodeURIComponent(id)}/files/${path.split('/').map(encodeURIComponent).join('/')}`, { method: 'PUT', body: typeof body === 'string' ? body : JSON.stringify(body), headers: typeof body === 'string' ? { 'content-type': 'text/plain' } : undefined });
 export const patchProject = (id: string, patch: Record<string, unknown>) => json<unknown>(`/api/projects/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(patch) });
 export const cancelJob = (id: string) => json<Job>(`/api/jobs/${encodeURIComponent(id)}/cancel`, { method: 'POST', body: '{}' });
+
+export type Voices = { providers: Array<{ name: string; configured: boolean; model: string; speakers: Array<string | { id?: string; name?: string }> }>; cached: Array<{ project: string; auditions: string[] }>; credit: { elevenlabs?: { plan?: string; used?: number; limit?: number; remaining?: number; reset?: string; available?: boolean; note?: string }; sarvam?: { budgetInr?: number; note?: string } } };
+export const getVoices = () => json<Voices>('/api/voices');
+export const getKeys = () => json<Record<string, 'set' | 'unset'>>('/api/settings/keys');
