@@ -2,6 +2,7 @@
 import { existsSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { ROOT } from './env.js';
+import { FableonError, ERROR_CODES } from './core/errors.js';
 
 export const QUALITY = {
   preview: { size: '540x960', label: 'preview 540x960' },
@@ -10,20 +11,20 @@ export const QUALITY = {
 
 export function quality(name = 'preview') {
   const q = QUALITY[name];
-  if (!q) throw new Error(`unknown --quality ${name} (choose preview or final)`);
+  if (!q) throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown --quality ${name} (choose preview or final)`, { quality: name });
   return q;
 }
 
 export function projectDir(arg) {
-  if (!arg) throw new Error('missing --project <dir>');
+  if (!arg) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'missing --project <dir>');
   const dir = resolve(arg);
-  if (!existsSync(dir)) throw new Error(`project not found: ${dir} (run: fableon init <name> --from fixtures/adi-parva)`);
+  if (!existsSync(dir)) throw new FableonError(ERROR_CODES.NOT_FOUND, `project not found: ${dir} (run: fableon init <name> --from fixtures/adi-parva)`, { project: dir });
   return dir;
 }
 
 export function requireFile(dir, name, hint) {
   const p = join(dir, name);
-  if (!existsSync(p)) throw new Error(`${dir} has no ${name}${hint ? ` (${hint})` : ''}`);
+  if (!existsSync(p)) throw new FableonError(ERROR_CODES.NOT_FOUND, `${dir} has no ${name}${hint ? ` (${hint})` : ''}`, { project: dir, file: name });
   return p;
 }
 
@@ -35,11 +36,11 @@ export function assertProjectInputs(dir) {
 
 // Copy a project's inputs into work/<name>/. Derived folders (reference stills, audio, render, qa) stay out.
 export function initProject(name, from) {
-  if (!name || /[\\/]/.test(name) || name === '.' || name === '..') throw new Error('init needs a simple project name (no slashes)');
+  if (!name || /[\\/]/.test(name) || name === '.' || name === '..') throw new FableonError(ERROR_CODES.BAD_REQUEST, 'init needs a simple project name (no slashes)');
   const src = resolve(ROOT, from);
-  if (!existsSync(src)) throw new Error(`source project not found: ${src}`);
+  if (!existsSync(src)) throw new FableonError(ERROR_CODES.NOT_FOUND, `source project not found: ${src}`, { path: src });
   const dest = join(ROOT, 'work', name);
-  if (existsSync(dest) && readdirSync(dest).length) throw new Error(`${dest} already exists and is not empty`);
+  if (existsSync(dest) && readdirSync(dest).length) throw new FableonError(ERROR_CODES.BAD_REQUEST, `${dest} already exists and is not empty`, { path: dest });
   mkdirSync(dest, { recursive: true });
   const skip = new Set(['reference-stills', 'audio', 'render', 'qa', 'stills', 'golden', 'diff']);
   const copied = [];

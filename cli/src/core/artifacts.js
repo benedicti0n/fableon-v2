@@ -1,9 +1,10 @@
 // Atomic, validated project artifacts. The library never writes without a schema where one exists.
-import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createHash, randomBytes } from 'node:crypto';
 import { dirname, join, relative, resolve } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { ROOT } from '../env.js';
+import { validationError } from './errors.js';
 
 const validators = new Map();
 export const schemaPath = (name) => join(ROOT, 'schema', `${name}.schema.json`);
@@ -28,9 +29,7 @@ export function validate(schema, data) {
     validators.set(schema, v);
   }
   if (!v(data)) {
-    const err = new Error(`${schema} validation failed:\n${v.errors.map((e) => `${e.instancePath || '/'} ${e.message}`).join('\n')}`);
-    err.validation = v.errors;
-    throw err;
+    throw validationError(schema, v.errors);
   }
   return data;
 }
@@ -74,7 +73,21 @@ export function writeJsonArtifact(projectDir, stage, rel, data, schema = null) {
   return sha256(text);
 }
 
-export function fileHash(p) { return existsSync(p) ? sha256(readFileSync(p)) : null; }
+const memo = new Map();
+/** Raw-byte file hash memoised by (path, size, mtimeMs); binary files must never be decoded as text. */
+export function fileHash(p) {
+  if (!existsSync(p)) return null;
+  let st;
+  try { st = statSync(p); } catch { return null; }
+  const key = `${p}\0${st.size}\0${st.mtimeMs}`;
+  const hit = memo.get(key);
+  if (hit) return hit;
+  const h = sha256(readFileSync(p));
+  if (memo.size > 5000) memo.clear();
+  memo.set(key, h);
+  return h;
+}
+export function clearFileHashMemo() { memo.clear(); }
 export function outputHash(projectDir, outputs) {
   const h = createHash('sha256');
   for (const rel of outputs) {

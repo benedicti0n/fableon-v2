@@ -26,7 +26,7 @@ export function blockingFailures(review, script, factsById) {
   }).map((l) => byN.get(l.n));
 }
 
-export async function runFactcheck({ projectDir, project, router }) {
+export async function runFactcheck({ projectDir, project, router, progress = null }) {
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
   const verified = (facts.facts ?? []).filter((f) => f.verified);
@@ -65,14 +65,18 @@ export async function runFactcheck({ projectDir, project, router }) {
       return data.lines;
     };
 
+    progress?.({ step: 'factcheck:first', done: 0, total: 2 });
     const first = await ask(ids);
+    progress?.({ step: 'factcheck:first', done: 1, total: 2 });
     const byN = new Map(review.lines.map((l) => [l.n, l]));
     for (const l of first) byN.set(l.n, { ...l, hash: lines.find((x) => x.n === l.n).hash, confirmed: false });
     review = { ...review, model, settings, reviewedAt: new Date().toISOString(), lines: [...byN.values()].sort((a, b) => a.n - b.n) };
 
     const flags = review.lines.filter((l) => factual(l) && !l.confirmed);
     if (flags.length) {
+      progress?.({ step: 'factcheck:confirm', done: 1, total: 2 });
       const second = await ask(flags.map((l) => l.n));
+      progress?.({ step: 'factcheck:confirm', done: 2, total: 2 });
       const sByN = new Map(review.lines.map((l) => [l.n, l]));
       for (const l of second) {
         const old = sByN.get(l.n);

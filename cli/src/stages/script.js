@@ -393,7 +393,7 @@ function renderScript(project, data, facts) {
   return lines.join('\n');
 }
 
-export async function runScript({ projectDir, project, router }) {
+export async function runScript({ projectDir, project, router, progress = null }) {
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
   const brief = readFileSync(join(projectDir, 'brief.md'), 'utf8');
@@ -426,10 +426,12 @@ export async function runScript({ projectDir, project, router }) {
     ? `Use exactly ${lineTarget} lines (${lineLo}-${lineHi} allowed) and about ${wordsTarget} words; hard range ${wordsLo}-${wordsHi}; about ${(target / lineTarget).toFixed(1)} words per line. Exact plan, one beat per line: ${planList}. Per-line word budget: ${budgetList}; stay within 2 words of each budget. Count words before returning. Exactly one mystery line ends with "?" before the pivot; the pivot line starts with ${pivotList}; the payoff is the last 1-2 lines. Optional deadpan pair: two consecutive escalation lines, good news then genuinely bad news, both beat escalation with tone deadpan. At least one escalation line must contain an actual quoted in-character sentence in quotation marks (for example the brahmin says \"मेरे पास कोई विकल्प नहीं।\"), not indirect speech. Every line needs gloss, delivery and a literal look with set, who, pose and note.`
     : `Use exactly ${lineTarget} lines (${lineLo}-${lineHi} allowed) and about ${wordsTarget} words; hard range ${wordsLo}-${wordsHi}. Exact plan, one beat per line: ${planList}. Per-line word budget: ${budgetList}; stay within 2 words of each budget. Count words before returning. Exactly one mystery line ends with "?" before the pivot; the pivot line starts with ${pivotList}; the payoff is the last 1-2 lines. Every look needs set, who, pose and a literal note.`;
   const repairHint = `Keep the reference formula: hook line 0 10-16 words with no setup; 1-2 setting lines; 3-6 escalation lines with one short quoted in-character dialogue inside an escalation line (actual quotation marks); exactly one mystery line ending in "?" before the pivot; the pivot line starts with ${pivotList}; exactly one analogy; the payoff is the last 1-2 lines. Median sentence length ${isHi ? '8-14' : '10-16'} words: split any long sentence into two short ones. Every look needs at least one who and a catalog pose. Every setting/escalation/pivot/analogy line cites a verified fact. Include hookAdvisory.${isHi ? ' Every line needs a gloss and delivery; every pause/emphasis word must exist in its line.' : ''} Use the exact plan ${planList} and word budget ${budgetList}. Keep about ${lineTarget} lines (${lineLo}-${lineHi}) and ${wordsLo}-${wordsHi} words.`;
+  progress?.({ step: 'script:model', done: 0, total: 1 });
   const { data, usage } = await router.callJson('script', [
     { role: 'system', content: isHi ? SCRIPT_HI : SCRIPT },
     { role: 'user', content: `STABLE CATALOG (sets, marks, poses, expressions and props are the only stageable ones):\n${card}\n\nDATA:\n<brief>\n${brief}\n</brief>\n<verified_facts>\n${verified.map((f) => `${f.id}: ${f.claim}`).join('\n')}\n</verified_facts>\nTarget: ${project.seconds} seconds at ${rate} words/second = about ${wordsTarget} words (valid ${wordsLo}-${wordsHi}). ${instruction} Return json only.` },
   ], { validate: (d) => validateScript(d, { project, facts, catalog, sourceTexts }), repairHint });
+  progress?.({ step: 'script:model', done: 1, total: 1 });
   data.wps = rate;
   writeJsonArtifact(projectDir, 'script', 'script.json', data, 'script');
   writeTextArtifact(projectDir, 'script', 'SCRIPT.md', renderScript(project, data, facts));

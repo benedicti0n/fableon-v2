@@ -51,6 +51,7 @@ import { runGlowTests } from './glow.mjs';
 import { runGlowDiscTests } from './glow_disc.mjs';
 import { runForegroundTests } from './foreground.mjs';
 import { runDepthMaskTests } from './depth_mask.mjs';
+import { runStateTests } from './state.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -196,6 +197,8 @@ try {
   check('foreground allocator', fg.ok, `${fg.checks.filter((c) => c.ok).length}/${fg.checks.length} checks`);
   const dm = runDepthMaskTests();
   check('depth mask', dm.ok, `${dm.checks.filter((c) => c.ok).length}/${dm.checks.length} checks`);
+  const st = runStateTests();
+  check('state migration + lock', st.ok, `${st.checks.filter((c) => c.ok).length}/${st.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

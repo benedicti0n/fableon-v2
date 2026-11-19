@@ -2,6 +2,8 @@
 // assemble, qa, all).
 import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
+import { printError } from './core/errors.js';
+import { takeEventsFlag, eventsEnabled, emitJob, setCurrentJob } from './core/events.js';
 import { validateCommand } from './validate.js';
 import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
@@ -28,6 +30,8 @@ import {
 } from './pipeline.js';
 
 export function main(argv = process.argv) {
+  const { argv: cleanArgv, events } = takeEventsFlag(argv);
+  if (events) setCurrentJob(process.env.FABLEON_JOB_ID ?? null);
   const program = new Command();
   program
     .name('fableon')
@@ -316,5 +320,9 @@ export function main(argv = process.argv) {
     .option('--workers <n>', 'parallel segment workers', '2')
     .action((opts) => allCommand(opts.project, { qualityName: opts.quality, workers: Number(opts.workers) }));
 
-  return program.parseAsync(argv);
+  return program.parseAsync(cleanArgv).catch((e) => {
+    printError(e);
+    if (eventsEnabled()) emitJob('failed', { error: e?.toJSON?.() ?? { message: String(e) } });
+    process.exitCode = 1;
+  });
 }

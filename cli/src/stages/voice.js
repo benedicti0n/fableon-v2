@@ -13,7 +13,7 @@ const probe = (file) => Number(capture('ffprobe', ['-v', 'error', '-show_entries
 const scaleWords = (words, k) => words.map((w) => ({ ...w, a: +Math.max(0, w.a * k).toFixed(3), b: +Math.max(0, w.b * k).toFixed(3) }));
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
-export async function runVoice({ projectDir: projectDirArg, project, fit = true, cachedOnly = false }) {
+export async function runVoice({ projectDir: projectDirArg, project, fit = true, cachedOnly = false, progress = null }) {
   const projectDir = resolve(projectDirArg);
   loadDotEnv();
   const voice = project.voice ?? {};
@@ -36,7 +36,9 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
     speed = clamp(baseSpeed * (naturalEstimate / target), 0.7, 1.2);
   }
   const steps = [];
+  progress?.({ step: 'voice:synthesize', done: 0, total: 2 });
   let result = await synthesize({ provider, projectDir, project: { ...project, voice: voiceFor(speed) } });
+  progress?.({ step: 'voice:synthesize', done: 1, total: 2 });
   const voicePath = join(projectDir, 'voice.wav'), wordsPath = join(projectDir, 'words.json');
   if (!existsSync(voicePath)) throw new Error(`${provider} did not write voice.wav`);
   let natural = probe(voicePath);
@@ -173,6 +175,7 @@ export async function runVoice({ projectDir: projectDirArg, project, fit = true,
     writeJsonArtifact(projectDir, 'voice', 'project.json', project, 'project');
   }
   writeJsonArtifact(projectDir, 'voice', 'words.json', timesAreFinal ? words : scaleWords(words, atempo !== 1 ? 1 / atempo : 1), 'words');
+  progress?.({ step: 'voice:fit', done: 2, total: 2 });
   natural = finalDuration;
   return {
     natural,

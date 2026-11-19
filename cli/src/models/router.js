@@ -6,6 +6,7 @@ import { ROOT, loadDotEnv } from '../env.js';
 import { atomicWrite, readJson, writeJsonArtifact } from '../core/artifacts.js';
 import { catalogModel, catalogPrice, fallbackConfigsForStage, fallbackForStage, modelForStage, modelId, repoModels } from '../core/model-config.js';
 import { PROVIDERS } from './providers.js';
+import { FableonError, ERROR_CODES, asFableonError } from '../core/errors.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const jitter = () => Math.floor(Math.random() * 120);
@@ -20,6 +21,7 @@ export class ModelRouter {
     this.signal = signal;
     this.onEvent = onEvent;
     this.logCalls = logCalls;
+    this.progressCount = 0;
     this.usage = {};
     this.callsByStage = {};
     this.tokensRun = 0;
@@ -157,8 +159,8 @@ export class ModelRouter {
 
   budgetCheck(stage) {
     const b = this.project.budget ?? {};
-    if (b.maxCallsPerStage && (this.callsByStage[stage] ?? 0) >= b.maxCallsPerStage) throw new Error(`budget: maxCallsPerStage ${b.maxCallsPerStage} reached for ${stage}`);
-    if (b.maxTokensPerRun && this.tokensRun >= b.maxTokensPerRun) throw new Error(`budget: maxTokensPerRun ${b.maxTokensPerRun} reached`);
+    if (b.maxCallsPerStage && (this.callsByStage[stage] ?? 0) >= b.maxCallsPerStage) throw new FableonError(ERROR_CODES.BUDGET_EXCEEDED, `budget: maxCallsPerStage ${b.maxCallsPerStage} reached for ${stage}`, { provider: this.config(stage).provider, limit: b.maxCallsPerStage, stage });
+    if (b.maxTokensPerRun && this.tokensRun >= b.maxTokensPerRun) throw new FableonError(ERROR_CODES.BUDGET_EXCEEDED, `budget: maxTokensPerRun ${b.maxTokensPerRun} reached`, { provider: this.config(stage).provider, limit: b.maxTokensPerRun, stage });
   }
 
   supportsJson(c, model) {
@@ -208,11 +210,15 @@ export class ModelRouter {
     if (!msgs.some((m) => m.role === 'system' && /json/i.test(m.content))) msgs.unshift({ role: 'system', content: 'Return one valid json object only.' });
     let lastErrors = [], lastFailure = null;
     const passes = [{ config: primary, fallback: false }, ...fbs.map((config) => ({ config, fallback: true }))];
+    const totalCalls = passes.length * (primary.maxRepairs ?? 2) + 1;
+    let calls = 0;
+    const bump = () => { calls++; this.onEvent?.({ type: 'progress', stage, step: `model:${stage}`, done: Math.min(calls, totalCalls), total: totalCalls }); };
     for (const pass of passes) {
       if (pass.fallback) this.recordFallback(stage, primary, pass.config, lastFailure?.message ?? lastErrors[0] ?? 'validation failed');
       for (let repair = 0; repair <= (pass.config.maxRepairs ?? 2); repair++) {
         let r;
         try {
+          bump();
           r = await this.chat(stage, msgs, { mockKey, temperature, config: pass.config, fallback: pass.fallback, fallbackFrom: pass.fallback ? primary.model : null });
         } catch (e) {
           lastFailure = e;
@@ -233,7 +239,7 @@ export class ModelRouter {
         msgs.push({ role: 'assistant', content: r.content.slice(0, 6000) }, { role: 'user', content: `Fix every validation error and return the complete corrected json object only. Keep the lines that are already valid. Count words before returning.\n- ${lastErrors.join('\n- ')}${repairHint ? `\n${repairHint}` : ''}` });
       }
     }
-    throw new Error(`${stage}: model output failed validation after repairs${fbs.length ? ' on the primary model and its fallbacks' : ''}:\n${lastErrors.join('\n')}`);
+    throw new FableonError(ERROR_CODES.STAGE_FAILED, `${stage}: model output failed validation after repairs${fbs.length ? ' on the primary model and its fallbacks' : ''}:\n${lastErrors.join('\n')}`, { stage, errors: lastErrors });
   }
 }
 

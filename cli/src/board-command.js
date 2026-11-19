@@ -5,9 +5,13 @@ import { loadDotEnv } from './env.js';
 import { PipelineRunner } from './core/runner.js';
 import { writeJsonArtifact } from './core/artifacts.js';
 import { projectDir } from './project.js';
+import { withProjectLock } from './core/lock.js';
+import { resolve } from 'node:path';
 import { renderCommand } from './pipeline.js';
 
-export async function boardCommand(dirArg, opts = {}) {
+export async function boardCommand(dirArg, opts = {}) { return withProjectLock(resolve(dirArg), 'board', () => boardCommandInner(dirArg, opts)); }
+
+async function boardCommandInner(dirArg, opts = {}) {
   loadDotEnv();
   const dir = projectDir(dirArg);
   const project = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));

@@ -173,7 +173,7 @@ export async function repairShot({ base, variants = [], measure, maxRounds = 3 }
   return { best, findings: bestFindings, rounds, escalated, needsHuman: bestFindings.length > 0 };
 }
 
-export async function runBoard({ projectDir, project, router }) {
+export async function runBoard({ projectDir, project, router, progress = null }) {
   const plan = JSON.parse(readFileSync(join(projectDir, 'shotplan.json'), 'utf8'));
   const cast = JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8'));
   const words = JSON.parse(readFileSync(join(projectDir, 'words.json'), 'utf8'));
@@ -192,6 +192,7 @@ export async function runBoard({ projectDir, project, router }) {
   try {
     // Compile each shot alone; if a shot cannot compile, try its variants.
     for (let i = 0; i < shots.length; i++) {
+      progress?.({ step: 'board:shot', done: i, total: shots.length });
       let chosen = null, findings = [], rounds = 0;
       for (const v of variants(shots[i], groups[i], catalog)) {
         rounds++;
@@ -202,6 +203,7 @@ export async function runBoard({ projectDir, project, router }) {
       review.shots.push({ id: shots[i].id, rounds, needsHuman: !chosen, findings });
       shots[i] = chosen;
     }
+    progress?.({ step: 'board:shot', done: shots.length, total: shots.length });
     const board = { version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) };
     let compiled = compileBoard(board, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');

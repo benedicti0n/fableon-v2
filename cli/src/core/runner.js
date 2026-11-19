@@ -4,6 +4,8 @@ import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { allStatuses, approve, assertWritable, isApprovedLocked, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
+import { FableonError, ERROR_CODES, asFableonError } from './errors.js';
+import { emitStage, emitProgress, emitStatus, emitError, emitLog } from './events.js';
 const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js' };
 
 export class PipelineRunner extends EventEmitter {
@@ -16,6 +18,8 @@ export class PipelineRunner extends EventEmitter {
     this.logFile = join(projectDir, 'logs', `run-${new Date().toISOString().replace(/[:.]/g, '-')}.log`);
     mkdirSync(join(projectDir, 'logs'), { recursive: true });
     this.router = opts.router ?? null;
+    this.op = opts.op ?? 'run';
+    this.projectId = this.project.id ?? null;
   }
 
   log(message) {
@@ -27,26 +31,26 @@ export class PipelineRunner extends EventEmitter {
   async run() {
     if (!this.router) {
       const { ModelRouter } = await import('../models/router.js');
-      this.router = new ModelRouter(this.projectDir, this.project, { noCache: this.opts.noCache, signal: this.abort });
+      this.router = new ModelRouter(this.projectDir, this.project, { noCache: this.opts.noCache, signal: this.abort, onEvent: (e) => emitStage(this.projectId, e.stage, { op: this.op, step: e.step, done: e.done, total: e.total, type: 'progress', project: this.projectId }) });
     }
     const to = this.opts.to ?? 'voice';
     const toIndex = stageOrder(to);
-    if (toIndex < 0) throw new Error(`unknown --to stage "${to}" (choose ${STAGES.map((s) => s.name).join(', ')})`);
+    if (toIndex < 0) throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown --to stage "${to}" (choose ${STAGES.map((s) => s.name).join(', ')})`, { to });
     const only = this.opts.only ?? null;
     const autopilot = this.opts.autopilot ?? !!this.project.autopilot;
     const force = !!this.opts.force;
     for (const stage of STAGES.slice(0, toIndex + 1)) {
       if (only && stage.name !== only) continue;
-      if (this.abort?.aborted) throw new Error('cancelled');
+      if (this.abort?.aborted) throw new FableonError(ERROR_CODES.CANCELLED, 'cancelled');
       const status = statusOf(this.projectDir, this.project, stage);
       const shouldRun = force || ['missing', 'stale', 'failed'].includes(status.status) || (status.status === 'edited' && force);
       if (!shouldRun) { this.emit('skip', { stage: stage.name, status: status.status }); continue; }
-      if (status.status === 'edited' && !force) throw new Error(`${stage.name} has hand-edited output; review it, approve it, or rerun with --force`);
+      if (status.status === 'edited' && !force) throw new FableonError(ERROR_CODES.EDITED_OUTPUT, `${stage.name} has hand-edited output; review it, approve it, or rerun with --force`, { stage: stage.name });
       assertWritable(this.projectDir, this.project, stage.name, { autopilot, force });
       if (!autopilot) {
         for (const dep of stage.deps) {
           const ds = statusOf(this.projectDir, this.project, stageByName(dep));
-          if (!ds.approved) throw new Error(`${stage.name} is waiting for ${dep} approval (${ds.status}); review ${this.projectDir} and run: fableon approve --project ${this.projectDir} --stage ${dep}`);
+          if (!ds.approved) throw new FableonError(ERROR_CODES.WAITING_APPROVAL, `${stage.name} is waiting for ${dep} approval (${ds.status}); review ${this.projectDir} and run: fableon approve --project ${this.projectDir} --stage ${dep}`, { stage: stage.name, dep });
         }
       }
       await this.runStage(stage, { autopilot, fit: this.opts.fit !== false, cachedOnly: !!this.opts.cachedOnly, status });
@@ -59,13 +63,16 @@ export class PipelineRunner extends EventEmitter {
     const t0 = Date.now();
     this.log(`stage ${stage.name} start (${status.status})`);
     this.emit('progress', { stage: stage.name, status: 'running', progress: 0, message: `running ${stage.name}` });
+    emitStage(this.projectId, stage.name, { op: this.op, status: 'running', message: `running ${stage.name}` });
     recordStage(this.projectDir, this.project, stage.name, { status: 'running' });
+    emitStatus(this.projectId, stage.name, { status: 'running', op: this.op });
+    const progress = (p = {}) => emitProgress(this.projectId, stage.name, p.step ?? stage.name, p.done ?? 0, p.total ?? 0, { op: this.op, ...p });
     try {
       let result;
       const mod = await import(`../stages/${STAGE_MODULE[stage.name]}`);
       const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`];
-      if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly });
-      else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot });
+      if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly, progress });
+      else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot, progress });
       if (stage.name === 'factcheck') this.log(`factcheck reviewed ${result.reviewed ?? 0} line(s); factual flags ${result.failures?.length ?? 0}; craft weak ${result.craft?.length ?? 0}`);
       if (stage.name === 'cast') this.log(`cast ${result.characters ?? 0} character(s), ${result.assets ?? 0} asset gap(s); sheet ${result.sheet}`);
       if (stage.name === 'shotplan') this.log(`shotplan ${result.shots ?? 0} shot(s), average ${result.average ?? '?'} s, span ${result.span ?? '?'}`);
@@ -108,13 +115,21 @@ export class PipelineRunner extends EventEmitter {
       recordStage(this.projectDir, this.project, stage.name, { status: 'fresh', usage });
       const ms = Date.now() - t0;
       this.log(`stage ${stage.name} done ${ms}ms`);
+      emitProgress(this.projectId, stage.name, 'done', 1, 1, { op: this.op, etaMs: 0 });
+      emitStage(this.projectId, stage.name, { op: this.op, status: 'done', ms, message: `${stage.name} complete` });
+      emitStatus(this.projectId, stage.name, { status: 'fresh', op: this.op });
       this.emit('complete', { stage: stage.name, status: 'fresh', ms, usage, message: `${stage.name} complete` });
       return result;
     } catch (e) {
-      recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: e.message });
-      this.log(`stage ${stage.name} failed: ${e.message}`);
-      this.emit('failed', { stage: stage.name, status: 'failed', error: e.message });
-      throw e;
+      const err = this.abort?.aborted ? new FableonError(ERROR_CODES.CANCELLED, 'cancelled') : asFableonError(e, ERROR_CODES.STAGE_FAILED);
+      if (err.code === ERROR_CODES.INTERNAL) err.code = ERROR_CODES.STAGE_FAILED;
+      err.details = { ...(err.details ?? {}), stage: stage.name };
+      recordStage(this.projectDir, this.project, stage.name, { status: 'failed', error: err.message });
+      this.log(`stage ${stage.name} failed: ${err.message}`);
+      emitError(this.projectId, err, { op: this.op, stage: stage.name });
+      emitStatus(this.projectId, stage.name, { status: 'failed', op: this.op });
+      this.emit('failed', { stage: stage.name, status: 'failed', error: err.message, code: err.code });
+      throw err;
     }
   }
 }

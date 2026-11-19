@@ -6,6 +6,7 @@ import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { assertProjectInputs, initProject, projectDir, quality, requireFile } from './project.js';
 import { validateStoryboard } from './validate.js';
 import { balance } from './jobs.js';
+import { withProjectLock } from './core/lock.js';
 import { makeContext } from './frames.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -46,7 +47,9 @@ async function writeMeta(dir) {
   await run(process.execPath, renderArgs(dir, 'events', '--out', join(dir, 'events.json')), { cwd: ROOT });
 }
 
-export async function shotsCommand(dirArg) {
+export async function shotsCommand(...args) { return withProjectLock(projectDir(args[0]), 'shots', () => shotsCommandInner(...args)); }
+
+async function shotsCommandInner(dirArg) {
   const dir = projectDir(dirArg);
   prepare(dir);
   await writeMeta(dir);
@@ -59,7 +62,9 @@ export async function initCommand(name, from) {
   for (const f of r.copied) console.log(`  ${f}`);
 }
 
-export async function stillsCommand(dirArg, framesCsv, qualityName, shotsCsv) {
+export async function stillsCommand(...args) { return withProjectLock(projectDir(args[0]), 'stills', () => stillsCommandInner(...args)); }
+
+async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv) {
   const dir = projectDir(dirArg);
   prepare(dir);
   const q = quality(qualityName);
@@ -126,7 +131,9 @@ async function workers(dir, segs, q, n) {
   if (missing.length) throw new Error(`render finished but ${missing.length} clip(s) are missing: ${missing.map((s) => s[2]).join(', ')}`);
 }
 
-export async function renderCommand(dirArg, { qualityName = 'preview', workers: n = 2, detach = false, shots: shotFilter = null } = {}) {
+export async function renderCommand(...args) { return withProjectLock(projectDir(args[0]), 'render', () => renderCommandInner(...args)); }
+
+async function renderCommandInner(dirArg, { qualityName = 'preview', workers: n = 2, detach = false, shots: shotFilter = null } = {}) {
   const dir = projectDir(dirArg);
   prepare(dir);
   const q = quality(qualityName);
@@ -157,7 +164,9 @@ export async function renderCommand(dirArg, { qualityName = 'preview', workers: 
   await workers(dir, missing, q, n);
 }
 
-export async function audioCommand(dirArg) {
+export async function audioCommand(...args) { return withProjectLock(projectDir(args[0]), 'audio', () => audioCommandInner(...args)); }
+
+async function audioCommandInner(dirArg) {
   const dir = projectDir(dirArg);
   assertProjectInputs(dir);
   const py = findPython();
@@ -168,7 +177,9 @@ export async function audioCommand(dirArg) {
   console.log(`audio: wrote ${join(dir, 'audio', 'mix.wav')}`);
 }
 
-export async function assembleCommand(dirArg) {
+export async function assembleCommand(...args) { return withProjectLock(projectDir(args[0]), 'assemble', () => assembleCommandInner(...args)); }
+
+async function assembleCommandInner(dirArg) {
   const dir = projectDir(dirArg);
   requireFile(dir, 'shots.json');
   requireFile(join(dir, 'audio'), 'mix.wav', 'run: fableon audio --project <dir>');
@@ -187,7 +198,9 @@ const listOf = (text) => {
 
 
 
-export async function qaCommand(dirArg) {
+export async function qaCommand(...args) { return withProjectLock(projectDir(args[0]), 'qa', () => qaCommandInner(...args)); }
+
+async function qaCommandInner(dirArg) {
   const dir = projectDir(dirArg);
   const py = findPython();
   if (!py) throw new Error('no Python found (set FABLEON_PYTHON or create .venv)');
@@ -273,7 +286,9 @@ export async function voiceCommand(dirArg, speed, voice) {
   await run(py, [join(ROOT, 'voice', 'make_voice.py'), String(speed), voice], { cwd: join(ROOT, 'voice'), env: { ...process.env, PROJECT_DIR: dir } });
 }
 
-export async function allCommand(dirArg, { qualityName = 'preview', workers: n = 2 } = {}) {
+export async function allCommand(...args) { return withProjectLock(projectDir(args[0]), 'all', () => allCommandInner(...args)); }
+
+async function allCommandInner(dirArg, { qualityName = 'preview', workers: n = 2 } = {}) {
   const dir = projectDir(dirArg);
   console.log(`all: ${dir} (${qualityName}, ${n} workers)\n>> shots`);
   await shotsCommand(dir);

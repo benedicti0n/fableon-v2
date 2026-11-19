@@ -5,8 +5,12 @@ import { loadDotEnv } from './env.js';
 import { PipelineRunner } from './core/runner.js';
 import { writeJsonArtifact } from './core/artifacts.js';
 import { projectDir } from './project.js';
+import { withProjectLock } from './core/lock.js';
+import { resolve } from 'node:path';
 
-export async function shotplanCommand(dirArg, opts = {}) {
+export async function shotplanCommand(dirArg, opts = {}) { return withProjectLock(resolve(dirArg), 'shotplan', () => shotplanCommandInner(dirArg, opts)); }
+
+async function shotplanCommandInner(dirArg, opts = {}) {
   loadDotEnv();
   const dir = projectDir(dirArg);
   const project = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));

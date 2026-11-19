@@ -108,7 +108,7 @@ export function validateCues(d, { scenes, words, punchTimes, script, targets = n
   return errs;
 }
 
-export async function runSound({ projectDir, project, router }) {
+export async function runSound({ projectDir, project, router, progress = null }) {
   const dir = resolve(projectDir);
   const script = JSON.parse(readFileSync(join(dir, 'script.json'), 'utf8'));
   const shotplan = JSON.parse(readFileSync(join(dir, 'shotplan.json'), 'utf8'));
@@ -137,6 +137,7 @@ export async function runSound({ projectDir, project, router }) {
     stingerTargets: targets,
     punchAnchors: (shotplan.shots ?? []).flatMap((s) => (s.keys ?? []).map((k) => k.punch).filter(Boolean)),
   };
+  progress?.({ step: 'sound:model', done: 0, total: 3 });
   const { data: out } = await router.callJson('sound', [
     { role: 'system', content: SOUND },
     { role: 'user', content: `DATA:\n${JSON.stringify(data, null, 2)}\nReturn music, stingers and only the extra SFX the default map cannot know, as one json object. Use the scene ids exactly.` },
@@ -145,6 +146,7 @@ export async function runSound({ projectDir, project, router }) {
     repairHint: `Return one music section per scene (${scenes.join(', ')}), a hook/mystery/payoff stinger on each beat line, and at most one SFX per 1.2 s. SFX anchors are n:k or f<frame>; no non-impact SFX in the first 0.2 s after a punch.`,
   });
   // Model SFX are additions on top of the deterministic board map.
+  progress?.({ step: 'sound:model', done: 1, total: 3 });
   const sfx = mergeSfx(defaults, out.sfx, { words, punchTimes: punches });
   const cues = { version: 1, duration, music: out.music, stingers: out.stingers, sfx };
   writeJsonArtifact(projectDir, 'sound', 'cues.json', cues, 'cues');
@@ -164,7 +166,9 @@ export async function runSound({ projectDir, project, router }) {
   writeTextArtifact(projectDir, 'sound', 'cues.md', md);
   const py = findPython();
   if (!py) throw new Error('sound needs Python 3.12 with numpy/scipy (set FABLEON_PYTHON or create .venv)');
+  progress?.({ step: 'sound:mix', done: 2, total: 3 });
   await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+  progress?.({ step: 'sound:mix', done: 3, total: 3 });
   const mix = join(dir, 'audio', 'mix.wav');
   if (!existsSync(mix)) throw new Error(`sound: ${mix} was not written`);
   return { music: cues.music.length, stingers: cues.stingers.length, sfx: cues.sfx.length, mix, usage: router.stageUsage('sound') };

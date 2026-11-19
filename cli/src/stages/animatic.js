@@ -5,11 +5,13 @@ import { capture, findPython, ROOT, run } from '../env.js';
 import { renderCommand, shotsCommand } from '../pipeline.js';
 import { makeContext } from '../frames.js';
 
-export async function runAnimatic({ projectDir }) {
+export async function runAnimatic({ projectDir, progress = null }) {
   const shots = join(projectDir, 'shots.json');
   await shotsCommand(projectDir);
   if (!existsSync(shots)) throw new Error('animatic: shots.json was not written');
+  progress?.({ step: 'animatic:render', done: 0, total: 2 });
   await renderCommand(projectDir, { qualityName: 'preview', workers: 2 });
+  progress?.({ step: 'animatic:render', done: 1, total: 2 });
   const rows = JSON.parse(readFileSync(shots, 'utf8'));
   const render = join(projectDir, 'render');
   const list = join(render, 'animatic-concat.txt');
@@ -79,7 +81,9 @@ export async function runAnimatic({ projectDir }) {
   const shiftedShots = (metaRaw.shots ?? []).map((x) => ({ ...x, a: Math.max(0, x.a - off), b: x.b - off }));
   const shiftedFlash = metaRaw.flash ? shiftPair(metaRaw.flash) : undefined;
   writeFile(meta, JSON.stringify({ ...metaRaw, ...(metaRaw.shots ? { shots: shiftedShots } : {}), ...(shiftedFlash ? { flash: shiftedFlash } : {}), planned: ints(planned), xfade: ints(xfade) }, null, 2) + '\n');
+  progress?.({ step: 'animatic:qa', done: 1, total: 2 });
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), video, qaDir, meta], { cwd: ROOT });
+  progress?.({ step: 'animatic:qa', done: 2, total: 2 });
   const report = readFileSync(join(qaDir, 'report.md'), 'utf8');
   const lines = report.split('\n');
   const get = (p) => lines.find((l) => l.startsWith(p)) ?? '';

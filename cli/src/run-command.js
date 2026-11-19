@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadDotEnv } from './env.js';
 import { PipelineRunner } from './core/runner.js';
+import { withProjectLock } from './core/lock.js';
 
 export async function runCommand(dir, opts) {
   loadDotEnv();
@@ -19,7 +20,7 @@ export async function runCommand(dir, opts) {
   runner.on('skip', ({ stage, status }) => console.log(`skip ${stage} (${status})`));
   runner.on('failed', ({ stage, error }) => console.log(`FAILED ${stage}: ${error}`));
   try {
-    await runner.run();
+    await withProjectLock(dir, 'run', () => runner.run());
     console.log(`run: done — ${join(dir, 'logs')} and ${join(dir, '.fableon/state.json')}`);
   } finally { process.removeListener('SIGINT', onInt); }
 }

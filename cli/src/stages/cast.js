@@ -278,7 +278,7 @@ export async function castSheet(projectDir, characters, catalog) {
   return join(projectDir, 'cast', 'cast-sheet.jpg');
 }
 
-export async function runCast({ projectDir, project, router }) {
+export async function runCast({ projectDir, project, router, progress = null }) {
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
@@ -299,6 +299,7 @@ export async function runCast({ projectDir, project, router }) {
     currentCast: existsSync(join(projectDir, 'cast.json')) ? JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8')).characters ?? null : null,
     notes,
   };
+  progress?.({ step: 'cast:model', done: 0, total: 2 });
   const { data: draft, usage } = await router.callJson('cast', [
     { role: 'system', content: CAST },
     { role: 'user', content: `DATA:\n${JSON.stringify(data, null, 2)}\nReturn one json object with characters only.` },
@@ -310,11 +311,14 @@ export async function runCast({ projectDir, project, router }) {
     },
     repairHint: 'Use only the listed Spec fields and trait names. Every script character and every person/being mention needs an entry; place mentions are background only. Inline spec is preferred for new characters.',
   });
+  progress?.({ step: 'cast:model', done: 1, total: 2 });
   const characters = draft.characters.map((c) => ({ ...c, scale: c.scale ?? 1, notes: c.notes ?? '' }));
   const assets = assetGaps(script, catalog);
   const warnings = castWarnings({ version: 1, characters }, script, catalog);
   backupBeforeWrite(projectDir, 'cast', 'cast/cast-sheet.jpg', Buffer.from([0]));
+  progress?.({ step: 'cast:sheet', done: 1, total: 2 });
   const sheet = await castSheet(projectDir, characters, catalog);
+  progress?.({ step: 'cast:sheet', done: 2, total: 2 });
   writeJsonArtifact(projectDir, 'cast', 'cast.json', { version: 1, characters }, 'cast');
   writeJsonArtifact(projectDir, 'cast', 'assets.todo.json', { version: 1, assets }, 'assets');
   return { characters: characters.length, assets: assets.length, warnings: warnings.map((w) => `${w.code} ${w.id}: ${w.message}`), sheet, usage: router.stageUsage('cast') };

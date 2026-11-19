@@ -296,7 +296,7 @@ function normalizeSkeleton(plan, words, totalEnd) {
   return shots.length;
 }
 
-export async function runShotplan({ projectDir, project, router }) {
+export async function runShotplan({ projectDir, project, router, progress = null }) {
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const words = JSON.parse(readFileSync(join(projectDir, 'words.json'), 'utf8'));
   const cast = JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8'));
@@ -323,6 +323,7 @@ export async function runShotplan({ projectDir, project, router }) {
   };
   const skeletonSchema = JSON.parse(readFileSync(join(ROOT, 'schema', 'shotplan-skeleton.schema.json'), 'utf8'));
   const skeletonSystem = `${SHOTPLAN_SKELETON}\n\nDIRECTOR GUIDE\n${guide}\n\nDIRECTOR CRAFT\n${craft}\n\nCATALOG CARD\n${card.text}\n\nSKELETON SCHEMA\n${JSON.stringify(skeletonSchema, null, 2)}`;
+  progress?.({ step: 'shotplan:skeleton', done: 0, total: 2 });
   const { data: skeleton } = await router.callJson('shotplan', [
     { role: 'system', content: skeletonSystem },
     { role: 'user', content: `DATA:\n${JSON.stringify(data, null, 2)}\nReturn the complete shot skeleton as one json object.` },
@@ -337,6 +338,7 @@ export async function runShotplan({ projectDir, project, router }) {
     repairHint: 'Keep every valid shot. Use 20-32 shots, split long lines by word, cover every line in order, keep starts increasing and each shot 1.2-6 s (average 2.5-4 s), and give every new set a landmark in mustShow. Supply content only; the allocator sets transitions, shares, foreground, low heights and a punch on each hook/mystery/payoff line.',
   });
 
+  progress?.({ step: 'shotplan:skeleton', done: 1, total: 2 });
   const keysSchema = JSON.parse(readFileSync(join(ROOT, 'schema', 'shotplan-keys.schema.json'), 'utf8'));
   const keysSystem = `${SHOTPLAN_KEYS}\n\nDIRECTOR GUIDE\n${guide}\n\nDIRECTOR CRAFT\n${craft}\n\nCATALOG CARD\n${card.text}\n\nKEYS SCHEMA\n${JSON.stringify(keysSchema, null, 2)}`;
   const keyData = {
@@ -346,6 +348,7 @@ export async function runShotplan({ projectDir, project, router }) {
     assets: data.assets,
     notes,
   };
+  progress?.({ step: 'shotplan:keys', done: 1, total: 2 });
   const { data: keyDataOut } = await router.callJson('shotplan', [
     { role: 'system', content: keysSystem },
     { role: 'user', content: `DATA:\n${JSON.stringify(keyData, null, 2)}\nReturn keys, beats, fx and standIns for every skeleton shot as one json object.` },
@@ -365,6 +368,7 @@ export async function runShotplan({ projectDir, project, router }) {
     },
     repairHint: 'Keep every valid key. Start each shot on its first key, use a wide/establishing first key for the first shot and every new set, change size a step or side/angle >=30 degrees between adjacent keys, keep keys >=0.6 s, and turn mustShow into the first key with. Supply content only; the allocator fills shares, foreground, heights and required punches.',
   });
+  progress?.({ step: 'shotplan:keys', done: 2, total: 2 });
   const plan = allocatePlan(normalizePlan(mergePlan(skeleton, keyDataOut)), { script, words, catalog }).plan;
   writeJsonArtifact(projectDir, 'shotplan', 'shotplan.json', plan, 'shotplan');
   writeTextArtifact(projectDir, 'shotplan', 'shotplan.md', renderShotplanMd(plan, { script, words, cast }));
