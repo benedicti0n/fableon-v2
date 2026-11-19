@@ -40,20 +40,25 @@ Scenes and per-boundary transitions (crossfade/flash/cut), burst easing, punch/i
 - Sarvam Bulbul v4 Flash with Nachiket, whole-line natural rendering, 48 kHz, local MMS forced aligner, voice QA and a credit meter.
 - The model chooses content, the allocator fills DOF/foreground/hold shares; consecutive shots merge into continuous scenes. Savitri and Bakasura both end at the animatic checkpoint; see `docs/reports/phase-3e.md`.
 
-## Phase 3F — Context-aware sound and lighting design
-- Sound: replace the repeating cue map with context-aware selection from licensed SFX libraries (CC0 packs plus commercially licensed generative fill); an LLM picks sounds per event and a per-scene ambience bed, with no-repeat rules, a licence ledger for every sound, and music variation.
-- Lighting: a directional key per scene (side or three-quarter light, golden backlight with rim, moon key at night) instead of flat ambient; add a measured flat-lighting check calibrated on the reference (luma std, p2/p98).
-- Whip pans with motion blur; new set kits (e.g., a cart of food / forest clearing); UI for the shot plan, board and animatic checkpoints.
-- Carry-over: lock an approved script before factcheck (no autopilot revision of an approved script); add per-stage bake-offs for research, factcheck, cast, shotplan, performance and sound.
+## Phase 3F — Light and glow; pipeline fixes; final renders (done)
+- Opt-in per-shot `look` block: mood rigs (`warm-side`, `golden-glow`, `dusk`, `night-moon`, `noon`), key/sky/fill, sun disc and halo, shafts, clean multi-scale halation, mood grade.
+- Characters stay flat-lit: the mood key/sky/glow/grade is world-only; the depth-aware soft character mask keeps all glow/grade off the cards.
+- Measured world-only look check (`fableon lookcheck`) with a published calibration table; warnings are advisory and fixable with light, never skin.
+- Director fixes: approved stages are locked, the script budget uses the voice's delivered rate, places are never cast, `fableon clean` frees regenerable space, and the foreground allocator drops/re-picks props that cover >10 % of a subject.
+- Both films re-lit at the chosen moods and rendered at 1440×2560 with the full mix; animatic and final QA PASS; see `docs/reports/phase-3f.md`.
 
 ## Phase 4 — Backend API
-Node server: projects, artifacts, stages, jobs (REST + WebSocket progress), file serving for audio/video/stills.
+Node server for the pipeline library: projects, artifacts, stages, approvals, jobs (REST + WebSocket progress events), and file serving for audio/video/stills. The CLI and the future browser UI share the same stage registry and state.
 
 ## Phase 5 — Frontend: stages 1-6
-Brief, research, script editor (per-line regenerate, fact flags), voice (player, word timeline, pronunciation editor), storyboard shot timeline editor, animatic player.
+Brief, research, script editor (per-line regenerate, fact flags), voice (player, word timeline, pronunciation editor, per-stage voice selection), storyboard shot timeline editor, animatic player.
 
 ## Phase 6 — Frontend: stages 7-9 + autopilot
-Look & sound controls, render queue with per-shot re-render, QA report + export, presets and autopilot with checkpoints, model settings with cost estimates.
+Look & sound controls, render queue with per-shot re-render, QA report + export, presets and autopilot with checkpoints, per-stage model/voice selection and cost estimates.
 
-## Phase 7 — Packaging and catalog growth
-One-command start, desktop wrapper option, more sets/characters/actions, catalog authoring guide.
+## Later
+- Context-aware SFX libraries (CC0 packs plus licensed generative fill), a licence ledger and a per-scene ambience bed.
+- Per-stage bake-offs for research, fact-check, cast, shot plan, performance and sound.
+- Whip pans with motion blur; new set kits (e.g. a cart of food / forest clearing).
+- Semantic fx placement (fire on a mark, smoke from a set piece, effects from a landmark).
+- Phase 7 packaging and catalog growth: one-command start, desktop wrapper option, more sets/characters/actions, catalog authoring guide.
