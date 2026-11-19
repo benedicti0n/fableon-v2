@@ -1,5 +1,6 @@
 // Fableon local backend API. Binds 127.0.0.1, prints a per-launch token URL, and shares the CLI stage registry.
 import Fastify from 'fastify';
+import multipart from '@fastify/multipart';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -7,6 +8,8 @@ import { ROOT } from '../../cli/src/env.js';
 import { atomicWrite } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { newToken, installAuth } from './security.js';
+import * as P from './projects.js';
+import * as A from './artifacts.js';
 
 export const KEY_ALLOWLIST = ['DEEPSEEK_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'SARVAM_API_KEY', 'ELEVENLABS_API_KEY', 'OPENROUTER_API_KEY', 'TAVILY_API_KEY'];
 
@@ -43,6 +46,9 @@ function doctor() {
 export async function createServer({ root = join(ROOT, 'work'), token = newToken(), port = 4317, logger = false } = {}) {
   const projectRoot = resolve(root);
   const app = Fastify({ logger, bodyLimit: 2 * 1024 * 1024, trustProxy: false });
+  app.addContentTypeParser(['text/plain', 'text/markdown'], { parseAs: 'string' }, (_req, body, done) => done(null, body));
+  await app.register(multipart, { limits: { fileSize: 10 * 1024 * 1024, files: 1 } });
+  const ctxOf = (id) => P.resolveProject(projectRoot, id);
   installAuth(app, { token, port });
 
   app.setErrorHandler((err, req, reply) => {
@@ -54,6 +60,60 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   app.get('/', async () => ({ name: 'Fableon server', ok: true, hint: 'Use the token URL printed by `fableon serve`.' }));
   app.get('/api/health', async () => ({ ok: true, pid: process.pid, uptime: process.uptime(), root: projectRoot, version: '0.1.0' }));
   app.get('/api/doctor', async () => doctor());
+
+  app.get('/api/projects', async () => ({ projects: P.listProjects(projectRoot), root: projectRoot }));
+  app.post('/api/projects', async (req, reply) => {
+    const ctx = P.createProject(projectRoot, req.body ?? {});
+    return reply.code(201).send(P.details(ctx));
+  });
+  app.get('/api/projects/:id', async (req) => P.details(ctxOf(req.params.id)));
+  app.patch('/api/projects/:id', async (req) => P.patchProject(ctxOf(req.params.id), req.body ?? {}));
+  app.post('/api/projects/:id/archive', async (req) => P.archiveProject(projectRoot, ctxOf(req.params.id)));
+
+  app.get('/api/projects/:id/stages', async (req) => {
+    const d = P.details(ctxOf(req.params.id));
+    return { id: d.id, stages: d.stages, todos: d.todos, craft: d.craft, readOnly: d.readOnly };
+  });
+  app.post('/api/projects/:id/stages/:stage/approve', async (req) => P.approveStage(ctxOf(req.params.id), String(req.params.stage), req.body?.override ?? null));
+  app.post('/api/projects/:id/stages/:stage/notes', async (req) => {
+    const text = String(req.body?.text ?? '').trim();
+    if (!text) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'notes text is required');
+    return P.stageNotes(ctxOf(req.params.id), String(req.params.stage), text);
+  });
+
+  app.get('/api/projects/:id/files/*', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    try {
+      const file = A.filePath(ctx, req.params['*']);
+      return A.rangeReply(req, reply, file);
+    } catch (e) {
+      if (e.code === ERROR_CODES.BAD_REQUEST) return reply.code(400).send({ error: 'path traversal', code: ERROR_CODES.BAD_REQUEST });
+      throw e;
+    }
+  });
+  app.put('/api/projects/:id/files/*', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const rel = String(req.params['*']).replace(/^\/+/, '');
+    return A.putFile(ctx, rel, req.body);
+  });
+  app.post('/api/projects/:id/sources', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const file = await req.file();
+    if (!file) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'multipart file is required');
+    const buf = await file.toBuffer();
+    if (buf.length > 10 * 1024 * 1024) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'source is larger than 10 MB');
+    return A.saveSource(ctx, file.filename, buf);
+  });
+  app.get('/api/projects/:id/history', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    return { versions: A.history(ctx, req.query?.path ? String(req.query.path) : null) };
+  });
+  app.post('/api/projects/:id/history/restore', async (req) => {
+    const ctx = ctxOf(req.params.id);
+    const version = String(req.body?.version ?? '');
+    if (!version) throw new FableonError(ERROR_CODES.BAD_REQUEST, 'version is required');
+    return A.restore(ctx, version);
+  });
 
   app.get('/api/settings/keys', async () => Object.fromEntries(KEY_ALLOWLIST.map((name) => [name, keySet(name) ? 'set' : 'unset'])));
   app.put('/api/settings/keys/:name', async (req) => {
