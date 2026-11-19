@@ -38,7 +38,7 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
     if (e.type === 'progress') { q.invalidateQueries({ queryKey: ['jobs', id] }); return; }
     if (e.type === 'status' || (e.type === 'job' && ['done', 'failed', 'cancelled', 'interrupted'].includes(e.status ?? ''))) {
       q.invalidateQueries({ queryKey: ['project', id] }); q.invalidateQueries({ queryKey: ['stages', id] }); q.invalidateQueries({ queryKey: ['jobs', id] });
-      q.invalidateQueries({ queryKey: ['file', id] }); q.invalidateQueries({ queryKey: ['timeline', id] }); q.invalidateQueries({ queryKey: ['peaks', id] }); q.invalidateQueries({ queryKey: ['list', id] }); q.invalidateQueries({ queryKey: ['projects'] });
+      q.invalidateQueries({ queryKey: ['file', id] }); q.invalidateQueries({ queryKey: ['final-plan', id] }); q.invalidateQueries({ queryKey: ['timeline', id] }); q.invalidateQueries({ queryKey: ['peaks', id] }); q.invalidateQueries({ queryKey: ['list', id] }); q.invalidateQueries({ queryKey: ['projects'] });
     }
     if (e.type === 'job' && (e.status === 'queued' || e.status === 'running')) q.invalidateQueries({ queryKey: ['jobs', id] });
   });

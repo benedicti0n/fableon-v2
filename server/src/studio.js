@@ -134,9 +134,21 @@ export function estimate(ctx, body = {}) {
       return out;
     }
   }
+  if (op === 'stills') {
+    const tokens = String(args.frames ?? 'start,mid,end').split(',').filter(Boolean);
+    const passes = args.compare && args.look ? 2 : 1;
+    out.frameCount = Math.max(1, tokens.length) * passes;
+    out.seconds = +(out.frameCount * 0.2).toFixed(1);
+    out.notes.push(`Local ${args.quality === 'preview' ? '720x1280' : 'final-size'} still preview${passes > 1 ? ' (before + after)' : ''}; no provider call.`);
+    return out;
+  }
+  if (['lookdev', 'lookcheck', 'audio', 'animatic'].includes(op)) {
+    out.notes.push(op === 'audio' ? 'Local audio synthesis and mastering; no provider call.' : `${op} is a local render/check; no provider call.`);
+    return out;
+  }
   const scriptLines = script?.lines ?? [];
   const textChars = scriptLines.reduce((n, l) => n + Array.from(String(l.text)).length, 0);
-  if ((op === 'run' && ['voice', 'factcheck', 'script', 'brief', 'research', 'performance', 'cast', 'shotplan', 'board', 'sound', 'animatic'].includes(stage)) || ['voice-audition', 'voice-pace', 'cast', 'shotplan', 'board', 'lookdev', 'lookcheck', 'review', 'stills', 'animatic', 'final', 'script-lines'].includes(op)) {
+  if ((op === 'run' && ['voice', 'factcheck', 'script', 'brief', 'research', 'performance', 'cast', 'shotplan', 'board', 'sound', 'animatic'].includes(stage)) || ['voice-audition', 'voice-pace', 'cast', 'shotplan', 'board', 'review', 'script-lines'].includes(op)) {
     if (stage === 'voice' || op === 'voice-audition' || op === 'voice-pace' || (op === 'run' && stage === 'voice')) {
       const provider = project.voice?.provider ?? project.voice?.engine ?? 'kokoro';
       const model = project.voice?.model ?? (provider === 'kokoro' ? 'kokoro' : provider === 'sarvam' ? 'bulbul:v4-flash' : 'eleven_multilingual_v2');
