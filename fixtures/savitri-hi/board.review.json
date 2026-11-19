@@ -3,189 +3,132 @@
   "model": "deterministic base + measured variants",
   "shots": [
     {
-      "id": "S1",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
+      "id": "palace-day",
+      "rounds": 17,
+      "needsHuman": true,
+      "findings": [
+        "subject too small savitri: 26% below full floor 30%",
+        "subject too small savitri: 11% below close floor 25%",
+        "subject too small savitri: 17% below close floor 25%"
+      ]
     },
     {
-      "id": "S2",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S4",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S5",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S6",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S7",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S8",
+      "id": "hermitage-day",
       "rounds": 15,
-      "needsHuman": false,
-      "findings": []
+      "needsHuman": true,
+      "findings": [
+        "subject too small savitri: 7% below close floor 25%"
+      ]
     },
     {
-      "id": "S10",
+      "id": "village-day",
+      "rounds": 16,
+      "needsHuman": true,
+      "findings": [
+        "subject too small savitri: 7% below medium floor 12%",
+        "subject too small satyavan: 7% below medium floor 12%",
+        "subject too small savitri: 11% below medium floor 12%",
+        "subject too small satyavan: 12% below medium floor 12%",
+        "subject too large savitri: 58% above wide ceiling 50%",
+        "subject too small savitri: 28% below full floor 30%"
+      ]
+    },
+    {
+      "id": "deer-golden",
+      "rounds": 1,
+      "needsHuman": true,
+      "findings": [
+        "subject too small satyavan: 7% below medium floor 12%",
+        "subject too small satyavan: 10% below medium floor 12%",
+        "blocker yama: fills 18% in front of satyavan",
+        "blocker yama: fills 19% in front of satyavan",
+        "blocker yama: fills 18% in front of satyavan",
+        "subject too large yama: 83% above wide ceiling 50%",
+        "head cut yama: head box crosses the frame edge",
+        "edge yama: head crosses the left safe margin",
+        "cut subject yama: silhouette crosses the left side margin",
+        "subject too small yama: 28% below full floor 30%",
+        "subject too small satyavan: 12% below medium floor 12%",
+        "subject too small yama: 17% below close floor 25%",
+        "subject too small yama: 21% below close floor 25%"
+      ]
+    },
+    {
+      "id": "village-golden",
       "rounds": 1,
       "needsHuman": false,
       "findings": []
     },
     {
-      "id": "S12",
+      "id": "deer-night",
       "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S13",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S14",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S15",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S16",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S17",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S18",
-      "rounds": 12,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S19",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S20",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S22",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S23",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S24",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S25",
-      "rounds": 9,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S26",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S27",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S28",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S29",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S30",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S31",
-      "rounds": 1,
-      "needsHuman": false,
-      "findings": []
-    },
-    {
-      "id": "S32",
-      "rounds": 6,
-      "needsHuman": false,
-      "findings": []
+      "needsHuman": true,
+      "findings": [
+        "foreground prop deer.kunti: covers only 0.3% (a blob)",
+        "subject too small savitri: 7% below close floor 25%",
+        "subject too small savitri: 12% below close floor 25%",
+        "subject too large yama: 91% above full ceiling 85%",
+        "head cut yama: head box crosses the frame edge",
+        "edge yama: head crosses the left safe margin",
+        "cut subject yama: silhouette crosses the left side margin",
+        "blocker yama: fills 8% in front of savitri",
+        "foreground prop deer.pandu: covers only 0.7% (a blob)",
+        "foreground prop deer.pandu: covers only 0.7% (a blob)",
+        "blocker yama: fills 8% in front of savitri",
+        "blocker yama: fills 6% in front of savitri",
+        "blocker yama: fills 7% in front of savitri",
+        "blocker yama: fills 7% in front of savitri",
+        "blocker yama: fills 7% in front of savitri",
+        "blocker yama: fills 8% in front of savitri",
+        "blocker yama: fills 8% in front of savitri",
+        "blocker yama: fills 8% in front of savitri",
+        "blocker yama: fills 9% in front of savitri",
+        "blocker yama: fills 9% in front of savitri",
+        "blocker yama: fills 10% in front of savitri",
+        "blocker yama: fills 11% in front of savitri",
+        "blocker yama: fills 11% in front of savitri",
+        "blocker yama: fills 12% in front of savitri",
+        "blocker yama: fills 12% in front of savitri",
+        "subject too small savitri: 11% below medium floor 12%",
+        "subject too large yama: 52% above wide ceiling 50%",
+        "subject too small satyavan: 10% below medium floor 12%",
+        "subject too small savitri: 9% below medium floor 12%",
+        "subject too small savitri: 12% below medium floor 12%",
+        "edge savitri: head crosses the right safe margin",
+        "edge savitri: head crosses the right safe margin",
+        "edge savitri: head crosses the right safe margin",
+        "edge satyavan: head crosses the left safe margin",
+        "edge savitri: head crosses the right safe margin",
+        "edge satyavan: head crosses the left safe margin",
+        "head cut savitri: head box crosses the frame edge",
+        "edge savitri: head crosses the right safe margin",
+        "edge satyavan: head crosses the left safe margin",
+        "head cut savitri: head box crosses the frame edge",
+        "edge savitri: head crosses the right safe margin",
+        "head cut satyavan: head box crosses the frame edge",
+        "edge satyavan: head crosses the left safe margin",
+        "head cut savitri: head box crosses the frame edge",
+        "edge savitri: head crosses the right safe margin"
+      ]
     }
   ],
   "film": {
     "stats": {
-      "shots": 28,
-      "cuts": 2,
+      "shots": 6,
+      "cuts": 0,
       "flashes": 1,
-      "crossfades": 24,
-      "holdShare": 0.837,
-      "dofShare": 0.389,
-      "foregroundShare": 0.265,
-      "lowHeightShare": 0.905,
-      "punches": 7,
+      "crossfades": 4,
+      "holdShare": 0.93,
+      "dofShare": 0.318,
+      "foregroundShare": 0.353,
+      "lowHeightShare": 0.909,
+      "punches": 8,
       "rolls": 3,
       "kicks": 4,
+      "holdKeys": 33,
+      "minHoldCreep": 0.113,
       "keys": 34,
-      "seconds": 85.33
+      "seconds": 88.73
     },
     "errors": [],
     "skipped": false

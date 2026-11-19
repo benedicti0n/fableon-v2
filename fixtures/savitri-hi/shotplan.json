@@ -33,7 +33,8 @@
           "side": "front",
           "move": "push",
           "note": "Establishing shot of Savitri in the palace courtyard, decisive stance.",
-          "foreground": "palace.courtyard"
+          "foreground": "palace.courtyard",
+          "punch": "0:0"
         }
       ],
       "beats": [
@@ -46,7 +47,8 @@
       ],
       "fx": [],
       "standIns": [],
-      "scene": "palace-day"
+      "scene": "palace-day",
+      "mood": "warm-side"
     },
     {
       "id": "S2",
@@ -103,7 +105,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S4",
@@ -138,7 +141,8 @@
           "angle": "eye",
           "side": "front",
           "move": "push",
-          "note": "Wide shot of Savitri and Satyavan facing each other in the forest clearing."
+          "note": "Wide shot of Savitri and Satyavan facing each other in the forest clearing.",
+          "foreground": "hermitage.banyan"
         }
       ],
       "beats": [
@@ -159,9 +163,10 @@
       "standIns": [],
       "scene": "hermitage-day",
       "transition": {
-        "type": "crossfade",
-        "frames": 7
-      }
+        "type": "flash",
+        "frames": 4
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S5",
@@ -220,9 +225,10 @@
       "standIns": [],
       "scene": "hermitage-day",
       "transition": {
-        "type": "flash",
-        "frames": 4
-      }
+        "type": "crossfade",
+        "frames": 7
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S6",
@@ -267,7 +273,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S7",
@@ -295,7 +302,8 @@
           "angle": "eye",
           "side": "front",
           "move": "push",
-          "note": "Medium shot of Savitri with determination in her eyes."
+          "note": "Medium shot of Savitri with determination in her eyes.",
+          "foreground": "hermitage.desk"
         }
       ],
       "beats": [
@@ -312,7 +320,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S8",
@@ -403,7 +412,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S10",
@@ -436,7 +446,8 @@
           "angle": "low",
           "side": "front",
           "move": "push",
-          "note": "Savitri standing outside the hut, lost in thought."
+          "note": "Savitri standing outside the hut, lost in thought.",
+          "foreground": "village.door"
         }
       ],
       "beats": [
@@ -453,7 +464,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S12",
@@ -499,7 +511,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "warm-side"
     },
     {
       "id": "S13",
@@ -546,7 +559,8 @@
           "side": "left",
           "move": "push",
           "note": "Push from the wide forest into Satyavan at work.",
-          "ease": "glide"
+          "ease": "glide",
+          "foreground": "deer.deer"
         }
       ],
       "beats": [
@@ -564,7 +578,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S14",
@@ -610,7 +625,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S15",
@@ -672,7 +688,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S16",
@@ -717,7 +734,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S17",
@@ -770,8 +788,10 @@
       "standIns": [],
       "scene": "deer-golden",
       "transition": {
-        "type": "cut"
-      }
+        "type": "crossfade",
+        "frames": 7
+      },
+      "mood": "dusk"
     },
     {
       "id": "S18",
@@ -799,8 +819,7 @@
           "angle": "eye",
           "side": "front",
           "move": "hold",
-          "note": "Close-up of Yama speaking.",
-          "foreground": "deer.clearing"
+          "note": "Close-up of Yama speaking."
         }
       ],
       "beats": [
@@ -817,7 +836,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S19",
@@ -845,7 +865,8 @@
           "angle": "eye",
           "side": "front",
           "move": "push",
-          "note": "Yama extracting and binding the life force, then walking south."
+          "note": "Yama extracting and binding the life force, then walking south.",
+          "foreground": "deer.kunti"
         }
       ],
       "beats": [
@@ -868,7 +889,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "dusk"
     },
     {
       "id": "S20",
@@ -926,7 +948,8 @@
           "until": "11:3",
           "gait": "walk"
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S22",
@@ -985,7 +1008,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S23",
@@ -1040,7 +1064,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S24",
@@ -1095,7 +1120,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S25",
@@ -1129,7 +1155,7 @@
         },
         {
           "at": "14:4",
-          "size": "medium",
+          "size": "full",
           "on": [
             "savitri"
           ],
@@ -1154,7 +1180,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S26",
@@ -1207,8 +1234,10 @@
       "standIns": [],
       "scene": "deer-night",
       "transition": {
-        "type": "cut"
-      }
+        "type": "crossfade",
+        "frames": 7
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S27",
@@ -1263,7 +1292,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S28",
@@ -1319,7 +1349,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S29",
@@ -1390,7 +1421,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S30",
@@ -1445,7 +1477,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S31",
@@ -1474,10 +1507,11 @@
           ],
           "angle": "eye",
           "side": "front",
-          "move": "push",
+          "move": "glide",
           "note": "Yama releases the noose, granting Satyavan life.",
           "punch": "19:0",
-          "impact": "19:0"
+          "impact": "19:0",
+          "ease": "glide"
         }
       ],
       "beats": [
@@ -1512,7 +1546,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     },
     {
       "id": "S32",
@@ -1568,7 +1603,8 @@
       "transition": {
         "type": "crossfade",
         "frames": 7
-      }
+      },
+      "mood": "night-moon"
     }
   ]
 }

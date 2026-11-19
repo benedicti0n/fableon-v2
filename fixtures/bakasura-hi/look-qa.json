@@ -1,0 +1,199 @@
+{
+ "video": "/Users/benediction/Downloads/Web Dev projects/fableon-v2/work/bakasura-hi/final.mp4",
+ "scenes": [
+  {
+   "scene": "village-day",
+   "mood": "golden-glow",
+   "frame": 383,
+   "frames": [
+    215,
+    383,
+    551
+   ],
+   "metrics": {
+    "split": 0.636,
+    "glow": 0.0,
+    "mean": 0.423,
+    "std": 0.134,
+    "p2": 0.162,
+    "p98": 0.762,
+    "face": 0.452
+   },
+   "samples": [
+    {
+     "frame": 215,
+     "metrics": {
+      "split": 0.664,
+      "glow": 0.0004,
+      "mean": 0.423,
+      "std": 0.134,
+      "p2": 0.181,
+      "p98": 0.762,
+      "face": 0.135
+     },
+     "primary": "bakasura"
+    },
+    {
+     "frame": 383,
+     "metrics": {
+      "split": 0.41,
+      "glow": 0.0158,
+      "mean": 0.479,
+      "std": 0.161,
+      "p2": 0.162,
+      "p98": 0.886,
+      "face": 0.502
+     },
+     "primary": "brahmin"
+    },
+    {
+     "frame": 551,
+     "metrics": {
+      "split": 0.636,
+      "glow": 0.0,
+      "mean": 0.382,
+      "std": 0.11,
+      "p2": 0.155,
+      "p98": 0.554,
+      "face": 0.452
+     },
+     "primary": "brahmin"
+    }
+   ],
+   "issues": [
+    "std 0.13 outside 0.14-0.30"
+   ],
+   "primary": "bakasura"
+  },
+  {
+   "scene": "hermitage-day",
+   "mood": "golden-glow",
+   "frame": 1049,
+   "frames": [
+    892,
+    1049,
+    1206
+   ],
+   "metrics": {
+    "split": 0.741,
+    "glow": 0.003,
+    "mean": 0.401,
+    "std": 0.201,
+    "p2": 0.14,
+    "p98": 0.816,
+    "face": 0.103
+   },
+   "samples": [
+    {
+     "frame": 892,
+     "metrics": {
+      "split": 0.741,
+      "glow": 0.0,
+      "mean": 0.372,
+      "std": 0.192,
+      "p2": 0.146,
+      "p98": 0.753,
+      "face": 0.103
+     },
+     "primary": "bhima"
+    },
+    {
+     "frame": 1049,
+     "metrics": {
+      "split": 0.754,
+      "glow": 0.0031,
+      "mean": 0.401,
+      "std": 0.201,
+      "p2": 0.14,
+      "p98": 0.816,
+      "face": 0.159
+     },
+     "primary": "bakasura"
+    },
+    {
+     "frame": 1206,
+     "metrics": {
+      "split": 0.736,
+      "glow": 0.0032,
+      "mean": 0.407,
+      "std": 0.209,
+      "p2": 0.14,
+      "p98": 0.839,
+      "face": 0.098
+     },
+     "primary": "bhima"
+    }
+   ],
+   "issues": [
+    "face 0.10 vs frame 0.40"
+   ],
+   "primary": "bhima"
+  },
+  {
+   "scene": "village-day",
+   "mood": "dusk",
+   "frame": 1681,
+   "frames": [
+    1530,
+    1681,
+    1832
+   ],
+   "metrics": {
+    "split": 0.53,
+    "glow": 0.002,
+    "mean": 0.345,
+    "std": 0.154,
+    "p2": 0.101,
+    "p98": 0.742,
+    "face": 0.468
+   },
+   "samples": [
+    {
+     "frame": 1530,
+     "metrics": {
+      "split": 0.53,
+      "glow": 0.0006,
+      "mean": 0.345,
+      "std": 0.154,
+      "p2": 0.113,
+      "p98": 0.742,
+      "face": 0.106
+     },
+     "primary": "bhima"
+    },
+    {
+     "frame": 1681,
+     "metrics": {
+      "split": 0.532,
+      "glow": 0.0021,
+      "mean": 0.343,
+      "std": 0.131,
+      "p2": 0.101,
+      "p98": 0.741,
+      "face": 0.468
+     },
+     "primary": "brahmin"
+    },
+    {
+     "frame": 1832,
+     "metrics": {
+      "split": 0.413,
+      "glow": 0.0405,
+      "mean": 0.352,
+      "std": 0.2,
+      "p2": 0.085,
+      "p98": 0.958,
+      "face": 0.492
+     },
+     "primary": "brahmin"
+    }
+   ],
+   "issues": [],
+   "primary": "bhima"
+  }
+ ],
+ "warnings": [
+  "flat light village-day: std 0.13 outside 0.14-0.30",
+  "flat light hermitage-day: face 0.10 vs frame 0.40"
+ ]
+}

@@ -3,12 +3,12 @@ LOUDNESS I:         -14.1 LUFS | LRA:         2.4 LU | Peak:       -1.0 dBFS
 SILENCES silence_start: 66.084854; silence_end: 66.389333 | silence_duration: 0.304479
 FRAMES 1992; black []; unplanned white []; frozen spans >=12f []
 POPS (unplanned frame-diff spikes > 3x local median): []
-MOTION mean diff 4.67; frames with diff<0.3 (held): 23 (1%)
+MOTION mean diff 4.12; frames with diff<0.3 (held): 24 (1%)
 
 PER SHOT  (luma mean / std / p2 / p98 / saturation mean, medians over the shot)
-  shot  1 f0-690: 0.525 / 0.223 / 0.026 / 0.895 / 0.685
-  shot  2 f691-1335: 0.445 / 0.218 / 0.030 / 0.867 / 0.562
-  shot  3 f1336-1957: 0.593 / 0.191 / 0.080 / 0.894 / 0.655
+  shot  1 f0-690: 0.396 / 0.193 / 0.036 / 0.810 / 0.686
+  shot  2 f691-1335: 0.338 / 0.208 / 0.039 / 0.807 / 0.658
+  shot  3 f1336-1957: 0.326 / 0.187 / 0.063 / 0.880 / 0.553
 
 
 # Animatic QA

@@ -3,6 +3,7 @@
   "fps": 30,
   "tailFrames": 36,
   "crossfade": 10,
+  "featureRim": false,
   "shots": [
     {
       "id": "village-day",
@@ -19,6 +20,9 @@
         "line": 4,
         "wordIndex": 0,
         "offset": -2
+      },
+      "look": {
+        "mood": "golden-glow"
       },
       "actors": [
         {
@@ -262,7 +266,7 @@
             "wordIndex": 0,
             "offset": -2
           },
-          "over": "village.door",
+          "over": "village.hutDoor",
           "semantic": true,
           "move": "push",
           "side": "front",
@@ -389,7 +393,7 @@
             "wordIndex": 0,
             "offset": -2
           },
-          "over": "village.door",
+          "over": "village.hutDoor",
           "semantic": true,
           "move": "push",
           "side": "front",
@@ -510,7 +514,7 @@
             "wordIndex": 9,
             "offset": -2
           },
-          "over": "village.front",
+          "over": "village.hutDoor",
           "semantic": true,
           "move": "push",
           "side": "frontLeft",
@@ -718,12 +722,15 @@
         "wordIndex": 0,
         "offset": -2
       },
+      "look": {
+        "mood": "golden-glow"
+      },
       "actors": [
         {
           "who": "bhima",
           "id": "bhima",
           "pos": [
-            -150.25,
+            -146.35,
             1.5,
             -60
           ],
@@ -791,7 +798,7 @@
           "who": "bakasura",
           "id": "bakasura",
           "pos": [
-            -149.75,
+            -145.65,
             1.5,
             -60
           ],
@@ -891,13 +898,13 @@
         {
           "type": "dolly",
           "pos": [
-            -172.73595741851517,
+            -150,
             4,
-            -157.35174824462115
+            -160.34499382380935
           ],
           "look": [
             -150,
-            23.633005891940233,
+            23.65049104882098,
             -72.5
           ],
           "fov": 48,
@@ -918,7 +925,7 @@
             "wordIndex": 0,
             "offset": -2
           },
-          "over": "hermitage.clearing",
+          "over": "hermitage.mat",
           "semantic": true,
           "move": "push",
           "side": "front",
@@ -928,12 +935,12 @@
         {
           "type": "dolly",
           "pos": [
-            -149.1468656680282,
+            -145.2468656680282,
             2.88915909917471,
             -64.11695337449233
           ],
           "look": [
-            -150.25,
+            -146.35,
             2.5960875592644337,
             -60
           ],
@@ -966,12 +973,12 @@
         {
           "type": "dolly",
           "pos": [
-            -150.25,
+            -146.35,
             2.243477949878305,
             -62.720300049540555
           ],
           "look": [
-            -150.25,
+            -146.35,
             2.7124213002975206,
             -60
           ],
@@ -1010,12 +1017,12 @@
         {
           "type": "dolly",
           "pos": [
-            -147.42098416263184,
+            -143.32098416263185,
             2.2751446745159702,
             -68.69200543669056
           ],
           "look": [
-            -149.75,
+            -145.65,
             3.5616523709793646,
             -60
           ],
@@ -1046,7 +1053,7 @@
           "with": [
             "bhima"
           ],
-          "over": "hermitage.hut",
+          "over": "hermitage.mat",
           "semantic": true,
           "move": "push",
           "side": "frontLeft",
@@ -1058,12 +1065,12 @@
         {
           "type": "dolly",
           "pos": [
-            -153.25988685993462,
+            -149.15988685993463,
             2.2751446745159702,
             -66.07930237022515
           ],
           "look": [
-            -149.75,
+            -145.65,
             2.954101403224157,
             -60
           ],
@@ -1102,12 +1109,12 @@
         {
           "type": "dolly",
           "pos": [
-            -151.3531343319718,
+            -147.4531343319718,
             2.243477949878305,
             -64.11695337449233
           ],
           "look": [
-            -150.25,
+            -146.35,
             2.5960875592644337,
             -60
           ],
@@ -1140,13 +1147,13 @@
         {
           "type": "dolly",
           "pos": [
-            -146.8835013672661,
+            -142.98350136726606,
             2.243477949878305,
             -65.83094667550631
           ],
           "look": [
-            -150.25,
-            2.8946974877423197,
+            -146.35,
+            2.8946974877423224,
             -60
           ],
           "fov": 41,
@@ -1200,7 +1207,7 @@
           "cInf": 11,
           "dur": 0,
           "focus": [
-            -150.25,
+            -146.35,
             2.88915909917471,
             -60
           ]
@@ -1214,7 +1221,7 @@
           "cInf": 13,
           "dur": 0,
           "focus": [
-            -150.25,
+            -146.35,
             2.88915909917471,
             -60
           ]
@@ -1228,7 +1235,7 @@
           "cInf": 8,
           "dur": 0,
           "focus": [
-            -149.75,
+            -145.65,
             2.969526269658038,
             -60
           ]
@@ -1242,7 +1249,7 @@
           "cInf": 11,
           "dur": 0,
           "focus": [
-            -150.25,
+            -146.35,
             2.88915909917471,
             -60
           ]
@@ -1256,7 +1263,7 @@
           "cInf": 8,
           "dur": 0,
           "focus": [
-            -150.25,
+            -146.35,
             2.88915909917471,
             -60
           ]
@@ -1277,6 +1284,9 @@
       "end": {
         "end": true,
         "offset": 0
+      },
+      "look": {
+        "mood": "dusk"
       },
       "actors": [
         {
@@ -1524,7 +1534,7 @@
             "wordIndex": 0,
             "offset": -2
           },
-          "over": "village.front",
+          "over": "village.hutDoor",
           "semantic": true,
           "move": "push",
           "side": "front",
@@ -1660,7 +1670,7 @@
             "wordIndex": 7,
             "offset": -2
           },
-          "over": "village.door",
+          "over": "village.hutDoor",
           "semantic": true,
           "move": "push",
           "side": "front",
@@ -1777,17 +1787,6 @@
         "earrings": "#e8b53a"
       },
       "seed": 874
-    },
-    "ekachakra": {
-      "spec": {
-        "skin": "#8a6a4a",
-        "build": "stout",
-        "top": null,
-        "lower": "#6a8a4a",
-        "head": "hair",
-        "hairCol": "#3a2a1a"
-      },
-      "seed": 410
     }
   },
   "kicks": [

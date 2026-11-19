@@ -58,7 +58,8 @@
           "at": "0:0",
           "note": "Dust kicked up at the demon's feet."
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S2",
@@ -109,7 +110,8 @@
           "pose": "armsUp",
           "expr": "grin"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S3",
@@ -160,7 +162,8 @@
           "at": "0:13",
           "note": "A greedy bead of sweat."
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S4",
@@ -208,7 +211,8 @@
           "pose": "belly",
           "expr": "grin"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S5",
@@ -258,7 +262,8 @@
           "pose": "present",
           "expr": "grin"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S6",
@@ -305,7 +310,8 @@
           "pose": "pray",
           "expr": "relief"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S7",
@@ -348,7 +354,8 @@
           "pose": "fold",
           "expr": "nervous"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S8",
@@ -400,7 +407,8 @@
           "at": "3:3",
           "note": "Tears/sweat at the eyes."
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S9",
@@ -455,7 +463,8 @@
           "pose": "fold",
           "expr": "shock"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S10",
@@ -503,7 +512,8 @@
           "pose": "sit",
           "expr": "smile"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S11",
@@ -545,7 +555,8 @@
           "pose": "drink",
           "expr": "smile_closed"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S12",
@@ -596,7 +607,8 @@
           "at": "4:14",
           "note": "Satisfied sparkle."
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S13",
@@ -652,7 +664,8 @@
           "pose": "sit",
           "expr": "neutral"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S14",
@@ -697,7 +710,8 @@
           "talk": true,
           "face": "bhima"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S15",
@@ -739,7 +753,8 @@
           "pose": "flex",
           "expr": "stern"
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S16",
@@ -803,7 +818,8 @@
           "at": "6:14",
           "note": "Impact burst as the demon's back cracks."
         }
-      ]
+      ],
+      "mood": "golden-glow"
     },
     {
       "id": "S17",
@@ -849,7 +865,8 @@
           "pose": "shrug",
           "expr": "smile"
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S18",
@@ -891,7 +908,8 @@
           "pose": "shrug",
           "expr": "smile"
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S19",
@@ -955,7 +973,8 @@
           "at": "8:8",
           "note": "Dust rising where the body lands."
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S20",
@@ -1003,7 +1022,8 @@
           "expr": "shock",
           "impact": "8:15"
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S21",
@@ -1057,7 +1077,8 @@
           "at": "9:1",
           "note": "Festival petals over the village."
         }
-      ]
+      ],
+      "mood": "dusk"
     },
     {
       "id": "S22",
@@ -1110,7 +1131,8 @@
           "at": "9:10",
           "note": "Relief sparkle."
         }
-      ]
+      ],
+      "mood": "dusk"
     }
   ]
 }

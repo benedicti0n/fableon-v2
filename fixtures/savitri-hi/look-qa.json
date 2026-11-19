@@ -1,0 +1,385 @@
+{
+ "video": "/Users/benediction/Downloads/Web Dev projects/fableon-v2/work/savitri-hi/final.mp4",
+ "scenes": [
+  {
+   "scene": "palace-day",
+   "mood": "warm-side",
+   "frame": 111,
+   "frames": [
+    67,
+    111,
+    156
+   ],
+   "metrics": {
+    "split": 0.256,
+    "glow": 0.0,
+    "mean": 0.552,
+    "std": 0.143,
+    "p2": 0.19,
+    "p98": 0.801,
+    "face": 0.437
+   },
+   "samples": [
+    {
+     "frame": 67,
+     "metrics": {
+      "split": 0.487,
+      "glow": 0.0128,
+      "mean": 0.531,
+      "std": 0.191,
+      "p2": 0.145,
+      "p98": 0.886,
+      "face": 0.437
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 111,
+     "metrics": {
+      "split": 0.256,
+      "glow": 0.0,
+      "mean": 0.559,
+      "std": 0.143,
+      "p2": 0.19,
+      "p98": 0.801,
+      "face": 0.534
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 156,
+     "metrics": {
+      "split": 0.098,
+      "glow": 0.0,
+      "mean": 0.552,
+      "std": 0.105,
+      "p2": 0.358,
+      "p98": 0.755,
+      "face": 0.388
+     },
+     "primary": "savitri"
+    }
+   ],
+   "issues": [],
+   "primary": "savitri"
+  },
+  {
+   "scene": "hermitage-day",
+   "mood": "warm-side",
+   "frame": 332,
+   "frames": [
+    276,
+    332,
+    387
+   ],
+   "metrics": {
+    "split": 0.683,
+    "glow": 0.0,
+    "mean": 0.34,
+    "std": 0.216,
+    "p2": 0.089,
+    "p98": 0.797,
+    "face": 0.396
+   },
+   "samples": [
+    {
+     "frame": 276,
+     "metrics": {
+      "split": 0.685,
+      "glow": 0.0012,
+      "mean": 0.325,
+      "std": 0.216,
+      "p2": 0.115,
+      "p98": 0.797,
+      "face": 0.396
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 332,
+     "metrics": {
+      "split": 0.654,
+      "glow": 0.0,
+      "mean": 0.35,
+      "std": 0.213,
+      "p2": 0.087,
+      "p98": 0.755,
+      "face": 0.401
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 387,
+     "metrics": {
+      "split": 0.683,
+      "glow": 0.0004,
+      "mean": 0.34,
+      "std": 0.224,
+      "p2": 0.089,
+      "p98": 0.803,
+      "face": 0.392
+     },
+     "primary": "savitri"
+    }
+   ],
+   "issues": [],
+   "primary": "savitri"
+  },
+  {
+   "scene": "village-day",
+   "mood": "warm-side",
+   "frame": 560,
+   "frames": [
+    510,
+    560,
+    610
+   ],
+   "metrics": {
+    "split": 0.407,
+    "glow": 0.033,
+    "mean": 0.481,
+    "std": 0.168,
+    "p2": 0.146,
+    "p98": 0.941,
+    "face": 0.388
+   },
+   "samples": [
+    {
+     "frame": 510,
+     "metrics": {
+      "split": 0.407,
+      "glow": 0.0329,
+      "mean": 0.484,
+      "std": 0.168,
+      "p2": 0.146,
+      "p98": 0.941,
+      "face": 0.38
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 560,
+     "metrics": {
+      "split": 0.425,
+      "glow": 0.0365,
+      "mean": 0.481,
+      "std": 0.168,
+      "p2": 0.148,
+      "p98": 0.955,
+      "face": 0.388
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 610,
+     "metrics": {
+      "split": 0.365,
+      "glow": 0.0252,
+      "mean": 0.476,
+      "std": 0.166,
+      "p2": 0.14,
+      "p98": 0.912,
+      "face": 0.389
+     },
+     "primary": "savitri"
+    }
+   ],
+   "issues": [],
+   "primary": "savitri"
+  },
+  {
+   "scene": "deer-golden",
+   "mood": "dusk",
+   "frame": 961,
+   "frames": [
+    828,
+    961,
+    1094
+   ],
+   "metrics": {
+    "split": 0.643,
+    "glow": 0.0,
+    "mean": 0.26,
+    "std": 0.184,
+    "p2": 0.075,
+    "p98": 0.665,
+    "face": 0.174
+   },
+   "samples": [
+    {
+     "frame": 828,
+     "metrics": {
+      "split": 0.505,
+      "glow": 0.0,
+      "mean": 0.294,
+      "std": 0.184,
+      "p2": 0.079,
+      "p98": 0.665,
+      "face": 0.246
+     },
+     "primary": "yama"
+    },
+    {
+     "frame": 961,
+     "metrics": {
+      "split": 0.705,
+      "glow": 0.0001,
+      "mean": 0.26,
+      "std": 0.196,
+      "p2": 0.066,
+      "p98": 0.772,
+      "face": 0.174
+     },
+     "primary": "yama"
+    },
+    {
+     "frame": 1094,
+     "metrics": {
+      "split": 0.643,
+      "glow": 0.0,
+      "mean": 0.218,
+      "std": 0.168,
+      "p2": 0.075,
+      "p98": 0.658,
+      "face": 0.172
+     },
+     "primary": "yama"
+    }
+   ],
+   "issues": [
+    "p98 0.67 outside 0.70-1.00"
+   ],
+   "primary": "yama"
+  },
+  {
+   "scene": "village-golden",
+   "mood": "dusk",
+   "frame": 1312,
+   "frames": [
+    1270,
+    1312,
+    1355
+   ],
+   "metrics": {
+    "split": 0.554,
+    "glow": 0.006,
+    "mean": 0.404,
+    "std": 0.185,
+    "p2": 0.181,
+    "p98": 0.842,
+    "face": 0.167
+   },
+   "samples": [
+    {
+     "frame": 1270,
+     "metrics": {
+      "split": 0.558,
+      "glow": 0.0063,
+      "mean": 0.409,
+      "std": 0.185,
+      "p2": 0.181,
+      "p98": 0.844,
+      "face": 0.155
+     },
+     "primary": "yama"
+    },
+    {
+     "frame": 1312,
+     "metrics": {
+      "split": 0.472,
+      "glow": 0.0058,
+      "mean": 0.402,
+      "std": 0.186,
+      "p2": 0.168,
+      "p98": 0.842,
+      "face": 0.197
+     },
+     "primary": "yama"
+    },
+    {
+     "frame": 1355,
+     "metrics": {
+      "split": 0.554,
+      "glow": 0.005,
+      "mean": 0.404,
+      "std": 0.182,
+      "p2": 0.181,
+      "p98": 0.832,
+      "face": 0.167
+     },
+     "primary": "yama"
+    }
+   ],
+   "issues": [
+    "face 0.17 vs frame 0.40"
+   ],
+   "primary": "yama"
+  },
+  {
+   "scene": "deer-night",
+   "mood": "night-moon",
+   "frame": 2096,
+   "frames": [
+    1783,
+    2096,
+    2409
+   ],
+   "metrics": {
+    "split": 0.048,
+    "glow": 0.0,
+    "mean": 0.279,
+    "std": 0.088,
+    "p2": 0.113,
+    "p98": 0.452,
+    "face": 0.439
+   },
+   "samples": [
+    {
+     "frame": 1783,
+     "metrics": {
+      "split": 0.048,
+      "glow": 0.0,
+      "mean": 0.289,
+      "std": 0.088,
+      "p2": 0.113,
+      "p98": 0.452,
+      "face": 0.451
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 2096,
+     "metrics": {
+      "split": 0.037,
+      "glow": 0.0,
+      "mean": 0.279,
+      "std": 0.089,
+      "p2": 0.114,
+      "p98": 0.464,
+      "face": 0.439
+     },
+     "primary": "savitri"
+    },
+    {
+     "frame": 2409,
+     "metrics": {
+      "split": 0.055,
+      "glow": 0.0,
+      "mean": 0.278,
+      "std": 0.087,
+      "p2": 0.113,
+      "p98": 0.434,
+      "face": 0.43
+     },
+     "primary": "savitri"
+    }
+   ],
+   "issues": [],
+   "primary": "savitri"
+  }
+ ],
+ "warnings": [
+  "flat light deer-golden: p98 0.67 outside 0.70-1.00",
+  "flat light village-golden: face 0.17 vs frame 0.40"
+ ]
+}
