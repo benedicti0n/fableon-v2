@@ -14,7 +14,7 @@ const EMOJI = /\p{Extended_Pictographic}/gu;
 const DEVANAGARI = /^\p{Script=Devanagari}/u;
 const STOP = new Set(['the', 'a', 'an', 'and', 'or', 'of', 'to', 'in', 'on', 'for', 'with', 'is', 'was', 'are', 'were', 'by', 'from', 'as', 'at', 'this', 'that', 'it', 'its', 'his', 'her', 'their', 'a', 'i', 'we', 'you', 'का', 'की', 'के', 'में', 'से', 'को', 'और', 'है', 'था', 'थी', 'एक', 'यह', 'वह', 'पर']);
 
-export function validatePublish(data, { channel = null } = {}) {
+export function validatePublish(data, { channel = null, language = null } = {}) {
   const errs = validationErrors('publish', data);
   if (!data?.titles || !data?.description || !data?.hashtags || !data?.thumbnailText) return errs;
   const all = JSON.stringify({ titles: data.titles, description: data.description, tags: data.tags, hashtags: data.hashtags, pinnedComment: data.pinnedComment });
@@ -26,6 +26,10 @@ export function validatePublish(data, { channel = null } = {}) {
   if (graphemes(data.description.hi) + graphemes(data.description.en) > 5000) errs.push('description is longer than 5000 characters');
   if (data.hashtags.length < 3 || data.hashtags.length > 8) errs.push('hashtags must be 3-8');
   if (data.hashtags.some((h) => !/^#\S+$/.test(h))) errs.push('every hashtag must start with #');
+  if (language === 'hi') { const deva = data.hashtags.filter((h) => /^#[\u0900-\u097F]/.test(h)).length; if (deva < 2) errs.push('Hindi projects need at least 2 Devanagari hashtags'); }
+  const appTag = '#fableon';
+  const channelName = String(channel?.name ?? '').trim().toLowerCase().replace(/^#/, '');
+  if (data.hashtags.some((h) => h.toLowerCase() === appTag) && channelName !== 'fableon') errs.push('do not use the app name as a hashtag');
   if (graphemes(data.tags) > 500) errs.push('tags must be <= 500 characters');
   if (graphemes(data.thumbnailText.hi) > 0 && wordsOf(data.thumbnailText.hi).length > 4) errs.push('thumbnailText.hi must be <= 4 words');
   if ((data.pinnedComment.match(EMOJI) ?? []).length > 1 || (all.match(EMOJI) ?? []).length > 1) errs.push('at most one emoji is allowed');
@@ -33,6 +37,8 @@ export function validatePublish(data, { channel = null } = {}) {
   if (caps.length) errs.push(`ALL-CAPS words are not allowed: ${caps.slice(0, 5).join(', ')}`);
   if (data.hashtags.length > 60) errs.push('more than 60 hashtags');
   if (!/[?？]\s*$/.test(String(data.pinnedComment).trim())) errs.push('pinnedComment should be a question');
+  if (!String(data.recommendations.madeForKidsReason ?? '').trim() || /^none$/i.test(String(data.recommendations.madeForKidsReason).trim())) errs.push('madeForKids needs a real reason');
+  if (!String(data.recommendations.alteredContentReason ?? '').trim() || /^none$/i.test(String(data.recommendations.alteredContentReason).trim())) errs.push('alteredContent needs a real reason');
   if (channel?.hashtags?.length && !data.hashtags.some((h) => channel.hashtags.includes(h))) { /* optional house tags */ }
   return errs;
 }
@@ -164,9 +170,19 @@ export async function runPublish({ projectDir, project, router, progress = null 
   const { data, usage } = await router.callJson('publish', [
     { role: 'system', content: (await import('./stages/prompts.js')).PUBLISH },
     { role: 'user', content: `DATA:\n${JSON.stringify(input, null, 2)}\nReturn json only.` },
-  ], { validate: (d) => validatePublish(d, { channel }), repairHint: 'Five titles, combined Devanagari first <= 100 chars; description <= 5000; 3-8 hashtags; tags <= 500; no < or >; no ALL-CAPS; <= 1 emoji; Hindi question pinned comment.' });
+  ], { validate: (d) => validatePublish(d, { channel, language: project.language }), repairHint: 'Five titles, combined Devanagari first <= 100 chars; description <= 5000; 3-8 hashtags; tags <= 500; no < or >; no ALL-CAPS; <= 1 emoji; Hindi question pinned comment.' });
   progress?.({ step: 'publish:model', done: 1, total: 2 });
-  const flags = factFlags(data, facts, script);
+  let flags = factFlags(data, facts, script);
+  if (flags.length) {
+    try {
+      const { data: review } = await router.callJson('factcheck', [
+        { role: 'system', content: (await import('./stages/prompts.js')).PUBLISH_FACT },
+        { role: 'user', content: `VERIFIED FACTS:\n${JSON.stringify((facts.facts ?? []).filter((f) => f.verified !== false).map((f) => f.claim), null, 2)}\nFACTCHECKED SCRIPT:\n${JSON.stringify((script.lines ?? []).map((l) => ({ text: l.text, gloss: l.gloss })), null, 2)}\nSENTENCES:\n${JSON.stringify(flags.map((f) => f.text), null, 2)}\nReturn json only.` },
+      ], { mockKey: 'publish-fact', validate: (d) => Array.isArray(d.claims) ? [] : ['/claims must be an array'] });
+      const byText = new Map((review.claims ?? []).map((c) => [String(c.text), c]));
+      flags = flags.filter((f) => { const c = byText.get(f.text); return !c || c.supported === false; }).map((f) => ({ ...f, reason: byText.get(f.text)?.reason ?? f.reason }));
+    } catch { /* keep the fast pre-filter when the factcheck model is unavailable */ }
+  }
   const selected = {
     ...data,
     selection: { title: data.titles[0].combined, cover: null, template: 'title', thumbnailText: data.thumbnailText.hi },

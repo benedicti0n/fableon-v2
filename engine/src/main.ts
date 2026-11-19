@@ -356,7 +356,7 @@ const drawShot = (id: number, f: number) => {
   gradeLegacy.protect = 0;
   gradeFor(gradeLook, s.look && rig ? rig.grade : s.light);
   gradeLook.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
-  gradeLook.setLook({ exposure: s.look?.exposure ?? 0, warmth: s.look?.warmth ?? 0, vignette: s.look?.vignette ?? 1, haze: s.look?.haze ?? 0 });
+  gradeLook.setLook({ exposure: s.look?.exposure ?? 0, warmth: s.look?.warmth ?? 0, vignette: s.look?.vignette ?? 1, haze: s.look?.haze ?? 1 });
   gradeLook.setCharMask(charMaskRT.texture, W, H, lookOn);
   gradeLook.protect = lookOn ? 1 : 0;
   composer.render();

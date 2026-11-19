@@ -26,6 +26,7 @@ Lv, Lvm = integrated(voice), momentary_max(voice)
 music, _ = cues_score.render()
 music = music[:, :N]
 sfx = cues_sfx.render()[:, :N]
+amb = cues_sfx.render_ambience()[:, :N]
 
 # speech mask: duck 4 dB under speech (40 ms attack / 250 ms release) so the bed sits 9 LU under the voice
 duck = np.ones(N)
@@ -35,7 +36,7 @@ duck = lp(np.minimum(duck, 1.0), 4.0, 1)
 music = norm_to(music * duck[None, :], Lv - 12 + 3, "integrated") * dbg(float(MIX.get("musicDb", 0)))
 sfx = norm_to(sfx, Lvm, "momentary") * dbg(-6 + float(MIX.get("sfxDb", 0)))
 
-mix = voice + music + sfx
+mix = voice + music + sfx + amb
 mix = norm_to(mix, -14.0, "integrated")
 for _ in range(3):
     up = np.abs(signal.resample_poly(mix, 4, 1, axis=-1)).max(axis=0).reshape(-1, 4).max(axis=1)[:N]
@@ -49,3 +50,4 @@ write_wav(os.path.join(OUT, "mix.wav"), mix)
 write_wav(os.path.join(OUT, "stem_music.wav"), music)
 write_wav(os.path.join(OUT, "stem_sfx.wav"), sfx)
 write_wav(os.path.join(OUT, "stem_voice.wav"), voice)
+write_wav(os.path.join(OUT, "stem_ambience.wav"), amb)

@@ -2,7 +2,7 @@
 import Fastify from 'fastify';
 import multipart from '@fastify/multipart';
 import websocket from '@fastify/websocket';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT } from '../../cli/src/env.js';
@@ -142,10 +142,34 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     const ctx = P.createProject(projectRoot, req.body ?? {});
     return reply.code(201).send(P.details(ctx));
   });
+  const coverFor = (dir, id) => {
+    const publish = join(dir, 'publish', 'cover.jpg');
+    if (existsSync(publish)) return `/api/projects/${encodeURIComponent(id)}/files/publish/cover.jpg`;
+    const cached = join(dir, 'review', 'cover.jpg');
+    const final = join(dir, 'final.mp4');
+    if (existsSync(final) && !existsSync(cached)) {
+      try {
+        const d = Number(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nokey=1', final], { encoding: 'utf8' }).stdout.trim());
+        const t = Math.max(0.3, Math.min((Number.isFinite(d) ? d : 10) * 0.4, (Number.isFinite(d) ? d : 10) - 0.5));
+        mkdirSync(join(dir, 'review'), { recursive: true });
+        spawnSync('ffmpeg', ['-y', '-v', 'error', '-ss', String(t), '-i', final, '-frames:v', '1', '-vf', 'scale=640:-2', '-q:v', '4', cached]);
+      } catch { /* fall through */ }
+    }
+    if (existsSync(cached)) return `/api/projects/${encodeURIComponent(id)}/files/review/cover.jpg`;
+    const stills = join(dir, 'stills');
+    if (existsSync(stills)) { const f = readdirSync(stills).find((x) => /\.(jpg|jpeg|png)$/i.test(x)); if (f) return `/api/projects/${encodeURIComponent(id)}/files/stills/${encodeURIComponent(f)}`; }
+    const animatic = join(dir, 'animatic.mp4');
+    if (existsSync(animatic)) {
+      const a = join(dir, 'review', 'cover-animatic.jpg');
+      if (!existsSync(a)) { mkdirSync(join(dir, 'review'), { recursive: true }); spawnSync('ffmpeg', ['-y', '-v', 'error', '-ss', '1', '-i', animatic, '-frames:v', '1', '-vf', 'scale=640:-2', '-q:v', '4', a]); }
+      if (existsSync(a)) return `/api/projects/${encodeURIComponent(id)}/files/review/cover-animatic.jpg`;
+    }
+    return null;
+  };
   app.get('/api/projects/overview', async () => {
     return { projects: P.listProjects(projectRoot).map((p) => {
       const d = P.details(P.resolveProject(projectRoot, p.id));
-      const cover = existsSync(join(p.path, 'publish', 'cover.jpg')) ? `/api/projects/${encodeURIComponent(p.id)}/files/publish/cover.jpg` : null;
+      const cover = coverFor(p.path, p.id);
       return { ...p, stages: d.stages, usage: d.usage, project: { seconds: d.project.seconds, language: d.project.language, published: d.project.published ?? null, tags: d.project.tags ?? [] }, cover };
     }) };
   });

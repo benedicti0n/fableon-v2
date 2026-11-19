@@ -1,5 +1,5 @@
 // Production queue: preset batch creation, collision-safe ids, persistence and pause controls.
-import { existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ProductionQueue, listPresets } from '../server/src/queue.js';
@@ -27,6 +27,24 @@ export async function runQueueTests() {
     ok('queue pauses', q2.paused === true, 'paused');
     const removed = q2.remove(batch.items[0].item.id);
     ok('queued item can be removed', removed && q2.items.length === 1, JSON.stringify(q2.items));
+    const hard = ['fact-check facts failed', 'DISK_LOW: need 3 GB', 'provider failed after all fallbacks', 'QA failed'];
+    for (const err of hard) {
+      const q3 = new ProductionQueue(root, fakeJobs, hub, { interval: 999999 }); q3.stop();
+      const item = q3.items[0];
+      q3.paused = false; item.status = 'running'; item.jobId = 'fake-job';
+      q3.jobs = { list: () => [], get: () => ({ status: 'failed', error: err }), create: () => ({ id: 'x' }), cancel: async () => ({}) };
+      await q3.tick();
+      ok(`hard stop: ${err.slice(0, 24)}`, item.status === 'failed' && item.note === err, JSON.stringify(item));
+    }
+    const q4 = new ProductionQueue(root, fakeJobs, hub, { interval: 999999 }); q4.stop();
+    const budgetItem = q4.items[0];
+    budgetItem.status = 'running'; budgetItem.jobId = 'fake-job'; budgetItem.budgetUsd = 0.001;
+    q4.paused = false;
+    const calls = join(root, budgetItem.project, 'logs', 'calls.jsonl');
+    writeFileSync(calls, JSON.stringify({ ts: new Date().toISOString(), stage: 'e2e', provider: 'deepseek', model: 'x', costUsd: 0.01, cached: false, ok: true }) + '\n');
+    q4.jobs = { list: () => [], get: () => ({ status: 'done' }), create: () => ({ id: 'x' }), cancel: async () => ({}) };
+    await q4.tick();
+    ok('100 percent budget pause/fail', budgetItem.status === 'failed' && /budget exceeded/.test(budgetItem.note ?? ''), JSON.stringify(budgetItem));
   } finally { rmSync(root, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

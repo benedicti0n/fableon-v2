@@ -20,6 +20,7 @@ import { shotplanCommand } from './shotplan-command.js';
 import { scriptLinesCommand } from './script-lines-command.js';
 import { sfxPreviewCommand } from './sfx-preview.js';
 import { exportCommand } from './export-command.js';
+import { studioCommand } from './studio-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
 import { runBakeoff } from './bakeoff.js';
@@ -46,6 +47,14 @@ export function main(argv = process.argv) {
     .name('fableon')
     .description('Local, stage-wise generator for vertical cartoon story shorts')
     .version('0.1.0');
+
+  program
+    .command('studio')
+    .description('build the studio when stale, serve it and open the browser')
+    .option('--port <n>', 'port', '4317')
+    .option('--root <dir>', 'project root', 'work')
+    .option('--no-open', 'do not open the browser')
+    .action(async (opts) => { try { await studioCommand({ port: Number(opts.port), root: opts.root, open: opts.open }); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('serve')

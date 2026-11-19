@@ -64,6 +64,11 @@ export async function runSoundTests() {
     await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
     const variedHash = createHash('sha256').update(readFileSync(mix)).digest('hex');
     ok('sfx seed/gain changes the mix', variedHash !== baseHash, `${variedHash} vs ${baseHash}`);
+    const amb = structuredClone(baseCues); amb.music[0].ambience = 'birds'; amb.mix = { ...(amb.mix ?? {}), ambienceDb: -6 };
+    writeFileSync(join(dir, 'cues.json'), JSON.stringify(amb));
+    await run(py, [join(ROOT, 'audio', 'cues_mix.py')], { cwd: join(ROOT, 'audio'), env: { ...process.env, PROJECT_DIR: dir } });
+    const ambHash = createHash('sha256').update(readFileSync(mix)).digest('hex');
+    ok('ambience bed and ambienceDb change the mix', ambHash !== baseHash && existsSync(join(dir, 'audio', 'stem_ambience.wav')), `${ambHash} vs ${baseHash}`);
   } finally { rmSync(dir, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

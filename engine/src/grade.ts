@@ -98,7 +98,7 @@ vec3 gradeMood(vec3 src, vec2 uv) {
   vec2 p = uv * 2.0 - 1.0;
   float r = length(p) * 0.70710678;
   outC *= max(0.0, 1.0 - (lookVignette - 1.0) * 0.22 * smoothstep(0.15, 1.0, r));
-  outC = mix(outC, vec3(0.72, 0.70, 0.66), clamp(lookHaze * 0.18, 0.0, 0.35));
+  outC = mix(outC, vec3(0.72, 0.70, 0.66), clamp((lookHaze - 1.0) * 0.18, 0.0, 0.35));
   return clamp(outC, 0.0, 1.0);
 }
 vec3 gradeLegacy(vec3 src, vec2 uv) {

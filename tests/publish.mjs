@@ -25,6 +25,11 @@ export async function runPublishTests() {
   ok('validator accepts a complete package', validatePublish(good).length === 0, validatePublish(good).join('; '));
   const bad = structuredClone(good); bad.titles = bad.titles.slice(0, 4); bad.titles[0].combined = 'THIS <IS> ALL CAPS ' + 'x'.repeat(120); bad.hashtags = ['#one'];
   ok('validator blocks lengths, tags and angle brackets', validatePublish(bad).length >= 3, validatePublish(bad).join('; '));
+  const hindi = structuredClone(good); hindi.hashtags = ['#सावित्री', '#shorts', '#savitri'];
+  ok('Hindi package needs two Devanagari hashtags', validatePublish(hindi, { language: 'hi' }).some((e) => /Devanagari hashtags/.test(e)), validatePublish(hindi, { language: 'hi' }).join('; '));
+  hindi.hashtags.push('#महाभारत'); ok('Hindi package accepts two Devanagari hashtags', validatePublish(hindi, { language: 'hi' }).length === 0, validatePublish(hindi, { language: 'hi' }).join('; '));
+  const appTag = structuredClone(good); appTag.hashtags.push('#fableon'); ok('app name is not a hashtag', validatePublish(appTag).some((e) => /app name/.test(e)), validatePublish(appTag).join('; '));
+  const noReason = structuredClone(good); noReason.recommendations.madeForKidsReason = 'None'; noReason.recommendations.alteredContentReason = 'None'; ok('recommendations need real reasons', validatePublish(noReason).filter((e) => /real reason/.test(e)).length === 2, validatePublish(noReason).join('; '));
   const facts = { facts: [{ id: 'F1', claim: 'Savitri married Satyavan.', verified: true, sources: [{ quote: 'Savitri chose Satyavan' }] }] };
   const script = { lines: [{ n: 0, text: 'सावित्री ने सत्यवान से विवाह किया।', gloss: 'Savitri married Satyavan.' }], characters: [{ id: 'savitri' }, { id: 'satyavan' }] };
   const supported = structuredClone(good); supported.description.en = 'Savitri married Satyavan. Source: public domain.';

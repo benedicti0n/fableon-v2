@@ -212,7 +212,7 @@ export class World {
     su.e0.value = e[0]; su.e.value.set(e[1], e[2], e[3], e[4]);
     this.sky.position.copy(cam.position);
     this.stars.visible = !!K.stars; this.stars.position.copy(cam.position);
-    untone(L.fog, this.fog.color); const haze = Math.max(0, Number(s.look?.haze ?? 0)); this.fog.near = L.fogNear / (1 + haze * 0.6); this.fog.far = L.fogFar / (1 + haze * 0.25);
+    untone(L.fog, this.fog.color); const haze = Math.max(0, Number(s.look?.haze ?? 1)); const hazeOff = haze - 1; this.fog.near = L.fogNear / (1 + hazeOff * 0.6); this.fog.far = L.fogFar / (1 + hazeOff * 0.25);
     scene.fog = this.fog; scene.background = null;
     const showSun = rig ? rig.sun : s.light === "golden";
     this.sunDisc.visible = showSun;
