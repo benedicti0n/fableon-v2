@@ -13,6 +13,8 @@ const MIME = {
   '.json': 'application/json; charset=utf-8', '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.mp4': 'video/mp4',
   '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml',
   '.srt': 'text/plain; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.yaml': 'text/yaml; charset=utf-8', '.yml': 'text/yaml; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
+  '.woff2': 'font/woff2', '.woff': 'font/woff', '.ico': 'image/x-icon', '.map': 'application/json; charset=utf-8',
 };
 const BLOCK = /(^|\/)(\.env|\.fableon|logs|node_modules|\.git)(\/|$)/;
 const EDITABLE = new Set(['brief.md', 'script.json', 'pronunciations.json', 'shotplan.json', 'cast.notes.json', 'shotplan.notes.json']);

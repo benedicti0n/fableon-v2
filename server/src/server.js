@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { ROOT } from '../../cli/src/env.js';
 import { atomicWrite } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
-import { newToken, installAuth } from './security.js';
+import { newToken, installAuth, inside } from './security.js';
 import { acquireLock } from '../../cli/src/core/lock.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
