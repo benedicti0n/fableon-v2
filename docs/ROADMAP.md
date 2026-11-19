@@ -47,8 +47,11 @@ Scenes and per-boundary transitions (crossfade/flash/cut), burst easing, punch/i
 - Director fixes: approved stages are locked, the script budget uses the voice's delivered rate, places are never cast, `fableon clean` frees regenerable space, and the foreground allocator drops/re-picks props that cover >10 % of a subject.
 - Both films re-lit at the chosen moods and rendered at 1440×2560 with the full mix; animatic and final QA PASS; see `docs/reports/phase-3f.md`.
 
-## Phase 4 — Backend API
-Node server for the pipeline library: projects, artifacts, stages, approvals, jobs (REST + WebSocket progress events), and file serving for audio/video/stills. The CLI and the future browser UI share the same stage registry and state.
+## Phase 4 — Backend API (done)
+Local-only Fastify API on 127.0.0.1 with a per-launch token, Host/Origin/traversal guards, projects, stages,
+approvals, artifacts with Range, editable sources with history, the shared ops registry, child-process job queue with
+WebSocket/SSE events, persisted/cancellable jobs, models, voices, usage and budgets. The CLI and the browser UI share
+the same stage registry and state; see `docs/API.md` and `docs/reports/phase-4.md`.
 
 ## Phase 5 — Frontend: stages 1-6
 Brief, research, script editor (per-line regenerate, fact flags), voice (player, word timeline, pronunciation editor, per-stage voice selection), storyboard shot timeline editor, animatic player.

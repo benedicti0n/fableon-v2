@@ -5,6 +5,8 @@ import { runDoctor } from './doctor.js';
 import { listOps } from './core/ops.js';
 import { printError } from './core/errors.js';
 import { takeEventsFlag, eventsEnabled, emitJob, finishJob, setCurrentJob } from './core/events.js';
+import { acquireLock } from './core/lock.js';
+import { resolve } from 'node:path';
 import { validateCommand } from './validate.js';
 import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
@@ -59,6 +61,14 @@ export function main(argv = process.argv) {
     .command('doctor')
     .description('check Node, Python, packages, ffmpeg, Chromium/WebGL, engine dist and disk space')
     .action(() => { runDoctor(); });
+
+  const WRITE_COMMANDS = new Set(['run', 'approve', 'cast', 'shotplan', 'board', 'render', 'audio', 'assemble', 'qa', 'all', 'stills', 'lookdev', 'lookcheck', 'review', 'clean', 'voice', 'compile', 'schema', 'frames']);
+  let actionLock = null;
+  program.hook('preAction', (thisCommand, actionCommand) => {
+    const opts = actionCommand.opts?.() ?? {};
+    if (WRITE_COMMANDS.has(actionCommand.name()) && opts.project) actionLock = acquireLock(resolve(opts.project), actionCommand.name());
+  });
+  program.hook('postAction', () => { actionLock?.release(); actionLock = null; });
 
   program
     .command('ops')

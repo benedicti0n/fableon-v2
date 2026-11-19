@@ -53,6 +53,7 @@ import { runForegroundTests } from './foreground.mjs';
 import { runDepthMaskTests } from './depth_mask.mjs';
 import { runStateTests } from './state.mjs';
 import { runEventsTests } from './events.mjs';
+import { runServerTests } from './server.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -202,6 +203,8 @@ try {
   check('state migration + lock', st.ok, `${st.checks.filter((c) => c.ok).length}/${st.checks.length} checks`);
   const ev = await runEventsTests();
   check('ops + CLI events', ev.ok, `${ev.checks.filter((c) => c.ok).length}/${ev.checks.length} checks`);
+  const sv = await runServerTests();
+  check('server API', sv.ok, `${sv.checks.filter((c) => c.ok).length}/${sv.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);
   const starts = runStartAnchors();

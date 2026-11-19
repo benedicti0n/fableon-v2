@@ -9,6 +9,7 @@ import { ROOT } from '../../cli/src/env.js';
 import { atomicWrite } from '../../cli/src/core/artifacts.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
 import { newToken, installAuth } from './security.js';
+import { acquireLock } from '../../cli/src/core/lock.js';
 import * as P from './projects.js';
 import * as A from './artifacts.js';
 import { EventHub } from './hub.js';
@@ -92,6 +93,20 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   const projectRoot = resolve(root);
   const app = Fastify({ logger, bodyLimit: 2 * 1024 * 1024, trustProxy: false });
   app.addContentTypeParser(['text/plain', 'text/markdown'], { parseAs: 'string' }, (_req, body, done) => done(null, body));
+  // Every direct project mutation takes the same lock as the CLI/jobs; job starts are skipped (the child locks).
+  app.addHook('preHandler', (req, reply, done) => {
+    if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) return done();
+    const url = String(req.raw.url ?? req.url ?? '');
+    const m = /^\/api\/projects\/([^/?]+)/.exec(url);
+    if (!m) return done();
+    if (/\/ops\//.test(url) || /\/run(?:[?#]|$)/.test(url)) return done();
+    try {
+      const ctx = P.resolveProject(projectRoot, decodeURIComponent(m[1]));
+      req.fableonLock = acquireLock(ctx.dir, `api:${req.method.toLowerCase()}`);
+      reply.raw.once('close', () => { try { req.fableonLock?.release(); } catch { /* best effort */ } });
+      return done();
+    } catch (e) { return done(e); }
+  });
   await app.register(multipart, { limits: { fileSize: 10 * 1024 * 1024, files: 1 } });
   await app.register(websocket);
   const ctxOf = (id) => P.resolveProject(projectRoot, id);
@@ -194,7 +209,29 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     const deep = project ? usage.deep.filter((r) => String(r.project).includes(project)) : usage.deep;
     const eleven = project ? usage.eleven.filter((r) => String(r.project).includes(project)) : usage.eleven;
     const totals = summarize({ deep, eleven });
-    return { since, project, totals, deep, eleven, mock: usage.mock };
+    const to = req.query?.to ? String(req.query.to) : null;
+    const byDay = new Map();
+    for (const rel of usage.files) {
+      let lines = [];
+      try { lines = readFileSync(join(ROOT, rel), 'utf8').split('\n'); } catch { continue; }
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        let l; try { l = JSON.parse(line); } catch { continue; }
+        const day = String(l.ts ?? '').slice(0, 10);
+        if (!day || (since && day < since) || (to && day > to)) continue;
+        if (project && !String(rel).includes(project)) continue;
+        const key = `${day}\0${l.provider ?? '?'}\0${l.stage ?? '?'}\0${l.model ?? '?'}`;
+        const row = byDay.get(key) ?? { day, provider: l.provider ?? null, stage: l.stage ?? null, model: l.model ?? null, calls: 0, cached: 0, characters: 0, promptTokens: 0, completionTokens: 0, reasoningTokens: 0, costUsd: 0 };
+        if (l.cached) row.cached++; else row.calls++;
+        row.characters += Number(l.characters ?? 0);
+        row.promptTokens += Number(l.promptTokens ?? 0);
+        row.completionTokens += Number(l.completionTokens ?? 0);
+        row.reasoningTokens += Number(l.reasoningTokens ?? 0);
+        row.costUsd += Number(l.costUsd ?? 0);
+        byDay.set(key, row);
+      }
+    }
+    return { since, to, project, byDay: [...byDay.values()].sort((a, b) => a.day.localeCompare(b.day) || String(a.provider).localeCompare(String(b.provider)) || String(a.stage).localeCompare(String(b.stage))), totals, deep, eleven, mock: usage.mock };
   });
 
   app.get('/api/jobs', async (req) => ({ jobs: jobs.list(req.query?.project ? String(req.query.project) : null) }));

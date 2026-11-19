@@ -69,6 +69,7 @@ export class JobManager {
     if (ctx.readOnly) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'fixtures are read-only', { project: ctx.id });
     const a = { ...(args ?? {}) };
     delete a.confirmBudget;
+    if (!(op.argsSchema.properties ?? {}).project) delete a.project;
     const valid = this.validator(op);
     if (!valid(a)) throw new FableonError(ERROR_CODES.BAD_REQUEST, `bad args for ${name}: ${this.ajv.errorsText(valid.errors)}`, { op: name, errors: valid.errors });
     if (this.activeWriter(ctx.dir)) {
@@ -90,11 +91,14 @@ export class JobManager {
   }
 
   pump() {
+    const queued = [...this.jobs.values()].filter((j) => j.status === 'queued').sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+    // Light reads/writes can start while a heavy render runs, as long as no project has two writers.
+    for (const j of queued.filter((x) => !x.heavy)) {
+      if (!this.activeWriter(j.projectDir)) this.start(j);
+    }
     if (this.activeHeavy) return;
-    const next = [...this.jobs.values()].filter((j) => j.status === 'queued' && j.heavy).sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))[0]
-      ?? [...this.jobs.values()].filter((j) => j.status === 'queued' && !j.heavy).sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))[0];
-    if (!next) return;
-    this.start(next);
+    const heavy = queued.find((j) => j.heavy && !this.activeWriter(j.projectDir));
+    if (heavy) this.start(heavy);
   }
 
   start(job) {
