@@ -107,6 +107,16 @@ Jobs run as isolated children. At most one **heavy** job runs at a time; light j
 project has at most one writer (`PROJECT_LOCKED`, `409`). Jobs persist in `work/.fableon-server/jobs.jsonl` with a
 per-job log. On restart, running jobs become `interrupted`; `render`, `final` and `animatic` are marked resumable.
 
+## Part regeneration
+
+`POST /api/projects/:id/ops/ranges` with `{from, to, note, count, edges}` generates 1–3 takes for a
+1–20 s range (word-snapped; `frames:true` for exact frames). `GET /api/projects/:id/ranges` returns the
+ranges, takes and accepted history. `GET /api/projects/:id/ranges/:takeId/file` streams a take's preview.
+`POST /api/projects/:id/ranges/:takeId/accept` writes the chosen patch, marks the board edited, trims
+sound cues in the range (and queues a mix rebuild when something was removed), then queues a run from
+board to final. `POST /api/projects/:id/ranges/revert` removes the last accepted edit and queues the same
+run. Only the affected shot segments are dirty; the animatic cache reuses every other shot.
+
 ## Style packs
 
 `GET /api/styles` lists every pack (including `testOnly`) with `status`, `sample` and contract errors.

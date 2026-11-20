@@ -113,12 +113,12 @@ export function finalPlan(projectDir) {
   const manifestPath = join(projectDir, 'render', 'final', 'manifest.json');
   const manifest = existsSync(manifestPath) ? json(manifestPath) : null;
   const castHash = fileHash(join(projectDir, 'cast.json')) ?? 'none';
-  const boardHash = fileHash(join(projectDir, 'board.json')) ?? 'none';
   const lookHash = fileHash(join(projectDir, 'look.json')) ?? 'none';
   const mixHash = fileHash(join(projectDir, 'audio', 'mix.wav')) ?? 'none';
   const segments = rows.map((row, i) => {
     const shotLookHash = hash12(row.story.look ?? null);
-    const payload = { shot: row.story, range: [row.a, row.b], cast: castHash, look: shotLookHash, board: boardHash, engine, quality, size };
+    // The storyboard shot is the cache identity. A board change only dirties the shots whose picture actually changed.
+    const payload = { shot: row.story, range: [row.a, row.b], cast: castHash, look: shotLookHash, engine, quality, size };
     const hash = hash12(payload);
     const file = join('render', 'final', 'segments', `${row.id}.${hash}.mp4`);
     const prev = manifest?.segments?.[row.id];
@@ -127,7 +127,7 @@ export function finalPlan(projectDir) {
     if (prev?.hash === hash && exists) reason = null;
     else if (prev?.engine && prev.engine !== engine) reason = 'engine';
     else if (prev?.lookHash !== shotLookHash) reason = 'look';
-    else if (prev?.boardHash && prev.boardHash !== boardHash) reason = 'board';
+    
     else if (prev && prev.size !== size) reason = 'quality';
     return { shot: row.id, scene: row.board.scene ?? row.id, frames: row.b - row.a, cached: !reason, reason, file, hash, lookHash: shotLookHash };
   });

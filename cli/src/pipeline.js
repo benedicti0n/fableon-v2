@@ -1,5 +1,5 @@
 // Phase 1 pipeline: init -> voice -> shots -> stills/render -> audio -> assemble -> qa (all against one project folder).
-import { existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { basename, join } from 'node:path';
 import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
@@ -9,6 +9,8 @@ import { balance } from './jobs.js';
 import { withProjectLock } from './core/lock.js';
 import { emitStage, emitProgress, emitLog, finishJob } from './core/events.js';
 import { makeContext } from './frames.js';
+import { fileHash } from './core/artifacts.js';
+import { createHash } from 'node:crypto';
 import { DEFAULT_STYLE, styleAdapter, styleId, styleQaEnv } from './styles.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -169,6 +171,30 @@ async function workers(dir, segs, q, n) {
   emitStage(project, 'render', { op: 'render', status: 'done' });
 }
 
+async function previewWithCache(dir, all, q, n) {
+  const { engineBuildId } = await import('./final.js');
+  const project = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
+  const engine = engineBuildId(dir);
+  const cast = fileHash(join(dir, 'cast.json')) ?? 'none';
+  const look = fileHash(join(dir, 'look.json')) ?? 'none';
+  const cacheDir = join(dir, 'render', 'animatic', 'segments');
+  mkdirSync(cacheDir, { recursive: true });
+  const entries = all.map(([id, a, b]) => {
+    const shot = JSON.parse(readFileSync(join(dir, 'storyboard.json'), 'utf8')).shots.find((s) => s.id === String(id));
+    const hash = createHash('sha256').update(JSON.stringify({ shot, cast, look, engine, size: q.size, style: styleId(project) })).digest('hex').slice(0, 12);
+    return { id, a, b, file: join(cacheDir, `${id}.${hash}.mp4`) };
+  });
+  const missing = entries.filter((e) => !existsSync(e.file) || statSync(e.file).size === 0);
+  if (missing.length) await workers(dir, missing.map((e) => [e.a, e.b, e.file]), q, n);
+  else console.log(`render: animatic cache hit for ${entries.length}/${entries.length} clip(s)`);
+  for (const e of entries) {
+    const target = join(dir, 'render', `seg_${pad(e.id)}.mp4`);
+    if (existsSync(e.file)) copyFileSync(e.file, target);
+  }
+  const gone = entries.filter((e) => !existsSync(join(dir, 'render', `seg_${pad(e.id)}.mp4`)));
+  if (gone.length) throw new Error(`render: ${gone.length} cached clip(s) missing after render`);
+}
+
 export async function renderCommand(...args) { return withProjectLock(projectDir(args[0]), 'render', () => renderCommandInner(...args)); }
 
 async function renderCommandInner(dirArg, { qualityName = 'preview', workers: n = 2, detach = false, shots: shotFilter = null } = {}) {
@@ -199,10 +225,11 @@ async function renderCommandInner(dirArg, { qualityName = 'preview', workers: n 
       return;
     }
   }
-  const segs = segments(dir, all);
   const renderDir = join(dir, 'render');
   mkdirSync(renderDir, { recursive: true });
   for (const f of readdirSync(renderDir)) if (f.endsWith('.part.mp4')) rmSync(join(renderDir, f));
+  if (qualityName === 'preview' && styleId(projectJson) === DEFAULT_STYLE && !detach) { await previewWithCache(dir, all, q, n); return; }
+  const segs = segments(dir, all);
   const missing = segs.filter((s) => !existsSync(s[2]));
   if (!missing.length) { console.log(`render: all ${segs.length} clips exist, nothing to do`); return; }
   if (detach) {

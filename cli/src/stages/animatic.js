@@ -5,8 +5,10 @@ import { capture, findPython, ROOT, run } from '../env.js';
 import { renderCommand, shotsCommand } from '../pipeline.js';
 import { makeContext } from '../frames.js';
 import { DEFAULT_STYLE, styleAdapter, styleId, styleQaEnv } from '../styles.js';
+import { applyAcceptedToProject } from '../ranges.js';
 
 export async function runAnimatic({ projectDir, progress = null }) {
+  applyAcceptedToProject(projectDir);
   const shots = join(projectDir, 'shots.json');
   await shotsCommand(projectDir);
   if (!existsSync(shots)) throw new Error('animatic: shots.json was not written');

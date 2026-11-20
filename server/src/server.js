@@ -24,6 +24,7 @@ import { repoModels, modelForStage, fallbackConfigsForStage, modelId } from '../
 import { collectUsage, summarize } from '../../cli/src/usage.js';
 import { ProductionQueue, listPresets, savePreset, deletePreset, listLibrary } from './queue.js';
 import { checkStyle, importStyle, listStyles, readStyle, styleDir } from '../../cli/src/styles.js';
+import { acceptRangeTake, listRangeState, revertLastRange, trimCuesForRange } from '../../cli/src/ranges.js';
 import { getBudgets, saveBudgets, summary as costSummary, csv as costCsv, balances as costBalances } from './costs.js';
 import { dirname as pdirname } from 'node:path';
 import { SARVAM_V4, NACHIKET } from '../../cli/src/voice/sarvam.js';
@@ -199,6 +200,31 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     return reply.code(job ? 202 : 200).send({ ...r, job });
   });
   app.post('/api/projects/:id/archive', async (req) => P.archiveProject(projectRoot, ctxOf(req.params.id)));
+
+  app.get('/api/projects/:id/ranges', async (req) => listRangeState(ctxOf(req.params.id).dir));
+  app.get('/api/projects/:id/ranges/:takeId/file', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const state = listRangeState(ctx.dir);
+    const take = (state.ranges ?? []).flatMap((r) => r.takes ?? []).find((t) => t.id === req.params.takeId);
+    if (!take?.video) return reply.code(404).send({ error: 'take not found' });
+    const file = join(ctx.dir, take.video);
+    if (!existsSync(file)) return reply.code(404).send({ error: 'take video missing' });
+    return reply.type('video/mp4').send(createReadStream(file));
+  });
+  app.post('/api/projects/:id/ranges/:takeId/accept', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const accepted = acceptRangeTake(ctx.dir, req.body?.rangeId ?? null, req.params.takeId);
+    const changed = trimCuesForRange(ctx.dir, accepted.fromFrame, accepted.toFrame);
+    const audioJob = changed ? jobs.create(ctx, 'audio', { project: ctx.dir }) : null;
+    const job = jobs.create(ctx, 'run', { from: 'board', to: 'final', force: true, autopilot: true, project: ctx.dir });
+    return reply.code(202).send({ ...accepted, cuesChanged: changed, audioJob, job });
+  });
+  app.post('/api/projects/:id/ranges/revert', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const reverted = revertLastRange(ctx.dir);
+    const job = jobs.create(ctx, 'run', { from: 'board', to: 'final', force: true, autopilot: true, project: ctx.dir });
+    return reply.code(202).send({ ...reverted, job });
+  });
 
   app.get('/api/projects/:id/stages', async (req) => {
     const d = P.details(ctxOf(req.params.id));

@@ -4,7 +4,7 @@ import { basename, join } from 'node:path';
 import { ROOT } from '../env.js';
 import { fileHash, outputHash, readJson, sha256, writeJsonArtifact } from './artifacts.js';
 import { FableonError, ERROR_CODES } from './errors.js';
-import { STAGES, stageByName } from './stages.js';
+import { STAGES, stageByName, stageOrder } from './stages.js';
 import { modelForStage, modelId } from './model-config.js';
 
 export const STATE_VERSION = 2;

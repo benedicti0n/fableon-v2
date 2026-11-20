@@ -38,7 +38,7 @@ accepts the Vite development origin; do not use it for normal work.
 | **Voice** | Provider/model/voice, pace and fit; run voice after an estimate; waveform from `/peaks` with word-level seek, per-line play and loop; pronunciation editor including `sayAs`; auditions and pace variants; voice QA; approve. |
 | **Cast** | Cast sheet, character specs and swatches, `mustHave` traits, asset gaps with stand-ins, director notes and a cast re-run, approve. |
 | **Shot plan / Board** | Timeline over the voice waveform with scenes coloured by mood, key ticks, a per-scene mood selector that edits `shotplan.json`, shot thumbnails, board findings, per-shot notes, `Run shot plan`, `Run board`, look-dev, both approvals. |
-| **Animatic** | Range video player with shot markers from `/timeline`, click-to-jump, animatic QA with pass/warn badges, a per-shot note that re-runs the board shot and then the animatic, approve. |
+| **Animatic** | Range video player with shot markers from `/timeline`, click-to-jump, animatic QA with pass/warn badges, a per-shot note that re-runs the board shot and then the animatic, approve; and a **Regenerate this part** editor: drag 1–20 s, see the Hindi words, pick 1–3 takes, match/cut edges, preview A/B in context, use or keep, and revert the last accepted edit. |
 | **Settings** | Write-only API keys, per-stage model routing and project overrides, usage by provider/stage/day, doctor checks. |
 
 A project with `readOnly: true` (a fixture) shows a `fixture · read-only` badge; edit, run and approve controls
@@ -97,7 +97,7 @@ re-runs the deterministic board rather than editing `board.json`.
 
 ## Phase 6 screens
 
-- **Finish** (step 9): per-scene look cards (mood, exposure, warmth, glow, haze, shafts, vignette) with a before/after
+- **Finish** (step 9): the same **Regenerate this part** editor under the final player, with the final plan showing only the affected shot dirty; per-scene look cards (mood, exposure, warmth, glow, haze, shafts, vignette) with a before/after
   look preview; sound timeline with voice waveform, music, stingers and SFX, click-to-add/drag, keyboard move/delete,
   gain/seed inspector and one-effect preview; mix sliders and Rebuild mix; final segment strip, plan, estimate, player
   with A/B and final QA. `Save look`/`Save cues` must be pressed before Render final; edited cues leave the sound stage

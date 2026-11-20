@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { approveStage, fileUrl, getProject, getTimeline, runOp, text, waitJob } from '../api/client';
 import { Badge, Button, ErrorNotice, Field, inputClass, Panel, Spinner, StatusBadge, stageFrame } from '../components/ui';
 import { Markdown } from '../lib/markdown';
+import { RangeEditor } from '../components/RangeEditor';
 
 export default function Animatic() {
   const { id = '' } = useParams();
@@ -35,5 +36,6 @@ export default function Animatic() {
         <Panel className="p-4"><div className="mb-2 flex items-center justify-between"><h2 className="text-sm font-semibold">Shot note</h2>{scene ? <Badge tone="neutral">{scene.id}</Badge> : null}</div><Field label="What should change in this shot?"><textarea className={inputClass} rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Hold the close-up two beats longer." /></Field><Button className="mt-2 w-full" variant="primary" disabled={!scene || !note.trim() || rerun.isPending || readOnly} onClick={() => rerun.mutate()}>{rerun.isPending ? 'Queueing…' : 'Save & re-render shot'}</Button><div className="mt-1 text-[10px] text-studio-muted">Queues the board shot re-run, then the animatic. Segments that exist are reused.</div></Panel>
       </div>
     </div>
+    <RangeEditor project={id} duration={dur} words={tl.script.flatMap((l) => l.words.map((w, index) => ({ line: l.n, index, a: w.a, b: w.b, w: w.w })))} disabled={readOnly} />
   </div>;
 }

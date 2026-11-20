@@ -61,6 +61,7 @@ import { runPublishTests } from './publish.mjs';
 import { runQueueTests } from './queue.mjs';
 import { runCostTests } from './costs.mjs';
 import { runStyleTests } from './styles.mjs';
+import { runRangeTests } from './ranges.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -226,6 +227,8 @@ try {
   console.log('\n== style packs ==');
   const styles = await runStyleTests();
   for (const c of styles.checks) check(c.name, c.ok, c.detail);
+  const rangeTests = await runRangeTests();
+  for (const c of rangeTests.checks) check(c.name, c.ok, c.detail);
   check('cost ledger', costs.ok, `${costs.checks.filter((c) => c.ok).length}/${costs.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);

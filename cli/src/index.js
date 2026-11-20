@@ -21,6 +21,7 @@ import { scriptLinesCommand } from './script-lines-command.js';
 import { sfxPreviewCommand } from './sfx-preview.js';
 import { exportCommand } from './export-command.js';
 import { styleCheckCommand, styleImportCommand, styleListCommand } from './style-command.js';
+import { rangeCommand } from './range-command.js';
 import { studioCommand } from './studio-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
@@ -401,6 +402,18 @@ export function main(argv = process.argv) {
       if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
       voiceCommand(opts.project, opts.speed, opts.voice);
     });
+
+  program
+    .command('range')
+    .description('generate 1-3 alternative takes for one 1-20 s range')
+    .requiredOption('--project <dir>', 'project folder')
+    .requiredOption('--from <s>', 'range start in seconds (snaps to words)')
+    .requiredOption('--to <s>', 'range end in seconds (snaps to words)')
+    .option('--note <text>', 'director note for the take')
+    .option('--count <n>', 'number of takes (1-3)', '2')
+    .option('--edges <mode>', 'match or cut', 'match')
+    .option('--frames', 'use exact frames instead of word snapping')
+    .action(async (opts) => { try { const r = await rangeCommand(opts.project, { from: opts.from, to: opts.to, note: opts.note, count: Number(opts.count), edges: opts.edges, frames: !!opts.frames }); console.log(JSON.stringify(r, null, 2)); } catch (e) { printError(e); process.exit(1); } });
 
   const style = program.command('style').description('list, check and import style packs');
   style

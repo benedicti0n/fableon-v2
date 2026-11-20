@@ -57,6 +57,9 @@ export type FileEntry = { path: string; name: string; size: number; mtime: strin
 export type Estimate = { op: string; project: string; provider: string | null; calls: number; characters: number; cachedCharacters: number; usd: number; inr?: number; frameCount?: number; seconds?: number; notes: string[] };
 export type StylePack = { id: string; name: string; description: string; status: string; testOnly?: boolean; sample: string | null; errors?: string[] };
 export type StyleCheck = { ok: boolean; errors: string[]; rendered: Array<string | null> };
+export type RangeTake = { id: string; index: number; video: string; inContext?: { from: number; to: number }; summary: string };
+export type RangeEntry = { id: string; fromFrame: number; toFrame: number; from: number; to: number; words: string; note: string; edges: 'match' | 'cut'; count: number; createdAt: string; takes: RangeTake[] };
+export type RangeState = { version: number; ranges: RangeEntry[]; accepted: Array<{ id: string; rangeId: string; takeId: string; fromFrame: number; toFrame: number; acceptedAt: string }>; history: Array<{ type: string; rangeId: string; takeId: string; at: string }> };
 
 export const getProject = (id: string) => json<{ id: string; readOnly: boolean; source: string; project: Project; stages: StageRow[]; todos: string[]; craft: Array<{ n: number; note: string }>; usage: { calls: number; cached: number; promptTokens: number; completionTokens: number; costUsd: number } }>(`/api/projects/${encodeURIComponent(id)}`);
 export const getStages = (id: string) => json<{ id: string; stages: StageRow[]; todos: string[]; craft: Array<{ n: number; note: string }> }>(`/api/projects/${encodeURIComponent(id)}/stages`);
@@ -81,6 +84,10 @@ export const getStyles = () => json<{ styles: StylePack[] }>('/api/styles');
 export const checkStyle = (id: string, render = true) => json<StyleCheck>(`/api/styles/${encodeURIComponent(id)}/check`, { method: 'POST', body: JSON.stringify({ render }) });
 export const importStyle = (body: { from?: string; git?: string; id?: string; name?: string }) => json<{ id: string; dir: string; licence: string }>('/api/styles/import', { method: 'POST', body: JSON.stringify(body) });
 export const changeStyle = (id: string, style: string, confirm = false) => json<{ style: string; changed: boolean; reset: boolean; job?: Job | null; estimate?: { lowUsd: number; highUsd: number } }>(`/api/projects/${encodeURIComponent(id)}/style`, { method: 'POST', body: JSON.stringify({ style, confirm }) });
+export const getRanges = (id: string) => json<RangeState>(`/api/projects/${encodeURIComponent(id)}/ranges`);
+export const rangeTakeUrl = (id: string, takeId: string) => `/api/projects/${encodeURIComponent(id)}/ranges/${encodeURIComponent(takeId)}/file`;
+export const acceptRange = (id: string, takeId: string, rangeId?: string) => json<{ rangeId: string; takeId: string; fromFrame: number; toFrame: number; cuesChanged: boolean; job: Job; audioJob: Job | null }>(`/api/projects/${encodeURIComponent(id)}/ranges/${encodeURIComponent(takeId)}/accept`, { method: 'POST', body: JSON.stringify({ rangeId }) });
+export const revertRange = (id: string) => json<{ accepted: number; job: Job }>(`/api/projects/${encodeURIComponent(id)}/ranges/revert`, { method: 'POST', body: '{}' });
 
 export async function waitJob(id: string, timeoutMs = 30 * 60 * 1000): Promise<Job> {
   const end = Date.now() + timeoutMs;

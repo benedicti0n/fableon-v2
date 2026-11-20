@@ -12,6 +12,11 @@ export const OPS = [
     outputs: ['storyboard.json', 'script.json', 'voice.wav'],
   },
   {
+    name: 'ranges', description: 'generate 1-3 alternative takes for one 1-20 s range', kind: 'stage', heavy: true, cancellable: true,
+    argsSchema: obj({ ...proj, from: num, to: num, note: str, count: num, edges: { enum: ['match', 'cut'] }, frames: bool }, ['project', 'from', 'to']),
+    outputs: ['ranges.json', 'ranges/'],
+  },
+  {
     name: 'approve', description: 'approve one stage output', kind: 'stage', heavy: false, cancellable: false,
     argsSchema: obj({ ...proj, stage: str, override: str }, ['project', 'stage']),
     outputs: ['.fableon/state.json'],
@@ -130,6 +135,7 @@ export function opArgv(name, args = {}) {
   switch (name) {
     case 'run': return ['run', ...addProject([...(args.to ? ['--to', args.to] : []), ...(args.only ? ['--only', args.only] : []), ...(args.force ? ['--force'] : []), ...(args.autopilot ? ['--autopilot'] : []), ...(args.noCache ? ['--no-cache'] : []), ...(args.fit ? ['--fit', args.fit] : []), ...(args.cachedOnly ? ['--cached-only'] : [])])];
     case 'approve': return ['approve', ...addProject(['--stage', args.stage, ...(args.override ? ['--override', args.override] : [])])];
+    case 'ranges': return ['range', ...addProject(['--from', String(args.from), '--to', String(args.to), ...(args.note ? ['--note', args.note] : []), ...(args.count != null ? ['--count', String(args.count)] : []), ...(args.edges ? ['--edges', args.edges] : []), ...(args.frames ? ['--frames'] : [])])];
     case 'script-lines': return ['script-lines', ...addProject(['--lines', (args.lines ?? []).join(','), ...(args.notes ? ['--notes', args.notes] : []), ...(args.force ? ['--force'] : []), ...(args.noCache ? ['--no-cache'] : [])])];
     case 'cast': return ['cast', ...addProject([...(args.notes ? ['--notes', args.notes] : [])])];
     case 'shotplan': return ['shotplan', ...addProject([...(args.notes ? ['--notes', args.notes] : [])])];

@@ -134,6 +134,13 @@ export function estimate(ctx, body = {}) {
       return out;
     }
   }
+  if (op === 'ranges') {
+    const from = Number(args.from ?? 0), to = Number(args.to ?? 0), count = Math.max(1, Math.min(3, Number(args.count ?? 2)));
+    out.frameCount = Math.max(1, Math.round((Math.max(0, to - from) + 2) * 30)) * count;
+    out.seconds = +(out.frameCount * 0.12).toFixed(1);
+    out.notes.push(`Local ${count} take(s) at preview quality for the range plus one second each side; no provider call.`);
+    return out;
+  }
   if (op === 'stills') {
     const tokens = String(args.frames ?? 'start,mid,end').split(',').filter(Boolean);
     const passes = args.compare && args.look ? 2 : 1;

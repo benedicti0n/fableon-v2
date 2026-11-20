@@ -9,6 +9,7 @@ import { compileBoard } from '../authoring.js';
 import { checkFramesMeasured } from '../frames.js';
 import { compileFilmCheck } from '../film.js';
 import { trimForegroundMarks } from '../allocator.js';
+import { applyAcceptedRanges } from '../ranges.js';
 
 const DEFAULTS = { palace: 'courtyard', hermitage: 'clearing', village: 'front', deer: 'clearing', arena: 'floor', city: 'clearing', lac: 'stage', naga: 'floor' };
 const seedOf = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) % 1000; };
@@ -246,6 +247,8 @@ export async function runBoard({ projectDir, project, router, progress = null })
     const finalBoard = { version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) };
 
     compiled = compileBoard(finalBoard, words, catalog).storyboard;
+    const ranged = applyAcceptedRanges(projectDir, compiled);
+    if (JSON.stringify(ranged) !== JSON.stringify(compiled)) compiled = ranged;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');
     measured = await checkFramesMeasured(projectDir);
     for (const id of new Set(measured.errors.map((e) => e.shot))) {
