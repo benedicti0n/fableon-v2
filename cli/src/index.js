@@ -20,6 +20,7 @@ import { shotplanCommand } from './shotplan-command.js';
 import { scriptLinesCommand } from './script-lines-command.js';
 import { sfxPreviewCommand } from './sfx-preview.js';
 import { exportCommand } from './export-command.js';
+import { styleCheckCommand, styleImportCommand, styleListCommand } from './style-command.js';
 import { studioCommand } from './studio-command.js';
 import { boardCommand } from './board-command.js';
 import { usageCommand } from './usage.js';
@@ -130,6 +131,7 @@ export function main(argv = process.argv) {
     .description('run pipeline stages in dependency order')
     .requiredOption('--project <dir>', 'project folder')
     .option('--to <stage>', 'last stage to run', 'animatic')
+    .option('--from <stage>', 'first stage to run (after a style change, start at cast)')
     .option('--only <stage>', 'run only this stage')
     .option('--force', 'overwrite hand-edited outputs')
     .option('--autopilot', 'do not stop for approvals')
@@ -399,6 +401,26 @@ export function main(argv = process.argv) {
       if (!opts.project) { console.error('fableon: missing --project <dir>'); process.exit(1); }
       voiceCommand(opts.project, opts.speed, opts.voice);
     });
+
+  const style = program.command('style').description('list, check and import style packs');
+  style
+    .command('list')
+    .description('list ready and porting style packs')
+    .option('--json', 'print json')
+    .action((opts) => { try { const r = styleListCommand({ json: !!opts.json }); if (opts.json) console.log(JSON.stringify(r)); } catch (e) { printError(e); process.exit(1); } });
+  style
+    .command('check <id>')
+    .description('validate the contract, catalog, prompt sizes and QA profile; render a test board at preview and final')
+    .option('--no-render', 'contract checks only')
+    .action(async (id, opts) => { try { const r = await styleCheckCommand(id, { render: opts.render !== false }); if (!r.ok) process.exitCode = 1; } catch (e) { printError(e); process.exit(1); } });
+  style
+    .command('import')
+    .description('copy a skill folder or git URL into styles/_incoming and scaffold a pack')
+    .option('--from <dir>', 'skill folder')
+    .option('--git <url>', 'git URL to clone')
+    .option('--id <id>', 'pack id')
+    .option('--name <name>', 'display name')
+    .action((opts) => { try { styleImportCommand({ from: opts.from, git: opts.git, id: opts.id, name: opts.name }); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('all')

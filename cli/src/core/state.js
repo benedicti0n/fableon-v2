@@ -159,6 +159,21 @@ export function assertWritable(projectDir, project, name, { autopilot = false, f
   if (!force) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, `${name} output is approved; review the new inputs and rerun with --force to replace it, or approve the new output`, { stage: name });
 }
 
+/** A deliberate user action: make this stage and every later stage runnable again without deleting history. */
+export function resetFrom(projectDir, from) {
+  const start = stageOrder(from);
+  if (start < 0) throw new Error(`unknown stage "${from}"`);
+  const state = loadState(projectDir);
+  for (const stage of STAGES.slice(start)) {
+    const st = state.stages?.[stage.name];
+    if (!st) continue;
+    st.status = 'stale';
+    st.approvedHash = null;
+  }
+  saveState(projectDir, state);
+  return state;
+}
+
 export function markScriptRevised(projectDir, { force = false } = {}) {
   const project = readJson(join(projectDir, 'project.json'), 'project');
   if (isApprovedLocked(projectDir, project, 'script') && !force) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'script output is approved and read-only; rerun with --force without autopilot to revise it', { stage: 'script' });

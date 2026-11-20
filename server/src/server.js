@@ -23,6 +23,7 @@ import { STAGES } from '../../cli/src/core/stages.js';
 import { repoModels, modelForStage, fallbackConfigsForStage, modelId } from '../../cli/src/core/model-config.js';
 import { collectUsage, summarize } from '../../cli/src/usage.js';
 import { ProductionQueue, listPresets, savePreset, deletePreset, listLibrary } from './queue.js';
+import { checkStyle, importStyle, listStyles, readStyle, styleDir } from '../../cli/src/styles.js';
 import { getBudgets, saveBudgets, summary as costSummary, csv as costCsv, balances as costBalances } from './costs.js';
 import { dirname as pdirname } from 'node:path';
 import { SARVAM_V4, NACHIKET } from '../../cli/src/voice/sarvam.js';
@@ -166,6 +167,19 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
     }
     return null;
   };
+  app.get('/api/styles', async () => ({ styles: listStyles({ includeTest: true }).map((s) => ({ ...s, sample: s.sample ? `/api/styles/${encodeURIComponent(s.id)}/sample` : null })) }));
+  app.get('/api/styles/:id/sample', async (req, reply) => {
+    const s = readStyle(req.params.id);
+    const f = (s.sampleFrames ?? [])[0];
+    if (!f || !existsSync(join(ROOT, f))) return reply.code(404).send({ error: 'no sample frame' });
+    return reply.type(/\.png$/i.test(f) ? 'image/png' : 'image/jpeg').send(readFileSync(join(ROOT, f)));
+  });
+  app.post('/api/styles/import', async (req, reply) => {
+    const r = importStyle(req.body ?? {});
+    return reply.code(201).send(r);
+  });
+  app.post('/api/styles/:id/check', async (req) => checkStyle(req.params.id, { render: req.body?.render !== false }));
+
   app.get('/api/projects/overview', async () => {
     return { projects: P.listProjects(projectRoot).map((p) => {
       const d = P.details(P.resolveProject(projectRoot, p.id));
@@ -175,6 +189,15 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   });
   app.get('/api/projects/:id', async (req) => P.details(ctxOf(req.params.id)));
   app.patch('/api/projects/:id', async (req) => P.patchProject(ctxOf(req.params.id), req.body ?? {}));
+  app.post('/api/projects/:id/style', async (req, reply) => {
+    const ctx = ctxOf(req.params.id);
+    const body = req.body ?? {};
+    const r = P.changeProjectStyle(ctx, body.style, { confirm: !!body.confirm });
+    if (r.requiresConfirm) return reply.code(409).send({ error: `changing style re-runs from cast; estimate $${r.estimate.lowUsd}-$${r.estimate.highUsd}`, code: 'STYLE_RERUN', ...r });
+    let job = null;
+    if (r.reset) job = jobs.create(ctx, 'run', { to: 'final', from: 'cast', force: true, autopilot: true, project: ctx.dir });
+    return reply.code(job ? 202 : 200).send({ ...r, job });
+  });
   app.post('/api/projects/:id/archive', async (req) => P.archiveProject(projectRoot, ctxOf(req.params.id)));
 
   app.get('/api/projects/:id/stages', async (req) => {

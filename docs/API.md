@@ -107,6 +107,18 @@ Jobs run as isolated children. At most one **heavy** job runs at a time; light j
 project has at most one writer (`PROJECT_LOCKED`, `409`). Jobs persist in `work/.fableon-server/jobs.jsonl` with a
 per-job log. On restart, running jobs become `interrupted`; `render`, `final` and `animatic` are marked resumable.
 
+## Style packs
+
+`GET /api/styles` lists every pack (including `testOnly`) with `status`, `sample` and contract errors.
+`GET /api/styles/:id/sample` serves its first sample frame. `POST /api/styles/import` copies a skill folder
+(`{from}`) or clones a git URL (`{git}`) into `styles/_incoming/`, scaffolds a not-ready pack and returns its id and
+licence. `POST /api/styles/:id/check` validates the contract and renders a preview and final still; a passing check
+flips the pack to `ready`.
+
+`POST /api/projects/:id/style` with `{style, confirm}` changes the pack. Before cast approval this is a normal edit.
+After it, the call returns `409 STYLE_RERUN` with `{estimate, from:"cast"}` unless `confirm:true`; a confirmed call
+resets cast and later stages in state (history is kept) and queues a run from cast to final.
+
 ## Budgets
 
 Before a job the server sums project stage cost and estimates the op (0.05 USD for model stages). If

@@ -60,6 +60,7 @@ import { runFinishLookTests } from './look-finish.mjs';
 import { runPublishTests } from './publish.mjs';
 import { runQueueTests } from './queue.mjs';
 import { runCostTests } from './costs.mjs';
+import { runStyleTests } from './styles.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -222,6 +223,9 @@ try {
   const queue = await runQueueTests();
   check('production queue', queue.ok, `${queue.checks.filter((c) => c.ok).length}/${queue.checks.length} checks`);
   const costs = await runCostTests();
+  console.log('\n== style packs ==');
+  const styles = await runStyleTests();
+  for (const c of styles.checks) check(c.name, c.ok, c.detail);
   check('cost ledger', costs.ok, `${costs.checks.filter((c) => c.ok).length}/${costs.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);

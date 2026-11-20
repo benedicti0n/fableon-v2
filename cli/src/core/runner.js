@@ -1,11 +1,14 @@
 // Library stage runner. The CLI/server only renders events; this module writes the run log.
 import { EventEmitter } from 'node:events';
+import { resolve } from 'node:path';
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { allStatuses, approve, assertWritable, isApprovedLocked, loadState, recordStage, saveState, statusOf } from './state.js';
 import { STAGES, stageByName, stageOrder } from './stages.js';
 import { FableonError, ERROR_CODES, asFableonError } from './errors.js';
 import { emitStage, emitProgress, emitStatus, emitError, emitLog } from './events.js';
+import { pathToFileURL } from 'node:url';
+import { DEFAULT_STYLE, ensureProjectStyle, loadStyle, styleAdapter, styleId } from '../styles.js';
 const STAGE_MODULE = { brief: 'brief.js', research: 'research.js', script: 'script.js', factcheck: 'factcheck.js', performance: 'performance.js', cast: 'cast.js', voice: 'voice.js', shotplan: 'shotplan.js', board: 'board.js', sound: 'sound.js', animatic: 'animatic.js', final: 'final.js', publish: 'publish.js' };
 
 export class PipelineRunner extends EventEmitter {
@@ -29,6 +32,8 @@ export class PipelineRunner extends EventEmitter {
   }
 
   async run() {
+    this.project = ensureProjectStyle(this.projectDir, this.project);
+    if (styleId(this.project) !== DEFAULT_STYLE) loadStyle(styleId(this.project));
     if (!this.router) {
       const { ModelRouter } = await import('../models/router.js');
       this.router = new ModelRouter(this.projectDir, this.project, { noCache: this.opts.noCache, signal: this.abort, onEvent: (e) => emitStage(this.projectId, e.stage, { op: this.op, step: e.step, done: e.done, total: e.total, type: 'progress', project: this.projectId }) });
@@ -36,10 +41,14 @@ export class PipelineRunner extends EventEmitter {
     const to = this.opts.to ?? 'voice';
     const toIndex = stageOrder(to);
     if (toIndex < 0) throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown --to stage "${to}" (choose ${STAGES.map((s) => s.name).join(', ')})`, { to });
+    const from = this.opts.from ?? null;
+    const fromIndex = from ? stageOrder(from) : 0;
+    if (fromIndex < 0) throw new FableonError(ERROR_CODES.BAD_REQUEST, `unknown --from stage "${from}" (choose ${STAGES.map((s) => s.name).join(', ')})`, { from });
+    if (fromIndex > toIndex) throw new FableonError(ERROR_CODES.BAD_REQUEST, `--from ${from} is after --to ${to}`, { from, to });
     const only = this.opts.only ?? null;
     const autopilot = this.opts.autopilot ?? !!this.project.autopilot;
     const force = !!this.opts.force;
-    for (const stage of STAGES.slice(0, toIndex + 1)) {
+    for (const stage of STAGES.slice(fromIndex, toIndex + 1)) {
       if (only && stage.name !== only) continue;
       if (this.abort?.aborted) throw new FableonError(ERROR_CODES.CANCELLED, 'cancelled');
       const status = statusOf(this.projectDir, this.project, stage);
@@ -69,7 +78,15 @@ export class PipelineRunner extends EventEmitter {
     const progress = (p = {}) => emitProgress(this.projectId, stage.name, p.step ?? stage.name, p.done ?? 0, p.total ?? 0, { op: this.op, ...p });
     try {
       let result;
-      const mod = await import(`../stages/${STAGE_MODULE[stage.name]}`);
+      let modPath = new URL(`../stages/${STAGE_MODULE[stage.name]}`, import.meta.url).href;
+      if (styleId(this.project) !== DEFAULT_STYLE) {
+        try {
+          const { style, adapter } = await styleAdapter(styleId(this.project));
+          const override = adapter.stages?.[stage.name];
+          if (override) modPath = pathToFileURL(resolve(style.dir, override)).href;
+        } catch { /* loadStyle already failed loudly for a not-ready pack */ }
+      }
+      const mod = await import(modPath);
       const fn = mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}`] ?? mod[`run${stage.name[0].toUpperCase()}${stage.name.slice(1)}Stage`];
       if (stage.name === 'voice') result = await fn({ projectDir: this.projectDir, project: this.project, fit, cachedOnly, progress });
       else result = await fn({ projectDir: this.projectDir, project: this.project, router: this.router, autopilot, progress });

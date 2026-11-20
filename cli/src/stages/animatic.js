@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { capture, findPython, ROOT, run } from '../env.js';
 import { renderCommand, shotsCommand } from '../pipeline.js';
 import { makeContext } from '../frames.js';
+import { DEFAULT_STYLE, styleAdapter, styleId, styleQaEnv } from '../styles.js';
 
 export async function runAnimatic({ projectDir, progress = null }) {
   const shots = join(projectDir, 'shots.json');
@@ -36,7 +37,10 @@ export async function runAnimatic({ projectDir, progress = null }) {
     if (!existsSync(tail)) {
       const jobs = join(render, 'tail_jobs.json');
       writeFile(jobs, JSON.stringify([[fromF, toF, tail]]));
-      await run(process.execPath, [join(ROOT, 'engine', 'scripts', 'render.cjs'), 'segments', '--jobs', jobs, '--project', projectDir, '--size', '540x960', '--msaa', '0'], { cwd: ROOT });
+      const pj = JSON.parse(readFileSync(join(projectDir, 'project.json'), 'utf8'));
+      const custom = styleId(pj) === DEFAULT_STYLE ? null : (await styleAdapter(styleId(pj))).adapter;
+      if (custom && typeof custom.renderSegments === 'function') await custom.renderSegments({ projectDir, jobsFile: jobs, size: '540x960' });
+      else await run(process.execPath, [join(ROOT, 'engine', 'scripts', 'render.cjs'), 'segments', '--jobs', jobs, '--project', projectDir, '--size', '540x960', '--msaa', '0'], { cwd: ROOT });
     }
     const fullList = join(render, 'animatic-full.txt');
     writeFileSync(fullList, rows.map(([id]) => `file 'seg_${String(id).padStart(2, '0')}.mp4'\n`).join('') + `file '${tail.split('/').pop()}'\n`);
@@ -86,7 +90,8 @@ export async function runAnimatic({ projectDir, progress = null }) {
   const shiftedFlash = metaRaw.flash ? shiftPair(metaRaw.flash) : undefined;
   writeFile(meta, JSON.stringify({ ...metaRaw, ...(metaRaw.shots ? { shots: shiftedShots } : {}), ...(shiftedFlash ? { flash: shiftedFlash } : {}), planned: ints(planned), xfade: ints(xfade) }, null, 2) + '\n');
   progress?.({ step: 'animatic:qa', done: 1, total: 2 });
-  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), video, qaDir, meta], { cwd: ROOT });
+  const projectJson = JSON.parse(readFileSync(join(projectDir, 'project.json'), 'utf8'));
+  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), video, qaDir, meta], { cwd: ROOT, env: { ...process.env, ...styleQaEnv(projectJson) } });
   progress?.({ step: 'animatic:qa', done: 2, total: 2 });
   const report = readFileSync(join(qaDir, 'report.md'), 'utf8');
   const lines = report.split('\n');

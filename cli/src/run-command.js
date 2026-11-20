@@ -10,7 +10,7 @@ export async function runCommand(dir, opts) {
   const project = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
   const ctrl = new AbortController();
   const runner = new PipelineRunner(dir, project, {
-    to: opts.to ?? 'animatic', only: opts.only ?? null, force: !!opts.force,
+    to: opts.to ?? 'animatic', from: opts.from ?? null, only: opts.only ?? null, force: !!opts.force,
     autopilot: opts.autopilot ? true : undefined, fit: opts.fit !== 'off', noCache: opts.cache === false, cachedOnly: !!opts.cachedOnly,
     signal: ctrl.signal,
   });

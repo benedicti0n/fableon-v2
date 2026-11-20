@@ -2,7 +2,7 @@
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, statSync, statfsSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { ROOT, RENDER_CJS, run } from './env.js';
 import { FableonError, ERROR_CODES } from './core/errors.js';
@@ -10,6 +10,7 @@ import { fileHash, sha256, atomicWrite } from './core/artifacts.js';
 import { runQa } from './pipeline.js';
 import { lookcheckCommand } from './lookcheck.js';
 import { applyLook } from './look-adjust.js';
+import { DEFAULT_STYLE, readStyle, styleAdapter, styleId } from './styles.js';
 
 const json = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const walk = (dir, out = []) => {
@@ -34,6 +35,10 @@ export function engineBuildId(projectDir = null) {
   }
   const pkg = json(join(ROOT, 'engine', 'package.json'));
   h.update(String(pkg.dependencies?.three ?? ''));
+  let sid = DEFAULT_STYLE;
+  if (projectDir && existsSync(join(projectDir, 'project.json'))) { try { sid = styleId(json(join(projectDir, 'project.json'))); } catch { /* default */ } }
+  h.update(`style:${sid}`);
+  try { const s = readStyle(sid); h.update(readFileSync(resolve(s.dir, s.adapter))); h.update(readFileSync(resolve(ROOT, s.catalog))); } catch { /* the style check reports a broken pack */ }
   let gl = process.env.FABLEON_GLINFO ?? 'unknown';
   if (projectDir && existsSync(join(projectDir, '.fableon', 'glinfo.json'))) {
     try { gl = json(join(projectDir, '.fableon', 'glinfo.json')).renderer ?? gl; } catch { /* keep unknown */ }
@@ -183,6 +188,9 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
   const plan = finalPlan(projectDir);
   if (!plan.framesToRender && !plan.audioOnly && !plan.assembleOnly && existsSync(join(projectDir, 'final.mp4'))) return { ...plan, skipped: true };
   ensureDisk(projectDir, plan);
+  const projectJson = json(join(projectDir, 'project.json'));
+  const sid = styleId(projectJson);
+  const custom = sid === DEFAULT_STYLE ? null : (await styleAdapter(sid)).adapter;
   const final = join(projectDir, 'final.mp4');
   if (existsSync(final)) copyFileSync(final, join(projectDir, 'final.prev.mp4'));
   const wake = caffeinate();
@@ -207,7 +215,8 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
           const jobsFile = join(tmp, 'shot-jobs.json');
           writeFileSync(jobsFile, JSON.stringify(jobs));
           progress?.({ step: 'final:segments', done: 0, total: jobs.length });
-          await run(process.execPath, [RENDER_CJS, 'shotsegments', '--jobs', jobsFile, '--project', tmp, '--size', plan.size, '--msaa', '0', '--crf', '8'], { cwd: ROOT });
+          if (custom && typeof custom.renderShotSegments === 'function') await custom.renderShotSegments({ projectDir: tmp, jobsFile, size: plan.size, crf: 8 });
+          else await run(process.execPath, [RENDER_CJS, 'shotsegments', '--jobs', jobsFile, '--project', tmp, '--size', plan.size, '--msaa', '0', '--crf', '8'], { cwd: ROOT });
           progress?.({ step: 'final:segments', done: jobs.length, total: jobs.length });
         }
         const dirtyTransitions = plan.transitions.filter((t) => !t.cached);
@@ -217,7 +226,8 @@ export async function renderFinal(projectDir, { progress = null } = {}) {
           const jobsFile = join(tmp, 'transition-jobs.json');
           writeFileSync(jobsFile, JSON.stringify(jobs));
           progress?.({ step: 'final:transitions', done: 0, total: jobs.length });
-          await run(process.execPath, [RENDER_CJS, 'segments', '--jobs', jobsFile, '--project', tmp, '--size', plan.size, '--msaa', '0', '--crf', '8'], { cwd: ROOT });
+          if (custom && typeof custom.renderSegments === 'function') await custom.renderSegments({ projectDir: tmp, jobsFile, size: plan.size });
+          else await run(process.execPath, [RENDER_CJS, 'segments', '--jobs', jobsFile, '--project', tmp, '--size', plan.size, '--msaa', '0', '--crf', '8'], { cwd: ROOT });
           progress?.({ step: 'final:transitions', done: jobs.length, total: jobs.length });
         }
       } finally { rmSync(tmp, { recursive: true, force: true }); }

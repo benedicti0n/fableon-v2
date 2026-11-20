@@ -28,7 +28,12 @@
         "$ref": "../schema/event.schema.json"
       },
       "Project": {
-        "$ref": "../schema/project.schema.json"
+        "$ref": "../schema/project.schema.json",
+        "properties": {
+          "style": {
+            "type": "string"
+          }
+        }
       },
       "State": {
         "$ref": "../schema/state.schema.json"

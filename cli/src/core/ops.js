@@ -8,7 +8,7 @@ const proj = { project: str };
 export const OPS = [
   {
     name: 'run', description: 'run pipeline stages in dependency order', kind: 'stage', heavy: true, cancellable: true,
-    argsSchema: obj({ ...proj, to: str, only: str, force: bool, autopilot: bool, noCache: bool, fit: str, cachedOnly: bool }, ['project']),
+    argsSchema: obj({ ...proj, to: str, from: str, only: str, force: bool, autopilot: bool, noCache: bool, fit: str, cachedOnly: bool }, ['project']),
     outputs: ['storyboard.json', 'script.json', 'voice.wav'],
   },
   {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Badge, Button, DialogShell, Empty, ErrorNotice, Field, inputClass, Panel, SelectBox } from '../components/ui';
-import { getOverview, json, patchProject } from '../api/client';
+import { getOverview, getStyles, json, patchProject } from '../api/client';
 
 type P = {
   id: string; title: string; readOnly: boolean; source: string; cover: string | null;
@@ -31,12 +31,16 @@ export default function Projects() {
   const [seconds, setSeconds] = React.useState('90');
   const [language, setLanguage] = React.useState('hi');
   const [voice, setVoice] = React.useState('sarvam');
+  const [style, setStyle] = React.useState('toon3d');
   const [error, setError] = React.useState<unknown>(null);
   const [search, setSearch] = React.useState('');
   const [filter, setFilter] = React.useState('all');
   const [hideTests, setHideTests] = React.useState(true);
   const [selected, setSelected] = React.useState<string[]>([]);
   const q = useQuery({ queryKey: ['overview'], queryFn: getOverview });
+  const styles = useQuery({ queryKey: ['styles'], queryFn: getStyles });
+  const readyStyles = (styles.data?.styles ?? []).filter((s) => s.status === 'ready' && !s.testOnly);
+  const chosenStyle = readyStyles.find((s) => s.id === style);
   const m = useMutation({ mutationFn: create, onSuccess: (p) => { qc.invalidateQueries({ queryKey: ['overview'] }); setParams({}); nav(`/p/${encodeURIComponent(p.id)}/brief`); }, onError: setError });
   const a = useMutation({ mutationFn: archive, onSuccess: () => qc.invalidateQueries({ queryKey: ['overview'] }), onError: setError });
   const markTest = useMutation({ mutationFn: ({ id, test }: { id: string; test: boolean }) => patchProject(id, { tags: test ? ['test'] : [] }), onSuccess: () => qc.invalidateQueries({ queryKey: ['overview'] }), onError: setError });
@@ -50,7 +54,7 @@ export default function Projects() {
     if (hideTests && p.project.tags?.includes('test')) return false;
     return true;
   });
-  const submit = (e: React.FormEvent) => { e.preventDefault(); setError(null); m.mutate({ topic, seconds: Number(seconds), language, voice }); };
+  const submit = (e: React.FormEvent) => { e.preventDefault(); setError(null); m.mutate({ topic, seconds: Number(seconds), language, voice, style }); };
   const bulkArchive = async () => { for (const id of selected) await a.mutateAsync(id); setSelected([]); };
   return <div className="mx-auto max-w-6xl">
     <div className="flex flex-wrap items-end justify-between gap-3"><div><div className="text-[10px] font-semibold uppercase tracking-[.2em] text-studio-amber">Studio</div><h1 className="mt-1 text-2xl font-semibold">Projects</h1><p className="mt-1 text-sm text-studio-muted">Local films, from a brief to a publishable package.</p></div><Button variant="primary" onClick={() => setParams({ new: '1' })}>+ New project</Button></div>
@@ -61,7 +65,7 @@ export default function Projects() {
     <h2 className="mb-2 mt-8 text-xs font-semibold uppercase tracking-[.16em] text-studio-faint">Fixtures · read-only</h2>
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{fixtures.map((p) => <Panel key={p.id} className="overflow-hidden"><button className="block w-full text-left" onClick={() => nav(`/p/${encodeURIComponent(p.id)}/brief`)}><div className="relative aspect-[16/9] bg-studio-bg">{p.cover ? <img src={p.cover} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-[10px] uppercase tracking-[.2em] text-studio-faint">fixture</div>}<span className="absolute left-2 top-2"><Badge tone="teal">fixture</Badge></span></div><div className="p-3"><div className="truncate text-sm font-semibold">{p.title}</div><div className="text-[10px] text-studio-faint">{p.id} · {p.project.seconds}s</div></div></button></Panel>)}</div>
     <DialogShell open={open} onOpenChange={(v) => !v && setParams({})} title="New project" description="The brief and source material come next. Scripts and narration stay in the project language." footer={<><Button variant="ghost" onClick={() => setParams({})}>Cancel</Button><Button variant="primary" onClick={submit} disabled={m.isPending || !topic.trim()}>{m.isPending ? 'Creating…' : 'Create project'}</Button></>}>
-      <form onSubmit={submit} className="grid gap-4"><Field label="Topic"><input className={inputClass} value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Savitri and Satyavan: the princess who out-argued Death" autoFocus /></Field><div className="grid grid-cols-2 gap-3"><Field label="Seconds"><input className={inputClass} type="number" min={10} max={600} value={seconds} onChange={(e) => setSeconds(e.target.value)} /></Field><Field label="Language"><SelectBox ariaLabel="Language" value={language} onValueChange={setLanguage} items={[{ value: 'hi', label: 'Hindi' }, { value: 'en', label: 'English' }]} /></Field></div><Field label="Voice provider" hint="The voice can be changed later on the Voice screen."><SelectBox ariaLabel="Voice provider" value={voice} onValueChange={setVoice} items={[{ value: 'sarvam', label: 'Sarvam (Hindi)' }, { value: 'elevenlabs', label: 'ElevenLabs' }, { value: 'kokoro', label: 'Kokoro (English)' }]} /></Field></form>
+      <form onSubmit={submit} className="grid gap-4"><Field label="Topic"><input className={inputClass} value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Savitri and Satyavan: the princess who out-argued Death" autoFocus /></Field><div className="grid grid-cols-2 gap-3"><Field label="Seconds"><input className={inputClass} type="number" min={10} max={600} value={seconds} onChange={(e) => setSeconds(e.target.value)} /></Field><Field label="Language"><SelectBox ariaLabel="Language" value={language} onValueChange={setLanguage} items={[{ value: 'hi', label: 'Hindi' }, { value: 'en', label: 'English' }]} /></Field></div><Field label="Voice provider" hint="The voice can be changed later on the Voice screen."><SelectBox ariaLabel="Voice provider" value={voice} onValueChange={setVoice} items={[{ value: 'sarvam', label: 'Sarvam (Hindi)' }, { value: 'elevenlabs', label: 'ElevenLabs' }, { value: 'kokoro', label: 'Kokoro (English)' }]} /></Field><Field label="Style" hint="The pack changes the picture, never the shared script, voice, sound or publish pipeline. It can be changed freely until the cast is approved."><div className="flex items-center gap-3"><div className="min-w-0 flex-1"><SelectBox ariaLabel="Style" value={style} onValueChange={setStyle} items={readyStyles.length ? readyStyles.map((s) => ({ value: s.id, label: s.name })) : [{ value: 'toon3d', label: '2D cartoon cards in a 3D world' }]} /></div>{chosenStyle?.sample ? <img src={chosenStyle.sample} alt="" className="h-14 w-9 rounded border border-studio-line object-cover" /> : null}</div></Field></form>
     </DialogShell>
   </div>;
 }

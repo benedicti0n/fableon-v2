@@ -2,12 +2,13 @@
 import { existsSync, readdirSync, readFileSync, renameSync, statSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { ROOT } from '../../cli/src/env.js';
-import { approve, loadState, saveState, stageOutputHash, statusTable, computeHash } from '../../cli/src/core/state.js';
+import { approve, loadState, saveState, stageOutputHash, statusTable, computeHash, resetFrom } from '../../cli/src/core/state.js';
 import { stageByName } from '../../cli/src/core/stages.js';
 import { readJson, writeJsonArtifact } from '../../cli/src/core/artifacts.js';
 import { recordFactcheckOverride } from '../../cli/src/stages/factcheck.js';
 import { newProject } from '../../cli/src/core/new-project.js';
 import { FableonError, ERROR_CODES } from '../../cli/src/core/errors.js';
+import { ensureProjectStyle, loadStyle } from '../../cli/src/styles.js';
 
 const ID = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,80}$/;
 const FIXTURES = join(ROOT, 'fixtures');
@@ -35,7 +36,7 @@ export function resolveProject(rootDir, id) {
   if (!ID.test(String(id))) throw new FableonError(ERROR_CODES.BAD_REQUEST, `bad project id "${id}"`, { id });
   for (const [base, readOnly, source] of [[rootDir, false, 'work'], [FIXTURES, true, 'fixture']]) {
     const dir = join(base, String(id));
-    if (existsSync(join(dir, 'project.json'))) return { id: id, dir, project: JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8')), readOnly, source };
+    if (existsSync(join(dir, 'project.json'))) { const project = ensureProjectStyle(dir, JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8')), { write: !readOnly }); return { id: id, dir, project, readOnly, source }; }
   }
   throw new FableonError(ERROR_CODES.NOT_FOUND, `project ${id} was not found`, { project: id });
 }
@@ -59,7 +60,7 @@ export function createProject(rootDir, body = {}) {
   const slug = String(body.id ?? topic).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'project';
   const dir = join(projectRoot(rootDir), slug);
   if (existsSync(dir)) throw new FableonError(ERROR_CODES.BAD_REQUEST, `project ${slug} already exists`, { id: slug });
-  const created = newProject(dir, { topic, seconds: Number(body.seconds ?? 90), voice: typeof body.voice === 'string' ? body.voice : 'am_michael', language: body.language ?? 'en' });
+  const created = newProject(dir, { topic, seconds: Number(body.seconds ?? 90), voice: typeof body.voice === 'string' ? body.voice : 'am_michael', language: body.language ?? 'en', style: body.style ?? 'toon3d' });
   if (body.voice) {
     if (typeof body.voice === 'string' && ['sarvam', 'elevenlabs', 'kokoro'].includes(body.voice)) {
       created.project.voice = body.voice === 'sarvam'
@@ -73,7 +74,7 @@ export function createProject(rootDir, body = {}) {
   return resolveProject(rootDir, slug);
 }
 
-const PATCH_KEYS = new Set(['voice', 'models', 'autopilot', 'budget', 'look', 'published', 'tags']);
+const PATCH_KEYS = new Set(['voice', 'models', 'autopilot', 'budget', 'look', 'published', 'tags', 'style']);
 export function patchProject(ctx, patch = {}) {
   if (ctx.readOnly) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'fixtures are read-only', { project: ctx.id });
   const next = { ...ctx.project };
@@ -84,6 +85,23 @@ export function patchProject(ctx, patch = {}) {
   writeJsonArtifact(ctx.dir, 'api', 'project.json', next, 'project');
   ctx.project = next;
   return details(ctx);
+}
+
+/** Change the pack. Before cast approval this is a free edit; after it, the caller must confirm a rerun from cast. */
+export function changeProjectStyle(ctx, nextStyle, { confirm = false } = {}) {
+  if (ctx.readOnly) throw new FableonError(ERROR_CODES.APPROVED_LOCKED, 'fixtures are read-only', { project: ctx.id });
+  const id = String(nextStyle ?? '');
+  loadStyle(id);
+  if (id === (ctx.project.style ?? 'toon3d')) return { style: id, changed: false, reset: false, estimate: null };
+  const cast = statusTable(ctx.dir).rows.find((r) => r.stage === 'cast');
+  const locked = cast?.status === 'approved';
+  const estimate = { lowUsd: 0.02, highUsd: 0.10, from: 'cast', note: 'cast + shot plan + board + animatic; voice and earlier stages stay cached' };
+  if (locked && !confirm) return { style: id, changed: false, requiresConfirm: true, reset: true, estimate, from: 'cast' };
+  const next = { ...ctx.project, style: id };
+  writeJsonArtifact(ctx.dir, 'api', 'project.json', next, 'project');
+  ctx.project = next;
+  if (locked) resetFrom(ctx.dir, 'cast');
+  return { style: id, changed: true, reset: locked, estimate, from: locked ? 'cast' : null };
 }
 
 export function archiveProject(rootDir, ctx) {

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "id": "flat-card",
+  "name": "Flat cards (test only)",
+  "description": "Solid colour cards with a drifting block. Test-only second pack that proves a style can replace the picture while the shared pipeline stays unchanged.",
+  "status": "ready",
+  "testOnly": true,
+  "source": {
+    "skill": "flat-card-fixture",
+    "licence": "MIT (Fableon test fixture; no third-party art)"
+  },
+  "formats": ["short-vertical"],
+  "sampleFrames": ["styles/flat-card/sample.jpg"],
+  "adapter": "./adapter.mjs",
+  "catalog": "schema/catalog.json",
+  "boardSchema": "schema/storyboard.schema.json",
+  "prompts": {
+    "director": "docs/DIRECTOR_GUIDE.md",
+    "craft": "styles/flat-card/craft.md"
+  },
+  "lookControls": ["exposure"],
+  "craftFormula": "default",
+  "qa": { "frozenFrames": 300, "popFactor": 3, "popOffset": 1.0 },
+  "cache": "flat-card"
+}

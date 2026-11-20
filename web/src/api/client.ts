@@ -55,6 +55,8 @@ export type Timeline = { project: string; fps: number; duration: number; scenes:
 export type Peaks = { path: string; hash: string; sampleRate: number; duration: number; buckets: number; peaks: Array<{ min: number; max: number }>; cached?: boolean };
 export type FileEntry = { path: string; name: string; size: number; mtime: string; type: string; url: string };
 export type Estimate = { op: string; project: string; provider: string | null; calls: number; characters: number; cachedCharacters: number; usd: number; inr?: number; frameCount?: number; seconds?: number; notes: string[] };
+export type StylePack = { id: string; name: string; description: string; status: string; testOnly?: boolean; sample: string | null; errors?: string[] };
+export type StyleCheck = { ok: boolean; errors: string[]; rendered: Array<string | null> };
 
 export const getProject = (id: string) => json<{ id: string; readOnly: boolean; source: string; project: Project; stages: StageRow[]; todos: string[]; craft: Array<{ n: number; note: string }>; usage: { calls: number; cached: number; promptTokens: number; completionTokens: number; costUsd: number } }>(`/api/projects/${encodeURIComponent(id)}`);
 export const getStages = (id: string) => json<{ id: string; stages: StageRow[]; todos: string[]; craft: Array<{ n: number; note: string }> }>(`/api/projects/${encodeURIComponent(id)}/stages`);
@@ -75,6 +77,10 @@ export const cancelJob = (id: string) => json<Job>(`/api/jobs/${encodeURICompone
 export type Voices = { providers: Array<{ name: string; configured: boolean; model: string; speakers: Array<string | { id?: string; name?: string }> }>; cached: Array<{ project: string; auditions: string[] }>; credit: { elevenlabs?: { plan?: string; used?: number; limit?: number; remaining?: number; reset?: string; available?: boolean; note?: string }; sarvam?: { budgetInr?: number; note?: string } } };
 export const getVoices = () => json<Voices>('/api/voices');
 export const getKeys = () => json<Record<string, 'set' | 'unset'>>('/api/settings/keys');
+export const getStyles = () => json<{ styles: StylePack[] }>('/api/styles');
+export const checkStyle = (id: string, render = true) => json<StyleCheck>(`/api/styles/${encodeURIComponent(id)}/check`, { method: 'POST', body: JSON.stringify({ render }) });
+export const importStyle = (body: { from?: string; git?: string; id?: string; name?: string }) => json<{ id: string; dir: string; licence: string }>('/api/styles/import', { method: 'POST', body: JSON.stringify(body) });
+export const changeStyle = (id: string, style: string, confirm = false) => json<{ style: string; changed: boolean; reset: boolean; job?: Job | null; estimate?: { lowUsd: number; highUsd: number } }>(`/api/projects/${encodeURIComponent(id)}/style`, { method: 'POST', body: JSON.stringify({ style, confirm }) });
 
 export async function waitJob(id: string, timeoutMs = 30 * 60 * 1000): Promise<Job> {
   const end = Date.now() + timeoutMs;
@@ -107,7 +113,7 @@ export const recomposeCover = (id: string, selection: Record<string, unknown>) =
 export const overridePublish = (id: string, reason: string) => json<{ project: string; reason: string }>(`/api/projects/${encodeURIComponent(id)}/publish/override`, { method: 'POST', body: JSON.stringify({ reason }) });
 export const markPublished = (id: string, body: { platform: string; url: string; publishedAt: string }) => json<unknown>(`/api/projects/${encodeURIComponent(id)}/published`, { method: 'POST', body: JSON.stringify(body) });
 
-export type Preset = { version: 1; id: string; name: string; format: 'short-vertical' | 'long-16x9'; seconds: number; language: 'hi' | 'en'; voice: Record<string, unknown>; models: Record<string, unknown>; research: { web?: boolean; library?: string[] }; mix?: Record<string, number>; render: { quality: 'preview' | 'final'; workers: number }; gates: string[]; budgetUsd: number; publish: { enabled: boolean; profiles: string[]; subtitles?: { hi?: boolean; en?: boolean }; coverTemplate?: string }; builtIn?: boolean };
+export type Preset = { version: 1; id: string; name: string; format: 'short-vertical' | 'long-16x9'; seconds: number; language: 'hi' | 'en'; voice: Record<string, unknown>; models: Record<string, unknown>; research: { web?: boolean; library?: string[] }; mix?: Record<string, number>; render: { quality: 'preview' | 'final'; workers: number }; gates: string[]; budgetUsd: number; publish: { enabled: boolean; profiles: string[]; subtitles?: { hi?: boolean; en?: boolean }; coverTemplate?: string }; style?: string; builtIn?: boolean };
 export type QueueItem = { id: string; project: string; projectDir?: string; presetId: string; action: string; to: string; status: string; gates: string[]; budgetUsd: number; estimate: { lowUsd: number; highUsd: number }; spent: number; jobId: string | null; note: string | null; createdAt: string };
 export const getPresets = () => json<{ presets: Preset[] }>('/api/presets');
 export const savePreset = (p: Preset) => json<Preset>(`/api/presets/${encodeURIComponent(p.id)}`, { method: 'PUT', body: JSON.stringify(p) });

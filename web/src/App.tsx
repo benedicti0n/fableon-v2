@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useMutation, useQuery } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
@@ -9,7 +9,7 @@ import '@fontsource/noto-sans-devanagari/400.css';
 import '@fontsource/noto-sans-devanagari/600.css';
 import './styles.css';
 import { useQueryClient } from '@tanstack/react-query';
-import { getProject } from './api/client';
+import { changeStyle, getProject, getStyles } from './api/client';
 import { ActivityPanel, LeftRail, Stepper } from './components/layout';
 import { Badge } from './components/ui';
 import { useEvents } from './hooks/useEvents';
@@ -39,6 +39,20 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
   const [budgetAlert, setBudgetAlert] = React.useState<string | null>(null);
   const current = loc.pathname.split('/').pop() ?? 'brief';
   const project = useQuery({ queryKey: ['project', id], queryFn: () => getProject(id), enabled: !!id });
+  const styles = useQuery({ queryKey: ['styles'], queryFn: getStyles });
+  const [styleError, setStyleError] = React.useState<string | null>(null);
+  const styleMut = useMutation({
+    mutationFn: ({ next, confirm }: { next: string; confirm: boolean }) => changeStyle(id, next, confirm),
+    onSuccess: () => { setStyleError(null); q.invalidateQueries({ queryKey: ['project', id] }); q.invalidateQueries({ queryKey: ['stages', id] }); q.invalidateQueries({ queryKey: ['jobs', id] }); q.invalidateQueries({ queryKey: ['overview'] }); },
+    onError: (e: Error) => setStyleError(e.message),
+  });
+  const pickStyle = (next: string) => {
+    const current = project.data?.project.style ?? 'toon3d';
+    if (!next || next === current) return;
+    const castApproved = project.data?.stages.find((s) => s.stage === 'cast')?.status === 'approved';
+    if (castApproved && !window.confirm('Changing the style re-runs cast, shot plan, board and animatic (estimate $0.02-$0.10). The old outputs stay in history. Continue?')) return;
+    styleMut.mutate({ next, confirm: !!castApproved });
+  };
   useEvents(id, (e) => {
     if (e.type === 'budget') { setBudgetAlert(e.message ?? 'A budget threshold was crossed.'); q.invalidateQueries({ queryKey: ['costs'] }); }
     if (e.type === 'queue') { q.invalidateQueries({ queryKey: ['queue'] }); return; }
@@ -55,7 +69,7 @@ function ProjectFrame({ children }: { children: React.ReactNode }) {
       <header className="border-b border-studio-line bg-studio-panel/40 px-5 py-3">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0"><div className="flex items-center gap-2"><h1 className="truncate text-base font-semibold">{project.data?.project.title ?? id}</h1>{project.data?.readOnly ? <Badge tone="teal">fixture · read-only</Badge> : null}</div><div className="mt-0.5 text-[11px] text-studio-muted">{project.data?.project.topic} · {project.data?.project.seconds}s · {project.data?.project.language.toUpperCase()}</div></div>
-          {project.data?.usage ? <div className="shrink-0 text-right text-[10px] leading-4 text-studio-muted"><div>${Number(project.data.usage.costUsd ?? 0).toFixed(4)} logged</div><div>{project.data.usage.calls} live / {project.data.usage.cached} cached</div></div> : null}
+          <div className="shrink-0 text-right text-[10px] leading-4 text-studio-muted">{project.data && !project.data.readOnly ? <label className="mb-1 flex items-center justify-end gap-1"><span className="uppercase tracking-wide">style</span><select aria-label="Style" className="rounded border border-studio-line bg-studio-bg px-1.5 py-0.5 text-[10px] text-studio-text" value={project.data.project.style ?? 'toon3d'} onChange={(e) => pickStyle(e.target.value)}>{(styles.data?.styles ?? []).filter((s) => s.status === 'ready' && !s.testOnly).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label> : null}{styleError ? <div role="alert" className="max-w-52 text-studio-red">{styleError}</div> : null}{project.data?.usage ? <div>${Number(project.data.usage.costUsd ?? 0).toFixed(4)} logged</div> : null}{project.data?.usage ? <div>{project.data.usage.calls} live / {project.data.usage.cached} cached</div> : null}</div>
         </div>
         <div className="mt-3"><Stepper project={id} current={current} /></div>
       </header>

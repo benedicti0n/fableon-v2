@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "daily-short-hi",
-  "name": "Daily short · Hindi",
+  "name": "Daily short \u00b7 Hindi",
   "format": "short-vertical",
   "seconds": 110,
   "language": "hi",
@@ -122,5 +122,6 @@
       "en": true
     },
     "coverTemplate": "title"
-  }
+  },
+  "style": "toon3d"
 }

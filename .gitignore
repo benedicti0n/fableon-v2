@@ -16,3 +16,5 @@ fixtures/*/schema.json
 fixtures/*/frames.json
 
 .fableon/
+
+styles/_incoming/

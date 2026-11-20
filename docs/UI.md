@@ -111,7 +111,10 @@ re-runs the deterministic board rather than editing `board.json`.
 - **Costs**: month picker, spend/effective/budget left/forecast/per-film/per-minute/cache tiles, stacked day chart
   with a table, stage/film tables, provider balances, CSV and budget editor.
 - **Projects**: cover/status/duration/ten stage dots/spend cards, search/status filter, hide test projects, mark test,
-  bulk archive.
+  bulk archive. New project has a Style dropdown with a sample frame; the project header repeats it. After cast approval
+  the change asks to confirm a rerun from cast.
+- **Settings -> Styles**: ready/not-ready packs, sample frames, **Check** (contract plus a preview/final test still) and
+  **Add from a skill folder** or a git URL. Imports are text only; `PORTING.md` lists the remaining porting tasks.
 - **Settings**: channel profile used only by the publish prompt; API keys, routing, usage and doctor remain.
 
 Keyboard: the same Tab/Enter/Escape conventions as Phase 5. On the Finish sound lane, select an SFX marker and use

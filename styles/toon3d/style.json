@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "toon3d",
+  "name": "2D cartoon cards in a 3D world",
+  "description": "Flat 2D character cards with ink outlines, lit inside a painted 3D toon world with lens blur and a warm/cool grade. From the cartoon-3d-short skill.",
+  "status": "ready",
+  "source": {
+    "skill": "cartoon-3d-short",
+    "licence": "MIT (ported template; see LICENSES/)",
+    "notes": "The first Fableon look; no engine files moved."
+  },
+  "formats": ["short-vertical"],
+  "sampleFrames": ["styles/toon3d/sample.jpg"],
+  "adapter": "./adapter.mjs",
+  "catalog": "schema/catalog.json",
+  "boardSchema": "schema/storyboard.schema.json",
+  "prompts": {
+    "director": "docs/DIRECTOR_GUIDE.md",
+    "craft": "styles/toon3d/craft.md"
+  },
+  "lookControls": ["exposure", "warmth", "glow", "haze", "vignette", "shafts"],
+  "craftFormula": "default",
+  "sound": {
+    "sfxKinds": ["poof", "shimmer", "thud", "whoosh", "flashHit", "pop", "arrow", "steps"],
+    "instruments": ["veena", "bansuri", "tabla", "tanpura", "nagara"]
+  },
+  "qa": { "frozenFrames": 12, "popFactor": 3, "popOffset": 1.0 },
+  "cache": "toon3d"
+}

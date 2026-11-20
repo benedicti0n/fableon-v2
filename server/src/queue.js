@@ -117,7 +117,7 @@ export class ProductionQueue {
       let id = idFor(topicPart);
       let dir = join(this.root, id);
       for (let n = 2; existsSync(dir); n++) { id = `${idFor(topicPart)}-${n}`; dir = join(this.root, id); }
-      const made = newProject(dir, { topic: topicPart, seconds, voice: preset.voice?.voice ?? 'am_michael', language: preset.language ?? 'hi' });
+      const made = newProject(dir, { topic: topicPart, seconds, voice: preset.voice?.voice ?? 'am_michael', language: preset.language ?? 'hi', style: preset.style ?? 'toon3d' });
       const project = { ...made.project, voice: preset.voice, models: preset.models ?? made.project.models, research: { web: !!preset.research?.web, maxSources: Number(preset.research?.maxSources ?? 8) } };
       writeJsonArtifact(dir, 'preset', 'project.json', project, 'project');
       for (const f of attached) {

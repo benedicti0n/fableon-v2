@@ -2726,6 +2726,7 @@ export interface components {
                 publishedAt: string;
             };
             tags?: string[];
+            style?: string;
             $defs: {
                 model: {
                     /** @enum {unknown} */
@@ -2805,6 +2806,7 @@ export interface components {
                         fallbacks?: number;
                         costUsd?: number | null;
                     };
+                    by?: string | null;
                 };
             };
         };

@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { validate, writeJsonArtifact } from './artifacts.js';
 
-export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', language = 'en' }) {
+export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', language = 'en', style = 'toon3d' }) {
   if (!topic || !String(topic).trim()) throw new Error('new needs --topic "..."');
   const dir = resolve(dirArg);
   if (existsSync(dir) && readdirSync(dir).length) throw new Error(`${dir} already exists and is not empty`);
@@ -11,7 +11,7 @@ export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', 
   const id = basename(dir).replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase() || 'project';
   const title = String(topic).split(/[:.]/)[0].slice(0, 80).trim() || id;
   const project = {
-    version: 1, id, title, topic: String(topic), seconds: Number(seconds), language,
+    version: 1, id, title, topic: String(topic), seconds: Number(seconds), language, style,
     voice: language === 'hi'
       ? {
         provider: 'elevenlabs', model: 'eleven_multilingual_v2', voiceId: null, language: 'hi',

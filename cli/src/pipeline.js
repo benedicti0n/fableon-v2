@@ -9,6 +9,7 @@ import { balance } from './jobs.js';
 import { withProjectLock } from './core/lock.js';
 import { emitStage, emitProgress, emitLog, finishJob } from './core/events.js';
 import { makeContext } from './frames.js';
+import { DEFAULT_STYLE, styleAdapter, styleId, styleQaEnv } from './styles.js';
 
 const pad = (n) => String(n).padStart(2, '0');
 const frames = (segs) => segs.reduce((n, s) => n + s[1] - s[0], 0);
@@ -103,7 +104,10 @@ async function stillsCommandInner(dirArg, framesCsv, qualityName, shotsCsv, look
         renderDir = temp;
       }
       const prefix = !tag && !compare ? 'stills/f_' : `stills/${tag}${suffix}${suffix ? '-' : ''}`;
-      await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, prefix), '--frames', frames, '--project', renderDir, '--size', size, '--msaa', '0'], { cwd: ROOT });
+      let custom = null;
+      try { const pj = JSON.parse(readFileSync(join(renderDir, 'project.json'), 'utf8')); custom = (await styleAdapter(styleId(pj))).adapter; } catch { custom = null; }
+      if (custom && typeof custom.renderStills === 'function') await custom.renderStills({ projectDir: renderDir, frames, out: join(dir, prefix), size });
+      else await run(process.execPath, [RENDER_CJS, 'stills', '--out', join(dir, prefix), '--frames', frames, '--project', renderDir, '--size', size, '--msaa', '0'], { cwd: ROOT });
       if (temp) { rmSync(temp, { recursive: true, force: true }); temp = null; }
     }
   } finally { if (temp) rmSync(temp, { recursive: true, force: true }); }
@@ -179,6 +183,21 @@ async function renderCommandInner(dirArg, { qualityName = 'preview', workers: n 
     if (!rows.length) throw new Error(`no shots matched --shots ${shotFilter}`);
     const nums = new Set(rows.map((s) => s.n));
     all = all.filter(([id]) => nums.has(id));
+  }
+  const projectJson = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
+  if (styleId(projectJson) !== DEFAULT_STYLE) {
+    const { adapter } = await styleAdapter(styleId(projectJson));
+    if (typeof adapter.renderPreview === 'function') {
+      const segs = segments(dir, all);
+      const renderDir = join(dir, 'render');
+      mkdirSync(renderDir, { recursive: true });
+      for (const f of readdirSync(renderDir)) if (f.endsWith('.part.mp4')) rmSync(join(renderDir, f));
+      const missing = segs.filter((s) => !existsSync(s[2]));
+      if (!missing.length) { console.log(`render: all ${segs.length} clips exist, nothing to do`); return; }
+      await adapter.renderPreview({ projectDir: dir, qualityName, workers: n });
+      console.log(`render: style ${styleId(projectJson)} wrote ${missing.length} clip(s) at ${q.size}`);
+      return;
+    }
   }
   const segs = segments(dir, all);
   const renderDir = join(dir, 'render');
@@ -283,7 +302,8 @@ export async function runQa(dirArg) {
   const meta = { ...rawMeta, shots: (rawMeta.shots ?? []).map((s) => ({ ...s, a: Math.max(0, s.a - off), b: s.b - off })), ...(rawMeta.flash ? { flash: shiftPair(rawMeta.flash) } : {}), xfade: (rawMeta.xfade ?? []).map(shiftPair), planned };
   const metaVideo = join(out, 'qa_meta.video.json');
   writeFileSync(metaVideo, JSON.stringify(meta, null, 2) + '\n');
-  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT });
+  const projectJson = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
+  await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT, env: { ...process.env, ...styleQaEnv(projectJson) } });
   let voiceOk = true;
   if (existsSync(join(dir, 'voice.wav')) && existsSync(join(dir, 'words.json'))) {
     try { await run(py, [join(ROOT, 'tools', 'qa', 'voice_qa.py'), dir], { cwd: ROOT }); }

@@ -29,7 +29,7 @@ export const STAGES = [
   },
   {
     name: 'cast', version: 1, deps: ['script'], prompt: CAST,
-    inputs: ['script.json', 'research/facts.json', 'cast.notes.json'], extraInputs: ['schema/catalog.json'], projectKeys: ['language'],
+    inputs: ['script.json', 'research/facts.json', 'cast.notes.json'], extraInputs: ['schema/catalog.json'], projectKeys: ['language', 'style'],
     outputs: ['cast.json', 'assets.todo.json', 'cast/cast-sheet.jpg'],
   },
   {
@@ -41,14 +41,14 @@ export const STAGES = [
     name: 'shotplan', version: 1, deps: ['voice', 'cast'], prompt: SHOTPLAN,
     inputs: ['script.json', 'words.json', 'cast.json', 'assets.todo.json', 'shotplan.notes.json'],
     extraInputs: ['schema/catalog.json', 'schema/shotplan.schema.json', 'docs/DIRECTOR_GUIDE.md', 'prompts/director-craft.md'],
-    projectKeys: ['language', 'seconds'],
+    projectKeys: ['language', 'seconds', 'style'],
     outputs: ['shotplan.json', 'shotplan.md'],
   },
   {
     name: 'board', version: 1, deps: ['shotplan'], prompt: '',
     inputs: ['shotplan.json', 'script.json', 'words.json', 'cast.json', 'assets.todo.json'],
     extraInputs: ['schema/catalog.json', 'schema/authoring.schema.json', 'docs/DIRECTOR_GUIDE.md', 'prompts/director-craft.md'],
-    projectKeys: ['language', 'seconds'],
+    projectKeys: ['language', 'seconds', 'style'],
     outputs: ['board.json', 'board.review.json', 'storyboard.json'],
   },
   {
@@ -61,13 +61,13 @@ export const STAGES = [
   {
     name: 'animatic', version: 1, deps: ['sound', 'board', 'voice'], prompt: '',
     inputs: ['storyboard.json', 'words.json', 'voice.wav', 'audio/mix.wav', 'board.json'],
-    projectKeys: ['seconds', 'voice'],
+    projectKeys: ['seconds', 'voice', 'style'],
     outputs: ['animatic-qa.md'],
   },
   {
     name: 'final', version: 1, deps: ['animatic', 'sound'], prompt: '',
     inputs: ['board.json', 'storyboard.json', 'shots.json', 'look.json', 'cues.json', 'audio/mix.wav', 'voice.wav', 'words.json'],
-    projectKeys: ['seconds', 'language'],
+    projectKeys: ['seconds', 'language', 'style'],
     outputs: ['final.mp4', 'final-qa.md', 'render/final/manifest.json'],
   },
   {
