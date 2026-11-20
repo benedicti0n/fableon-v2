@@ -30,6 +30,20 @@ const TRAITS = {
   beard: { field: 'beard', ok: (s) => !!s.beard, hint: 'beard must be set' },
   princess: { field: 'sari', ok: (s) => !!s.sari, hint: 'sari must be set' },
   god: { field: 'head', ok: (s) => s.head === 'crown' || s.head === 'crownSmall', hint: 'head must be crown or crownSmall' },
+  elder: { field: 'build', ok: (s) => s.build === 'elder', hint: 'build must be elder' },
+  'blue-attire': { field: 'top/sari/drape/lower', ok: (s) => hasHue([s.top, s.sari, s.drape, s.lower], 190, 250), hint: 'a blue garment is required' },
+  'green-attire': { field: 'top/sari/drape/lower', ok: (s) => hasHue([s.top, s.sari, s.drape, s.lower], 80, 170), hint: 'a green garment is required' },
+  'yellow-dhoti': { field: 'lower', ok: (s) => HEX.test(s.lower ?? '') && hasHue([s.lower], 35, 70), hint: 'lower must be yellow/gold' },
+  'feather-crown': { field: 'head', ok: (s) => s.head === 'featherCrown', hint: 'head must be featherCrown' },
+  jata: { field: 'head', ok: (s) => s.head === 'jata', hint: 'head must be jata' },
+  kavacha: { field: 'kavacha', ok: (s) => s.kavacha === true, hint: 'kavacha must be true' },
+  quiver: { field: 'quiver', ok: (s) => !!s.quiver, hint: 'quiver must be set' },
+  gem: { field: 'gem', ok: (s) => !!s.gem, hint: 'gem must be set' },
+  snake: { field: 'snake', ok: (s) => !!s.snake, hint: 'snake must be set' },
+  crescent: { field: 'crescent', ok: (s) => !!s.crescent, hint: 'crescent must be set' },
+  armlets: { field: 'armlets', ok: (s) => !!s.armlets, hint: 'armlets must be set' },
+  ash: { field: 'ash', ok: (s) => !!s.ash, hint: 'ash must be set' },
+  blindfold: { field: 'blindfold', ok: (s) => !!s.blindfold, hint: 'blindfold must be set' },
 };
 
 const normTrait = (t) => String(t).trim().toLowerCase().replace(/[\s_]+/g, '-');
@@ -52,6 +66,17 @@ function isIndigoSkin(s) {
 
 function hasRedGarment(s) {
   return [s.top, s.sari, s.drape].some((c) => HEX.test(c ?? '') && (() => { const [r, g, b] = rgb(c); return r > 100 && r > g * 1.4 && r > b * 1.4; })());
+}
+function hasHue(cols, lo, hi) {
+  return cols.some((c) => {
+    if (!HEX.test(c ?? '')) return false;
+    const [r, g, b] = rgb(c).map((x) => x / 255);
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    if (d < 0.08) return false;
+    let h = max === r ? 60 * (((g - b) / d) % 6) : max === g ? 60 * ((b - r) / d + 2) : 60 * ((r - g) / d + 4);
+    if (h < 0) h += 360;
+    return h >= lo && h <= hi;
+  });
 }
 const primaryGarment = (s) => s.sari ?? s.drape ?? s.top ?? s.lower ?? '#000000';
 
@@ -278,6 +303,19 @@ export async function castSheet(projectDir, characters, catalog) {
   return join(projectDir, 'cast', 'cast-sheet.jpg');
 }
 
+/** Replace a known character's spec with the catalog's iconography preset; keep the model's notes. */
+export function applyIconography(data, script, catalog) {
+  const presets = catalog.iconography ?? [];
+  const names = new Map([...(script.characters ?? []), ...(script.mentions ?? [])].map((c) => [c.id, c.name]));
+  const characters = (data.characters ?? []).map((c) => {
+    const keys = [c.id, c.name, names.get(c.id)].filter(Boolean).map((x) => String(x).toLowerCase());
+    const hit = presets.find((p) => (p.match ?? []).some((m) => keys.includes(String(m).toLowerCase())));
+    if (!hit) return c;
+    return { ...c, spec: structuredClone(hit.spec), mustHave: [...new Set(hit.mustHave ?? [])] };
+  });
+  return { ...data, characters };
+}
+
 export async function runCast({ projectDir, project, router, progress = null }) {
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const facts = JSON.parse(readFileSync(join(projectDir, 'research', 'facts.json'), 'utf8'));
@@ -296,6 +334,7 @@ export async function runCast({ projectDir, project, router, progress = null }) 
     facts: verified.map((f) => ({ id: f.id, claim: f.claim })),
     sceneLooks: (script.lines ?? []).map((l) => ({ n: l.n, who: l.look?.who ?? [], note: l.look?.note ?? '' })),
     castlist: examples,
+    iconography: catalog.iconography ?? [],
     currentCast: existsSync(join(projectDir, 'cast.json')) ? JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8')).characters ?? null : null,
     notes,
   };
@@ -306,13 +345,14 @@ export async function runCast({ projectDir, project, router, progress = null }) 
   ], {
     validate: (d) => {
       if (d && d.version === undefined) d.version = 1;
-      const errs = validationErrors('cast', d);
-      return errs.length ? errs : castErrors(d, script, catalog);
+      const p = applyIconography(d, script, catalog);
+      const errs = validationErrors('cast', p);
+      return errs.length ? errs : castErrors(p, script, catalog);
     },
     repairHint: 'Use only the listed Spec fields and trait names. Every script character and every person/being mention needs an entry; place mentions are background only. Inline spec is preferred for new characters.',
   });
   progress?.({ step: 'cast:model', done: 1, total: 2 });
-  const characters = draft.characters.map((c) => ({ ...c, scale: c.scale ?? 1, notes: c.notes ?? '' }));
+  const characters = applyIconography(draft, script, catalog).characters.map((c) => ({ ...c, scale: c.scale ?? 1, notes: c.notes ?? '' }));
   const assets = assetGaps(script, catalog);
   const warnings = castWarnings({ version: 1, characters }, script, catalog);
   backupBeforeWrite(projectDir, 'cast', 'cast/cast-sheet.jpg', Buffer.from([0]));

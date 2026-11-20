@@ -149,7 +149,20 @@
             "throw",
             "hips",
             "think",
-            "grab"
+            "grab",
+            "kneel",
+            "pranam",
+            "lie",
+            "fallen",
+            "sleep",
+            "strike",
+            "guard",
+            "blowConch",
+            "drive",
+            "ride",
+            "dance",
+            "weep",
+            "lift"
           ]
         }
       }
@@ -228,7 +241,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         }
       }
@@ -414,7 +432,20 @@
                 "throw",
                 "hips",
                 "think",
-                "grab"
+                "grab",
+                "kneel",
+                "pranam",
+                "lie",
+                "fallen",
+                "sleep",
+                "strike",
+                "guard",
+                "blowConch",
+                "drive",
+                "ride",
+                "dance",
+                "weep",
+                "lift"
               ]
             },
             {
@@ -439,7 +470,12 @@
                 "pained",
                 "smile",
                 "smile_closed",
-                "lick"
+                "lick",
+                "angry",
+                "sad",
+                "smirk",
+                "determined",
+                "sleepy"
               ]
             },
             {
@@ -520,7 +556,20 @@
             "throw",
             "hips",
             "think",
-            "grab"
+            "grab",
+            "kneel",
+            "pranam",
+            "lie",
+            "fallen",
+            "sleep",
+            "strike",
+            "guard",
+            "blowConch",
+            "drive",
+            "ride",
+            "dance",
+            "weep",
+            "lift"
           ]
         },
         "b": {
@@ -555,7 +604,20 @@
             "throw",
             "hips",
             "think",
-            "grab"
+            "grab",
+            "kneel",
+            "pranam",
+            "lie",
+            "fallen",
+            "sleep",
+            "strike",
+            "guard",
+            "blowConch",
+            "drive",
+            "ride",
+            "dance",
+            "weep",
+            "lift"
           ]
         }
       }
@@ -591,7 +653,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         },
         "b": {
@@ -609,7 +676,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         }
       }
@@ -803,7 +875,11 @@
             "long",
             "bald",
             "topknot",
-            null
+            null,
+            "helmet",
+            "jata",
+            "loose",
+            "featherCrown"
           ]
         },
         "hairCol": {
@@ -2029,7 +2105,20 @@
                     "throw",
                     "hips",
                     "think",
-                    "grab"
+                    "grab",
+                    "kneel",
+                    "pranam",
+                    "lie",
+                    "fallen",
+                    "sleep",
+                    "strike",
+                    "guard",
+                    "blowConch",
+                    "drive",
+                    "ride",
+                    "dance",
+                    "weep",
+                    "lift"
                   ]
                 },
                 "expr": {
@@ -2047,7 +2136,12 @@
                     "pained",
                     "smile",
                     "smile_closed",
-                    "lick"
+                    "lick",
+                    "angry",
+                    "sad",
+                    "smirk",
+                    "determined",
+                    "sleepy"
                   ]
                 },
                 "noBlob": {
@@ -2260,7 +2354,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         }
       }
@@ -2489,7 +2588,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         },
         "rate": {
@@ -2682,7 +2786,20 @@
             "throw",
             "hips",
             "think",
-            "grab"
+            "grab",
+            "kneel",
+            "pranam",
+            "lie",
+            "fallen",
+            "sleep",
+            "strike",
+            "guard",
+            "blowConch",
+            "drive",
+            "ride",
+            "dance",
+            "weep",
+            "lift"
           ]
         },
         "expr": {
@@ -2700,7 +2817,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         },
         "mirror": {
@@ -2825,7 +2947,20 @@
             "throw",
             "hips",
             "think",
-            "grab"
+            "grab",
+            "kneel",
+            "pranam",
+            "lie",
+            "fallen",
+            "sleep",
+            "strike",
+            "guard",
+            "blowConch",
+            "drive",
+            "ride",
+            "dance",
+            "weep",
+            "lift"
           ]
         },
         "expr": {
@@ -2843,7 +2978,12 @@
             "pained",
             "smile",
             "smile_closed",
-            "lick"
+            "lick",
+            "angry",
+            "sad",
+            "smirk",
+            "determined",
+            "sleepy"
           ]
         },
         "prop": {
@@ -2865,7 +3005,21 @@
                 "mango",
                 "ladle",
                 "scroll",
-                "bigbow"
+                "bigbow",
+                "conch",
+                "flute",
+                "chakra",
+                "sword",
+                "shield",
+                "dice",
+                "trident",
+                "lotus",
+                "bowl",
+                "pestle",
+                "plough",
+                "umbrella",
+                "chamara",
+                "banner"
               ]
             },
             {
@@ -2983,7 +3137,20 @@
                       "throw",
                       "hips",
                       "think",
-                      "grab"
+                      "grab",
+                      "kneel",
+                      "pranam",
+                      "lie",
+                      "fallen",
+                      "sleep",
+                      "strike",
+                      "guard",
+                      "blowConch",
+                      "drive",
+                      "ride",
+                      "dance",
+                      "weep",
+                      "lift"
                     ]
                   },
                   "expr": {
@@ -3001,7 +3168,12 @@
                       "pained",
                       "smile",
                       "smile_closed",
-                      "lick"
+                      "lick",
+                      "angry",
+                      "sad",
+                      "smirk",
+                      "determined",
+                      "sleepy"
                     ]
                   },
                   "prop": {
@@ -3023,7 +3195,21 @@
                           "mango",
                           "ladle",
                           "scroll",
-                          "bigbow"
+                          "bigbow",
+                          "conch",
+                          "flute",
+                          "chakra",
+                          "sword",
+                          "shield",
+                          "dice",
+                          "trident",
+                          "lotus",
+                          "bowl",
+                          "pestle",
+                          "plough",
+                          "umbrella",
+                          "chamara",
+                          "banner"
                         ]
                       },
                       {

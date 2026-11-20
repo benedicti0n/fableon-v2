@@ -274,7 +274,7 @@ export const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
 export const EXPRS = ["neutral", "stern", "grin", "laugh", "whistle", "nervous", "shock", "relief", "relief_open", "dazed",
-  "pained", "smile", "smile_closed", "lick"] as const;
+  "pained", "smile", "smile_closed", "lick", "angry", "sad", "smirk", "determined", "sleepy"] as const;
 export type Expr = (typeof EXPRS)[number];
 export type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral";
 export type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
@@ -294,6 +294,11 @@ export const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mou
   smile: { eye: ["dot", "dot"], brow: [0, -1], mouth: "smirk" },
   smile_closed: { eye: ["happy", "happy"], brow: [0, -1], mouth: "smile" },
   lick: { eye: ["dot", "dot"], brow: [0, -1], mouth: "lick" },
+  angry: { eye: ["lid", "lid"], brow: [5, -4], mouth: "frown" },
+  sad: { eye: ["lid", "lid"], brow: [-4, 3], mouth: "frown" },
+  smirk: { eye: ["lid", "dot"], brow: [1, -2], mouth: "smirk" },
+  determined: { eye: ["slit", "slit"], brow: [4, -2], mouth: "dash" },
+  sleepy: { eye: ["dash", "dash"], brow: [1, 1], mouth: "dash" },
 };
 export const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 export const eyeKind = (k: EyeK, lid: number): EyeK =>

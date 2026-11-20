@@ -126,6 +126,10 @@
             "long",
             "bald",
             "topknot",
+            "helmet",
+            "jata",
+            "loose",
+            "featherCrown",
             null
           ]
         },
@@ -184,6 +188,64 @@
           "type": "number"
         },
         "earrings": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "armour": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kavacha": {
+          "type": "boolean"
+        },
+        "quiver": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gem": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "snake": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "crescent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "armlets": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lowerPattern": {
+          "enum": [
+            "plain",
+            "tiger",
+            "bark"
+          ]
+        },
+        "emblem": {
           "type": [
             "string",
             "null"

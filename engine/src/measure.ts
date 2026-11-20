@@ -1,7 +1,7 @@
 // Subject measurements from the real drawing code. A recording canvas context (no pixels) captures the bounds of
 // person()/special drawings; the returned head geometry gives eye and head heights. All numbers are metres at scale 1.
 import { Pen } from "./toon";
-import { person, ganesha, agni, deer, naga, baby, jarShape, type Build, type Spec } from "./people";
+import { person, ganesha, agni, deer, naga, baby, jarShape, type Build, type Spec, type Pose } from "./people";
 import { SU } from "./cast";
 
 export type Measure = {
@@ -74,6 +74,8 @@ const REP: Record<Build, Spec> = {
   kid: { skin: "#e7b07e", build: "kid", top: null, lower: "#f6efdc", drape: "#7a3f9a", head: "hair", hairCol: "#2a1a1e" },
   baby: { skin: "#f4c9a0", build: "baby", top: null, lower: "#f6efdc", head: null },
 };
+
+export { POSE_MEASURES, poseMeasure } from './pose-measure';
 
 export const drawingPen = () => new Pen(new RecCtx() as unknown as CanvasRenderingContext2D);
 
