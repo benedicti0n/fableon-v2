@@ -63,6 +63,7 @@ import { runCostTests } from './costs.mjs';
 import { runStyleTests } from './styles.mjs';
 import { runRangeTests } from './ranges.mjs';
 import { runKitTests } from './kit.mjs';
+import { runFixtureStills } from './fixture-stills.mjs';
 
 const MAD_LIMIT = 6.0;
 const DURATION = 121.30, DURATION_TOL = 0.05;
@@ -232,6 +233,8 @@ try {
   for (const c of rangeTests.checks) check(c.name, c.ok, c.detail);
   const kit = await runKitTests();
   for (const c of kit.checks) check(c.name, c.ok, c.detail);
+  const fixtureStills = await runFixtureStills();
+  for (const c of fixtureStills.checks) check(c.name, c.ok, c.detail);
   check('cost ledger', costs.ok, `${costs.checks.filter((c) => c.ok).length}/${costs.checks.length} checks`);
   const validator = await runValidator();
   check('validator', validator.ok, `${validator.cases.filter((c) => c.ok).length}/${validator.cases.length} cases`);

@@ -382,7 +382,8 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   const hp = blobPts(300, hc, H);
   if (o.head === "bun" || o.head === "topknot") { const r = o.head === "bun" ? 0.32 : 0.2; p.ell(300 + 4 * u * facing, crown + 0.02 * HH, r * W * 0.55, r * HH * 0.6, o.hairCol ?? "#2a1a1e", ow * 0.8); }
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
-  if (o.earrings || o.kavacha) for (const s of [-1, 1]) { const ex = 300 + s * 0.98 * H.a, ey = hc + 0.3 * H.b; p.ell(ex, ey, 5 * u, 8 * u, o.earrings ?? GOLD, 2 * u); p.dot(ex, ey + 8 * u, 3 * u, o.earrings ?? GOLD); }
+  if (o.earrings) for (const s of [-1, 1]) p.dot(300 + s * 0.98 * H.a, hc + 0.3 * H.b, 5 * u, o.earrings);
+  if (o.kavacha) for (const s of [-1, 1]) { const ex = 300 + s * 0.98 * H.a, ey = hc + 0.3 * H.b; p.ell(ex, ey, 5 * u, 8 * u, o.earrings ?? GOLD, 2 * u); p.dot(ex, ey + 8 * u, 3 * u, o.earrings ?? GOLD); }
   p.inkRing(hp, ow, thick);
   hair(p, o, hp, H, hc, crown, light, u, ow, facing);
   const brim = o.head === "crown" || o.head === "turban" || o.head === "crownSmall";
