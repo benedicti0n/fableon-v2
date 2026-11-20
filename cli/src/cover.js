@@ -35,17 +35,18 @@ export function candidateFrames(projectDir) {
     const frame = Math.min(b - 1, Math.max(a + pad, Math.round((a + b) / 2)));
     const key = (frames.keys ?? []).filter((k) => k.shot === shot.id && k.frames?.some((f) => Math.abs(f - frame) <= 12)).sort((x, y) => Math.abs((x.frames?.[0] ?? 0) - frame) - Math.abs((y.frames?.[0] ?? 0) - frame))[0] ?? null;
     const subject = key?.subjects?.[0] ?? null;
+    const subjects = key?.subjects ?? [];
     const head = subject?.headBox;
     const headSize = head ? Math.max(0, (head.x1 - head.x0) * (head.y1 - head.y0)) : 0;
     const face = head ? Number(subject.visible ?? 1) > 0 && head.y0 >= 0 && head.y1 <= 1 : false;
     const chars = (shot.actors ?? []).length;
-    out.push({ shot: shot.id ?? String(id), index: i, frame, time: +(frame / 30).toFixed(3), head, headSize, face, chars, beat: beatOf(shot), transition: trans?.type ?? 'cut' });
+    out.push({ shot: shot.id ?? String(id), index: i, frame, time: +(frame / 30).toFixed(3), head, headSize, face, subjects, chars, beat: beatOf(shot), transition: trans?.type ?? 'cut' });
   }
   return out;
 }
 
 /** Extract, score and keep the top six candidates; returns metadata with relative image paths. */
-export async function buildCandidates(projectDir, finalPath) {
+export async function buildCandidates(projectDir, finalPath, { subject = null } = {}) {
   const dir = join(projectDir, 'publish', 'candidates');
   mkdirSync(dir, { recursive: true });
   const rows = candidateFrames(projectDir);
@@ -61,17 +62,30 @@ export async function buildCandidates(projectDir, finalPath) {
     paths.push({ row, metric });
   }
   const metricsRows = await metrics(paths.map((p) => p.metric));
+  const overlap = (a, b) => {
+    if (!a || !b) return 0;
+    const ix = Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0));
+    const iy = Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+    const area = (x) => Math.max(1e-6, (x.x1 - x.x0) * (x.y1 - x.y0));
+    return (ix * iy) / Math.min(area(a), area(b));
+  };
   const scored = paths.map(({ row, metric }, i) => {
     const m = metricsRows[i] ?? { sharpness: 0, contrast: 0, saturation: 0 };
     const sharp = norm(Math.log1p(m.sharpness) / Math.log(20), 1);
     const contrast = norm(m.contrast, 80);
     const sat = norm(m.saturation, 0.55);
-    const head = Math.min(1, row.headSize / 0.08);
+    const named = subject ? (row.subjects ?? []).find((s) => s.id === subject) : null;
+    const box = named?.headBox ?? row.head;
+    const inside = !!box && box.x0 >= 0.01 && box.x1 <= 0.99 && box.y0 >= 0.01 && box.y1 <= 0.99;
+    const head = Math.min(1, (box ? (box.x1 - box.x0) * (box.y1 - box.y0) : 0) / 0.08);
     const beat = row.beat === 'hook' ? 1 : row.beat === 'mystery' ? 0.85 : row.beat === 'payoff' ? 0.95 : 0.35;
     const chars = row.chars === 1 || row.chars === 2 ? 1 : 0.4;
-    const score = +(head * 0.30 + (row.face ? 0.20 : 0) + sharp * 0.18 + contrast * 0.12 + sat * 0.10 + beat * 0.06 + chars * 0.04).toFixed(4);
-    return { ...row, sharpness: +m.sharpness.toFixed(1), contrast: +m.contrast.toFixed(1), saturation: +m.saturation.toFixed(3), score };
-  }).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 6);
+    const heads = (row.subjects ?? []).map((s) => s.headBox).filter(Boolean);
+    const touching = heads.some((a, j) => heads.some((b, k) => j !== k && overlap(a, b) > 0.18));
+    const subjectPenalty = subject && !named ? -2 : subject && !inside ? -1.5 : 0;
+    const score = +(head * 0.30 + (inside || !subject ? 0.20 : 0) + sharp * 0.18 + contrast * 0.12 + sat * 0.10 + beat * 0.06 + chars * 0.04 + subjectPenalty).toFixed(4);
+    return { ...row, head: box ?? row.head, sharpness: +m.sharpness.toFixed(1), contrast: +m.contrast.toFixed(1), saturation: +m.saturation.toFixed(3), subject: subject ?? null, named: !!named, inside, touching, score: touching ? -1 : score };
+  }).filter((r) => r.score >= 0).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 6);
   for (const p of paths) { try { if (p.metric !== p.row.image) rmSync(p.metric, { force: true }); } catch { /* best effort */ } }
   writeFileSync(join(projectDir, 'publish', 'candidates.json'), JSON.stringify(scored, null, 2) + '\n');
   return scored;

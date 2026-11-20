@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync }
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { factFlags, subtitleCues, toSrt, validateSrt, validatePublish, exportPackage } from '../cli/src/publish.js';
+import { factFlags, subtitleCues, toSrt, validateSrt, validatePublish, exportPackage, normalizePublish, titleScore, sourceCitation, creditsLine } from '../cli/src/publish.js';
 import { buildCandidates, composeCover } from '../cli/src/cover.js';
 
 const json = (v) => JSON.stringify(v, null, 2) + '\n';
@@ -23,6 +23,20 @@ export async function runPublishTests() {
     recommendations: { madeForKids: false, madeForKidsReason: 'animated myth for general audiences', alteredContent: false, alteredContentReason: 'fully animated', category: 'Film & Animation' },
   };
   ok('validator accepts a complete package', validatePublish(good).length === 0, validatePublish(good).join('; '));
+  const flat = { hi: 'कर्ण का अखाड़े में आगमन', en: 'Karna enters the arena', combined: 'कर्ण का अखाड़े में आगमन | Karna enters the arena' };
+  const hook = { hi: 'कौन है कर्ण?', en: 'Who is Karna?', combined: 'कौन है कर्ण? | Who is Karna?' };
+  ok('hook titles outscore flat descriptions', titleScore(hook) > titleScore(flat), `${titleScore(hook)} vs ${titleScore(flat)}`);
+  const normalized = normalizePublish({ ...good, titles: [flat, hook, ...good.titles.slice(2)], thumbnailText: { hi: 'कर्ण का अखाड़ा', alternatives: [] } }, { script: { characters: [{ id: 'karna', name: 'कर्ण' }] }, project: { language: 'hi' } });
+  ok('normalization uses रंगभूमि, not अखाड़ा', !JSON.stringify(normalized).includes('अखाड़ा') && normalized.titles.some((t) => t.combined.includes('रंगभूमि')), JSON.stringify(normalized.titles[0]));
+  ok('normalization prefers a question thumbnail naming the subject', normalized.thumbnailText.hi === 'कौन है कर्ण?', normalized.thumbnailText.hi);
+  ok('normalization writes the disclosure reason', /no real person, place or event/.test(normalized.recommendations.alteredContentReason), normalized.recommendations.alteredContentReason);
+  const srcDir = mkdtempSync(join(tmpdir(), 'fableon-source-'));
+  writeFileSync(join(srcDir, 'karna.txt'), 'K. M. Ganguli, The Mahabharata, Book 1: Adi Parva, Section CXXXVIII\nSource: sacred-texts');
+  const citation = sourceCitation(srcDir, { sources: [{ title: 'Karna at the tournament', path: 'karna.txt' }] });
+  ok('source citation names the work and section', /The Mahabharata, Adi Parva, section CXXXVIII, tr\. Kisari Mohan Ganguli/.test(citation), citation);
+  rmSync(srcDir, { recursive: true, force: true });
+  ok('credits name Sarvam and Bulbul', /Sarvam AI, Bulbul voice/.test(creditsLine({ voice: { provider: 'sarvam', model: 'bulbul:v4-flash' } })), creditsLine({ voice: { provider: 'sarvam' } }));
+
   const bad = structuredClone(good); bad.titles = bad.titles.slice(0, 4); bad.titles[0].combined = 'THIS <IS> ALL CAPS ' + 'x'.repeat(120); bad.hashtags = ['#one'];
   ok('validator blocks lengths, tags and angle brackets', validatePublish(bad).length >= 3, validatePublish(bad).join('; '));
   const hindi = structuredClone(good); hindi.hashtags = ['#सावित्री', '#shorts', '#savitri'];
@@ -57,6 +71,12 @@ export async function runPublishTests() {
     const b = await buildCandidates(dir, final);
     ok('cover candidates are deterministic', a.length === b.length && a.every((x, i) => x.score === b[i].score && x.image === b[i].image), JSON.stringify(a.map((x) => [x.shot, x.score])));
     ok('cover candidate has a scored image', a.length >= 1 && statSync(join(dir, a[0].image)).size > 1000, JSON.stringify(a[0]));
+    const named = await buildCandidates(dir, final, { subject: 'satyavan' });
+    ok('cover prefers the character named in the thumbnail', named[0]?.shot === 'two' && named[0]?.named && named[0]?.inside, JSON.stringify(named.map((x) => [x.shot, x.named, x.inside, x.score])));
+    write(join(dir, 'frames.json'), { keys: [{ shot: 'two', frames: [45], subjects: [{ id: 'satyavan', visible: 1, headBox: { x0: 0.35, y0: 0.2, x1: 0.55, y1: 0.4 } }, { id: 'savitri', visible: 1, headBox: { x0: 0.42, y0: 0.22, x1: 0.58, y1: 0.42 } }] }] });
+    const overlap = await buildCandidates(dir, final, { subject: 'satyavan' });
+    ok('cover rejects candidates whose heads touch or overlap', overlap.every((x) => !x.touching), JSON.stringify(overlap.map((x) => [x.shot, x.touching, x.score])));
+
     const cover = await composeCover(dir, { image: a[0].image, text: 'सावित्री का सवाल', template: 'title' });
     const st = statSync(join(dir, cover));
     ok('cover is 1080x1920 and <= 2 MB', st.size <= 2 * 1024 * 1024 && (await import('node:child_process')).spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', join(dir, cover)]).stdout.toString().trim() === '1080,1920', `${st.size} ${cover}`);
