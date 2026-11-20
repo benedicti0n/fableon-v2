@@ -181,7 +181,7 @@ export async function runBoard({ projectDir, project, router, progress = null })
   const words = JSON.parse(readFileSync(join(projectDir, 'words.json'), 'utf8'));
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
   const catalog = JSON.parse(readFileSync(join(ROOT, 'schema', 'catalog.json'), 'utf8'));
-  const castMap = Object.fromEntries(cast.characters.map((c) => [c.id, { spec: c.spec ?? c.cast, seed: seedOf(c.id) }]));
+  const castMap = Object.fromEntries(cast.characters.map((c) => [c.id, { spec: c.spec ?? c.cast, seed: seedOf(c.id), ...(c.variants?.length ? { variants: c.variants.map((v) => ({ at: v.at, name: v.name, spec: v.spec ?? v.cast, seed: seedOf(`${c.id}@${v.name}`) })) } : {}) }]));
   const kicks = (plan.shots ?? []).flatMap((s) => [...(s.keys ?? []).map((k) => k.impact), ...(s.beats ?? []).map((b) => b.impact)].filter(Boolean).map((at) => ({ at, amp: 0.6 })));
   const groups = groupPlan(plan);
   let shots = groups.map((s, i) => {

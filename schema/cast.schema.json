@@ -53,6 +53,41 @@
           },
           "notes": {
             "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at",
+                "name"
+              ],
+              "properties": {
+                "at": {
+                  "type": "string",
+                  "pattern": "^\\d+:\\d+$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "spec": {
+                  "$ref": "#/$defs/Spec"
+                },
+                "cast": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "mustHave": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
           }
         },
         "oneOf": [

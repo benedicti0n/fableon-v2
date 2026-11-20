@@ -31,7 +31,7 @@ items.forEach((it, i) => {
       id: `${it.id}-${light}-${i}`, start, end, light, sets: ['arena'],
       look: { mood: light === 'day' ? 'noon' : 'golden-glow' },
       actors: [{ cast: it.id, at: 'arena.floor', nudge: [0.8, 0, 2], pose: it.pose, expr: it.expr, prop: it.prop, facing: 'camera', scale: it.kind === 'expression' ? 1.8 : 1 }],
-      camera: [{ at: start, size: 'close', on: [it.id], move: 'hold', side: 'front', angle: 'eye' }],
+      camera: [{ at: start, size: ['pranam', 'lie', 'fallen', 'sleep', 'strike', 'guard', 'dance', 'lift'].includes(it.pose) ? 'wide' : 'medium', on: [it.id], move: 'hold', side: 'front', angle: 'eye' }],
     });
   }
 });
@@ -39,7 +39,7 @@ const storyboard = compileBoard({ version: 1, cast, shots }, words, catalog).sto
 items.forEach((it, i) => {
   for (let j = 0; j < 2; j++) {
     const cam = storyboard.shots[i * 2 + j].camera[0];
-    const k = it.kind === 'expression' ? 1 : (['lie', 'fallen', 'sleep'].includes(it.pose) ? 1.2 : 1.55);
+    const k = 1;
     cam.pos = [cam.look[0] + (cam.pos[0] - cam.look[0]) * k, cam.look[1] + (cam.pos[1] - cam.look[1]) * k, cam.look[2] + (cam.pos[2] - cam.look[2]) * k];
   }
 });

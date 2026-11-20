@@ -125,6 +125,18 @@ export function castErrors(data, script, catalog) {
       if (!t) { errs.push(`/characters/${c.id}/mustHave "${trait}" is not a mapped trait`); continue; }
       if (!t.ok(spec)) errs.push(`/characters/${c.id}/mustHave "${trait}" needs ${t.field}: ${t.hint}`);
     }
+    for (const v of c.variants ?? []) {
+      if (!/^\d+:\d+$/.test(String(v.at))) errs.push(`/characters/${c.id}/variants "${v.name}" needs a line:word anchor`);
+      const vs = specOf(v, catalog);
+      if (!vs) { errs.push(`/characters/${c.id}/variants "${v.name}" needs a spec or cast key`); continue; }
+      const verrs = validationErrors('cast', { version: 1, characters: [{ id: c.id, name: c.name, spec: vs, mustHave: v.mustHave ?? c.mustHave, notes: '' }] });
+      for (const e of verrs) errs.push(`/characters/${c.id}/variants/${v.name}${e}`);
+      for (const trait of v.mustHave ?? []) {
+        const t = TRAITS[normTrait(trait)];
+        if (!t) errs.push(`/characters/${c.id}/variants/${v.name}/mustHave "${trait}" is not a mapped trait`);
+        else if (!t.ok(vs)) errs.push(`/characters/${c.id}/variants/${v.name}/mustHave "${trait}" needs ${t.field}: ${t.hint}`);
+      }
+    }
     const mainIds = new Set((script.characters ?? []).map((x) => x.id));
     const darkerOk = (c.mustHave ?? []).some((t) => ['dark-skin', 'indigo-skin'].includes(normTrait(t)));
     const L = lab(spec.skin)[0];
@@ -175,7 +187,10 @@ export function assetGaps(script, catalog) {
 const compactSpec = (s) => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== undefined));
 
 function castDefs(characters, catalog) {
-  return Object.fromEntries(characters.map((c) => [c.id, { spec: compactSpec(specOf(c, catalog)), seed: seedOf(c.id) }]));
+  return Object.fromEntries(characters.map((c) => [c.id, {
+    spec: compactSpec(specOf(c, catalog)), seed: seedOf(c.id),
+    ...(c.variants?.length ? { variants: c.variants.map((v) => ({ at: v.at, name: v.name, spec: compactSpec(specOf(v, catalog)), seed: seedOf(`${c.id}@${v.name}`) })) } : {}),
+  }]));
 }
 let sheetFeatureRim = false;
 function boardFromShots(characters, catalog, shots) {
@@ -230,6 +245,7 @@ async function groupBlockers(tmp, characters) {
 }
 
 export async function castSheet(projectDir, characters, catalog) {
+  characters = characters.map((c) => ({ ...c, variants: [] }));
   try { sheetFeatureRim = JSON.parse(readFileSync(join(projectDir, 'project.json'), 'utf8')).look?.featureRim === true; } catch { sheetFeatureRim = false; }
   const words = [{ w: 'cast', a: 0, b: 10, line: 0 }];
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cast-'));
@@ -364,7 +380,8 @@ export async function runCast({ projectDir, project, router, progress = null }) 
   const warnings = castWarnings({ version: 1, characters }, script, catalog);
   backupBeforeWrite(projectDir, 'cast', 'cast/cast-sheet.jpg', Buffer.from([0]));
   progress?.({ step: 'cast:sheet', done: 1, total: 2 });
-  const sheet = await castSheet(projectDir, characters, catalog);
+  const sheetCharacters = characters.flatMap((c) => [c, ...(c.variants ?? []).map((v) => ({ ...c, id: `${c.id}@${v.name}`, name: `${c.name} · ${v.name}`, spec: v.spec, cast: v.cast, mustHave: v.mustHave ?? c.mustHave }))]);
+  const sheet = await castSheet(projectDir, sheetCharacters, catalog);
   progress?.({ step: 'cast:sheet', done: 2, total: 2 });
   writeJsonArtifact(projectDir, 'cast', 'cast.json', { version: 1, characters }, 'cast');
   writeJsonArtifact(projectDir, 'cast', 'assets.todo.json', { version: 1, assets }, 'assets');

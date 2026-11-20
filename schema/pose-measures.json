@@ -1,0 +1,114 @@
+{
+  "stand": {
+    "standing": 1,
+    "seated": 1,
+    "eye": 0.846,
+    "eyeSeated": 0.846,
+    "head": 1,
+    "halfWidth": 1
+  },
+  "kneel": {
+    "standing": 0.78,
+    "seated": 0.78,
+    "eye": 0.626,
+    "eyeSeated": 0.626,
+    "head": 1,
+    "halfWidth": 1.046
+  },
+  "pranam": {
+    "standing": 0.621,
+    "seated": 0.621,
+    "eye": 0.626,
+    "eyeSeated": 0.626,
+    "head": 1,
+    "halfWidth": 2.282
+  },
+  "lie": {
+    "standing": 0.474,
+    "seated": 0.474,
+    "eye": 0.8,
+    "eyeSeated": 0.8,
+    "head": 1,
+    "halfWidth": 2.282
+  },
+  "fallen": {
+    "standing": 0.526,
+    "seated": 0.526,
+    "eye": 0.8,
+    "eyeSeated": 0.8,
+    "head": 1,
+    "halfWidth": 2.244
+  },
+  "sleep": {
+    "standing": 0.434,
+    "seated": 0.434,
+    "eye": 0.8,
+    "eyeSeated": 0.8,
+    "head": 1,
+    "halfWidth": 2.046
+  },
+  "strike": {
+    "standing": 1.183,
+    "seated": 1.183,
+    "eye": 0.79,
+    "eyeSeated": 0.79,
+    "head": 1,
+    "halfWidth": 1.893
+  },
+  "guard": {
+    "standing": 1,
+    "seated": 1,
+    "eye": 0.846,
+    "eyeSeated": 0.846,
+    "head": 1,
+    "halfWidth": 2.107
+  },
+  "blowConch": {
+    "standing": 0.924,
+    "seated": 0.924,
+    "eye": 0.776,
+    "eyeSeated": 0.776,
+    "head": 1,
+    "halfWidth": 1.328
+  },
+  "drive": {
+    "standing": 0.729,
+    "seated": 0.729,
+    "eye": 0.592,
+    "eyeSeated": 0.592,
+    "head": 1,
+    "halfWidth": 1.649
+  },
+  "ride": {
+    "standing": 0.746,
+    "seated": 0.746,
+    "eye": 0.592,
+    "eyeSeated": 0.592,
+    "head": 1,
+    "halfWidth": 1
+  },
+  "dance": {
+    "standing": 0.929,
+    "seated": 0.929,
+    "eye": 0.776,
+    "eyeSeated": 0.776,
+    "head": 1,
+    "halfWidth": 2.153
+  },
+  "weep": {
+    "standing": 0.918,
+    "seated": 0.918,
+    "eye": 0.79,
+    "eyeSeated": 0.79,
+    "head": 1,
+    "halfWidth": 1.718
+  },
+  "lift": {
+    "standing": 1.112,
+    "seated": 1.112,
+    "eye": 0.776,
+    "eyeSeated": 0.776,
+    "head": 1,
+    "halfWidth": 2.023
+  }
+}

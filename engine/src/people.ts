@@ -328,10 +328,11 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   const legLine = (pts: P2[], col = lowerCol) => { p.stroke(pts, legW + 3.5, INK); p.stroke(pts, legW, col); };
   const foot = (x: number, y: number, side: number) => { p.stroke([[x - side * 3 * u, y], [x + side * 12 * u, y + 1 * u]], footW + 3, INK); p.stroke([[x - side * 3 * u, y], [x + side * 12 * u, y + 1 * u]], footW, mix(skin, INK, 0.25)); };
   if (kneel) {
-    legLine(curve([300 - 15 * u, hipY], [300 - 0.3 * W, sole - 0.26 * HH], [300 - 0.1 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1));
-    foot(300 - 0.1 * W, sole - 0.06 * HH, -1);
-    legLine(curve([300 + 15 * u, hipY], [300 + 0.3 * W, sole - 0.4 * HH], [300 + 0.42 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1));
-    foot(300 + 0.42 * W, sole - 0.06 * HH, 1);
+    // one knee and shin on the ground, the other foot planted forward
+    legLine(curve([300 - 15 * u, hipY], [300 - 0.4 * W, sole - 0.06 * HH], [300 - 0.08 * W, sole - 0.035 * HH]), mix(lowerCol, INK, 0.1));
+    foot(300 - 0.08 * W, sole - 0.035 * HH, -1);
+    legLine(curve([300 + 15 * u, hipY], [300 + 0.34 * W, sole - 0.38 * HH], [300 + 0.5 * W, sole - 0.02 * HH]), mix(lowerCol, INK, 0.1));
+    foot(300 + 0.5 * W, sole - 0.02 * HH, 1);
   }
   if (drive) { legLine(curve([300 - 15 * u, hipY], [300 - 0.34 * W, sole - 0.26 * HH], [300 - 0.3 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1)); foot(300 - 0.3 * W, sole - 0.06 * HH, -1); legLine(curve([300 + 15 * u, hipY], [300 + 0.34 * W, sole - 0.26 * HH], [300 + 0.3 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + 0.3 * W, sole - 0.06 * HH, 1); }
   if (ride) { for (const side of [-1, 1]) { legLine(curve([300 + side * 15 * u, hipY], [300 + side * 0.46 * W, sole - 0.2 * HH], [300 + side * 0.36 * W, sole - 0.05 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + side * 0.36 * W, sole - 0.05 * HH, side); } }
@@ -349,7 +350,7 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
     if (o.kavacha) { p.ell(tcx, tcy - 0.02 * HH, 0.11 * HH, 0.11 * HH, "#f2c230", 2 * u); for (let i = 0; i < 8; i++) { const a = rad(i * 45); p.stroke([[tcx + Math.cos(a) * 0.14 * HH, tcy - 0.02 * HH + Math.sin(a) * 0.14 * HH], [tcx + Math.cos(a) * 0.2 * HH, tcy - 0.02 * HH + Math.sin(a) * 0.2 * HH]], 2 * u, "#f2c230"); } }
   }
   for (const a of arms) if (a.front) drawArm(a);
-  if (o.armlets) { for (const a of arms) { p.band([[a.E[0], a.E[1] - 5 * u], [a.E[0] + (a.H[0] - a.E[0]) * 0.22, a.E[1] + (a.H[1] - a.E[1]) * 0.22]], o.armlets, 9 * u, 1.6 * u, "round"); p.band([[a.H[0] - 3 * u, a.H[1] - 3 * u], [a.H[0] + 3 * u, a.H[1] + 3 * u]], o.armlets, 6 * u, 1.2 * u, "round"); } }
+  if (o.armlets) { for (const a of arms) { const q0 = lerp2(a.S, a.E, 0.42), q1 = lerp2(a.S, a.E, 0.54); p.band([q0, q1], o.armlets, 6.5 * u, 1.4 * u, "round"); p.stroke([q0, q1], 1.2 * u, mix(o.armlets, INK, 0.35)); } }
   // props in front
   if (prop === "laddu") { p.ell(R.H[0] + 6 * u, R.H[1] - 10 * u, 13 * u, 12 * u, "#f0a43a", 2.6 * u); for (const [dx, dy] of [[-4, -14], [5, -8], [0, -4]]) p.dot(R.H[0] + (6 + dx) * u, R.H[1] + (dy) * u, 1.6 * u, "#c46d1e"); p.dot(R.H[0], R.H[1], 5.5 * u); }
   if (prop === "mango") { p.ell(R.H[0] + 4 * u, R.H[1] - 10 * u, 11 * u, 14 * u, "#f2b632", 2.4 * u, 0, 360, 20); p.dot(R.H[0], R.H[1], 5.5 * u); }
@@ -371,7 +372,7 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   if (prop === "lotus") { const [hx, hy] = R.H; for (let i = 0; i < 7; i++) { const a = rad(-140 + i * 40); p.ell(hx + Math.cos(a) * 10 * u, hy - 12 * u + Math.sin(a) * 8 * u, 8 * u, 14 * u, i % 2 ? "#f29bb5" : "#f7c0d0", 1.6 * u, 0, 360, a); } p.dot(hx, hy - 12 * u, 4 * u, GOLD); }
   if (prop === "bowl") { const [hx, hy] = R.H; p.ell(hx, hy - 4 * u, 20 * u, 10 * u, "#c9a26a", 2.6 * u); p.band([[hx - 20 * u, hy - 6 * u], [hx + 20 * u, hy - 6 * u]], GOLD, 3 * u, 1.2 * u, "round"); }
   if (prop === "pestle") { const [hx, hy] = R.H; p.band([[hx, hy + 0.35 * HH], [hx + 10 * u, hy - 1.05 * HH]], "#6a6f76", 7 * u, 1.8 * u, "round"); for (const f of [0.2, 0.5, 0.8]) p.band([[hx + (f * 10) * u, hy + 0.35 * HH - f * 1.4 * HH], [hx + (f * 10 + 2) * u, hy + 0.3 * HH - f * 1.4 * HH]], GOLD, 9 * u, 1.4 * u, "round"); p.ell(hx + 10 * u, hy - 1.08 * HH, 12 * u, 16 * u, "#6a6f76", 2.6 * u); }
-  if (prop === "plough") { const [hx, hy] = R.H; p.band([[hx - 0.25 * HH, hy + 0.2 * HH], [hx + 0.55 * HH, hy - 0.35 * HH]], "#8a5a34", 6 * u, 1.8 * u, "round"); p.band([[hx + 0.5 * HH, hy - 0.3 * HH], [hx + 0.7 * HH, hy + 0.05 * HH]], "#6a6f76", 6 * u, 1.8 * u, "round"); p.poly([[hx + 0.7 * HH, hy + 0.05 * HH], [hx + 0.85 * HH, hy + 0.22 * HH], [hx + 0.62 * HH, hy + 0.25 * HH]], "#9aa2ab", 2.4 * u); }
+  if (prop === "plough") { const [hx, hy] = L.H; const a: P2 = [hx + 0.1 * HH, hy + 0.2 * HH], b: P2 = [hx - 0.72 * HH, hy - 0.3 * HH]; p.band([a, b], "#8a5a34", 7 * u, 2 * u, "round"); p.band([b, [b[0] - 0.02 * HH, b[1] + 0.3 * HH]], "#6a6f76", 7 * u, 2 * u, "round"); p.poly([[b[0] - 0.02 * HH, b[1] + 0.3 * HH], [b[0] + 0.22 * HH, b[1] + 0.38 * HH], [b[0] - 0.12 * HH, b[1] + 0.48 * HH]], "#9aa2ab", 2.4 * u); }
   if (prop === "umbrella") { const [hx, hy] = R.H; p.band([[hx, hy + 0.4 * HH], [hx, hy - 1.35 * HH]], "#8a5a34", 4 * u, 1.4 * u, "round"); const top = hy - 1.3 * HH; const dome = ellPts(hx, top, 0.62 * HH, 0.22 * HH, 180, 360); p.shadedFill(dome, "#c8342e", mul("#c8342e", SH_CLOTH), light, 0.62 * HH); p.inkRing(dome, 3 * u, thickAngle(light)); p.band([[hx - 0.62 * HH, top], [hx + 0.62 * HH, top]], GOLD, 4 * u, 1.4 * u); for (let i = -3; i <= 3; i++) p.stroke([[hx + i * 0.17 * HH, top], [hx + i * 0.17 * HH, top + 0.1 * HH]], 1.6 * u, mix("#c8342e", INK, 0.35)); }
   if (prop === "chamara") { const [hx, hy] = R.H; p.band([[hx, hy + 0.1 * HH], [hx, hy - 0.3 * HH]], "#8a5a34", 4 * u, 1.4 * u, "round"); for (let i = -2; i <= 2; i++) p.stroke([[hx + i * 3 * u, hy - 0.3 * HH], [hx + i * 6 * u, hy - 0.7 * HH]], 3 * u, "#f2e6c4"); }
   if (prop === "banner") { const [hx, hy] = L.H; p.band([[hx, hy + 0.5 * HH], [hx, hy - 1.65 * HH]], "#8a5a34", 5 * u, 1.8 * u, "round"); const top = hy - 1.65 * HH; p.poly([[hx, top], [hx + 0.7 * HH, top + 0.02 * HH], [hx + 0.66 * HH, top + 0.32 * HH], [hx, top + 0.28 * HH]], "#c8342e", 2.6 * u); p.band([[hx, top], [hx, top + 0.3 * HH]], GOLD, 3 * u, 1.2 * u); if (o.emblem === "snake") { p.stroke(curve([hx + 0.12 * HH, top + 0.14 * HH], [hx + 0.3 * HH, top + 0.04 * HH], [hx + 0.5 * HH, top + 0.16 * HH]), 3 * u, GOLD); p.ell(hx + 0.5 * HH, top + 0.16 * HH, 5 * u, 7 * u, GOLD, 1.4 * u); } else if (o.emblem === "palm") { p.stroke([[hx + 0.34 * HH, top + 0.24 * HH], [hx + 0.36 * HH, top + 0.07 * HH]], 3 * u, GOLD); for (let i = -2; i <= 2; i++) p.stroke([[hx + 0.36 * HH, top + 0.07 * HH], [hx + (0.2 + i * 0.08) * HH, top + 0.02 * HH]], 2 * u, GOLD); } else { p.ell(hx + 0.35 * HH, top + 0.14 * HH, 0.09 * HH, 0.11 * HH, GOLD, 2 * u); p.dot(hx + 0.35 * HH, top + 0.14 * HH, 3 * u, "#8a5a34"); } }
@@ -408,13 +409,13 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
     const mx = 300 + 8 * u * facing, my = hc + 20 * u;
     if (F === "O") p.ell(mx, my + 2 * u, 8 * u, 9 * u, "#5a1e28", 3 * u); else if (F === "smile") p.arc(mx, my - 3 * u, 8 * u, 4.5 * u, 20, 160, 4 * u); else if (F === "frown") p.arc(mx, my + 3 * u, 6.5 * u, 3.5 * u, 200, 340, 4 * u);
   }
-  if (o.gem) { const gx = 300 + 7 * u * facing, gy = hc - 30 * u; p.poly([[gx - 5 * u, gy], [gx, gy - 7 * u], [gx + 5 * u, gy], [gx, gy + 7 * u]], o.gem, 1.6 * u); p.dot(gx - 2 * u, gy - 2 * u, 1.5 * u, WHITE); }
-  if (o.crescent) p.poly([[300 - 0.55 * H.a, crown + 0.1 * HH], [300 - 0.32 * H.a, crown - 0.02 * HH], [300 - 0.5 * H.a, crown + 0.16 * HH]], o.crescent, 1.4 * u);
-  if (o.snake) { const sx = 300, sy = chin + 0.1 * HH; p.band(curve([sx - 0.34 * T.a, sy], [sx, sy + 0.22 * HH], [sx + 0.34 * T.a, sy - 0.02 * HH]), o.snake, 0.13 * HH, 2 * u); const hx = sx + 0.34 * T.a, hy = sy - 0.05 * HH; p.poly([[hx - 0.08 * HH, hy + 0.08 * HH], [hx - 0.1 * HH, hy - 0.1 * HH], [hx + 0.06 * HH, hy - 0.12 * HH], [hx + 0.08 * HH, hy + 0.06 * HH]], o.snake, 1.8 * u); p.dot(hx - 0.02 * HH, hy - 0.04 * HH, 1.4 * u, INK); p.stroke([[hx + 0.04 * HH, hy - 0.1 * HH], [hx + 0.09 * HH, hy - 0.13 * HH]], 1.2 * u, INK); }
-  if (o.ash) for (const dy of [-40, -32, -24]) p.stroke([[300 + 7 * u * facing - 0.18 * H.a, hc + dy * u], [300 + 7 * u * facing + 0.18 * H.a, hc + dy * u]], 2.6 * u, o.ash);
   if (o.tilak) p.poly([[300 + 7 * u * facing - 2.2 * u, hc - 34 * u], [300 + 7 * u * facing + 2.2 * u, hc - 34 * u], [300 + 7 * u * facing, hc - 24 * u]], o.tilak, 0);
   if (o.flower) for (let i = 0; i < 5; i++) { const a = rad(72 * i); p.ell(300 - 0.85 * H.a + 9 * u * Math.cos(a), hc - 0.55 * H.b + 9 * u * Math.sin(a), 6 * u, 6 * u, o.flower, 1.5 * u); }
   headwear(p, o, H, hc, crown, light, u, ow, facing);
+  if (o.ash) for (const dy of [-18, -13, -8]) p.stroke([[300 + 7 * u * facing - 0.22 * H.a, hc + dy * u], [300 + 7 * u * facing + 0.22 * H.a, hc + dy * u]], 2.8 * u, o.ash);
+  if (o.crescent) { const cx = 300 - 0.2 * W, cy = crown - 0.22 * HH, r = 0.16 * HH; const outer = ellPts(cx, cy, r, r, 40, 320); const inner = ellPts(cx + r * 0.36, cy, r * 0.8, r * 0.8, 300, 60).reverse(); p.poly([...outer, ...inner], o.crescent, 1.4 * u); }
+  if (o.snake) { const sx = 300, sy = chin - 0.02 * HH; p.band(curve([sx - 0.38 * T.a, sy], [sx, sy + 0.12 * HH], [sx + 0.38 * T.a, sy - 0.03 * HH]), o.snake, 0.13 * HH, 2 * u); const hx = sx - 0.56 * W, hy = hc + 0.12 * H.b; p.stroke(curve([sx - 0.34 * T.a, sy], [sx - 0.48 * W, sy - 0.12 * HH], [hx + 0.04 * HH, hy + 0.1 * HH]), 5 * u, o.snake); p.poly([[hx - 0.11 * HH, hy + 0.2 * HH], [hx - 0.18 * HH, hy - 0.02 * HH], [hx - 0.05 * HH, hy - 0.22 * HH], [hx + 0.11 * HH, hy - 0.08 * HH], [hx + 0.13 * HH, hy + 0.15 * HH]], o.snake, 2 * u); p.dot(hx - 0.03 * HH, hy - 0.06 * HH, 2 * u, WHITE); p.dot(hx - 0.03 * HH, hy - 0.06 * HH, 1.2 * u, INK); p.stroke([[hx + 0.08 * HH, hy - 0.2 * HH], [hx + 0.13 * HH, hy - 0.27 * HH]], 1.6 * u, INK); }
+  if (o.gem) { const gx = 300 + 7 * u * facing, gy = hc - 15 * u; p.poly([[gx - 6 * u, gy], [gx, gy - 9 * u], [gx + 6 * u, gy], [gx, gy + 9 * u]], o.gem, 1.8 * u); p.dot(gx - 2 * u, gy - 3 * u, 1.8 * u, WHITE); }
   p.rot = null;
   return { L: L.H, R: R.H, hc, chin, crown, u, HH };
 };
@@ -456,21 +457,23 @@ const headwear = (p: Pen, o: Spec, H: Blob, hc: number, crown: number, light: nu
   }
   if (o.head === "jata") {
     const col = o.hairCol ?? "#2a1a1e";
-    const pile = ellPts(300 + 2 * u * facing, crown + 0.16 * 2 * H.b, 0.56 * 2 * H.a, 0.36 * 2 * H.b);
-    p.shadedFill(pile, col, mul(col, SH_FELT), light, 0.56 * 2 * H.a); p.inkRing(pile, ow, 5 * u);
-    for (let i = -2; i <= 2; i++) p.stroke(curve([300 - 0.4 * 2 * H.a, crown + 0.22 * 2 * H.b], [300 + i * 24 * u, crown + (i % 2 ? 0.04 : 0.12) * 2 * H.b], [300 + 0.4 * 2 * H.a, crown + 0.26 * 2 * H.b]), 3 * u, mix(col, INK, 0.55));
-    for (const [dx, dy] of [[-0.3, 0.42], [0.25, 0.5], [0, 0.38]]) p.stroke([[300 + dx * 2 * H.a, crown + 0.3 * 2 * H.b], [300 + dx * 1.5 * 2 * H.a, crown + dy * 2 * H.b]], 4 * u, col);
-    p.band([[300 - 0.15 * 2 * H.a, crown + 0.02 * 2 * H.b], [300 + 0.15 * 2 * H.a, crown + 0.02 * 2 * H.b]], GOLD, 5 * u, 1.4 * u, "round");
+    // Tall matted bun above the hairline (bottom stops above the brows), one connected pile.
+    const pile = ellPts(300 + 2 * u * facing, crown - 0.02 * 2 * H.b, 0.52 * 2 * H.a, 0.3 * 2 * H.b);
+    p.shadedFill(pile, col, mul(col, SH_FELT), light, 0.52 * 2 * H.a); p.inkRing(pile, ow, 5 * u);
+    const top = ellPts(300 + 2 * u * facing, crown - 0.34 * 2 * H.b, 0.27 * 2 * H.a, 0.18 * 2 * H.b);
+    p.shadedFill(top, col, mul(col, SH_FELT), light, 0.27 * 2 * H.a); p.inkRing(top, ow * 0.8, 4 * u);
+    for (let i = -3; i <= 3; i++) p.stroke(curve([300 - 0.4 * 2 * H.a, crown + 0.12 * 2 * H.b], [300 + i * 18 * u, crown + (i % 2 ? -0.12 : -0.04) * 2 * H.b], [300 + 0.4 * 2 * H.a, crown + 0.18 * 2 * H.b]), 2.8 * u, mix(col, INK, 0.55));
+    for (const side of [-1, 1]) p.stroke(curve([300 + side * 0.36 * 2 * H.a, crown + 0.18 * 2 * H.b], [300 + side * 0.5 * 2 * H.a, hc + 0.9 * 2 * H.b], [300 + side * 0.45 * 2 * H.a, hc + 1.25 * 2 * H.b]), 5 * u, col);
   }
   if (o.head === "featherCrown") {
     crownShape(p, 300 + 2 * u * facing, crown + 0.27 * 2 * H.b, 0.3 * 2 * H.a, 0.26 * 2 * H.b, o.crownCol ?? GOLD, u);
     const fx = 300 + 0.4 * 2 * H.a, fy = crown + 0.12 * 2 * H.b;
-    p.band([[fx, fy + 0.18 * 2 * H.b], [fx + 0.03 * 2 * H.a, fy - 0.5 * 2 * H.b]], "#2f8a8a", 8 * u, 3 * u, "round");
-    const tipx = fx + 0.03 * 2 * H.a, tipy = fy - 0.56 * 2 * H.b;
-    p.ell(tipx, tipy, 11 * u, 17 * u, "#2f8a8a", 2 * u);
-    p.ell(tipx, tipy, 8 * u, 13 * u, "#1e4fd8", 0);
-    p.ell(tipx, tipy, 4 * u, 6 * u, GOLD, 1.5 * u);
-    p.dot(tipx, tipy, 2 * u, INK);
+    const tipx = fx + 0.12 * 2 * H.a, tipy = fy - 0.4 * 2 * H.b;
+    p.band(curve([fx, fy + 0.16 * 2 * H.b], [fx + 0.16 * 2 * H.a, fy - 0.12 * 2 * H.b], [tipx, tipy]), "#2f8a8a", 8 * u, 3 * u, "round");
+    p.ell(tipx, tipy, 9 * u, 14 * u, "#2f8a8a", 2 * u);
+    p.ell(tipx, tipy, 6 * u, 10 * u, "#1e4fd8", 0);
+    p.ell(tipx, tipy, 3 * u, 5 * u, GOLD, 1.4 * u);
+    p.dot(tipx, tipy, 1.5 * u, INK);
   }
   const HH = 2 * H.b, W = 2 * H.a;
   if (o.head === "crown") crownShape(p, 300 + 2 * u * facing, crown + 0.3 * HH, 0.4 * W, 0.42 * HH, o.crownCol ?? GOLD, u);

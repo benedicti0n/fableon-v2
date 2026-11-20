@@ -9202,12 +9202,10 @@
         "border": "#e8b53a",
         "head": "hair",
         "hairCol": "#1e1418",
-        "necklace": "#e8b53a",
-        "armlets": "#e8b53a"
+        "necklace": "#e8b53a"
       },
       "mustHave": [
-        "blue-attire",
-        "armlets"
+        "blue-attire"
       ],
       "description": "Iconography preset: balarama.",
       "props": [
@@ -9287,12 +9285,10 @@
         "head": "crown",
         "crownCol": "#e8b53a",
         "necklace": "#e8b53a",
-        "earrings": "#e8b53a",
-        "armlets": "#e8b53a"
+        "earrings": "#e8b53a"
       },
       "mustHave": [
-        "crown",
-        "armlets"
+        "crown"
       ],
       "description": "Iconography preset: indra.",
       "props": [
@@ -9371,7 +9367,8 @@
         "earrings": "#e8b53a",
         "necklace": "#e8b53a",
         "quiver": "#8a5a34",
-        "hairCol": "#1e1418"
+        "hairCol": "#1e1418",
+        "head": "hair"
       },
       "mustHave": [
         "kavacha",
@@ -9424,8 +9421,7 @@
         "head": "jata",
         "hairCol": "#2a1a1e",
         "gem": "#e05a4a",
-        "quiver": "#8a5a34",
-        "ash": "#f4f1ea"
+        "quiver": "#8a5a34"
       },
       "mustHave": [
         "gem",

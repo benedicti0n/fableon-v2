@@ -10,6 +10,8 @@ import { SIZE, solveCamera } from './solver.js';
 import { OVER_HEAD_MIN, OVER_HEAD_MAX, OVER_HEAD_RATIO } from './composition.js';
 import { normalizeWord } from '../../shared/words.mjs';
 
+const POSE_MEASURES = JSON.parse(readFileSync(join(ROOT, 'schema', 'pose-measures.json'), 'utf8'));
+const SEATED_POSES = new Set(['kneel', 'pranam', 'drive', 'ride', 'lie', 'fallen', 'sleep']);
 const FPS = 30;
 const normAngle = (deg) => (deg * Math.PI) / 180;
 
@@ -190,7 +192,15 @@ const compileActor = (entry, shot, ctx) => {
     const def = ctx.board.cast?.[castId];
     if (!def) throw new Error(`shot ${shot.id}: cast "${castId}" is not declared`);
     if (def.group) throw new Error(`shot ${shot.id}: group "${castId}" cannot be a single actor (use a row)`);
-    if (!ctx.cast[useId]) ctx.cast[useId] = { spec: def.spec, seed: def.seed ?? stableSeed(castId) };
+    const defSpec = def.spec, defSeed = def.seed ?? stableSeed(castId);
+    if (def.variants?.length) {
+      out.variants = def.variants.map((v) => {
+        const vid = `${castId}@${v.name}`;
+        if (!ctx.cast[vid]) ctx.cast[vid] = { spec: v.spec, seed: v.seed ?? stableSeed(vid) };
+        return { at: parseAnchor(v.at, ctx.fps), who: vid };
+      });
+    }
+    if (!ctx.cast[useId]) ctx.cast[useId] = { spec: defSpec, seed: defSeed };
     if (a.variant) {
       let base = ctx.cast[useId].spec;
       if (typeof base === 'string') base = specFor(castId, { spec: base }, ctx.catalog);
@@ -364,8 +374,11 @@ const actorStateAt = (a, f, shot, ctx) => {
   const pos = a.motion && !a.ride ? motionAt(a.motion, f, base, ctx) : base;
   const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
   const key = a.special ? a.special : (spec.build ?? 'adult');
-  const measure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
-  return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated, who: a.who, view: a.view, entering: w.from, exiting: w.to };
+  const baseMeasure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
+  const env = POSE_MEASURES[st.pose];
+  if (process.env.DEBUG_POSE) console.error('DBG', a.who, JSON.stringify(st.pose), !!env, baseMeasure.eye, JSON.stringify(env), SEATED_POSES.has(st.pose), !!st.seated);
+  const measure = env ? { ...baseMeasure, standing: baseMeasure.standing * env.standing, seated: baseMeasure.standing * env.standing, eye: baseMeasure.eye * env.eye, eyeSeated: baseMeasure.eye * env.eye, head: baseMeasure.head * env.head, halfWidth: baseMeasure.halfWidth * env.halfWidth } : baseMeasure;
+  return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated || SEATED_POSES.has(st.pose), who: a.who, view: a.view, entering: w.from, exiting: w.to };
 };
 
 const effectStateAt = (fx, f, ctx, shot) => {

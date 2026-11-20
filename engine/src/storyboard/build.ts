@@ -169,7 +169,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     return s;
   };
 
-  type ActorState = { st: Partial<Actor>; params: Record<string, unknown>; pos: V3; scale: number; expr: Expr; moving: Moving | null };
+  type ActorState = { st: Partial<Actor>; params: Record<string, unknown>; pos: V3; scale: number; expr: Expr; moving: Moving | null; who: string };
   const actorState = (a: Actor, f: number, shotStart: number, ignoreVisible = false): ActorState | null => {
     let st: Partial<Actor> = { ...a };
     let params = { ...(a.params ?? {}) };
@@ -194,13 +194,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     if (scale === 0) return null;
     const talkSpec = st.talk;
     const expr = talkSpec ? talk(T(f) * (talkSpec.rate ?? 1), talkSpec.base) : (st.expr ?? "neutral");
-    return { st, params, pos, scale, expr, moving };
+    let activeWho = a.who;
+    for (const v of a.variants ?? []) if (f >= anchor(v.at, shotStart)) activeWho = v.who;
+    return { st, params, pos, scale, expr, moving, who: activeWho };
   };
 
   const actor = (out: Stage, cam: CamInfo, a: Actor, f: number, shotStart: number) => {
     const state = actorState(a, f, shotStart);
     if (!state) return;
-    const { st, params, pos, scale, expr, moving } = state;
+    const { st, params, pos, scale, expr, moving, who: activeWho } = state;
     const common = { t: T(f), scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale, yaw: st.yaw ?? undefined, id: a.id ?? a.who, seated: st.seated };
     if (a.special === "ganesha") {
       const pv = (key: string, d = 0) => {
@@ -241,12 +243,12 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     }
     if (a.special === "flat") {
       const fpose = (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"];
-      card(out, cam, `flat|${expr}|${fpose}|${JSON.stringify(spec(a.who))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(a.who), { pose: fpose, expr: expr as never, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
+      card(out, cam, `flat|${expr}|${fpose}|${JSON.stringify(spec(activeWho))}`, (p, light) => { p.g.transform(0, 1, -1, 0, 1000, 215); person(p, spec(activeWho), { pose: fpose, expr: expr as never, light, t: T(f) }); }, pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 2.2 });
       return;
     }
     if (a.special) throw new Error(`special "${a.special}" is not implemented yet (shot frame ${f})`);
     const e = cast[a.who];
-    const baseSpec = spec(a.who);
+    const baseSpec = spec(activeWho);
     const sp = a.animate ? { ...baseSpec } : baseSpec;
     for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, shotStart);
     const phase = a.motion?.type === "path" && a.motion.walk ? (moving ? moving.phase(f) : motionFn(a.motion, st.pos, shotStart).phase(f)) : undefined;
@@ -262,7 +264,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const a = ref.a, start = ref.start;
     const state = actorState(a, f, start, true);
     if (!state) throw new Error(`attachment actor "${id}" is not drawn at frame ${f}`);
-    const { st, params, pos, scale, expr } = state;
+    const { st, params, pos, scale, expr, who: activeWho } = state;
     const pen = drawingPen();
     let geo: "body" | "wide" | "baby" = "body";
     let pt: [number, number], hands: { L: [number, number]; R: [number, number] } | null = null;
@@ -273,7 +275,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     };
     if (a.special === "flat") {
       geo = "wide";
-      const r = person(pen, spec(a.who), { pose: (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"], expr: expr as never, t: T(f) });
+      const r = person(pen, spec(activeWho), { pose: (typeof params.pose === "string" ? params.pose : st.pose ?? "armsUp") as Actor["pose"], expr: expr as never, t: T(f) });
       const flat = ([x, y]: [number, number]): [number, number] => [1000 - y, 215 + x];
       pt = flat(attach === "head" || attach === "eyes" ? [300, r.hc] : attach === "crown" ? [300, r.crown] : attach === "chest" ? [300, r.chin + 0.55 * r.HH] : attach === "handL" ? r.L : r.R);
     } else if (a.special === "ganesha") {
@@ -295,7 +297,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     } else if (a.special === "pot") {
       pt = attach === "crown" ? [300, 560] : attach === "feet" ? [300, 840] : [300, 650];
     } else {
-      const baseSpec = spec(a.who);
+      const baseSpec = spec(activeWho);
       const sp = a.animate ? { ...baseSpec } : baseSpec;
       for (const [k, v] of Object.entries(a.animate ?? {})) (sp as unknown as Record<string, unknown>)[k] = animated(v, f, start);
       const phase = a.motion?.type === "path" && a.motion.walk ? state.moving?.phase(f) : undefined;

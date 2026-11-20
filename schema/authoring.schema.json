@@ -941,6 +941,64 @@
             "string",
             "null"
           ]
+        },
+        "armour": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kavacha": {
+          "type": "boolean"
+        },
+        "quiver": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gem": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "snake": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "crescent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "armlets": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lowerPattern": {
+          "enum": [
+            "plain",
+            "tiger",
+            "bark"
+          ]
+        },
+        "emblem": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -2706,6 +2764,41 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "name",
+              "spec"
+            ],
+            "properties": {
+              "at": {
+                "type": "string",
+                "pattern": "^\\d+:\\d+$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "spec": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/Spec"
+                  }
+                ]
+              },
+              "seed": {
+                "type": "number"
+              }
+            }
           }
         }
       }

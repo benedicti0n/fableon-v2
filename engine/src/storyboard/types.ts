@@ -43,7 +43,7 @@ export type Actor = {
   animate?: Record<string, Animated>; scale?: number; mirror?: boolean;
   noBlob?: boolean; blobScale?: number; yaw?: number | null; pose?: Pose; expr?: Expr; prop?: PropK; facing?: -1 | 0 | 1;
   look?: number; seated?: boolean; headTilt?: number; tilt?: number; talk?: Talk | null; appear?: Appear | null;
-  visible?: Visible | null; beats?: Beat[];
+  visible?: Visible | null; beats?: Beat[]; variants?: { at: Anchor; who: string }[];
 };
 export type Sparkle = {
   kind: "sparkle"; id?: string; motion?: Motion; at: Anchor; pos: Point; size?: number; count?: number; offsets?: [number, number, number][];

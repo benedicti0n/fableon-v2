@@ -75,3 +75,4 @@ New set kits and character specs, then long-form 16:9 projects. The later backlo
 - Whip pans with motion blur; new set kits (e.g. a cart of food / forest clearing).
 - Semantic fx placement (fire on a mark, smoke from a set piece, effects from a landmark).
 - Phase 7 packaging and catalog growth: one-command start, desktop wrapper option, more sets/characters/actions, catalog authoring guide.
+- Asset drafting: a routed model drafts new props, animals and costumes as SVG from a description. Drafts are measured, shown on a review sheet and approved before they enter the catalog; every film then reuses them at no cost. Choose the model by a bake-off on our own asset prompts (quality score + price), as for the script.
