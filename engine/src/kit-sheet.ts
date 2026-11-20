@@ -4,9 +4,10 @@ import { Pen } from "./toon";
 import { person, type Spec, type Pose, type PropK } from "./people";
 import CATALOG from "../../schema/catalog.json";
 
-const W = 2600, M = 70, ROW_LABEL = 190;
+const W = 4400, M = 100, ROW_LABEL = 300;
 const SKINS = ["#f4c9a0", "#c98c5c", "#7f4b2e"];
 const BUILDS = ["adult", "stout", "kid"] as const;
+const POSE_PROP: Record<string, string | null> = { strike: 'sword', guard: 'shield', blowConch: 'conch', drive: null, ride: 'sword', dance: null, weep: null, lift: 'chakra', fallen: 'sword' };
 const BASE: Spec = { skin: "#e7b07e", build: "adult", top: "#2f8a8a", lower: "#f2e6c4", border: "#e8b53a", head: "hair", hairCol: "#1e1418" };
 
 const FIELD_ROWS: Array<{ name: string; extra: Partial<Spec> }> = [
@@ -29,7 +30,7 @@ const FIELD_ROWS: Array<{ name: string; extra: Partial<Spec> }> = [
 function draw() {
   const canvas = document.createElement("canvas");
   canvas.width = W;
-  canvas.height = 7600;
+  canvas.height = 12200;
   const ctx = canvas.getContext("2d")!;
   ctx.fillStyle = "#f7f2e8";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -54,7 +55,7 @@ function draw() {
   text("Every new Spec field on 3 skins x 3 builds; poses, expressions, props and iconography presets below.", M, y, 22, "400"); y += 44;
 
   // Fields: 9 columns, one row per field.
-  const cw = 252, ch = 330;
+  const cw = 440, ch = 590;
   text("Spec fields", M, y, 26, "700"); y += 16;
   for (const row of FIELD_ROWS) {
     text(row.name, M, y + 28, 18, "600");
@@ -64,46 +65,46 @@ function draw() {
       card(x, y, cw, ch, `${build} · ${skin}`, spec);
       x += cw + 10;
     }
-    y += ch + 14;
+    y += ch + 20;
   }
 
   // Poses.
   y += 20; text("Poses", M, y, 28, "700"); y += 18;
   let x = M;
   for (const pose of ["kneel", "pranam", "lie", "fallen", "sleep", "strike", "guard", "blowConch", "drive", "ride", "dance", "weep", "lift"] as Pose[]) {
-    if (x + 190 > W - M) { x = M; y += 330; }
-    card(x, y, 180, 320, pose, { ...BASE, top: "#c8342e" }, { pose });
-    x += 190;
+    if (x + 320 > W - M) { x = M; y += 560; }
+    card(x, y, 310, 540, pose, { ...BASE, top: "#c8342e" }, { pose, prop: (POSE_PROP[pose] ?? null) as PropK });
+    x += 320;
   }
-  y += 350;
+  y += 580;
 
   // Expressions.
   text("Expressions", M, y, 28, "700"); y += 18; x = M;
   for (const expr of ["angry", "sad", "smirk", "determined", "sleepy"]) {
-    card(x, y, 180, 320, expr, { ...BASE, head: "crownSmall" }, { expr });
-    x += 190;
+    card(x, y, 310, 540, expr, { ...BASE, head: "crownSmall" }, { expr });
+    x += 320;
   }
-  y += 350;
+  y += 580;
 
   // Props.
   text("Props", M, y, 28, "700"); y += 18; x = M;
-  for (const prop of ["conch", "flute", "chakra", "sword", "shield", "dice", "trident", "lotus", "bowl", "pestle", "plough", "umbrella", "chamara", "banner", "banner: snake", "banner: palm"]) {
+  for (const prop of ["conch", "flute", "chakra", "sword", "shield", "dice", "trident", "lotus", "bowl", "pestle", "plough", "umbrella", "chamara", "banner", "banner: snake", "banner: palm", "vajra"]) {
     const [p, emblem] = prop.includes(":") ? prop.split(": ").map((z) => z.trim()) : [prop, null];
-    card(x, y, 180, 320, prop, { ...BASE, emblem }, { prop: p as PropK });
-    x += 190;
-    if (x > W - M - 180) { x = M; y += 330; }
+    card(x, y, 310, 540, prop, { ...BASE, emblem }, { prop: p as PropK });
+    x += 320;
+    if (x > W - M - 310) { x = M; y += 560; }
   }
-  y += 350;
+  y += 580;
 
   // Presets.
   text("Iconography presets", M, y, 28, "700"); y += 18; x = M;
   const presets = (CATALOG as unknown as { iconography?: Array<{ name: string; spec: Spec; props?: string[] }> }).iconography ?? [];
   for (const preset of presets) {
-    card(x, y, 210, 340, preset.name, preset.spec, { prop: (preset.props?.[0] ?? null) as PropK });
-    x += 220;
-    if (x > W - M - 210) { x = M; y += 350; }
+    card(x, y, 360, 620, preset.name, preset.spec, { prop: (preset.props?.[0] ?? null) as PropK });
+    x += 380;
+    if (x > W - M - 360) { x = M; y += 650; }
   }
-  y += 390;
+  y += 700;
   text("Review: fields, poses, expressions, props and presets. Existing Adi shots must stay pixel-identical.", M, y, 20, "400");
   return canvas.toDataURL("image/jpeg", 0.9);
 }

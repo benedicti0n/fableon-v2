@@ -44,6 +44,7 @@ const TRAITS = {
   armlets: { field: 'armlets', ok: (s) => !!s.armlets, hint: 'armlets must be set' },
   ash: { field: 'ash', ok: (s) => !!s.ash, hint: 'ash must be set' },
   blindfold: { field: 'blindfold', ok: (s) => !!s.blindfold, hint: 'blindfold must be set' },
+  blind: { field: 'blind', ok: (s) => s.blind === true, hint: 'blind must be true' },
 };
 
 const normTrait = (t) => String(t).trim().toLowerCase().replace(/[\s_]+/g, '-');
@@ -124,6 +125,10 @@ export function castErrors(data, script, catalog) {
       if (!t) { errs.push(`/characters/${c.id}/mustHave "${trait}" is not a mapped trait`); continue; }
       if (!t.ok(spec)) errs.push(`/characters/${c.id}/mustHave "${trait}" needs ${t.field}: ${t.hint}`);
     }
+    const mainIds = new Set((script.characters ?? []).map((x) => x.id));
+    const darkerOk = (c.mustHave ?? []).some((t) => ['dark-skin', 'indigo-skin'].includes(normTrait(t)));
+    const L = lab(spec.skin)[0];
+    if (mainIds.has(c.id) && L < 35 && !darkerOk) errs.push(`/characters/${c.id}/spec.skin L* ${L.toFixed(1)} is below the readability floor 35; lighten the skin or declare dark-skin/indigo-skin`);
   }
   for (const id of wanted.keys()) if (!seen.has(id)) errs.push(`/characters is missing ${id}`);
   const main = (script.characters ?? []).map((c) => data.characters?.find((x) => x.id === c.id)).filter(Boolean);
@@ -172,8 +177,9 @@ const compactSpec = (s) => Object.fromEntries(Object.entries(s).filter(([, v]) =
 function castDefs(characters, catalog) {
   return Object.fromEntries(characters.map((c) => [c.id, { spec: compactSpec(specOf(c, catalog)), seed: seedOf(c.id) }]));
 }
+let sheetFeatureRim = false;
 function boardFromShots(characters, catalog, shots) {
-  return { version: 1, fps: 30, tailFrames: 0, cast: castDefs(characters, catalog), shots };
+  return { version: 1, fps: 30, tailFrames: 0, cast: castDefs(characters, catalog), shots, featureRim: sheetFeatureRim };
 }
 function groupShot(characters, catalog, { spacing = 1.0, side = 'front', third = null, set = 'hermitage', mark = 'hermitage.clearing' } = {}) {
   return {
@@ -224,6 +230,7 @@ async function groupBlockers(tmp, characters) {
 }
 
 export async function castSheet(projectDir, characters, catalog) {
+  try { sheetFeatureRim = JSON.parse(readFileSync(join(projectDir, 'project.json'), 'utf8')).look?.featureRim === true; } catch { sheetFeatureRim = false; }
   const words = [{ w: 'cast', a: 0, b: 10, line: 0 }];
   const tmp = mkdtempSync(join(tmpdir(), 'fableon-cast-'));
   try {

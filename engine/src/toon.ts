@@ -294,27 +294,28 @@ export const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mou
   smile: { eye: ["dot", "dot"], brow: [0, -1], mouth: "smirk" },
   smile_closed: { eye: ["happy", "happy"], brow: [0, -1], mouth: "smile" },
   lick: { eye: ["dot", "dot"], brow: [0, -1], mouth: "lick" },
-  angry: { eye: ["lid", "lid"], brow: [5, -4], mouth: "frown" },
-  sad: { eye: ["lid", "lid"], brow: [-4, 3], mouth: "frown" },
-  smirk: { eye: ["lid", "dot"], brow: [1, -2], mouth: "smirk" },
-  determined: { eye: ["slit", "slit"], brow: [4, -2], mouth: "dash" },
-  sleepy: { eye: ["dash", "dash"], brow: [1, 1], mouth: "dash" },
+  angry: { eye: ["lid", "lid"], brow: [9, -7], mouth: "frown" },
+  sad: { eye: ["lid", "lid"], brow: [-9, 7], mouth: "frown" },
+  smirk: { eye: ["lid", "dot"], brow: [2, -6], mouth: "smirk" },
+  determined: { eye: ["slit", "slit"], brow: [7, 7], mouth: "dash" },
+  sleepy: { eye: ["dash", "dash"], brow: [2, 2], mouth: "o" },
 };
 export const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 export const eyeKind = (k: EyeK, lid: number): EyeK =>
   lid >= 1 && k !== "happy" && k !== "squeeze" && k !== "spiral" ? "dash" : lid > 0 ? halfLid(k) : k;
 export const lidOf = (b: boolean | number | undefined) => (b === true ? 1 : Number(b) || 0);
 
-export const eye = (p: Pen, kind: EyeK, x: number, ey: number, u: number, side: number, look: number, skin: string) => {
+export const eye = (p: Pen, kind: EyeK, x: number, ey: number, u: number, side: number, look: number, skin: string, col: string = INK) => {
   const lx = x + look * 3 * u, lw = 3.8 * u;
+  if (needsFeatureRim(skin) && ['dot', 'small', 'lid', 'slit'].includes(kind)) p.ell(x, ey, 9.5 * u, 7.5 * u, WHITE, 2.2 * u);
   switch (kind) {
     case "dot": p.ell(lx, ey, 3.8 * u, 5.5 * u, INK, 0); break;
     case "small": p.ell(lx, ey, 3 * u, 4.4 * u, INK, 0); break;
-    case "lid": p.ell(lx, ey - u, 7 * u, 6 * u, INK, 0, 0, 180); p.stroke([[x - 9 * u, ey - u], [x + 9 * u, ey - u]], lw); break;
-    case "slit": p.ell(lx, ey, 7 * u, 2.6 * u, INK, 0, 0, 180); p.stroke([[x - 9 * u, ey], [x + 9 * u, ey]], lw); break;
-    case "happy": p.arc(x, ey + 3 * u, 8 * u, 6 * u, 200, 340, lw); break;
-    case "dash": p.stroke([[x - 8.5 * u, ey], [x + 8.5 * u, ey]], lw); break;
-    case "squeeze": p.stroke([[x + 6 * u * side, ey - 5 * u], [x - 6 * u * side, ey], [x + 6 * u * side, ey + 5 * u]], lw); break;
+    case "lid": p.ell(lx, ey - u, 7 * u, 6 * u, INK, 0, 0, 180); p.stroke([[x - 9 * u, ey - u], [x + 9 * u, ey - u]], lw, col); break;
+    case "slit": p.ell(lx, ey, 7 * u, 2.6 * u, INK, 0, 0, 180); p.stroke([[x - 9 * u, ey], [x + 9 * u, ey]], lw, col); break;
+    case "happy": p.arc(x, ey + 3 * u, 8 * u, 6 * u, 200, 340, lw, col); break;
+    case "dash": p.stroke([[x - 8.5 * u, ey], [x + 8.5 * u, ey]], lw, col); break;
+    case "squeeze": p.stroke([[x + 6 * u * side, ey - 5 * u], [x - 6 * u * side, ey], [x + 6 * u * side, ey + 5 * u]], lw, col); break;
     case "shock": case "shockHalf":
       p.ell(x, ey, 11 * u, 11 * u, WHITE, 2.6 * u); p.dot(lx - side * 1.5 * u, ey + 1.5 * u, 3 * u);
       if (kind === "shockHalf") { p.ell(x, ey, 11 * u, 11 * u, skin, 0, 180, 360); p.stroke([[x - 11 * u, ey], [x + 11 * u, ey]], 2.6 * u); }
@@ -335,22 +336,22 @@ export const dmouth = (p: Pen, mx: number, y: number, rx: number, ry: number, u:
   p.ell(mx, y, rx, ry, null, 3 * u, 0, 180);
 };
 
-export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1, feature = false) => {
-  const mw = 4 * u, mc = feature ? mix(MOUTH, "#c76a72", 0.55) : MOUTH;
+export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1, feature = false, col: string | null = null) => {
+  const mw = 4 * u, mc = col ?? (feature ? mix(MOUTH, "#c76a72", 0.55) : MOUTH), line = col ?? INK;
   switch (kind) {
-    case "dash": p.stroke([[mx - 5.5 * u * k, my], [mx + 5.5 * u * k, my - 0.8 * u]], mw); break;
-    case "frown": p.arc(mx, my + 3 * u, 6.5 * u * k, 3.5 * u, 200, 340, mw); break;
-    case "smirk": p.arc(mx + u, my - 3 * u, 7 * u * k, 4 * u, 10, 150, mw); break;
-    case "smile": p.arc(mx, my - 3 * u, 8 * u * k, 4.5 * u, 20, 160, mw); break;
-    case "smileWide": p.arc(mx, my - 4 * u, 11 * u * k, 6 * u, 15, 165, mw); break;
+    case "dash": p.stroke([[mx - 5.5 * u * k, my], [mx + 5.5 * u * k, my - 0.8 * u]], mw, line); break;
+    case "frown": p.arc(mx, my + 3 * u, 6.5 * u * k, 3.5 * u, 200, 340, mw, line); break;
+    case "smirk": p.arc(mx + u, my - 3 * u, 7 * u * k, 4 * u, 10, 150, mw, line); break;
+    case "smile": p.arc(mx, my - 3 * u, 8 * u * k, 4.5 * u, 20, 160, mw, line); break;
+    case "smileWide": p.arc(mx, my - 4 * u, 11 * u * k, 6 * u, 15, 165, mw, line); break;
     case "grin": dmouth(p, mx, my - u, 12 * u * k, 8 * u, u, false, feature); break;
     case "laugh": dmouth(p, mx, my, 16 * u * k, 11 * u, u, true, feature); break;
     case "o": p.ell(mx + 4 * u, my, 3.5 * u, 4 * u, mc, 2.8 * u); break;
     case "O": p.ell(mx, my + 2 * u, 9 * u * k, 11 * u, mc, 3.2 * u); break;
-    case "wave": { const s: P2[] = []; for (let i = 0; i <= 12; i++) s.push([mx - 9 * u * k + i * 1.5 * u * k, my + 1.5 * u * Math.sin(i * 1.3)]); p.stroke(s, 3 * u); break; }
+    case "wave": { const s: P2[] = []; for (let i = 0; i <= 12; i++) s.push([mx - 9 * u * k + i * 1.5 * u * k, my + 1.5 * u * Math.sin(i * 1.3)]); p.stroke(s, 3 * u, line); break; }
     case "teeth":
       p.poly([[mx - 12 * u * k, my - 4 * u], [mx + 12 * u * k, my - 4 * u], [mx + 11 * u * k, my + 4 * u], [mx - 11 * u * k, my + 4 * u]], WHITE, 3 * u);
-      for (const j of [-1, 0, 1]) p.stroke([[mx + j * 6 * u * k, my - 4 * u], [mx + j * 6 * u * k, my + 4 * u]], 1.5 * u);
+      for (const j of [-1, 0, 1]) p.stroke([[mx + j * 6 * u * k, my - 4 * u], [mx + j * 6 * u * k, my + 4 * u]], 1.5 * u, line);
       break;
     case "lick": p.arc(mx, my - 3 * u, 8 * u * k, 4.5 * u, 20, 160, mw); p.ell(mx + 6 * u * k, my + 3 * u, 3.6 * u, 4.6 * u, TONGUE, 2.4 * u); break;
   }
@@ -363,19 +364,22 @@ export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr,
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy;
   const rimCol = mix(skin, "#ffffff", 0.2);
+  const line = featureRim ? mix(skin, "#ffffff", 0.66) : INK;
   for (const side of [-1, 1]) {
     const x = fx + side * ex;
     const kind = eyeKind(F.eye[(facing ? side === facing : side > 0) ? 1 : 0], lid);
     if (featureRim) p.stroke(ellPts(x, ey, (kind === "shock" ? 12.5 : 8.5) * u, (kind === "shock" ? 12.5 : 10.5) * u), 1.2 * u, rimCol);
-    eye(p, kind, x, ey, u, side, look, skin);
-    const [dI, dO] = F.brow, by = ey - (brim ? 17 : 20) * u;
-    if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
-    else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u);
+    eye(p, kind, x, ey, u, side, look, skin, line);
+    const [dI, dO] = F.brow; let by = ey - (brim ? 17 : 20) * u;
+    if (expr === "smirk" && side > 0) by -= 8 * u;
+    if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u, line);
+    else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u, line);
   }
   const mx = cx + 8 * u * facing, my = cy + 20 * u;
-  mouth(p, F.mouth, mx, my, u, 1, featureRim);
-  if (moustache) for (const s of [-1, 1])
-    taper(p, [mx + s * 1.5 * u, cy + 12.5 * u], [mx + s * (stout ? 19 : 15) * u, cy + (stout ? 10.5 : 15) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, moustache);
+  mouth(p, F.mouth, mx, my, u, 1, featureRim, line);
+  const mcol = featureRim && moustache ? mix(moustache, "#ffffff", 0.45) : moustache;
+  if (mcol) for (const s of [-1, 1])
+    taper(p, [mx + s * 1.5 * u, cy + 12.5 * u], [mx + s * (stout ? 19 : 15) * u, cy + (stout ? 10.5 : 15) * u], stout ? 5.5 * u : 4.5 * u, 1.6 * u, mcol);
   if (expr === "nervous") p.ell(cx + 40 * u * (facing || 1), cy - 22 * u, 3 * u, 5 * u, "#9fd4ff", 2 * u);
 };
 

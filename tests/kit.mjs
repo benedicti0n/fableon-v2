@@ -5,6 +5,7 @@ import { ROOT } from '../cli/src/env.js';
 import { applyIconography, castErrors } from '../cli/src/stages/cast.js';
 import { build } from 'esbuild';
 import { pathToFileURL } from 'node:url';
+import pw from '../engine/node_modules/playwright/index.js';
 
 export async function runKitTests() {
   const checks = [], errors = [];
@@ -29,7 +30,7 @@ export async function runKitTests() {
     ok('every new pose has an envelope', poses.every((p) => !!POSE_MEASURES[p]), JSON.stringify(Object.keys(POSE_MEASURES)));
 
     const presets = catalog.iconography ?? [];
-    ok('all 15 iconography presets exist', presets.length === 15, String(presets.length));
+    ok('all 16 iconography presets exist', presets.length === 16, String(presets.length));
     ok('preset names are unique', new Set(presets.map((p) => p.name)).size === presets.length, JSON.stringify(presets.map((p) => p.name)));
     for (const p of presets) {
       const script = { characters: [{ id: p.name, name: p.name }], mentions: [] };
@@ -40,6 +41,20 @@ export async function runKitTests() {
     const applied = applyIconography({ characters: [{ id: 'krishna', name: 'कृष्ण', spec: { ...base }, mustHave: ['young-man'], notes: '' }] }, { characters: [{ id: 'krishna', name: 'कृष्ण' }] }, catalog);
     ok('the cast stage prefers the Krishna preset', applied.characters[0].spec.head === 'featherCrown' && applied.characters[0].mustHave.includes('indigo-skin'), JSON.stringify(applied.characters[0]));
     ok('iconography presets carry props for the shot planner', krishna?.props?.includes('flute'), JSON.stringify(krishna?.props));
+
+    const maskFile = join(ROOT, 'engine', 'dist', 'pose-mask.js');
+    await build({ entryPoints: [join(ROOT, 'engine', 'src', 'pose-mask.ts')], bundle: true, format: 'iife', outfile: maskFile, logLevel: 'error' });
+    const browser = await pw.chromium.launch({ channel: 'chrome', headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html><body><script>${readFileSync(maskFile, 'utf8')}</script></body></html>`, { waitUntil: 'load' });
+      await page.waitForFunction(() => window.ready === true, { timeout: 60000 });
+      const rows = await page.evaluate(() => window.poseIoU());
+      const stand = rows.filter((r) => r.a === 'stand');
+      const pair = rows.filter((r) => r.a !== 'stand');
+      ok('every new pose differs from stand (IoU < 0.85)', stand.every((r) => r.iou < 0.85), JSON.stringify(stand));
+      ok('every pair of new poses differs (IoU < 0.85)', pair.every((r) => r.iou < 0.85), JSON.stringify(pair.filter((r) => r.iou >= 0.85)));
+    } finally { await browser.close(); }
 
     const sheet = join(ROOT, 'docs', 'reports', 'phase-7', 'kit-sheet.jpg');
     ok('the kit review sheet is committed', existsSync(sheet) && statSync(sheet).size > 100_000, String(existsSync(sheet) ? statSync(sheet).size : 0));

@@ -31,6 +31,7 @@ export function newProject(dirArg, { topic, seconds = 90, voice = 'am_michael', 
       : { engine: 'kokoro', voice, speed: 1.35, language: 'en' },
     research: { web: false, maxSources: 8 },
     models: { default: { provider: 'deepseek', model: null } },
+    look: { featureRim: true },
     autopilot: false,
   };
   validate('project', project);

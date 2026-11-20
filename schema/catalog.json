@@ -1756,6 +1756,11 @@
       "name": "banner",
       "status": "implemented",
       "description": "Banner with an emblem."
+    },
+    {
+      "name": "vajra",
+      "status": "implemented",
+      "description": "Double-ended thunderbolt."
     }
   ],
   "specials": [
@@ -9161,7 +9166,7 @@
         "\u0917\u094b\u0935\u093f\u0902\u0926"
       ],
       "spec": {
-        "skin": "#3b4f9e",
+        "skin": "#6f8fe8",
         "build": "slim",
         "top": null,
         "lower": "#f2c230",
@@ -9179,7 +9184,8 @@
       ],
       "description": "Iconography preset: krishna.",
       "props": [
-        "flute"
+        "flute",
+        "garland"
       ]
     },
     {
@@ -9246,19 +9252,21 @@
         "\u0915\u093f\u0930\u093e\u0924"
       ],
       "spec": {
-        "skin": "#8fa6b8",
+        "skin": "#a8693f",
         "build": "elder",
         "top": null,
         "lower": "#7a5a34",
+        "drape": "#5a7a3a",
         "head": "jata",
-        "hairCol": "#2a1a1e",
+        "hairCol": "#4a3a2a",
         "quiver": "#8a5a34",
         "ash": "#f4f1ea",
-        "lowerPattern": "bark"
+        "lowerPattern": "bark",
+        "armlets": "#e8b53a"
       },
       "mustHave": [
         "jata",
-        "forest-clothes"
+        "quiver"
       ],
       "description": "Iconography preset: shiva-kirata.",
       "props": [
@@ -9288,6 +9296,7 @@
       ],
       "description": "Iconography preset: indra.",
       "props": [
+        "vajra",
         "bow"
       ]
     },
@@ -9357,12 +9366,12 @@
         "build": "adult",
         "top": "#c0392b",
         "lower": "#f2e6c4",
-        "head": "crownSmall",
         "crownCol": "#e8b53a",
         "kavacha": true,
         "earrings": "#e8b53a",
         "necklace": "#e8b53a",
-        "quiver": "#8a5a34"
+        "quiver": "#8a5a34",
+        "hairCol": "#1e1418"
       },
       "mustHave": [
         "kavacha",
@@ -9385,12 +9394,16 @@
         "build": "slim",
         "top": "#8e2f3f",
         "lower": "#f2e6c4",
-        "head": "crownSmall",
+        "head": "turban",
         "crownCol": "#c9a26a",
-        "necklace": "#c9a26a"
+        "necklace": "#c9a26a",
+        "turbanCol": "#8e2f3f",
+        "beard": "#c9c4bc",
+        "moustache": "#c9c4bc"
       },
       "mustHave": [
-        "red-attire"
+        "red-attire",
+        "beard"
       ],
       "description": "Iconography preset: shakuni.",
       "props": [
@@ -9437,12 +9450,12 @@
         "lower": "#f2e6c4",
         "head": "crown",
         "crownCol": "#e8b53a",
-        "blindfold": "#f4f1ea",
         "beard": "#c9c4bc",
-        "beardLong": true
+        "beardLong": true,
+        "blind": true
       },
       "mustHave": [
-        "blindfold",
+        "blind",
         "crown"
       ],
       "description": "Iconography preset: dhritarashtra.",
@@ -9542,6 +9555,38 @@
         "crown"
       ],
       "description": "Iconography preset: bhishma.",
+      "props": [
+        "bow"
+      ]
+    },
+    {
+      "name": "karna-crowned",
+      "match": [
+        "karna-crowned",
+        "king-karna",
+        "angaraja",
+        "\u0905\u0902\u0917\u0930\u093e\u091c"
+      ],
+      "spec": {
+        "skin": "#a8693f",
+        "build": "adult",
+        "top": "#c0392b",
+        "lower": "#f2e6c4",
+        "crownCol": "#e8b53a",
+        "kavacha": true,
+        "earrings": "#e8b53a",
+        "necklace": "#e8b53a",
+        "quiver": "#8a5a34",
+        "hairCol": "#1e1418",
+        "head": "crownSmall"
+      },
+      "mustHave": [
+        "kavacha",
+        "red-attire",
+        "quiver",
+        "crown"
+      ],
+      "description": "Karna after he is made king of Anga; crown variant.",
       "props": [
         "bow"
       ]

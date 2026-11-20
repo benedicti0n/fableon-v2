@@ -24,9 +24,9 @@ export function runLookQaTests() {
     const r = spawnSync(py, [join(ROOT, 'tools', 'qa', 'look_qa.py'), dir, video], { encoding: 'utf8' });
     ok('look QA runs', r.status === 0, (r.stderr || r.stdout || '').slice(-200));
     const report = JSON.parse(readFileSync(join(dir, 'look-qa.json'), 'utf8'));
-    ok('look QA flat light', report.warnings.some((w) => /flat light S/.test(w)), JSON.stringify(report.warnings));
+    ok('look QA feature contrast', report.warnings.some((w) => /features S/.test(w)), JSON.stringify(report.warnings));
     ok('look QA crowded', report.warnings.some((w) => /crowded a\/b/.test(w)), JSON.stringify(report.warnings));
-    ok('look QA face metric', report.scenes[0]?.metrics?.face !== null, JSON.stringify(report.scenes[0]));
+    ok('look QA face metric', report.scenes[0]?.metrics?.face !== null && report.scenes[0]?.metrics?.faceContrast !== null, JSON.stringify(report.scenes[0]));
   } finally { rmSync(dir, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

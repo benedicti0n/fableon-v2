@@ -61,6 +61,19 @@ def load_mask(project, frame, img):
     return np.asarray(up) > 127
 
 
+def head_contrast(img, box):
+    if not box:
+        return None
+    h, w, _ = img.shape
+    x0 = max(0, int(box["x0"] * w)); x1 = min(w, int(box["x1"] * w) + 1)
+    y0 = max(0, int(box["y0"] * h)); y1 = min(h, int(box["y1"] * h) + 1)
+    if x1 <= x0 or y1 <= y0:
+        return None
+    p = img[y0:y1, x0:x1]
+    l = 0.2126 * p[..., 0] + 0.7152 * p[..., 1] + 0.0722 * p[..., 2]
+    return float(np.percentile(l, 95) - np.percentile(l, 5))
+
+
 def metrics(img, head_box=None, char_mask=None):
     r, g, b = img[..., 0], img[..., 1], img[..., 2]
     luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
@@ -82,6 +95,7 @@ def metrics(img, head_box=None, char_mask=None):
         "mean": round(float(np.mean(vals)), 3), "std": round(float(np.std(vals)), 3),
         "p2": round(float(np.percentile(vals, 2)), 3), "p98": round(float(np.percentile(vals, 98)), 3),
         "face": (lambda v: round(v, 3) if v is not None else None)(head_luma(img, head_box)) if head_box else None,
+        "faceContrast": (lambda v: round(v, 3) if v is not None else None)(head_contrast(img, head_box)) if head_box else None,
     }
 
 
@@ -129,6 +143,8 @@ def main():
             merged = {k: round(float(np.median([x["metrics"][k] for x in samples])), 3) for k in keys}
             faces = [x["metrics"]["face"] for x in samples if x["metrics"]["face"] is not None]
             merged["face"] = round(float(np.median(faces)), 3) if faces else None
+            contrasts = [x["metrics"].get("faceContrast") for x in samples if x["metrics"].get("faceContrast") is not None]
+            merged["faceContrast"] = round(float(np.median(contrasts)), 3) if contrasts else None
             m = merged
             primary = next((x["primary"] for x in samples if x["primary"]), None)
             t = TARGETS.get(mood, TARGETS["warm-side"])
@@ -137,8 +153,8 @@ def main():
             if not (t["glow"][0] <= m["glow"] <= t["glow"][1]): issues.append(f"glow {m['glow'] * 100:.1f}% outside {t['glow'][0] * 100:.1f}-{t['glow'][1] * 100:.1f}%")
             for k in ("mean", "std", "p2", "p98"):
                 if not (t[k][0] <= m[k] <= t[k][1]): issues.append(f"{k} {m[k]:.2f} outside {t[k][0]:.2f}-{t[k][1]:.2f}")
-            if m["face"] is not None and m["face"] < 0.30 and m["face"] < m["mean"] - 0.12: issues.append(f"face {m['face']:.2f} vs frame {m['mean']:.2f}")
-            if issues: warnings.append(f"flat light {id}: " + "; ".join(issues))
+            if m.get("faceContrast") is not None and m["faceContrast"] < 0.10: issues.append(f"features {m['faceContrast']:.2f} contrast on skin")
+            if issues: warnings.append(f"features {id}: " + "; ".join(issues))
             # crowded: head-box overlap of two subjects > 30% of the smaller box, on any sample
             seen_pairs = set()
             for row in people_rows:
@@ -157,7 +173,7 @@ def main():
         for f in os.listdir(tmp):
             os.unlink(os.path.join(tmp, f))
         os.rmdir(tmp)
-    md = ["# Measured look check", "", f"- video: `{os.path.basename(video)}`", f"- targets: {json.dumps(TARGETS)}", "- glow: share of luma > 0.9 outside the character mask", "", "| scene | mood | split | glow | mean | std | p2 | p98 | face | issues |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---|", *[f"| {r['scene']} | {r['mood']} | {r['metrics']['split']:.2f} | {r['metrics']['glow'] * 100:.1f}% | {r['metrics']['mean']:.2f} | {r['metrics']['std']:.2f} | {r['metrics']['p2']:.2f} | {r['metrics']['p98']:.2f} | {(r['metrics']['face'] or 0):.2f} | {'; '.join(r['issues']) or 'ok'} |" for r in out], "", "## Warnings", "", *([f"- {w}" for w in warnings] or ["- none"]), ""]
+    md = ["# Measured look check", "", f"- video: `{os.path.basename(video)}`", f"- targets: {json.dumps(TARGETS)}", "- glow: share of luma > 0.9 outside the character mask", "", "| scene | mood | split | glow | mean | std | p2 | p98 | face | feature | issues |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---|", *[f"| {r['scene']} | {r['mood']} | {r['metrics']['split']:.2f} | {r['metrics']['glow'] * 100:.1f}% | {r['metrics']['mean']:.2f} | {r['metrics']['std']:.2f} | {r['metrics']['p2']:.2f} | {r['metrics']['p98']:.2f} | {(r['metrics']['face'] or 0):.2f} | {(r['metrics'].get('faceContrast') or 0):.2f} | {'; '.join(r['issues']) or 'ok'} |" for r in out], "", "## Warnings", "", *([f"- {w}" for w in warnings] or ["- none"]), ""]
     json.dump({"video": video, "scenes": out, "warnings": warnings}, open(os.path.join(project, "look-qa.json"), "w"), indent=1)
     open(os.path.join(project, "look-qa.md"), "w").write("\n".join(md))
     print("\n".join(md[:10]))
