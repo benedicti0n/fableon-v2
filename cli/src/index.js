@@ -157,7 +157,7 @@ export function main(argv = process.argv) {
     .description('copy the publish package and transcode upload profiles')
     .requiredOption('--project <dir>', 'project folder')
     .option('--profiles <list>', 'youtube-short,reels', 'youtube-short')
-    .action((opts) => { try { const r = exportCommand(opts.project, { profiles: opts.profiles }); console.log(JSON.stringify(r)); } catch (e) { printError(e); process.exit(1); } });
+    .action(async (opts) => { try { const r = await exportCommand(opts.project, { profiles: opts.profiles }); console.log(JSON.stringify(r)); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('sfx-preview')

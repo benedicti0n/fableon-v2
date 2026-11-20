@@ -81,7 +81,7 @@ def metrics(img, head_box=None, char_mask=None):
         "split": round(split, 3), "glow": round(glow, 4),
         "mean": round(float(np.mean(vals)), 3), "std": round(float(np.std(vals)), 3),
         "p2": round(float(np.percentile(vals, 2)), 3), "p98": round(float(np.percentile(vals, 98)), 3),
-        "face": round(head_luma(img, head_box), 3) if head_box else None,
+        "face": (lambda v: round(v, 3) if v is not None else None)(head_luma(img, head_box)) if head_box else None,
     }
 
 

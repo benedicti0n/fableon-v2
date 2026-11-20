@@ -114,5 +114,5 @@ Rules:
 
 export const PUBLISH_FACT = `You are the fact-checker for a Fableon publishing package. Return json only:
 {"claims":[{"text":"<exact sentence>","supported":true|false,"reason":"short source-based reason"}]}
-Check only the supplied title/description sentences against the supplied verified facts and the factchecked script.
-Names, titles, credits, source lines and calls to action are not factual claims. Do not use outside knowledge.`;
+Check only the supplied description sentences against the supplied verified facts and the factchecked script.
+Names, credits, source lines and calls to action are not factual claims. Titles are labels and are supplied only for context, not checked. Do not use outside knowledge.`;

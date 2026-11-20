@@ -1,5 +1,5 @@
 // Animatic stage: preview segments + voice only, then the same short_qa report.
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync as writeFile } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync as writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { capture, findPython, ROOT, run } from '../env.js';
 import { renderCommand, shotsCommand } from '../pipeline.js';
@@ -10,6 +10,10 @@ export async function runAnimatic({ projectDir, progress = null }) {
   await shotsCommand(projectDir);
   if (!existsSync(shots)) throw new Error('animatic: shots.json was not written');
   progress?.({ step: 'animatic:render', done: 0, total: 2 });
+  // Preview segments are keyed by shot number; remove them when the board changes so an old one-shot
+  // clip can never be silently reused after a scene split or a re-plan.
+  const previewDir = join(projectDir, 'render');
+  if (existsSync(previewDir)) for (const f of readdirSync(previewDir)) if (/^seg_\d+\.mp4$/.test(f)) rmSync(join(previewDir, f), { force: true });
   await renderCommand(projectDir, { qualityName: 'preview', workers: 2 });
   progress?.({ step: 'animatic:render', done: 1, total: 2 });
   const rows = JSON.parse(readFileSync(shots, 'utf8'));

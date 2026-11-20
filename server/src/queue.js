@@ -53,8 +53,21 @@ export function listLibrary(root) {
   return readdirSync(dir, { withFileTypes: true }).filter((e) => e.isFile() && /\.(md|txt|html?)$/i.test(e.name)).map((e) => ({ name: e.name, size: statSync(join(dir, e.name)).size }));
 }
 
-function projectCost(projectDir) {
-  try { const u = summarize(collectUsage(projectDir)); return +(u.deep.cost + u.eleven.cost).toFixed(4); } catch { return 0; }
+export function projectCost(projectDir) {
+  // Sum every live call in the ledger: budget guards must see Gemini, Sarvam and any future provider,
+  // not only the two providers that the usage summary knows how to bucket.
+  try {
+    const ledger = join(projectDir, 'logs', 'calls.jsonl');
+    if (existsSync(ledger)) {
+      let total = 0;
+      for (const line of readFileSync(ledger, 'utf8').split('\n')) {
+        if (!line.trim()) continue;
+        try { const row = JSON.parse(line); if (!row.cached) total += Number(row.costUsd) || 0; } catch { /* skip a torn row */ }
+      }
+      return +total.toFixed(4);
+    }
+    const u = summarize(collectUsage(projectDir)); return +(u.deep.cost + u.eleven.cost).toFixed(4);
+  } catch { return 0; }
 }
 
 export class ProductionQueue {

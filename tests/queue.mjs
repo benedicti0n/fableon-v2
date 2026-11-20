@@ -2,7 +2,7 @@
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ProductionQueue, listPresets } from '../server/src/queue.js';
+import { ProductionQueue, listPresets, projectCost } from '../server/src/queue.js';
 
 export async function runQueueTests() {
   const checks = [], errors = [];
@@ -45,6 +45,8 @@ export async function runQueueTests() {
     q4.jobs = { list: () => [], get: () => ({ status: 'done' }), create: () => ({ id: 'x' }), cancel: async () => ({}) };
     await q4.tick();
     ok('100 percent budget pause/fail', budgetItem.status === 'failed' && /budget exceeded/.test(budgetItem.note ?? ''), JSON.stringify(budgetItem));
+    writeFileSync(calls, [JSON.stringify({ ts: new Date().toISOString(), stage: 'final', provider: 'gemini', model: 'x', costUsd: 0.02, cached: false }), JSON.stringify({ ts: new Date().toISOString(), stage: 'voice', provider: 'sarvam', model: 'x', costUsd: 0.03, cached: false })].join('\n') + '\n');
+    ok('queue cost meter counts every provider', projectCost(join(root, budgetItem.project)) === 0.05, String(projectCost(join(root, budgetItem.project))));
   } finally { rmSync(root, { recursive: true, force: true }); }
   return { ok: errors.length === 0, errors, checks };
 }

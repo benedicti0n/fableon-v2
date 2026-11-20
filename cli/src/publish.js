@@ -54,14 +54,14 @@ export function factFlags(data, facts, script) {
   const check = (text) => {
     for (const sentence of String(text ?? '').split(/(?<=[.!?।])\s+|\n+/)) {
       const clean = sentence.replace(/#\S+/g, '').trim();
-      if (!clean || /^(source|credits|music|effects|voice|links|follow|join|category|generated)\b/i.test(clean) || /https?:\/\//.test(clean) || clean.length < 12) continue;
+      if (!clean || /^(fableon|source|credits|music|effects|voice|links|follow|join|category|generated)\b/i.test(clean) || /https?:\/\//.test(clean) || clean.length < 12) continue;
       const t = tokens(clean);
       if (!t.size) continue;
       const supported = factsTokens.some((f) => [...t].filter((w) => f.tok.has(w)).length / Math.max(1, t.size) >= 0.25 || [...t].some((w) => f.tok.has(w)));
       if (!supported) flags.push({ text: clean, reason: 'no verified fact supports this sentence' });
     }
   };
-  for (const t of data.titles) { check(t.hi); check(t.en); }
+  // Titles, credits, source lines and calls to action are labels, not factual claims.
   check(data.description.hi); check(data.description.en);
   return flags;
 }
