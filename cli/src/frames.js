@@ -84,8 +84,24 @@ const actorState = (ctx, shot, actor, f, start) => {
   for (const b of actor.beats ?? []) if (f >= ctx.anchor(b.at, start)) st = { ...st, ...b };
   const vis = st.visible;
   if (vis && (f < ctx.anchor(vis.from, start) || f >= ctx.anchor(vis.to, start))) return null;
-  const base = actor.motion ? (actor.pos ? pointAt(ctx, actor.pos, f) : [0, 0, 0]) : pointAt(ctx, actor.pos, f);
-  const pos = actor.motion ? motionAt(ctx, actor.motion, f, base) : base;
+  let base = actor.ride ? [0, 0, 0] : actor.motion ? (actor.pos ? pointAt(ctx, actor.pos, f) : [0, 0, 0]) : pointAt(ctx, actor.pos, f);
+  let pos = actor.ride ? base : actor.motion ? motionAt(ctx, actor.motion, f, base) : base;
+  if (actor.ride) {
+    const mount = (shot.actors ?? []).find((x) => (x.id ?? x.who) === actor.ride);
+    if (mount) {
+      const ms = actorState(ctx, shot, mount, f, start);
+      if (!ms) return null;
+      const d = actor.rideOffset ?? [0, 0, 0], k = ms.scale ?? 1;
+      pos = [ms.pos[0] + d[0] * k, ms.pos[1] + d[1] * k, ms.pos[2] + d[2] * k];
+    } else {
+      const sp = (shot.set ?? []).find((x) => x.id === actor.ride);
+      if (sp?.motion) {
+        const b = motionAt(ctx, sp.motion, f, sp.pos ? pointAt(ctx, sp.pos, f) : [0, 0, 0]);
+        const d = actor.rideOffset ?? [0, 0, 0];
+        pos = [b[0] + d[0], b[1] + d[1], b[2] + d[2]];
+      }
+    }
+  }
   const ap = st.appear;
   const pop = ap ? Math.max(0, Math.min(1, (f - ctx.anchor(ap.at, start)) / ctx.fps / (ap.pop ?? 0.18))) : 1;
   const scale = (st.scale ?? 1) * pop;

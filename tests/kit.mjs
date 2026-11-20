@@ -47,18 +47,26 @@ export async function runKitTests() {
 
     const maskFile = join(ROOT, 'engine', 'dist', 'pose-mask.js');
     const exprFile = join(ROOT, 'engine', 'dist', 'expression-diff.js');
+    const animalFile = join(ROOT, 'engine', 'dist', 'special-bounds.js');
     await build({ entryPoints: [join(ROOT, 'engine', 'src', 'pose-mask.ts')], bundle: true, format: 'iife', outfile: maskFile, logLevel: 'error' });
     await build({ entryPoints: [join(ROOT, 'engine', 'src', 'expression-diff.ts')], bundle: true, format: 'iife', outfile: exprFile, logLevel: 'error' });
+    await build({ entryPoints: [join(ROOT, 'engine', 'src', 'special-bounds.ts')], bundle: true, format: 'iife', outfile: animalFile, logLevel: 'error' });
     const browser = await pw.chromium.launch({ channel: 'chrome', headless: true });
     try {
       const page = await browser.newPage();
-      await page.setContent(`<!doctype html><html><body><script>${readFileSync(maskFile, 'utf8')}</script><script>${readFileSync(exprFile, 'utf8')}</script></body></html>`, { waitUntil: 'load' });
+      await page.setContent(`<!doctype html><html><body><script>${readFileSync(maskFile, 'utf8')}</script><script>${readFileSync(exprFile, 'utf8')}</script><script>${readFileSync(animalFile, 'utf8')}</script></body></html>`, { waitUntil: 'load' });
       await page.waitForFunction(() => window.ready === true, { timeout: 60000 });
       const rows = await page.evaluate(() => window.poseIoU());
       const stand = rows.filter((r) => r.a === 'stand');
       const pair = rows.filter((r) => r.a !== 'stand');
       ok('every new pose differs from stand (IoU < 0.85)', stand.every((r) => r.iou < 0.85), JSON.stringify(stand));
       ok('every pair of new poses differs (IoU < 0.85)', pair.every((r) => r.iou < 0.85), JSON.stringify(pair.filter((r) => r.iou >= 0.85)));
+      const animalRows = await page.evaluate(() => window.specialBounds());
+      const animals = ['horse', 'elephant', 'cow', 'calf', 'dog', 'monkey', 'crane', 'boar', 'mongoose', 'swan', 'owl', 'crow', 'python'];
+      ok('every animal has a catalog measure', animals.every((a) => catalog.specials.some((x) => x.name === a) && catalog.measure[a]), JSON.stringify(animals.filter((a) => !catalog.measure[a])));
+      ok('animal measures match the drawn silhouettes', animals.every((a) => { const r = animalRows.find((x) => x.name === a), m = catalog.measure[a]; return r && Math.abs(r.standing - m.standing) < 0.02 && Math.abs(r.halfWidth - m.halfWidth) < 0.02; }), JSON.stringify(animalRows.filter((r) => { const m = catalog.measure[r.name]; return !m || Math.abs(r.standing - m.standing) >= 0.02 || Math.abs(r.halfWidth - m.halfWidth) >= 0.02; })));
+      ok('animal cards stay inside their frame', animalRows.every((r) => r.bounds.minY >= 0 && r.bounds.maxY <= 1000 && r.bounds.minX >= 0 && r.bounds.maxX <= 1000), JSON.stringify(animalRows.filter((r) => r.bounds.maxY > 1000 || r.bounds.maxX > 1000)));
+      ok('the Hanuman preset differs from the plain monkey', animalRows.find((r) => r.name === 'hanuman').pixels > animalRows.find((r) => r.name === 'monkey').pixels * 1.02, JSON.stringify(animalRows.filter((r) => r.name === 'hanuman' || r.name === 'monkey')));
       const exprRows = await page.evaluate(() => window.expressionDiff());
       const newExprs = new Set(['angry', 'sad', 'smirk', 'determined', 'sleepy']);
       const facePairs = exprRows.filter((r) => newExprs.has(r.a) || newExprs.has(r.b));
@@ -78,6 +86,35 @@ export async function runKitTests() {
       ok('the solver frames every new pose at medium size', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
     } finally { rmSync(frameDir, { recursive: true, force: true }); }
 
+    const mountWords = Array.from({ length: 40 }, (_, i) => ({ w: `m${i}`, a: i * 0.5, b: i * 0.5 + 0.4, line: 0 }));
+    const mountBase = { ...base, top: '#c0392b' };
+    const mountSpec = { spec: { skin: '#8a2f24' } };
+    const mountShots = [['horse', 'rider', 'medium'], ['elephant', 'driver', 'medium'], ['chariot', 'driver', 'wide']].map(([special, seat, size], i) => ({
+      id: `mount${i}`, start: `f${i * 90}`, end: `f${(i + 1) * 90}`, light: 'day', sets: ['arena'], look: { mood: 'warm-side' },
+      actors: [
+        { cast: 'mount', special, id: 'mount', at: 'arena.floor', params: {} },
+        { cast: 'rider', id: 'rider', ride: 'mount', seat, pose: seat === 'driver' ? 'drive' : 'ride', facing: 'camera' },
+      ],
+      camera: [{ at: `f${i * 90}`, size, on: ['rider'], move: 'hold', side: 'front', angle: 'eye' }],
+    }));
+    const mountBoard = { version: 1, cast: { mount: mountSpec, rider: { spec: mountBase } }, shots: mountShots };
+    const mountSb = compileBoard(mountBoard, mountWords, catalog).storyboard;
+    ok('mounts resolve seats into ride offsets', mountSb.shots.every((s) => s.actors[1].rideOffset?.length === 3), JSON.stringify(mountSb.shots.map((s) => s.actors[1])));
+    ok('the solver frames the mount and rider as one subject', mountSb.shots.every((s) => s.camera[0].subjects.includes('rider') && s.camera[0].subjects.includes('mount')), JSON.stringify(mountSb.shots.map((s) => s.camera[0].subjects)));
+    const mountDir = mkdtempSync(join(tmpdir(), 'fableon-mount-frame-'));
+    try {
+      writeFileSync(join(mountDir, 'storyboard.json'), JSON.stringify(mountSb, null, 2) + '\n');
+      writeFileSync(join(mountDir, 'words.json'), JSON.stringify(mountWords));
+      const measured = await checkFramesMeasured(mountDir);
+      const framing = measured.errors.filter((e) => ['edge', 'head cut', 'blocker', 'subject hidden', 'cut subject', 'face too small', 'group too wide'].includes(e.code));
+      ok('the solver frames horse, elephant and chariot mounts', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
+    } finally { rmSync(mountDir, { recursive: true, force: true }); }
+    let seatError = '';
+    try {
+      compileBoard({ version: 1, cast: { mount: mountSpec, rider: { spec: mountBase } }, shots: [{ ...mountShots[0], actors: [{ ...mountShots[0].actors[0] }, { ...mountShots[0].actors[1], seat: 'roof' }] }] }, mountWords, catalog);
+    } catch (e) { seatError = e.message; }
+    ok('the validator rejects an unknown mount seat', /asks for seat "roof"/.test(seatError), seatError);
+
     const variantWords = [{ w: 'one', a: 0, b: 1, line: 0 }, { w: 'two', a: 1, b: 2, line: 1 }, { w: 'three', a: 2, b: 3, line: 1 }];
     const variantBoard = { version: 1, cast: { k: { spec: { ...base, head: 'hair' }, variants: [{ at: '1:0', name: 'crowned', spec: { ...base, head: 'crownSmall' } }] } }, shots: [
       { id: 'a', start: '0:0', end: '1:0', light: 'day', sets: ['village'], actors: [{ cast: 'k', id: 'k', at: 'village.front', pose: 'stand', expr: 'neutral' }], camera: [{ at: '0:0', size: 'medium', on: ['k'], move: 'hold', side: 'front', angle: 'eye' }] },
@@ -88,7 +125,9 @@ export async function runKitTests() {
     ok('the variant spec is compiled into the cast', variantSb.cast['k@crowned']?.spec?.head === 'crownSmall', JSON.stringify(variantSb.cast['k@crowned']));
 
     const sheet = join(ROOT, 'docs', 'reports', 'phase-7', 'kit-sheet.jpg');
+    const animalSheet = join(ROOT, 'docs', 'reports', 'phase-7', 'animals-sheet.jpg');
     ok('the kit review sheet is committed', existsSync(sheet) && statSync(sheet).size > 100_000, String(existsSync(sheet) ? statSync(sheet).size : 0));
+    ok('the animals review sheet is committed', existsSync(animalSheet) && statSync(animalSheet).size > 100_000, String(existsSync(animalSheet) ? statSync(animalSheet).size : 0));
   } catch (e) {
     errors.push(e.message);
   }

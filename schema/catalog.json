@@ -1798,6 +1798,76 @@
       "name": "flat",
       "status": "implemented",
       "description": "A person drawn lying flat on a wide card (knocked-down kings)."
+    },
+    {
+      "name": "horse",
+      "status": "implemented",
+      "description": "Side-view horse (wide card); gallop phase, saddle and reins. Mount for one rider."
+    },
+    {
+      "name": "elephant",
+      "status": "implemented",
+      "description": "Side-view elephant with howdah (body card); trunk and legs cycle. Mount for a driver and passengers."
+    },
+    {
+      "name": "cow",
+      "status": "implemented",
+      "description": "Side-view cow (wide card); hump, horns, udder and slow walk."
+    },
+    {
+      "name": "calf",
+      "status": "implemented",
+      "description": "Small calf; the same card drawn at 0.55 scale."
+    },
+    {
+      "name": "dog",
+      "status": "implemented",
+      "description": "Side-view dog (wide card); floppy ears, fast tail and walk phase."
+    },
+    {
+      "name": "monkey",
+      "status": "implemented",
+      "description": "Standing monkey (body card); Hanuman preset adds white fur, a beard, a long ringed tail, a gold tiara and a mace."
+    },
+    {
+      "name": "crane",
+      "status": "implemented",
+      "description": "Side-view crane (wide card); long legs, neck and red crown."
+    },
+    {
+      "name": "boar",
+      "status": "implemented",
+      "description": "Side-view boar (wide card); dark bristles and tusks."
+    },
+    {
+      "name": "mongoose",
+      "status": "implemented",
+      "description": "Side-view mongoose (wide card); default half-golden rear for the Ashvamedhika mongoose."
+    },
+    {
+      "name": "swan",
+      "status": "implemented",
+      "description": "Side-view swan (wide card); curved neck and orange beak."
+    },
+    {
+      "name": "owl",
+      "status": "implemented",
+      "description": "Front-view owl (body card); big eyes, tufts and blink."
+    },
+    {
+      "name": "crow",
+      "status": "implemented",
+      "description": "Side-view crow (wide card); black plumage and walk phase."
+    },
+    {
+      "name": "python",
+      "status": "implemented",
+      "description": "Python (wide card); heavy coils, diamond pattern and a raised head."
+    },
+    {
+      "name": "chariot",
+      "status": "implemented",
+      "description": "Chariot composite: body, spoked wheels, 2 or 4 horses, banner emblem; seats for a driver and warrior; stuck wheel variant."
     }
   ],
   "effects": [
@@ -1895,6 +1965,22 @@
       "name": "dust",
       "status": "implemented",
       "description": "One-shot rising dust/smoke puff."
+    },
+    {
+      "name": "chakra",
+      "description": "Spinning Sudarshana chakra (gold rim, teeth, glow)."
+    },
+    {
+      "name": "conch",
+      "description": "Expanding conch sound rings."
+    },
+    {
+      "name": "divine",
+      "description": "Divine light: radial glow and rays behind a character."
+    },
+    {
+      "name": "cloth",
+      "description": "Endless glowing cloth that unrolls downward and never shows the body."
     }
   ],
   "setPieces": [
@@ -9155,6 +9241,168 @@
       "eyeSeated": 0.43797887423343745,
       "head": 0.5616,
       "halfWidth": 1.0081583999999997
+    },
+    "horse": {
+      "description": "horse animal card",
+      "standing": 0.9418,
+      "seated": 0.9418,
+      "eye": 0.8489,
+      "eyeSeated": 0.8489,
+      "head": 0.21,
+      "halfWidth": 0.8078
+    },
+    "elephant": {
+      "description": "elephant animal card",
+      "standing": 1.3997,
+      "seated": 1.3997,
+      "eye": 0.9655,
+      "eyeSeated": 0.9655,
+      "head": 0.48,
+      "halfWidth": 0.6286
+    },
+    "cow": {
+      "description": "cow animal card",
+      "standing": 0.756,
+      "seated": 0.756,
+      "eye": 0.594,
+      "eyeSeated": 0.594,
+      "head": 0.23,
+      "halfWidth": 0.7214
+    },
+    "calf": {
+      "description": "calf animal card",
+      "standing": 0.756,
+      "seated": 0.756,
+      "eye": 0.594,
+      "eyeSeated": 0.594,
+      "head": 0.23,
+      "halfWidth": 0.7214
+    },
+    "dog": {
+      "description": "dog animal card",
+      "standing": 0.7344,
+      "seated": 0.7344,
+      "eye": 0.5616,
+      "eyeSeated": 0.5616,
+      "head": 0.22,
+      "halfWidth": 0.6091
+    },
+    "monkey": {
+      "description": "monkey animal card",
+      "standing": 1.4796,
+      "seated": 1.4796,
+      "eye": 0.9504,
+      "eyeSeated": 0.9504,
+      "head": 0.36,
+      "halfWidth": 0.3866
+    },
+    "crane": {
+      "description": "crane animal card",
+      "standing": 0.8186,
+      "seated": 0.8186,
+      "eye": 0.769,
+      "eyeSeated": 0.769,
+      "head": 0.14,
+      "halfWidth": 0.5054
+    },
+    "boar": {
+      "description": "boar animal card",
+      "standing": 0.6782,
+      "seated": 0.6782,
+      "eye": 0.4104,
+      "eyeSeated": 0.4104,
+      "head": 0.28,
+      "halfWidth": 0.6178
+    },
+    "mongoose": {
+      "description": "mongoose animal card",
+      "standing": 0.6134,
+      "seated": 0.6134,
+      "eye": 0.4277,
+      "eyeSeated": 0.4277,
+      "head": 0.18,
+      "halfWidth": 0.5746
+    },
+    "swan": {
+      "description": "swan animal card",
+      "standing": 0.8186,
+      "seated": 0.8186,
+      "eye": 0.7776,
+      "eyeSeated": 0.7776,
+      "head": 0.12,
+      "halfWidth": 0.3974
+    },
+    "owl": {
+      "description": "owl animal card",
+      "standing": 1.2852,
+      "seated": 1.2852,
+      "eye": 1.1016,
+      "eyeSeated": 1.1016,
+      "head": 0.46,
+      "halfWidth": 0.3391
+    },
+    "crow": {
+      "description": "crow animal card",
+      "standing": 0.5551,
+      "seated": 0.5551,
+      "eye": 0.4666,
+      "eyeSeated": 0.4666,
+      "head": 0.22,
+      "halfWidth": 0.5486
+    },
+    "python": {
+      "description": "python animal card",
+      "standing": 0.7798,
+      "seated": 0.7798,
+      "eye": 0.7085,
+      "eyeSeated": 0.7085,
+      "head": 0.24,
+      "halfWidth": 0.6048
+    },
+    "chariot": {
+      "description": "chariot composite card",
+      "standing": 1.2226,
+      "seated": 1.2226,
+      "eye": 0.5098,
+      "eyeSeated": 0.5098,
+      "head": 0.55,
+      "halfWidth": 1.0562
+    },
+    "chakra": {
+      "description": "chakra effect card",
+      "standing": 1.4,
+      "seated": 1.4,
+      "eye": 0.7,
+      "eyeSeated": 0.7,
+      "head": 0.48999999999999994,
+      "halfWidth": 0.7
+    },
+    "conch": {
+      "description": "conch effect card",
+      "standing": 2.2,
+      "seated": 2.2,
+      "eye": 1.1,
+      "eyeSeated": 1.1,
+      "head": 0.77,
+      "halfWidth": 1.1
+    },
+    "divine": {
+      "description": "divine effect card",
+      "standing": 3.2,
+      "seated": 3.2,
+      "eye": 1.6,
+      "eyeSeated": 1.6,
+      "head": 1.1199999999999999,
+      "halfWidth": 1.6
+    },
+    "cloth": {
+      "description": "cloth effect card",
+      "standing": 4.0,
+      "seated": 4.0,
+      "eye": 2.0,
+      "eyeSeated": 2.0,
+      "head": 1.4,
+      "halfWidth": 0.4
     }
   },
   "iconography": [
@@ -9587,5 +9835,59 @@
         "bow"
       ]
     }
-  ]
+  ],
+  "mounts": {
+    "horse": {
+      "seats": {
+        "rider": [
+          0,
+          0.52,
+          0
+        ],
+        "driver": [
+          0,
+          0.54,
+          0.12
+        ]
+      }
+    },
+    "elephant": {
+      "seats": {
+        "driver": [
+          0,
+          1.06,
+          0.3
+        ],
+        "warrior": [
+          -0.32,
+          1.06,
+          -0.12
+        ],
+        "passenger": [
+          0.32,
+          1.06,
+          -0.12
+        ]
+      }
+    },
+    "chariot": {
+      "seats": {
+        "driver": [
+          0.3,
+          0.51,
+          0.14
+        ],
+        "warrior": [
+          -0.3,
+          0.51,
+          0.14
+        ],
+        "passenger": [
+          0,
+          0.51,
+          0.3
+        ]
+      }
+    }
+  }
 }

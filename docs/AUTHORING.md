@@ -236,6 +236,19 @@ solver never shrinks silently.
 actor path (S5). The actor's id becomes a moving target, so a camera key `"move":"follow"` on it tracks the boat. A
 camera may also follow a moving set-piece id directly. A `ride` target without a motion is a compile error.
 
+A `ride` target may also be a mount actor: place a horse, elephant or chariot special with an `id`, then give the rider
+`"ride": "<id>"` and `"seat": "rider" | "driver" | "warrior" | "passenger"`. Seats and their offsets live in
+`schema/catalog.json` under `mounts`; an explicit `nudge` overrides the seat. The board validates the seat name, the
+rider scale (0.5-1.6) and the number of riders per mount. A camera `on` that includes any rider is expanded to the mount
+and every rider, so the solver frames the group as one subject.
+
+### Mounts and seats
+
+Mounts are one card plus rider cards at seat offsets, not a second animation system. The horse, elephant and chariot
+specials expose `phase` (walk/gallop), the chariot also `horses` (2 or 4), `emblem` and `stuck` for Karna's wheel. The
+solver and the measured-frame QA both resolve the mount from the current shot, so a reused mount id in another shot
+cannot pull a rider to the wrong place.
+
 ### Mark views
 
 Every catalog mark has `view`: the camera heading that puts the set's characteristic background behind the subject.

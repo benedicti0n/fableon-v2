@@ -36,7 +36,7 @@ export const PROPS = ["bow", "bowDrawn", "mace", "spear", "net", "oar", "laddu",
   "pestle", "plough", "umbrella", "chamara", "banner", "vajra"] as const;
 export type PropK = null | (typeof PROPS)[number];
 /** custom (non-person) card drawings the interpreter can place */
-export const SPECIALS = ["ganesha", "agni", "deer", "naga", "baby", "pot", "flat"] as const;
+export const SPECIALS = ["ganesha", "agni", "deer", "naga", "baby", "pot", "flat", "horse", "elephant", "cow", "calf", "dog", "monkey", "crane", "boar", "mongoose", "swan", "owl", "crow", "python", "chariot"] as const;
 export type SpecialK = (typeof SPECIALS)[number];
 export type Opts = {
   expr?: Expr; pose?: Pose; phase?: number; facing?: -1 | 0 | 1; look?: number; blink?: boolean | number; talk?: number;
@@ -635,6 +635,315 @@ export const deer = (p: Pen, opts: { phase?: number; expr?: "neutral" | "shock";
   if (expr === "shock") { p.ell(hx + 20, hy - 6, 16, 16, WHITE, 5); p.dot(hx + 24, hy - 4, 5); } else p.ell(hx + 22, hy - 6, 7, 9, INK, 0);
 };
 
+/** side-view horse on a wide card (1000 x 700, ground at 640); gallop phase, saddle and reins for mounts */
+export const horse = (p: Pen, opts: { phase?: number; col?: string; light?: number; saddle?: boolean }) => {
+  const { phase = 0, col = "#a05a32", light = DEF_LIGHT, saddle = true } = opts;
+  const thick = thickAngle(light), dark = mix(col, INK, 0.45), pale = mix(col, "#f2dcc0", 0.5);
+  // far legs first, then the tail and body
+  for (const [x, ph] of [[350, 0.5], [640, 0.5]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 32;
+    p.stroke(curve([x, 505], [x + s * 0.3, 570], [x + s, 640]), 20, dark);
+    p.dot(x + s, 642, 11, dark);
+  }
+  p.stroke([...curve([320, 390], [250, 460], [280, 550], 8), ...curve([280, 550], [305, 585], [300, 600], 4).slice(1)], 16, dark);
+  p.poly([[300, 575], [278, 602], [320, 600]], dark, 6);
+  const body = blobPts(470, 420, { a: 200, b: 108, nTop: 2.1, nBot: 2.25, egg: 0.02, asym: 0.03, rot: rad(-3), noise: 0.006, seed: 21 });
+  p.shadedFill(body, col, dark, light, 200); p.inkRing(body, 12, thick);
+  p.clip(body, () => p.ell(465, 445, 145, 32, pale, 0));
+  // neck and head
+  p.line(curve([600, 390], [675, 335], [735, 280]), col, 96, true);
+  const hp = blobPts(790, 258, { a: 82, b: 45, nTop: 2.0, nBot: 2.2, egg: 0.16, asym: 0.05, rot: rad(26), noise: 0.006, seed: 22 });
+  p.shadedFill(hp, col, dark, light, 67); p.inkRing(hp, 11, thick);
+  p.line(curve([650, 335], [700, 300], [750, 245]), dark, 26, false); // mane
+  for (const [mx, my] of [[672, 316], [700, 292], [728, 266]]) p.stroke([[mx, my], [mx - 18, my + 16]], 8, dark);
+  p.poly([[754, 302], [744, 250], [782, 274]], col, 9); // near ear
+  p.poly([[778, 288], [790, 244], [812, 272]], dark, 8); // far ear
+  p.line(curve([828, 266], [852, 280], [862, 300]), dark, 10, false); // forelock
+  p.ell(817, 244, 7, 9, INK, 0); p.dot(819, 241, 2.5, WHITE);
+  p.ell(846, 280, 7, 6, mix(dark, INK, 0.5), 0); // nostril
+  p.stroke([[836, 304], [864, 298]], 4, dark); // mouth
+  // near legs
+  for (const [x, ph] of [[380, 0], [660, 0]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 34;
+    p.stroke(curve([x, 505], [x + s * 0.3, 572], [x + s, 640]), 23, col);
+    p.shadedFill(ellPts(x + s, 644, 15, 8), "#2a1a1e", "#1a1012", light, 15);
+  }
+  if (saddle) {
+    p.poly([[418, 366], [446, 332], [545, 332], [570, 360], [566, 398], [420, 398]], "#c0392b", 6);
+    p.stroke([[430, 360], [452, 340], [540, 340], [558, 362]], 5, GOLD);
+    p.band([[470, 388], [470, 455]], "#8a5a34", 10, 3, "round");
+    p.band([[520, 388], [520, 455]], "#8a5a34", 10, 3, "round");
+  }
+};
+
+/** side-view elephant on a body card, with howdah; trunk sways and legs cycle */
+export const elephant = (p: Pen, opts: { phase?: number; col?: string; light?: number; howdah?: boolean }) => {
+  const { phase = 0, col = "#8a8f96", light = DEF_LIGHT, howdah = true } = opts;
+  const thick = thickAngle(light), dark = mix(col, INK, 0.42), pale = mix(col, "#f2dcc0", 0.45);
+  for (const [x, ph] of [[190, 0.5], [340, 0.5], [220, 0], [410, 0]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 18;
+    p.line(curve([x, 780], [x + s * 0.4, 855], [x + s, 940]), x < 300 ? dark : col, x < 300 ? 50 : 56);
+    p.ell(x + s, 942, 23, 11, mix(col, INK, 0.3), 7);
+  }
+  p.stroke(curve([100, 700], [70, 760], [95, 850]), 14, dark);
+  const body = blobPts(285, 690, { a: 210, b: 185, nTop: 2.1, nBot: 2.2, egg: -0.02, asym: 0.04, rot: rad(-2), noise: 0.006, seed: 31 });
+  p.shadedFill(body, col, dark, light, 210); p.inkRing(body, 13, thick);
+  const head = blobPts(430, 570, { a: 118, b: 112, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0.04, rot: rad(-8), noise: 0.006, seed: 32 });
+  p.shadedFill(head, col, dark, light, 118); p.inkRing(head, 12, thick);
+  // ear
+  const ear = blobPts(420, 560, { a: 105, b: 125, nTop: 2.2, nBot: 2.1, egg: 0.15, asym: 0, rot: rad(-18), noise: 0.006, seed: 33 });
+  p.shadedFill(ear, mix(col, "#f2dcc0", 0.16), dark, light, 105); p.inkRing(ear, 10, thick);
+  p.clip(ear, () => p.ell(430, 575, 55, 78, pale, 0));
+  // trunk
+  p.line([...curve([492, 620], [540, 700], [520, 790], 8), ...curve([520, 790], [510, 830], [555, 855], 4).slice(1)], col, 52, true);
+  for (let i = 0; i < 5; i++) p.stroke([[500 - i * 4, 680 + i * 34], [532 - i * 4, 678 + i * 34]], 3.5, dark);
+  // tusks
+  p.poly([[478, 642], [500, 636], [548, 742], [526, 752]], "#f7f1e2", 8);
+  // eye and brow
+  p.ell(470, 528, 9, 11, INK, 0); p.dot(473, 524, 3, WHITE);
+  p.stroke([[452, 504], [486, 504]], 5, dark);
+  // howdah
+  if (howdah) {
+    p.poly(rrect(205, 430, 415, 500, 12), "#c0392b", 10);
+    p.stroke([[215, 438], [405, 438]], 5, GOLD);
+    for (const x of [220, 285, 350, 405]) p.stroke([[x, 438], [x, 398]], 7, GOLD);
+    p.stroke([[215, 398], [410, 398]], 7, GOLD);
+    p.band([[310, 430], [310, 360]], GOLD, 5, 2, "round");
+    p.poly([[270, 360], [350, 360], [342, 330], [278, 330]], "#f2c230", 6);
+  }
+};
+
+/** side-view cow on a wide card; hump, horns, udder and a slow walk phase */
+export const cow = (p: Pen, opts: { phase?: number; col?: string; light?: number; calf?: boolean }) => {
+  const { phase = 0, col = "#e8dcc2", light = DEF_LIGHT, calf = false } = opts;
+  const thick = thickAngle(light), dark = mix(col, INK, 0.4);
+  for (const [x, ph, far] of [[340, 0.5, true], [620, 0.5, true], [360, 0, false], [640, 0, false]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 22;
+    p.stroke(curve([x, 470], [x + s * 0.3, 555], [x + s, 640]), far ? 16 : 18, far ? dark : mix(col, INK, 0.18));
+    p.dot(x + s, 642, 10, dark);
+  }
+  p.stroke(curve([300, 390], [268, 430], [282, 500]), 10, dark);
+  const body = blobPts(480, 410, { a: 190, b: 90, nTop: 2.1, nBot: 2.25, egg: 0, asym: 0.02, rot: rad(-2), noise: 0.006, seed: 41 });
+  p.shadedFill(body, col, dark, light, 190); p.inkRing(body, 12, thick);
+  p.ell(565, 330, 82, 35, col, 10); // hump
+  p.line(curve([625, 390], [690, 360], [740, 360]), col, 66, true); // neck
+  const head = blobPts(765, 372, { a: 65, b: 47, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(12), noise: 0.006, seed: 42 });
+  p.shadedFill(head, col, dark, light, 65); p.inkRing(head, 10, thick);
+  p.poly([[742, 340], [738, 300], [758, 320]], "#d9c9a6", 7);
+  p.poly([[784, 336], [802, 298], [808, 326]], "#d9c9a6", 7);
+  p.ell(790, 365, 6, 8, INK, 0); p.ell(814, 390, 6, 5, mix(dark, INK, 0.5), 0);
+  p.ell(484, 492, 34, 16, "#f2c0b0", 6); // udder
+  if (calf) {
+    p.poly(rrect(150, 520, 245, 575, 10), "#f2e6c4", 7);
+    p.ell(170, 545, 18, 16, col, 8);
+  }
+};
+
+/** a small calf, same construction as the cow */
+export const calf = (p: Pen, opts: { phase?: number; col?: string; light?: number }) => {
+  cow(p, { ...opts, col: opts.col ?? "#efe3ca" });
+};
+
+/** side-view dog on a wide card; floppy ears and a fast tail */
+export const dog = (p: Pen, opts: { phase?: number; col?: string; light?: number }) => {
+  const { phase = 0, col = "#c98c5c", light = DEF_LIGHT } = opts;
+  const thick = thickAngle(light), dark = mix(col, INK, 0.45);
+  for (const [x, ph, far] of [[390, 0.5, true], [590, 0.5, true], [410, 0, false], [610, 0, false]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 30;
+    p.stroke(curve([x, 480], [x + s * 0.4, 560], [x + s, 640]), far ? 14 : 16, far ? dark : col);
+    p.dot(x + s, 642, 8, dark);
+  }
+  p.stroke(curve([310, 430], [240, 390], [250, 320]), 13, col);
+  const body = blobPts(500, 445, { a: 155, b: 68, nTop: 2.1, nBot: 2.2, egg: 0, asym: 0.03, rot: rad(-2), noise: 0.006, seed: 51 });
+  p.shadedFill(body, col, dark, light, 155); p.inkRing(body, 11, thick);
+  p.line(curve([620, 425], [670, 400], [700, 385]), col, 54, true);
+  const head = blobPts(715, 385, { a: 62, b: 49, nTop: 2.0, nBot: 2.2, egg: 0.12, asym: 0, rot: rad(8), noise: 0.006, seed: 52 });
+  p.shadedFill(head, col, dark, light, 62); p.inkRing(head, 10, thick);
+  p.poly([[690, 350], [672, 305], [714, 332]], dark, 8);
+  p.poly([[742, 350], [752, 304], [764, 340]], dark, 8);
+  p.ell(738, 380, 7, 9, INK, 0); p.ell(770, 398, 7, 6, INK, 0);
+  p.arc(752, 414, 17, 8, 20, 160, 4, dark);
+};
+
+/** monkey on a body card; `hanuman` gives white fur, a long ringed tail, a gold tiara and a mace */
+export const monkey = (p: Pen, opts: { light?: number; hanuman?: boolean; old?: boolean; phase?: number }) => {
+  const { light = DEF_LIGHT, hanuman = false, old = false, phase = 0 } = opts;
+  const fur = hanuman ? "#ece4d2" : "#8a5a3a", face = hanuman ? "#d9a066" : "#c98c5c", dark = mix(fur, INK, 0.4);
+  const thick = thickAngle(light), sway = Math.sin(Math.PI * 2 * phase) * 12;
+  // long tail behind, gold rings on the Hanuman tail
+  const tail = [...curve([300, 760], [150, 650], [150, 400], 8), ...curve([150, 400], [180, 330], [250, 300], 4).slice(1)];
+  p.stroke(tail, 19, dark); p.stroke(tail, 14, fur);
+  if (hanuman) for (const i of [4, 8, 12]) { const a = tail[i], b = tail[Math.min(i + 1, tail.length - 1)]; p.band([a, b], GOLD, 13, 2, "round"); }
+  // legs and arms
+  for (const s of [-1, 1]) p.line(curve([300 + s * 55, 790], [300 + s * 80, 870], [300 + s * 62, 960]), fur, 30);
+  for (const s of [-1, 1]) p.line(curve([300 + s * 80, 640], [300 + s * 140, 710 + sway], [300 + s * 120, 780]), fur, 26);
+  const body = blobPts(300, 710, { a: 105, b: 125, nTop: 2.1, nBot: 2.2, egg: 0, asym: 0, rot: 0, noise: 0.006, seed: 61 });
+  p.shadedFill(body, fur, dark, light, 105); p.inkRing(body, 11, thick);
+  p.ell(300, 730, 62, 78, face, 0);
+  const head = blobPts(300, 545, { a: 88, b: 82, nTop: 2.0, nBot: 2.15, egg: 0.06, asym: 0, rot: 0, noise: 0.006, seed: 62 });
+  p.shadedFill(head, fur, dark, light, 88); p.inkRing(head, 11, thick);
+  for (const s of [-1, 1]) { p.ell(300 + s * 86, 545, 24, 32, face, 8); p.ell(300 + s * 86, 545, 12, 18, dark, 0); }
+  p.ell(300, 555, 58, 52, face, 0);
+  p.ell(274, 535, 6, 8, INK, 0); p.ell(326, 535, 6, 8, INK, 0);
+  p.stroke([[286, 570], [314, 570]], 5, dark);
+  if (old) for (const s of [-1, 1]) p.stroke(curve([300 + s * 30, 580], [300 + s * 34, 610], [300 + s * 22, 630]), 6, "#f4f1ea");
+  if (hanuman) {
+    crownShape(p, 300, 475, 58, 62, GOLD, 2.4);
+    const [hx, hy] = [430, 720];
+    p.band([[hx, hy], [hx + 20, hy - 190]], "#8a5a34", 12, 3, "round");
+    p.ell(hx + 20, hy - 205, 28, 34, GOLD, 8);
+    p.poly([[hx - 6, hy - 232], [hx + 46, hy - 232], [hx + 20, hy - 270]], "#c9972e", 6);
+  }
+};
+
+/** side-view crane on a wide card, long legs and neck, red crown */
+export const crane = (p: Pen, opts: { phase?: number; light?: number }) => {
+  const light = opts.light ?? DEF_LIGHT, phase = opts.phase ?? 0, thick = thickAngle(light);
+  const step = Math.sin(Math.PI * 2 * phase) * 16;
+  for (const [x, s] of [[400, 1], [435, -1]] as const) p.stroke([[x, 500], [x + s * step, 640]], 8, "#3a3a3a");
+  const body = blobPts(430, 470, { a: 120, b: 72, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0.04, rot: rad(-4), noise: 0.006, seed: 71 });
+  p.shadedFill(body, "#f7f1e6", "#cfc7b8", light, 120); p.inkRing(body, 10, thick);
+  p.line(curve([500, 440], [580, 360], [610, 300]), "#f7f1e6", 18, true);
+  const head = blobPts(625, 290, { a: 30, b: 26, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0, rot: 0, noise: 0.006, seed: 72 });
+  p.shadedFill(head, "#f7f1e6", "#cfc7b8", light, 30); p.inkRing(head, 8, thick);
+  p.poly([[650, 284], [710, 296], [650, 304]], "#e8a03a", 5);
+  p.ell(630, 284, 4, 5, INK, 0); p.ell(628, 270, 11, 6, "#d8402e", 4);
+  p.stroke(curve([360, 450], [300, 470], [270, 510]), 8, "#2a2a2a");
+};
+
+/** side-view boar on a wide card, dark bristles and tusks */
+export const boar = (p: Pen, opts: { phase?: number; light?: number; col?: string }) => {
+  const light = opts.light ?? DEF_LIGHT, phase = opts.phase ?? 0, col = opts.col ?? "#5a4a42", thick = thickAngle(light), dark = mix(col, INK, 0.45);
+  for (const [x, ph, far] of [[360, 0.5, true], [610, 0.5, true], [380, 0, false], [630, 0, false]] as const) {
+    const s = Math.sin(Math.PI * 2 * (phase + ph)) * 22;
+    p.stroke([[x, 490], [x + s, 640]], far ? 14 : 16, far ? dark : col);
+  }
+  p.stroke(curve([320, 430], [290, 390], [305, 360]), 9, dark);
+  const body = blobPts(490, 445, { a: 180, b: 100, nTop: 2.1, nBot: 2.2, egg: 0, asym: 0.04, rot: rad(-2), noise: 0.008, seed: 81 });
+  p.shadedFill(body, col, dark, light, 180); p.inkRing(body, 12, thick);
+  for (let i = -3; i <= 3; i++) p.stroke([[490 + i * 30, 360], [480 + i * 32, 330]], 7, dark);
+  const head = blobPts(700, 470, { a: 82, b: 62, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(8), noise: 0.006, seed: 82 });
+  p.shadedFill(head, col, dark, light, 82); p.inkRing(head, 10, thick);
+  p.ell(752, 486, 28, 20, mix(col, "#f2c0b0", 0.45), 6);
+  p.ell(756, 488, 8, 5, INK, 0);
+  p.poly([[735, 512], [748, 550], [720, 520]], "#f4f1ea", 6);
+  p.ell(716, 450, 6, 7, INK, 0);
+  p.poly([[675, 418], [660, 392], [695, 404]], dark, 7);
+};
+
+/** side-view mongoose on a wide card; `golden` (0..1) gilds the rear half */
+export const mongoose = (p: Pen, opts: { light?: number; golden?: number; phase?: number }) => {
+  const light = opts.light ?? DEF_LIGHT, golden = opts.golden ?? 0.5, phase = opts.phase ?? 0, col = "#8a7a5a", thick = thickAngle(light), dark = mix(col, INK, 0.4);
+  const body = blobPts(490, 480, { a: 165, b: 58, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0, rot: rad(-2), noise: 0.005, seed: 91 });
+  p.shadedFill(body, col, dark, light, 165); p.inkRing(body, 10, thick);
+  if (golden > 0) p.clip([[320, 410], [320 + 330 * golden, 410], [320 + 330 * golden, 550], [320, 550]], () => { p.ell(490, 480, 170, 60, "#d9a62e", 0); p.inkRing(body, 10, thick); });
+  for (const [x, ph] of [[400, 0], [580, 0.5]] as const) { const s = Math.sin(Math.PI * 2 * (phase + ph)) * 18; p.stroke([[x, 520], [x + s, 640]], 8, dark); }
+  p.stroke(curve([330, 465], [280, 420], [300, 360]), 8, col);
+  p.line(curve([630, 470], [680, 460], [710, 450]), col, 44, true);
+  const head = blobPts(720, 450, { a: 42, b: 34, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: 0, noise: 0.005, seed: 92 });
+  p.shadedFill(head, col, dark, light, 42); p.inkRing(head, 8, thick);
+  p.ell(744, 460, 16, 10, dark, 5); p.ell(748, 460, 3, 3, INK, 0);
+  p.ell(716, 442, 4, 5, INK, 0);
+};
+
+/** side-view swan on a wide card, curved neck and orange beak */
+export const swan = (p: Pen, opts: { light?: number; phase?: number }) => {
+  const light = opts.light ?? DEF_LIGHT, phase = opts.phase ?? 0, thick = thickAngle(light), step = Math.sin(Math.PI * 2 * phase) * 10;
+  p.stroke([[420, 560], [420 + step, 640]], 7, "#3a3a3a"); p.stroke([[470, 560], [470 - step, 640]], 7, "#3a3a3a");
+  const body = blobPts(450, 500, { a: 130, b: 72, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0.02, rot: rad(2), noise: 0.006, seed: 101 });
+  p.shadedFill(body, "#f7f1e6", "#d8d0c2", light, 130); p.inkRing(body, 10, thick);
+  p.stroke(curve([510, 470], [560, 400], [610, 350]), 26, "#f7f1e6");
+  p.line(curve([600, 360], [620, 320], [600, 290]), "#f7f1e6", 22, true);
+  const head = blobPts(600, 286, { a: 27, b: 23, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0, rot: 0, noise: 0.005, seed: 102 });
+  p.shadedFill(head, "#f7f1e6", "#d8d0c2", light, 27); p.inkRing(head, 7, thick);
+  p.poly([[622, 282], [668, 292], [622, 300]], "#e8a03a", 5);
+  p.ell(610, 280, 4, 5, INK, 0);
+  p.stroke(curve([390, 455], [345, 470], [320, 500]), 8, "#e8a03a");
+};
+
+/** front-view owl on a body card, big eyes and tufts */
+export const owl = (p: Pen, opts: { light?: number; blink?: number }) => {
+  const light = opts.light ?? DEF_LIGHT, blink = opts.blink ?? 0, thick = thickAngle(light), col = "#a87a4a", dark = mix(col, INK, 0.4);
+  const ob = blobPts(300, 790, { a: 150, b: 190, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0, rot: 0, noise: 0.006, seed: 111 });
+  p.shadedFill(ob, col, dark, light, 150); p.inkRing(ob, 12, thick);
+  for (const s of [-1, 1]) p.poly([[300 + s * 60, 470], [300 + s * 105, 385], [300 + s * 120, 500]], col, 9);
+  const head = blobPts(300, 490, { a: 125, b: 105, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0, rot: 0, noise: 0.006, seed: 112 });
+  p.shadedFill(head, col, dark, light, 125); p.inkRing(head, 11, thick);
+  for (const s of [-1, 1]) {
+    p.ell(300 + s * 50, 485, 40, 40, "#f7f1e6", 6);
+    if (blink > 0.5) p.arc(300 + s * 50, 485, 28, 8, 200, 340, 6);
+    else { p.ell(300 + s * 50, 485, 19, 19, GOLD, 0); p.ell(300 + s * 50, 465, 9, 9, INK, 0); p.dot(300 + s * 50 + 3, 481, 3, WHITE); }
+  }
+  p.poly([[288, 520], [312, 520], [300, 550]], "#e8a03a", 5);
+  for (const s of [-1, 1]) p.stroke(curve([300 + s * 55, 640], [300 + s * 118, 700], [300 + s * 108, 790]), 5, dark);
+  p.stroke([[260, 955], [260, 975]], 8, "#e8a03a"); p.stroke([[340, 955], [340, 975]], 8, "#e8a03a");
+};
+
+/** side-view crow on a wide card */
+export const crow = (p: Pen, opts: { light?: number; phase?: number }) => {
+  const light = opts.light ?? DEF_LIGHT, phase = opts.phase ?? 0, thick = thickAngle(light), step = Math.sin(Math.PI * 2 * phase) * 10, col = "#2a2430", dark = "#151018";
+  p.stroke([[430, 530], [430 + step, 640]], 7, "#3a3a3a"); p.stroke([[480, 530], [480 - step, 640]], 7, "#3a3a3a");
+  const body = blobPts(470, 490, { a: 135, b: 72, nTop: 2.0, nBot: 2.2, egg: 0, asym: 0.04, rot: rad(-2), noise: 0.006, seed: 121 });
+  p.shadedFill(body, col, dark, light, 135); p.inkRing(body, 10, thick);
+  p.poly([[350, 470], [280, 430], [300, 510]], col, 7);
+  const head = blobPts(650, 430, { a: 52, b: 44, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(6), noise: 0.005, seed: 122 });
+  p.shadedFill(head, col, dark, light, 52); p.inkRing(head, 9, thick);
+  p.poly([[692, 426], [752, 438], [692, 450]], "#e8a03a", 5);
+  p.ell(670, 424, 5, 6, WHITE, 0); p.dot(671, 424, 2.5, INK);
+};
+
+/** a python on a wide card: heavy coils, diamond pattern and a raised head */
+export const python = (p: Pen, opts: { light?: number; phase?: number; col?: string }) => {
+  const light = opts.light ?? DEF_LIGHT, phase = opts.phase ?? 0, col = opts.col ?? "#5a6a3a", thick = thickAngle(light), dark = mix(col, INK, 0.45), sway = Math.sin(Math.PI * 2 * phase) * 14;
+  const coil = [ellPts(470, 600, 230, 58), ellPts(470, 530, 185, 48), ellPts(470, 470, 130, 40)];
+  for (const c of coil) { p.shadedFill(c, col, dark, light, 200); p.inkRing(c, 10, thick); }
+  p.line(curve([470, 450], [520 + sway, 360], [650 + sway, 330]), col, 50, true);
+  const head = blobPts(690 + sway, 320, { a: 55, b: 38, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(12), noise: 0.005, seed: 131 });
+  p.shadedFill(head, col, dark, light, 55); p.inkRing(head, 9, thick);
+  p.ell(706 + sway, 312, 5, 7, INK, 0);
+  p.stroke([[735 + sway, 328], [760 + sway, 334]], 3, "#d8402e");
+  p.stroke([[760 + sway, 334], [780 + sway, 330]], 2, "#d8402e");
+  for (let i = 0; i < 4; i++) p.stroke([[430 + i * 28, 590 - i * 8], [446 + i * 28, 566 - i * 8], [462 + i * 28, 590 - i * 8]], 4, dark);
+};
+
+/** a chariot composite on a wide card: body, spoked wheels, 2 or 4 horses and a banner with an emblem.
+ *  Riders are separate cards at the seats. `stuck` freezes the wheels (Karna's wheel). */
+export const chariot = (p: Pen, opts: { phase?: number; stuck?: boolean; horses?: number; light?: number; emblem?: string; col?: string }) => {
+  const { phase = 0, stuck = false, horses = 2, light = DEF_LIGHT, emblem = "sun", col = "#8a2f24" } = opts;
+  const dark = mix(col, INK, 0.45), gold = GOLD, wood = "#8a5a34", woodDark = "#5a3b2a";
+  const wheel = (cx: number, cy: number, r: number) => {
+    p.ell(cx, cy, r, r, "#3a2418", 12);
+    p.ell(cx, cy, r - 16, r - 16, gold, 8);
+    p.ell(cx, cy, r - 34, r - 34, "#f2c230", 0);
+    const a0 = stuck ? 0.2 : (phase * Math.PI * 2);
+    for (let i = 0; i < 8; i++) { const a = a0 + (i / 8) * Math.PI * 2; p.stroke([[cx + Math.cos(a) * 16, cy + Math.sin(a) * 16], [cx + Math.cos(a) * (r - 28), cy + Math.sin(a) * (r - 28)]], 7, woodDark); }
+    p.ell(cx, cy, 18, 18, gold, 7);
+  };
+  const n = horses >= 4 ? 4 : 2;
+  const xs = n === 4 ? [620, 680, 740, 800] : [720, 720];
+  for (let i = 0; i < n; i++) {
+    const hx = xs[i], s = n === 4 ? 0.5 : 0.72, mcol = i % 2 ? "#f2e6d6" : "#8a5a3a";
+    p.g.save(); p.g.translate(hx, 646 + (i % 2) * 12); p.g.scale(s, s); p.g.translate(-500, -640);
+    horse(p, { light, phase: phase + i * 0.17, col: mcol, saddle: false });
+    p.g.restore();
+    p.stroke([[hx + 88 * s, 646 - 310 * s], [600, 350]], 3, "#2a1a1e");
+  }
+  p.band([[245, 360], [625, 360]], wood, 24, 3, "round");
+  p.poly([[255, 360], [615, 360], [600, 268], [285, 268]], col, 9);
+  p.stroke([[300, 278], [585, 278]], 6, gold);
+  p.stroke([[325, 356], [325, 284]], 5, gold); p.stroke([[555, 356], [555, 284]], 5, gold);
+  p.band([[600, 360], [655, 332]], woodDark, 12, 3, "round");
+  p.stroke([[600, 360], [700, 420]], 5, woodDark);
+  p.band([[625, 360], [700, 360]], woodDark, 9, 2, "round");
+  wheel(365, 520, 118); wheel(530, 520, 118);
+  p.band([[270, 360], [270, 82]], wood, 9, 3, "round");
+  p.poly([[270, 92], [440, 120], [270, 190]], "#c0392b", 7);
+  if (emblem === "sun") { p.ell(335, 140, 22, 22, gold, 5); for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; p.stroke([[335 + Math.cos(a) * 27, 140 + Math.sin(a) * 27], [335 + Math.cos(a) * 38, 140 + Math.sin(a) * 38]], 4, gold); } }
+  else if (emblem === "snake") p.stroke(curve([310, 172], [332, 122], [358, 164]), 8, gold);
+  else if (emblem === "palm") { p.stroke([[335, 178], [335, 132]], 6, gold); for (const s of [-1, 1]) p.stroke(curve([335, 134], [335 + s * 28, 122], [335 + s * 36, 142]), 6, gold); }
+  else p.ell(335, 140, 14, 14, "#f2e6c4", 4);
+};
+
 /** a naga: coiled cobra with a hood and a friendly face; crown for the king. 600 x 1000 card, base at 975. */
 export const naga = (p: Pen, opts: { col?: string; king?: boolean; expr?: Expr; t?: number; light?: number; blink?: number }) => {
   const { col = "#3f9a6a", king = false, expr = "smile", t = 0, light = DEF_LIGHT, blink = 0 } = opts;
@@ -714,6 +1023,50 @@ export const fxPigeon = (p: Pen, flap: number) => {
 };
 export const fxArrow = (p: Pen) => { p.stroke([[20, 64], [220, 64]], 8, "#7a4b2a"); p.poly([[220, 50], [252, 64], [220, 78]], "#c9ccd2", 5); p.poly([[20, 64], [44, 46], [60, 46], [36, 64], [60, 82], [44, 82]], "#e8475a", 4); };
 export const fxMango = (p: Pen) => { p.ell(64, 70, 34, 44, "#f2b632", 7, 0, 360, 25); p.ell(78, 26, 16, 8, "#5aa64a", 4, 0, 360, -30); };
+/** spinning Sudarshana chakra: gold rim and sixteen teeth, 256 x 256 */
+export const fxChakra = (p: Pen, angle = 0, col = GOLD) => {
+  p.ell(128, 128, 100, 100, col, 10);
+  p.ell(128, 128, 82, 82, "#c9972e", 5);
+  for (let i = 0; i < 16; i++) {
+    const a = angle + (i / 16) * Math.PI * 2;
+    p.stroke([[128 + Math.cos(a) * 76, 128 + Math.sin(a) * 76], [128 + Math.cos(a + 0.08) * 100, 128 + Math.sin(a + 0.08) * 100]], 6, "#8a5a34");
+  }
+  for (let i = 0; i < 8; i++) {
+    const a = angle + (i / 8) * Math.PI * 2;
+    p.stroke([[128 + Math.cos(a) * 20, 128 + Math.sin(a) * 20], [128 + Math.cos(a) * 72, 128 + Math.sin(a) * 72]], 6, "#8a5a34");
+  }
+  p.ell(128, 128, 20, 20, col, 6);
+};
+/** conch rings: expanding sound waves, 256 x 256 */
+export const fxConch = (p: Pen, k: number, col = "#9fe8ff") => {
+  for (let i = 0; i < 3; i++) {
+    const u = Math.max(0, Math.min(1, k - i * 0.16)), r = 26 + u * 108;
+    if (u <= 0) continue;
+    p.arc(128, 128, r, r * 0.72, 0, 360, Math.max(1, 7 * (1 - u)), col);
+  }
+  p.ell(128, 128, 20, 14, "#f7f1e6", 6);
+  p.poly([[128, 114], [150, 128], [128, 142]], "#e8b53a", 4);
+};
+/** divine light: rounds and rays behind a character, 256 x 256 */
+export const fxDivine = (p: Pen, col = "#fff0a0", rays = 12, peak = 1) => {
+  const g = p.g, gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  const a = (k: number) => Math.round(255 * k * peak).toString(16).padStart(2, "0");
+  gr.addColorStop(0, col + a(1)); gr.addColorStop(0.45, col + a(0.55)); gr.addColorStop(1, col + "00");
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < rays; i++) { const th = (i / rays) * Math.PI * 2; p.poly([[128 + Math.cos(th - 0.04) * 34, 128 + Math.sin(th - 0.04) * 34], [128 + Math.cos(th) * 128, 128 + Math.sin(th) * 128], [128 + Math.cos(th + 0.04) * 34, 128 + Math.sin(th + 0.04) * 34]], col + "66", 0); }
+};
+/** endless cloth: a glowing strip that unrolls downward, 256 x 512; never shows a body */
+export const fxCloth = (p: Pen, k: number, col = "#f6efdc", w = 70) => {
+  const len = Math.max(8, Math.min(1, k) * 470), n = 18, left: P2[] = [], right: P2[] = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, y = 24 + t * len, x = 128 + Math.sin(t * 7 + 0.8) * 22;
+    left.push([x - w * 0.5, y]); right.push([x + w * 0.5, y]);
+  }
+  p.poly([...left, ...right.reverse()], col, 0);
+  p.stroke(left, 4, "#e8b53a"); p.stroke(right, 4, "#e8b53a");
+  for (let i = 1; i < n; i += 2) p.dot(128 + Math.sin((i / n) * 7 + 0.8) * 22, 24 + (i / n) * len, 3, "#fff6c0");
+};
+
 /** soft round glow on a 256 x 256 canvas (chant aura, lamp light): drawn on a see-through card */
 export const fxHalo = (p: Pen, col: string, peak = 1) => {
   const g = p.g, gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);

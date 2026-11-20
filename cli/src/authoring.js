@@ -218,7 +218,7 @@ const compileActor = (entry, shot, ctx) => {
   out.pos = a.pos ? resolvePoint(a.pos, sets, ctx.catalog) : a.at ? resolvePlaced(a.at, sets, ctx.catalog) : undefined;
   if (typeof a.at === 'string') { const v = markViewOf(a.at, sets, ctx.catalog); if (v !== undefined) out.view = v; }
   else if (a.at && typeof a.at === 'object' && a.at.mark) { const v = markViewOf(a.at.mark, sets, ctx.catalog); if (v !== undefined) out.view = v; }
-  if (a.ride) { out.ride = a.ride; out.rideOffset = a.nudge ?? [0, 0, 0]; delete out.pos; }
+  if (a.ride) { out.ride = a.ride; if (a.nudge) out.rideOffset = a.nudge; if (a.seat) out.seat = a.seat; delete out.pos; }
   if (a.nudge && out.pos) {
     if (Array.isArray(out.pos)) out.pos = [out.pos[0] + a.nudge[0], out.pos[1] + a.nudge[1], out.pos[2] + a.nudge[2]];
     else out.pos = { ...out.pos, d: [(out.pos.d?.[0] ?? 0) + a.nudge[0], (out.pos.d?.[1] ?? 0) + a.nudge[1], (out.pos.d?.[2] ?? 0) + a.nudge[2]] };
@@ -367,16 +367,23 @@ const actorStateAt = (a, f, shot, ctx) => {
   const st = w.st;
   let base = a.pos ? pointAt(a.pos, f, ctx) : [0, 0, 0];
   if (a.ride) {
-    const sp = (shot.set ?? []).find((x) => x.id === a.ride);
-    if (!sp?.motion) throw new Error(`actor ride target "${a.ride}" has no moving set piece`);
-    base = (() => { const b = motionAt(sp.motion, f, sp.pos ? pointAt(sp.pos, f, ctx) : [0, 0, 0], ctx); const d = a.rideOffset ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; })();
+    const mount = (shot.actors ?? []).find((x) => (x.id ?? x.who) === a.ride);
+    if (mount) {
+      const ms = actorStateAt(mount, f, shot, ctx);
+      if (!ms) return null;
+      const d = a.rideOffset ?? [0, 0, 0], k = ms.scale ?? 1;
+      base = [ms.pos[0] + d[0] * k, ms.pos[1] + d[1] * k, ms.pos[2] + d[2] * k];
+    } else {
+      const sp = (shot.set ?? []).find((x) => x.id === a.ride);
+      if (!sp?.motion) throw new Error(`actor ride target "${a.ride}" has no moving mount or set piece`);
+      base = (() => { const b = motionAt(sp.motion, f, sp.pos ? pointAt(sp.pos, f, ctx) : [0, 0, 0], ctx); const d = a.rideOffset ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; })();
+    }
   }
   const pos = a.motion && !a.ride ? motionAt(a.motion, f, base, ctx) : base;
   const spec = castSpec(a.who, ctx) ?? { build: 'adult' };
   const key = a.special ? a.special : (spec.build ?? 'adult');
   const baseMeasure = ctx.catalog.measure[key] ?? ctx.catalog.measure.adult;
   const env = POSE_MEASURES[st.pose];
-  if (process.env.DEBUG_POSE) console.error('DBG', a.who, JSON.stringify(st.pose), !!env, baseMeasure.eye, JSON.stringify(env), SEATED_POSES.has(st.pose), !!st.seated);
   const measure = env ? { ...baseMeasure, standing: baseMeasure.standing * env.standing, seated: baseMeasure.standing * env.standing, eye: baseMeasure.eye * env.eye, eyeSeated: baseMeasure.eye * env.eye, head: baseMeasure.head * env.head, halfWidth: baseMeasure.halfWidth * env.halfWidth } : baseMeasure;
   return { kind: 'actor', id: a.who, moveId: a.id, pos, measure, scale: st.scale ?? 1, seated: !!st.seated || SEATED_POSES.has(st.pose), who: a.who, view: a.view, entering: w.from, exiting: w.to };
 };
@@ -510,6 +517,29 @@ const applyFaces = (out, cameras, ctx) => {
   }
 };
 
+const resolveMounts = (list, shotId, catalog) => {
+  const mounts = catalog.mounts ?? {};
+  for (const a of list) {
+    if (!a.ride) continue;
+    const target = list.find((x) => (x.id ?? x.who) === a.ride);
+    if (!target) continue; // a moving set piece, checked by subjectSamples
+    const cfg = mounts[target.special];
+    if (!cfg) throw new Error(`shot ${shotId}: "${a.ride}" is not a mount (ride targets must be a horse, elephant or chariot)`);
+    if (a.scale !== undefined && (a.scale < 0.5 || a.scale > 1.6)) throw new Error(`shot ${shotId}: rider "${a.id ?? a.who}" scale ${a.scale} is outside 0.5-1.6 for a mount`);
+    const seat = a.seat ?? 'rider';
+    const off = cfg.seats?.[seat];
+    if (!off) throw new Error(`shot ${shotId}: "${a.id ?? a.who}" asks for seat "${seat}" but ${a.ride} has ${Object.keys(cfg.seats ?? {}).join(', ')}`);
+    if (a.rideOffset === undefined) a.rideOffset = off;
+    if (a.seat) delete a.seat;
+  }
+  for (const m of list) {
+    if (!mounts[m.special]) continue;
+    const riders = list.filter((x) => x.ride === (m.id ?? m.who));
+    const seats = Object.keys(mounts[m.special].seats ?? {}).length;
+    if (riders.length > seats) throw new Error(`shot ${shotId}: ${m.special} "${m.id ?? m.who}" has ${riders.length} riders but only ${seats} seats`);
+  }
+};
+
 const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
   const sets = shot.sets ?? [];
   const start = parseAnchor(shot.start, fps);
@@ -525,6 +555,7 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
     else list.push(compileActor(entry, { ...shot, sets }, ctx));
   }
   for (const r of shot.rows ?? []) list.push(...expandRow(r, sets, catalog, board.groups ?? {}).map((x) => compileActor(x, { ...shot, sets }, ctx)));
+  resolveMounts(list, shot.id, catalog);
   if (list.length) out.actors = list;
   if (shot.crowds) out.crowds = shot.crowds.map((c) => compileCrowd(c, { ...shot, sets }, ctx));
   if (shot.fx) out.fx = shot.fx.map((e) => compileEffect(e, { ...shot, sets }, ctx));
@@ -536,9 +567,15 @@ const compileShot = (shot, board, words, catalog, fps, ctx, shotEnd) => {
     const semantic = k.size !== undefined || k.on !== undefined || k.scenery === true;
     if (semantic) {
       const on = k.on === undefined ? (out.actors ?? []).map((a) => a.id ?? a.who) : Array.isArray(k.on) ? k.on : [k.on];
+      const mounted = new Set(on);
+      for (const a of out.actors ?? []) {
+        const id = a.id ?? a.who;
+        if (a.ride && (mounted.has(id) || mounted.has(a.ride))) mounted.add(a.ride);
+        if (a.special && (catalog.mounts ?? {})[a.special] && mounted.has(id)) for (const b of out.actors ?? []) if (b.ride === id) mounted.add(b.id ?? b.who);
+      }
       const f = ctx.anchorFrame(parseAnchor(k.at, fps), startFrame);
       const keyEnd = ki + 1 < keyFrames.length ? keyFrames[ki + 1] : shotEnd;
-      let subjects = on.map((id) => subjectSamples(id, out, out, f, keyEnd, k.later ?? [], ctx, k.at));
+      let subjects = [...mounted].map((id) => subjectSamples(id, out, out, f, keyEnd, k.later ?? [], ctx, k.at));
       if (!subjects.length && k.scenery && !k.size) k.size = 'establishing';
       if (k.move === 'follow') subjects = subjects.map((s) => ({ ...s, samples: [s.pos] }));
       const info = setInfo(catalog, sets[0]) ?? { front: 0, bounds: { min: [-10, 0, -10], max: [10, 10, 10] } };

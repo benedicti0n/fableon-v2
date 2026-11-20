@@ -1930,6 +1930,191 @@
               "exclusiveMinimum": 0
             }
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "chakra"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
+              "type": "string"
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "spin": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "conch"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
+              "type": "string"
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "dur": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "rings": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "divine"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
+              "type": "string"
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "rays": {
+              "type": "integer",
+              "minimum": 3,
+              "maximum": 32
+            },
+            "peak": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "at",
+            "pos"
+          ],
+          "properties": {
+            "kind": {
+              "const": "cloth"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "motion": {
+              "$ref": "#/$defs/Motion"
+            },
+            "at": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "pos": {
+              "$ref": "#/$defs/Point"
+            },
+            "size": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "color": {
+              "type": "string"
+            },
+            "until": {
+              "$ref": "#/$defs/Anchor"
+            },
+            "length": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "dur": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
         }
       ]
     },
@@ -2954,7 +3139,21 @@
             "naga",
             "baby",
             "pot",
-            "flat"
+            "flat",
+            "horse",
+            "elephant",
+            "cow",
+            "calf",
+            "dog",
+            "monkey",
+            "crane",
+            "boar",
+            "mongoose",
+            "swan",
+            "owl",
+            "crow",
+            "python",
+            "chariot"
           ]
         },
         "variant": {
@@ -3464,6 +3663,10 @@
         },
         "face": {
           "type": "string"
+        },
+        "seat": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "allOf": [

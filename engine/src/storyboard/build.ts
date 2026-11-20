@@ -18,7 +18,7 @@ import { dolly, run, kickAt as kickAtWith, kickCam as kickCamWith, Key, Kick, Sh
 import { gnCard } from "../core/specials";
 import { assembleShots, layersAt as layersAtShots, dofAt as dofAtList, transitionMaps, Def, Dof } from "../core/shotlist";
 import { setFeatureRim } from "../toon";
-import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person, ganesha } from "../people";
+import { fxSparkle, fxKnot, fxHalo, fxHeart, fxArrow, fxLump, fxMango, fxBubble, fxSmoke, fxFire, naga, agni, fxPigeon, fxWheel, fxWind, fxBolt, fxHorse, deer, baby, jarShape, person, ganesha, horse, elephant, cow, calf, dog, monkey, crane, boar, mongoose, swan, owl, crow, python, chariot, fxChakra, fxConch, fxDivine, fxCloth } from "../people";
 import { fxStars, fxPuff, fxSplash, fxBurst } from "../toon";
 import CATALOG from "../../../schema/catalog.json";
 import type { Actor, Animated, Anchor, Attach, Beat, CamKey, Crowd, Effect, JarsAction, Motion, Point, Shot, Storyboard } from "./types";
@@ -34,6 +34,23 @@ export type Runtime = {
 type Targets = Map<string, (f: number) => V3>;
 const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const num = (v: unknown, d = 0) => (typeof v === "number" ? v : d);
+type AnimalDraw = (p: Parameters<typeof person>[0], light: number, phase: number, expr: Expr, params: Record<string, unknown>) => void;
+const ANIMALS: Record<string, { geo: "wide" | "body"; blob: number; draw: AnimalDraw }> = {
+  horse: { geo: "wide", blob: 1.9, draw: (p, light, phase, _e, q) => horse(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined, saddle: q.saddle !== false }) },
+  elephant: { geo: "body", blob: 2.2, draw: (p, light, phase, _e, q) => elephant(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined, howdah: q.howdah !== false }) },
+  cow: { geo: "wide", blob: 1.8, draw: (p, light, phase, _e, q) => cow(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined, calf: q.calf === true }) },
+  calf: { geo: "wide", blob: 0.9, draw: (p, light, phase, _e, q) => calf(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined }) },
+  dog: { geo: "wide", blob: 1.1, draw: (p, light, phase, _e, q) => dog(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined }) },
+  monkey: { geo: "body", blob: 1.1, draw: (p, light, _phase, _e, q) => monkey(p, { light, hanuman: q.hanuman === true, old: q.old === true }) },
+  crane: { geo: "wide", blob: 1.0, draw: (p, light, phase) => crane(p, { phase, light }) },
+  boar: { geo: "wide", blob: 1.4, draw: (p, light, phase, _e, q) => boar(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined }) },
+  mongoose: { geo: "wide", blob: 0.9, draw: (p, light, _phase, _e, q) => mongoose(p, { light, golden: typeof q.golden === "number" ? q.golden : 0.5 }) },
+  swan: { geo: "wide", blob: 1.1, draw: (p, light, phase) => swan(p, { phase, light }) },
+  owl: { geo: "body", blob: 1.0, draw: (p, light, _phase, _e, q) => owl(p, { light, blink: typeof q.blink === "number" ? q.blink : 0 }) },
+  crow: { geo: "wide", blob: 0.9, draw: (p, light, phase) => crow(p, { phase, light }) },
+  python: { geo: "wide", blob: 1.8, draw: (p, light, phase, _e, q) => python(p, { phase, light, col: typeof q.col === "string" ? q.col : undefined }) },
+  chariot: { geo: "wide", blob: 2.4, draw: (p, light, phase, _e, q) => chariot(p, { phase, light, stuck: q.stuck === true, horses: typeof q.horses === "number" ? q.horses : 2, emblem: typeof q.emblem === "string" ? q.emblem : "sun", col: typeof q.col === "string" ? q.col : undefined }) },
+};
 
 export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = new Map()): Runtime {
   setFeatureRim(sb.featureRim === true);
@@ -51,6 +68,7 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const named = sb.points ?? {};
   const motionTargets: Targets = new Map(targets);
   const actorById = new Map<string, { a: Actor; start: number }>();
+  const actorAt = new Map<string, { a: Actor; start: number }>();
   const anchorMemo = new WeakMap<object, Map<number, number>>();
   const motionMemo = new WeakMap<Motion, Map<number, Moving>>();
   const beatMemo = new WeakMap<Actor, Map<number, { f: number; b: Beat }[]>>();
@@ -188,7 +206,18 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const moving = a.ride ? null : a.motion ? a.id && motionTargets.has(a.id) ? null : motionFn(a.motion, p, shotStart) : null;
     if (!p && !a.motion && !a.ride) throw new Error(`actor "${a.who}" has no pos or motion`);
     let pos = a.ride ? (motionTargets.get(a.ride)?.call(null, f) ?? [0, 0, 0]) : a.motion ? (a.id && motionTargets.has(a.id) ? motionTargets.get(a.id)!(f) : moving!.at(f)) : point(p!, f);
-    if (a.ride) { const d = a.rideOffset ?? [0, 0, 0]; pos = [pos[0] + d[0], pos[1] + d[1], pos[2] + d[2]]; }
+    if (a.ride) {
+      const mount = actorAt.get(`${a.ride}|${shotStart}`) ?? actorById.get(a.ride);
+      if (mount) {
+        const ms = actorState(mount.a, f, mount.start);
+        if (!ms) return null;
+        const d = a.rideOffset ?? [0, 0, 0], k = ms.scale ?? 1;
+        pos = [ms.pos[0] + d[0] * k, ms.pos[1] + d[1] * k, ms.pos[2] + d[2] * k];
+      } else {
+        const d = a.rideOffset ?? [0, 0, 0];
+        pos = [pos[0] + d[0], pos[1] + d[1], pos[2] + d[2]];
+      }
+    }
     const ap = st.appear;
     const scale = (st.scale ?? 1) * (ap ? pop(T(f), T(anchor(ap.at, shotStart)) + (ap.stagger ?? 0), ap.pop ?? 0.18) : 1);
     if (scale === 0) return null;
@@ -220,6 +249,15 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     if (a.special === "deer") {
       const graze = num(params.graze, 0), phase = num(params.phase, 0);
       card(out, cam, `deer|${expr}|${graze}|${phase}`, (p, light) => deer(p, { phase, graze, expr: expr === "shock" ? "shock" : "neutral", light }), pos[0], pos[1], pos[2], { geo: "wide", scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? 1.6, id: a.id ?? a.who, measure: 'deer', person: true, seated: !!st.seated });
+      return;
+    }
+    const animalName = a.special as string | undefined;
+    const animal = animalName ? ANIMALS[animalName] : undefined;
+    if (animal) {
+      const phase = state.moving?.phase(f) ?? num(params.phase, 0);
+      const pcol = typeof params.col === "string" ? params.col : undefined;
+      const pkey = [animalName, phase.toFixed(3), expr, pcol ?? "", num(params.howdah, 1), num(params.saddle, 1), num(params.hanuman, 0), num(params.old, 0), num(params.golden, -1)].join("|");
+      card(out, cam, pkey, (p, light) => animal.draw(p, light, phase, expr, params), pos[0], pos[1], pos[2], { geo: animal.geo, scale, mirror: st.mirror, noBlob: st.noBlob, blobScale: st.blobScale ?? animal.blob, id: a.id ?? a.who, measure: animalName, person: true, seated: !!st.seated });
       return;
     }
     if (a.special === "baby") {
@@ -438,6 +476,22 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
         const ph = (((T(f) * (e.rate ?? 1) + i / n) % 1) + 1) % 1, size = e.size ?? 0.12;
         fx(out, "sweat", 128, 128, (p) => p.ell(64, 64, 18, 26, "#9fd4ff", 5), pos[0] + (e.spread ?? 0) * i, pos[1] - (e.drop ?? 0) * ph, pos[2], size, size);
       }
+    } else if (e.kind === "chakra") {
+      if (e.until && f >= anchor(e.until, shotStart)) return;
+      const size = e.size ?? 1.4, ang = T(f) * (e.spin ?? 2.5);
+      fx(out, `chakra|${Math.round(ang * 8) % 32}|${e.color ?? ""}`, 256, 256, (p) => fxChakra(p, ang, e.color ?? "#e8b53a"), pos[0], pos[1], pos[2], size, size, { kind: "glow" });
+    } else if (e.kind === "conch") {
+      if (e.until && f >= anchor(e.until, shotStart)) return;
+      const dur = e.dur ?? 36, k = Math.max(0, (f - a) / dur);
+      if (k <= 1.2) { const size = e.size ?? 2.2; fx(out, `conch|${Math.round(k * 24)}|${e.color ?? ""}`, 256, 256, (p) => fxConch(p, Math.min(1, k), e.color ?? "#9fe8ff"), pos[0], pos[1], pos[2], size, size, { kind: "soft" }); }
+    } else if (e.kind === "divine") {
+      if (e.until && f >= anchor(e.until, shotStart)) return;
+      const size = (e.size ?? 3.2) * (0.96 + 0.04 * Math.sin(T(f) * 3)), h = e.height ?? size;
+      fx(out, `divine|${e.color ?? ""}|${e.rays ?? 12}`, 256, 256, (p) => fxDivine(p, e.color ?? "#fff0a0", e.rays ?? 12, e.peak ?? 1), pos[0], pos[1], pos[2], size, h, { kind: "glow" });
+    } else if (e.kind === "cloth") {
+      if (e.until && f >= anchor(e.until, shotStart)) return;
+      const dur = e.dur ?? 60, k = Math.max(0, Math.min(1, (f - a) / dur)), length = e.length ?? 4, width = e.width ?? 0.7;
+      fx(out, `cloth|${Math.round(k * 30)}|${e.color ?? ""}`, 256, 512, (p) => fxCloth(p, k, e.color ?? "#f6efdc", Math.max(24, 70 * (e.width ?? 0.7))), pos[0], pos[1] - length * k * 0.5, pos[2], width, length * Math.max(0.02, k), { kind: "soft" });
     } else if (e.kind === "halo") {
       if (f < a) return;
       if (e.visible && (f < anchor(e.visible.from, shotStart) || f >= anchor(e.visible.to, shotStart))) return;
@@ -494,7 +548,10 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
   const shots = [...(sb.shots ?? [])].map((s) => ({ s, start: anchor(s.start) })).sort((x, y) => x.start - y.start);
   // register moving targets before cameras/stages resolve Points that refer to them
   for (const { s, start } of shots) {
-    for (const a of s.actors ?? []) if (a.id) actorById.set(a.id, { a, start });
+    for (const a of s.actors ?? []) {
+      if (a.id) { actorById.set(a.id, { a, start }); actorAt.set(`${a.id}|${start}`, { a, start }); }
+      if (a.who) { actorAt.set(`${a.who}|${start}`, { a, start }); if (!actorById.has(a.who)) actorById.set(a.who, { a, start }); }
+    }
     for (const a of s.actors ?? []) if (a.id) motionTargets.set(a.id, a.ride ? (f: number) => { const b = motionTargets.get(a.ride!)?.(f) ?? [0, 0, 0]; const d = a.rideOffset ?? [0, 0, 0]; return [b[0] + d[0], b[1] + d[1], b[2] + d[2]]; } : a.motion ? (() => { const m = motionFn(a.motion!, a.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(a.pos!, f));
     for (const e of s.fx ?? []) if (e.id) { const em = e as Effect & { motion?: Motion; id?: string; pos?: Point }; motionTargets.set(e.id, em.motion ? (() => { const m = motionFn(em.motion!, em.pos, start); return (f: number) => m.at(f); })() : (f: number) => point(em.pos!, f)); }
     for (const x of s.set ?? []) if (x.piece === "boat" && x.id) motionTargets.set(x.id, (() => { const m = motionFn(x.motion, undefined, start); return (f: number) => m.at(f); })());

@@ -101,9 +101,15 @@ dolly: the camera slides toward `look` by pushK(f, push.from, push.rate) * pushK
   "who": "vyasa",                     // cast id
   "id": null,                         // optional moving-target id (Point {"at": id} follows it)
   "special": null,                    // null = person(); or "ganesha" | "agni" | "deer" | "naga" | "baby" | "pot" | "flat"
+                                      // animals: "horse" | "elephant" | "cow" | "calf" | "dog" | "monkey" | "crane"
+                                      // | "boar" | "mongoose" | "swan" | "owl" | "crow" | "python"; vehicle: "chariot"
   "params": {},                       // typed per special: ganesha {write, writeSpeed, puzzled, down, look, pen, ear, expr};
                                       // deer {graze, phase, expr}; baby {wrap, skin}; naga {col, king}; agni {burp};
-                                      // pot {}; flat {pose}
+                                      // horse {phase, col, saddle}; elephant {phase, col, howdah}; cow {phase, col, calf};
+                                      // calf {phase, col}; dog {phase, col}; monkey {hanuman, old}; crane/swan/crow {phase};
+                                      // boar {phase, col}; mongoose {golden}; owl {blink}; python {phase, col};
+                                      // chariot {phase, horses, emblem, stuck, col}
+                                      // pot {}; flat {pose}; riders also use "ride" (mount id) and "seat" (rider|driver|warrior|passenger)
   "pos": Point,                       // feet position; ballistic motion starts here
   "motion": null,                     // path or ballistic (see Motion)
   "animate": {},                      // numeric Spec fields animated over time, e.g. { "belly": Animated }
