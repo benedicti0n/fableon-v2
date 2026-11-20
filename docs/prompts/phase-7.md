@@ -212,3 +212,72 @@ The user picks a census episode that uses a new set and the kit. Suggestions: th
 - direct upload;
 - a desktop wrapper;
 - sample-based sound libraries.
+
+=====================================================================
+PHASE 7 AMENDMENT 1 — style packs and part regeneration
+=====================================================================
+
+Context: the user wants (1) to choose the animation style per project from a dropdown, because future films may use a different Claude skill with a very different art style, and (2) to select any part of a finished animatic or final (e.g. 1:10–1:15), regenerate only that part, and have it stitched back in place.
+
+Order of work:
+1. Finish the checkpoint A fix already decided (frozen spans and pops: diagnose, fix the cause, re-render, QA pass, STOP at the animatic gate for the user). Part regeneration reuses that code path, so the fix comes first.
+2. Append this amendment verbatim to docs/prompts/phase-7.md and commit: docs: phase 7 amendment 1
+3. Implement F2 and F3 below. The original F2–F11 become F4–F13, unchanged except where noted at the end.
+
+### F2  feat(core): style packs
+A Claude skill is instructions for an agent, not code Fableon runs. Today's look is the cartoon-3d-short skill ported into the engine. Make that port a pluggable "style pack", so a new skill becomes a new pack (a one-time porting job) without touching the shared pipeline. Fableon never runs a Claude skill per film.
+- Contract: docs/STYLES.md + schema/style.schema.json. A pack declares:
+  - id, name, description, version, source (skill name, URL, licence), formats (9:16 now), sample frames;
+  - its implementations of the style-specific stages: cast, shotplan, board (its own board schema), render (segment renderer with quality presets), stills, lookdev, the Finish look controls it supports, and measures for its validator;
+  - its catalog, prompt cards (within today's size budgets), director guide and craft notes;
+  - optional overrides: the script craft formula (default: today's formula), the sound palette (SFX kinds, instruments), the QA profile (frozen-span limit, pop rules, look targets — a limited-animation style may legitimately hold frames).
+- Shared and unchanged for every style: brief, research, script (unless overridden), fact-check, voice, the sound mix, segment cache and assembly, publish, export, queue, presets, costs.
+- Register today's look as the first pack, `toon3d` ("2D cartoon cards in a 3D world", from cartoon-3d-short), through an adapter over the existing engine. Do not move engine files. Golden, Adi audio and fixture stills stay identical.
+- Project and preset field `style`:
+  - default toon3d; existing projects migrate to toon3d;
+  - a Style dropdown (ready packs, each with a sample frame) in the New project dialog, the presets, and the project header;
+  - the style changes freely until the cast stage is approved. After that, "Change style" re-runs from cast, with history kept (estimate first, confirm), never silently.
+- Add a style from a skill: Settings → Styles → "Add from a skill folder" (or a git URL the user gives).
+  - Copy the skill into styles/_incoming/<name>/. Never copy reference media marked private or study-only; record the licence.
+  - Write styles/<id>/PORTING.md: what the skill does at each stage, what maps to the contract, what's missing, and the porting tasks.
+  - The pack shows as "not ready" in the dropdown until `fableon style check <id>` passes: a test board renders at preview and final quality; the QA profile, catalog check and prompt-size budgets pass.
+- Engine build ids, segment caches and QA are per style.
+- Tests:
+  - the contract check on toon3d;
+  - project/preset migration;
+  - a minimal test-only pack (flat colour cards) that proves a second pack can run brief → final through the shared pipeline.
+
+### F3  feat(edit): regenerate part of a film
+Select a time range on the animatic or final, generate alternative takes for just that range, preview them in context, pick one, and stitch it in. Everything outside the range stays frame-identical.
+- Range: from/to snap to word boundaries (hold Alt for frames); 1–20 s (longer ranges: use the per-shot note). A range may cross shot boundaries.
+- Takes: POST /api/projects/:id/ranges {from, to, note?, count 1–3, edges: "match" | "cut"} starts a job (estimate first: the planner call plus local render time) that does the following.
+  - Re-plan only the range with the routed shot planner: the note if given, plus the original intent. Without a note, make variations by choosing different solver/allocator options and seeds: camera size/move/angle, subject emphasis, character actions, poses, expressions, props, fx. Sets, scene, mood, narration and timing never change.
+  - Compile a board patch confined to the range:
+    - edges "match" (default): pin the camera and character states at the in and out frames to the current film (pinned keys; interpolation must never cross a pinned key), so there is no jump;
+    - edges "cut": the range becomes its own shot with cuts at its edges, subject to the editing rules (no jump cuts, keys >= 0.6 s).
+  - Validate the patch: the board validator plus a static-span check (no span without camera or subject motion longer than the style's frozen limit).
+  - Render each take at animatic quality for [from − 1 s, to + 1 s] only.
+- UI on Animatic and on Finish → Render:
+  - drag on the scrubber to select, with handles and the Hindi words shown under the range;
+  - a "Regenerate this part" drawer: note, number of takes, edges;
+  - takes play as looping players next to the current version, with A/B in context;
+  - "Use this take" or "Keep current";
+  - every take is kept in a per-range history with revert.
+- Accepting a take:
+  - writes the board patch with history; the board becomes `edited`, and the animatic gate needs the user's approval again;
+  - re-renders only the range in the animatic: extend the Phase 6 segment cache to the animatic, with sub-shot segments split at the range edges;
+  - the final plan then shows only that range dirty;
+  - if the take moves an action that has a sound effect, update those cues and rebuild the mix (audio only).
+- Guarantees, each tested:
+  - frames outside the range are byte-identical before and after (frame hashes), in both the animatic and the final;
+  - QA (frozen, pops) runs on the stitched range ± 1 s;
+  - voice and narration timing are untouched.
+- Tests: pinned-edge interpolation, the sub-shot segment split and cache reuse, the cut-edge editing rules, frame identity outside the range, take history and revert.
+
+### Changes to the rest of Phase 7
+- The census inventory stays style-independent. The matcher and the build list run against the chosen style's catalog (toon3d for now).
+- Checkpoint B also asks the user: build the new sets in toon3d now, or wait for a new style pack?
+- Acceptance additions:
+  - toon3d passes `fableon style check`;
+  - the test pack runs end to end;
+  - on work/karna-at-the-tournament (after checkpoint A), one ~5 s part is replaced by a chosen take, with frame identity outside the range proven and only that range re-rendered in the final.
