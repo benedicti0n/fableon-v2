@@ -20,6 +20,8 @@ export type Look = {
   rim?: number;
   fill?: number;
   grade?: string;
+  maskFill?: boolean;
+  skinNeutral?: boolean;
 };
 
 export type MoodRig = {

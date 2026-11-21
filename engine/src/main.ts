@@ -12,6 +12,7 @@ import { HalationEffect } from "./halation";
 import { MaskedBloomEffect } from "./glow";
 import { LegacyHalationEffect } from "./legacyHalation";
 import { moodRig } from "./look";
+import { CHAR } from "./shade";
 import { buildStoryboard, Runtime } from "./storyboard/build";
 import type { Storyboard } from "./storyboard/types";
 import type { Wd } from "./core/anchors";
@@ -82,7 +83,8 @@ const charMaskMat = (tex: THREE.Texture) => new THREE.ShaderMaterial({
   depthTest: false, depthWrite: false, side: THREE.DoubleSide, toneMapped: false, fog: false, blending: THREE.NoBlending, transparent: false,
 });
 const maskMeshes: THREE.Mesh[] = [];
-function renderCharMask(depthTex: THREE.Texture | null) {
+let charMaskFill = false;
+function renderCharMask(depthTex: THREE.Texture | null, fill = false) {
   let n = 0;
   for (const a of world.coverageCards.actors) {
     const tex = a.r?.tex;
@@ -92,6 +94,12 @@ function renderCharMask(depthTex: THREE.Texture | null) {
     m.geometry = a.mesh.geometry;
     (m.material as THREE.ShaderMaterial).uniforms.map.value = tex;
     (m.material as THREE.ShaderMaterial).uniforms.tDepth.value = depthTex;
+    const mat = m.material as THREE.ShaderMaterial;
+    if ((mat.blending === THREE.CustomBlending) !== fill) {
+      mat.blending = fill ? THREE.CustomBlending : THREE.NoBlending;
+      if (fill) { mat.blendEquation = THREE.MaxEquation; mat.blendEquationAlpha = THREE.MaxEquation; mat.blendSrc = THREE.OneFactor; mat.blendDst = THREE.OneFactor; }
+      mat.needsUpdate = true;
+    }
     m.position.copy(a.mesh.position); m.quaternion.copy(a.mesh.quaternion); m.scale.copy(a.mesh.scale);
     m.visible = true; n++;
   }
@@ -106,13 +114,15 @@ function renderCharMask(depthTex: THREE.Texture | null) {
 
 class CharMaskPass extends Pass {
   active = false;
+  fill = false;
   constructor() { super("CharMaskPass"); this.needsSwap = false; }
   render(_renderer: THREE.WebGLRenderer, inputBuffer: THREE.WebGLRenderTarget) {
     if (!this.active) return;
-    renderCharMask(ink.depthTexture ?? inputBuffer.depthTexture ?? null);
+    renderCharMask(ink.depthTexture ?? inputBuffer.depthTexture ?? null, this.fill);
   }
 }
 const maskPass = new CharMaskPass();
+
 
 // ---------- coverage pass: the same frame as flat object IDs ----------
 // Separate scene, separate unlit material, no post chain. This path is only used by `fableon frames` and
@@ -329,8 +339,11 @@ const drawShot = (id: number, f: number) => {
   const s = RT.SHOTS[id - 1];
   let t0 = performance.now();
   const target = world.update(s, f, cam, scene, H, RT.kickCam);
+  if (s.look?.skinNeutral) { CHAR.uCharTint.value.set(1, 1, 1); CHAR.uCharShade.value = 1; CHAR.uGrad.value = 0; CHAR.uFill.value = 0; }
   PROF.update = performance.now() - t0; t0 = performance.now();
   const lookOn = !!s.look;
+  charMaskFill = !!s.look?.maskFill;
+  maskPass.fill = charMaskFill;
   maskPass.active = lookOn;
   legacyPass.enabled = !lookOn; lookPass.enabled = lookOn;
   if (bloomLegacy) bloomLegacy.setCharMask(charMaskRT.texture, W, H, false);
@@ -355,7 +368,7 @@ const drawShot = (id: number, f: number) => {
   gradeLegacy.setCharMask(charMaskRT.texture, W, H, false);
   gradeLegacy.protect = 0;
   gradeFor(gradeLook, s.look && rig ? rig.grade : s.light);
-  gradeLook.setLegacy(GRADES[s.light], GRADE_STRENGTH[s.light] ?? 1);
+  gradeLook.setLegacy(GRADES[s.light], s.look?.skinNeutral ? 0 : (GRADE_STRENGTH[s.light] ?? 1));
   gradeLook.setLook({ exposure: s.look?.exposure ?? 0, warmth: s.look?.warmth ?? 0, vignette: s.look?.vignette ?? 1, haze: s.look?.haze ?? 1 });
   gradeLook.setCharMask(charMaskRT.texture, W, H, lookOn);
   gradeLook.protect = lookOn ? 1 : 0;

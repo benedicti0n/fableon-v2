@@ -206,6 +206,7 @@ export async function runBoard({ projectDir, project, router, progress = null })
       shots[i] = chosen;
     }
     progress?.({ step: 'board:shot', done: shots.length, total: shots.length });
+    if (project.look?.maskFill) for (const s of shots) s.look = { ...(s.look ?? {}), maskFill: true };
     const board = { version: 1, cast: castMap, shots, featureRim: project.look?.featureRim === true, ...(kicks.length ? { kicks } : {}) };
     let compiled = compileBoard(board, words, catalog).storyboard;
     atomicWrite(join(projectDir, 'storyboard.json'), JSON.stringify(compiled, null, 2) + '\n');

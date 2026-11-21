@@ -4384,6 +4384,12 @@
             },
             "halo": {
               "type": "boolean"
+            },
+            "maskFill": {
+              "type": "boolean"
+            },
+            "skinNeutral": {
+              "type": "boolean"
             }
           }
         },

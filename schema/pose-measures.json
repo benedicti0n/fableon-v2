@@ -13,7 +13,7 @@
     "eye": 0.626,
     "eyeSeated": 0.626,
     "head": 1,
-    "halfWidth": 1.046
+    "halfWidth": 1.191
   },
   "pranam": {
     "standing": 0.621,
@@ -21,29 +21,29 @@
     "eye": 0.626,
     "eyeSeated": 0.626,
     "head": 1,
-    "halfWidth": 2.282
+    "halfWidth": 1.855
   },
   "lie": {
     "standing": 0.474,
     "seated": 0.474,
-    "eye": 0.8,
-    "eyeSeated": 0.8,
+    "eye": 0.388,
+    "eyeSeated": 0.388,
     "head": 1,
     "halfWidth": 2.282
   },
   "fallen": {
     "standing": 0.526,
     "seated": 0.526,
-    "eye": 0.8,
-    "eyeSeated": 0.8,
+    "eye": 0.388,
+    "eyeSeated": 0.388,
     "head": 1,
     "halfWidth": 2.244
   },
   "sleep": {
     "standing": 0.434,
     "seated": 0.434,
-    "eye": 0.8,
-    "eyeSeated": 0.8,
+    "eye": 0.349,
+    "eyeSeated": 0.349,
     "head": 1,
     "halfWidth": 2.046
   },

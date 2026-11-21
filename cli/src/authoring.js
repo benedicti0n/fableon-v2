@@ -227,6 +227,7 @@ const compileActor = (entry, shot, ctx) => {
   if (motion) out.motion = motion;
   if (a.animate) out.animate = Object.fromEntries(Object.entries(a.animate).map(([k, v]) => [k, compileAnimated(v, ctx.fps)]));
   for (const k of ['scale', 'mirror', 'noBlob', 'blobScale', 'pose', 'expr', 'prop', 'look', 'seated', 'headTilt', 'tilt', 'offscreen']) if (a[k] !== undefined) out[k] = a[k];
+  if (a.special && out.scale === undefined) { const sp = (ctx.catalog.specials ?? []).find((x) => x.name === a.special); if (sp?.scale) out.scale = sp.scale; }
   if (a.talk !== undefined) out.talk = a.talk;
   Object.assign(out, compileFacing(a.facing));
   if (a.yaw !== undefined) out.yaw = typeof a.yaw === 'number' ? normAngle(a.yaw) : a.yaw;
@@ -525,11 +526,14 @@ const resolveMounts = (list, shotId, catalog) => {
     if (!target) continue; // a moving set piece, checked by subjectSamples
     const cfg = mounts[target.special];
     if (!cfg) throw new Error(`shot ${shotId}: "${a.ride}" is not a mount (ride targets must be a horse, elephant or chariot)`);
-    if (a.scale !== undefined && (a.scale < 0.5 || a.scale > 1.6)) throw new Error(`shot ${shotId}: rider "${a.id ?? a.who}" scale ${a.scale} is outside 0.5-1.6 for a mount`);
+    if (a.scale !== undefined && (a.scale < 0.35 || a.scale > 1.6)) throw new Error(`shot ${shotId}: rider "${a.id ?? a.who}" scale ${a.scale} is outside 0.5-1.6 for a mount`);
     const seat = a.seat ?? 'rider';
-    const off = cfg.seats?.[seat];
-    if (!off) throw new Error(`shot ${shotId}: "${a.id ?? a.who}" asks for seat "${seat}" but ${a.ride} has ${Object.keys(cfg.seats ?? {}).join(', ')}`);
-    if (a.rideOffset === undefined) a.rideOffset = off;
+    const hip = cfg.seats?.[seat];
+    if (!hip) throw new Error(`shot ${shotId}: "${a.id ?? a.who}" asks for seat "${seat}" but ${a.ride} has ${Object.keys(cfg.seats ?? {}).join(', ')}`);
+    if (a.rideOffset === undefined) {
+      const mirror = target.mirror ? -1 : 1;
+      a.rideOffset = [hip[0] * mirror, hip[1] - 0.30, hip[2]];
+    }
     if (a.seat) delete a.seat;
   }
   for (const m of list) {

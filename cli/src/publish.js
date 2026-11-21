@@ -298,11 +298,13 @@ export async function runPublish({ projectDir, project, router, progress = null 
   };
   writeJsonArtifact(dir, 'publish', 'publish/publish.json', selected, 'publish');
   writeJsonArtifact(dir, 'publish', 'publish/facts.json', { flags, at: new Date().toISOString() }, null);
-  const subject = namedSubject(data.thumbnailText.hi, script)?.id ?? null;
+  const subjectInfo = namedSubject(data.thumbnailText.hi, script);
+  const subject = subjectInfo?.id ?? null;
+  selected.selection.accent = subjectInfo?.name ?? null;
   const candidates = await buildCandidates(dir, join(dir, 'final.mp4'), { subject });
   if (candidates[0]) {
     selected.selection.cover = candidates[0].image;
-    await composeCover(dir, { image: candidates[0].image, text: data.thumbnailText.hi, template: 'title' });
+    await composeCover(dir, { image: candidates[0].image, text: data.thumbnailText.hi, template: 'title', accent: subjectInfo?.name ?? null });
     writeJsonArtifact(dir, 'publish', 'publish/publish.json', selected, 'publish');
   }
   const hi = subtitleCues(script, words, { duration, lang: 'hi' });
@@ -321,7 +323,7 @@ export async function recomposeCover(projectDir, data) {
   const candidates = existsSync(join(projectDir, 'publish', 'candidates.json')) ? json(join(projectDir, 'publish', 'candidates.json')) : [];
   const candidate = candidates.find((c) => c.image === selected.cover) ?? candidates[0];
   if (!candidate) throw new Error('no cover candidate');
-  await composeCover(projectDir, { image: candidate.image, text: selected.thumbnailText ?? data.thumbnailText?.hi ?? '', template: selected.template ?? 'title' });
+  await composeCover(projectDir, { image: candidate.image, text: selected.thumbnailText ?? data.thumbnailText?.hi ?? '', template: selected.template ?? 'title', accent: selected.accent ?? data.thumbnailText?.hi ?? null });
   return { cover: 'publish/cover.jpg', candidate: candidate.image };
 }
 

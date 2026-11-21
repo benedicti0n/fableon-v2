@@ -379,7 +379,7 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
   // ---------------- head ----------------
   const [cpx, cpy] = rotPts([[300, chin]], rad(A), 300, hipY)[0];
   const Ah = A + headTilt + (pose === "weep" ? 16 : 0) + (pose === "blowConch" ? -8 : 0);
-  p.rot = Ah ? [rad(Ah), 300, chin, cpx - 300, cpy - chin] : null;
+  p.rot = Ah ? [rad(Ah), 300, chin, cpx - 300 + (pose === "pranam" ? -55 * u : 0), cpy - chin] : null;
   const hp = blobPts(300, hc, H);
   if (o.head === "bun" || o.head === "topknot") { const r = o.head === "bun" ? 0.32 : 0.2; p.ell(300 + 4 * u * facing, crown + 0.02 * HH, r * W * 0.55, r * HH * 0.6, o.hairCol ?? "#2a1a1e", ow * 0.8); }
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
@@ -397,7 +397,9 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
     p.poly(bp, null, ow * 0.8);
     for (let i = -1; i <= 1; i++) p.stroke([[300 + i * 18 * u, by + 0.22 * bl], [300 + i * 22 * u, by + 0.7 * bl]], 1.8 * u, mix(o.beard, INK, 0.35));
   }
-  faceFront(p, 300, hc, W, o.blindfold ? "neutral" : expr, facing, look, lid, brim, skin, o.moustache ?? undefined, o.build === "stout" || o.build === "big", readable);
+  const hairFrac = o.head === "crown" || o.head === "crownSmall" || o.head === "featherCrown" ? 0.36 : o.head === "bun" || o.head === "topknot" || o.head === "jata" ? 0.3 : 0.4;
+  const browFloor = o.head && ["hair", "long", "loose", "bun", "topknot", "jata", "featherCrown"].includes(o.head) && ["angry", "sad", "determined", "smirk"].includes(expr) ? crown + hairFrac * HH + 4 * u : undefined;
+  faceFront(p, 300, hc, W, o.blindfold ? "neutral" : expr, facing, look, lid, brim, skin, o.moustache ?? undefined, o.build === "stout" || o.build === "big", readable, browFloor);
   if (o.beard) { // redraw the mouth over the beard
     const mx = 300 + 8 * u * facing, my = hc + 20 * u;
     const mcol = readable ? mix("#5a1e28", "#c76a72", 0.55) : "#5a1e28";
@@ -647,19 +649,25 @@ export const horse = (p: Pen, opts: { phase?: number; col?: string; light?: numb
   }
   p.stroke([...curve([320, 390], [250, 460], [280, 550], 8), ...curve([280, 550], [305, 585], [300, 600], 4).slice(1)], 16, dark);
   p.poly([[300, 575], [278, 602], [320, 600]], dark, 6);
+  for (const dx of [-8, 0, 8]) p.stroke([[300, 560], [286 + dx, 610], [270 + dx, 640]], 4, dark);
   const body = blobPts(470, 420, { a: 200, b: 108, nTop: 2.1, nBot: 2.25, egg: 0.02, asym: 0.03, rot: rad(-3), noise: 0.006, seed: 21 });
   p.shadedFill(body, col, dark, light, 200); p.inkRing(body, 12, thick);
   p.clip(body, () => p.ell(465, 445, 145, 32, pale, 0));
   // neck and head
-  p.line(curve([600, 390], [675, 335], [735, 280]), col, 96, true);
-  const hp = blobPts(790, 258, { a: 82, b: 45, nTop: 2.0, nBot: 2.2, egg: 0.16, asym: 0.05, rot: rad(26), noise: 0.006, seed: 22 });
+  p.line(curve([600, 390], [678, 330], [742, 312]), col, 90, true);
+  const hp = blobPts(790, 272, { a: 96, b: 46, nTop: 2.0, nBot: 2.2, egg: 0.18, asym: 0.05, rot: rad(16), noise: 0.006, seed: 22 });
   p.shadedFill(hp, col, dark, light, 67); p.inkRing(hp, 11, thick);
-  p.line(curve([650, 335], [700, 300], [750, 245]), dark, 26, false); // mane
-  for (const [mx, my] of [[672, 316], [700, 292], [728, 266]]) p.stroke([[mx, my], [mx - 18, my + 16]], 8, dark);
-  p.poly([[754, 302], [744, 250], [782, 274]], col, 9); // near ear
-  p.poly([[778, 288], [790, 244], [812, 272]], dark, 8); // far ear
-  p.line(curve([828, 266], [852, 280], [862, 300]), dark, 10, false); // forelock
-  p.ell(817, 244, 7, 9, INK, 0); p.dot(819, 241, 2.5, WHITE);
+  p.line(curve([650, 350], [700, 310], [748, 286]), dark, 26, false); // mane
+  for (const [mx, my] of [[672, 330], [704, 310], [732, 306]]) p.stroke([[mx, my], [mx - 18, my + 16]], 8, dark);
+  p.poly([[754, 256], [746, 210], [782, 236]], col, 8); // near ear
+  p.poly([[754, 240], [760, 218], [774, 238]], "#c98c5c", 3);
+  p.poly([[780, 256], [792, 208], [820, 236]], dark, 7); // far ear
+  
+  p.line(curve([820, 260], [842, 270], [854, 290]), dark, 9, false); // forelock
+  p.poly([[840, 276], [918, 296], [910, 324], [830, 306]], col, 8); // long muzzle
+  p.ell(904, 302, 6, 5, mix(dark, INK, 0.5), 0); // nostril
+  p.stroke([[892, 322], [914, 316]], 3, dark); // mouth
+  p.ell(820, 258, 9, 11, WHITE, 0); p.dot(822, 258, 5, INK);
   p.ell(846, 280, 7, 6, mix(dark, INK, 0.5), 0); // nostril
   p.stroke([[836, 304], [864, 298]], 4, dark); // mouth
   // near legs
@@ -733,10 +741,6 @@ export const cow = (p: Pen, opts: { phase?: number; col?: string; light?: number
   p.poly([[784, 336], [802, 298], [808, 326]], "#d9c9a6", 7);
   p.ell(790, 365, 6, 8, INK, 0); p.ell(814, 390, 6, 5, mix(dark, INK, 0.5), 0);
   p.ell(484, 492, 34, 16, "#f2c0b0", 6); // udder
-  if (calf) {
-    p.poly(rrect(150, 520, 245, 575, 10), "#f2e6c4", 7);
-    p.ell(170, 545, 18, 16, col, 8);
-  }
 };
 
 /** a small calf, same construction as the cow */
@@ -757,10 +761,12 @@ export const dog = (p: Pen, opts: { phase?: number; col?: string; light?: number
   const body = blobPts(500, 445, { a: 155, b: 68, nTop: 2.1, nBot: 2.2, egg: 0, asym: 0.03, rot: rad(-2), noise: 0.006, seed: 51 });
   p.shadedFill(body, col, dark, light, 155); p.inkRing(body, 11, thick);
   p.line(curve([620, 425], [670, 400], [700, 385]), col, 54, true);
-  const head = blobPts(715, 385, { a: 62, b: 49, nTop: 2.0, nBot: 2.2, egg: 0.12, asym: 0, rot: rad(8), noise: 0.006, seed: 52 });
+  const head = blobPts(715, 390, { a: 68, b: 46, nTop: 2.0, nBot: 2.2, egg: 0.18, asym: 0, rot: rad(4), noise: 0.006, seed: 52 });
   p.shadedFill(head, col, dark, light, 62); p.inkRing(head, 10, thick);
-  p.poly([[690, 350], [672, 305], [714, 332]], dark, 8);
-  p.poly([[742, 350], [752, 304], [764, 340]], dark, 8);
+  p.ell(684, 396, 20, 34, dark, 7); // floppy near ear
+  p.ell(744, 392, 18, 30, dark, 7); // floppy far ear
+  p.poly([[760, 400], [812, 416], [808, 432], [754, 424]], col, 7); // long snout
+  p.ell(806, 416, 6, 5, INK, 0); // nose
   p.ell(738, 380, 7, 9, INK, 0); p.ell(770, 398, 7, 6, INK, 0);
   p.arc(752, 414, 17, 8, 20, 160, 4, dark);
 };
@@ -768,7 +774,7 @@ export const dog = (p: Pen, opts: { phase?: number; col?: string; light?: number
 /** monkey on a body card; `hanuman` gives white fur, a long ringed tail, a gold tiara and a mace */
 export const monkey = (p: Pen, opts: { light?: number; hanuman?: boolean; old?: boolean; phase?: number }) => {
   const { light = DEF_LIGHT, hanuman = false, old = false, phase = 0 } = opts;
-  const fur = hanuman ? "#ece4d2" : "#8a5a3a", face = hanuman ? "#d9a066" : "#c98c5c", dark = mix(fur, INK, 0.4);
+  const fur = hanuman ? "#d89a3a" : "#8a5a3a", face = hanuman ? "#e8b07a" : "#c98c5c", dark = mix(fur, INK, 0.4);
   const thick = thickAngle(light), sway = Math.sin(Math.PI * 2 * phase) * 12;
   // long tail behind, gold rings on the Hanuman tail
   const tail = [...curve([300, 760], [150, 650], [150, 400], 8), ...curve([150, 400], [180, 330], [250, 300], 4).slice(1)];
@@ -920,22 +926,25 @@ export const chariot = (p: Pen, opts: { phase?: number; stuck?: boolean; horses?
     p.ell(cx, cy, 18, 18, gold, 7);
   };
   const n = horses >= 4 ? 4 : 2;
-  const xs = n === 4 ? [620, 680, 740, 800] : [720, 720];
+  const xs = n === 4 ? [640, 710, 780, 850] : [700, 810];
   for (let i = 0; i < n; i++) {
-    const hx = xs[i], s = n === 4 ? 0.5 : 0.72, mcol = i % 2 ? "#f2e6d6" : "#8a5a3a";
-    p.g.save(); p.g.translate(hx, 646 + (i % 2) * 12); p.g.scale(s, s); p.g.translate(-500, -640);
+    const hx = xs[i], sc = n === 4 ? 0.68 : (i ? 0.95 : 1.1), mcol = i % 2 ? "#f2e6d6" : "#8a5a3a";
+    p.g.save(); p.g.translate(hx, 646 + (i % 2) * 18); p.g.scale(sc, sc); p.g.translate(-500, -640);
     horse(p, { light, phase: phase + i * 0.17, col: mcol, saddle: false });
     p.g.restore();
-    p.stroke([[hx + 88 * s, 646 - 310 * s], [600, 350]], 3, "#2a1a1e");
+    p.stroke([[hx + 88 * sc, 646 - 310 * sc], [600, 360]], 4, "#2a1a1e");
   }
+  if (stuck) { p.g.save(); p.g.translate(500, 640); p.g.rotate(-0.10); p.g.translate(-500, -640); }
   p.band([[245, 360], [625, 360]], wood, 24, 3, "round");
-  p.poly([[255, 360], [615, 360], [600, 268], [285, 268]], col, 9);
-  p.stroke([[300, 278], [585, 278]], 6, gold);
-  p.stroke([[325, 356], [325, 284]], 5, gold); p.stroke([[555, 356], [555, 284]], 5, gold);
+  p.poly([[255, 360], [615, 360], [600, 220], [285, 220]], col, 9);
+  p.stroke([[300, 232], [585, 232]], 6, gold);
+  p.stroke([[325, 356], [325, 238]], 5, gold); p.stroke([[555, 356], [555, 238]], 5, gold);
   p.band([[600, 360], [655, 332]], woodDark, 12, 3, "round");
   p.stroke([[600, 360], [700, 420]], 5, woodDark);
   p.band([[625, 360], [700, 360]], woodDark, 9, 2, "round");
-  wheel(365, 520, 118); wheel(530, 520, 118);
+  p.ell(370, 528, 22, 112, mix(woodDark, INK, 0.35), 6); // far wheel sliver
+  wheel(470, 520, 132);
+  if (stuck) { p.ell(470, 646, 150, 20, "#3a2418", 0); p.ell(470, 646, 90, 14, "#151018", 0); p.g.restore(); }
   p.band([[270, 360], [270, 82]], wood, 9, 3, "round");
   p.poly([[270, 92], [440, 120], [270, 190]], "#c0392b", 7);
   if (emblem === "sun") { p.ell(335, 140, 22, 22, gold, 5); for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; p.stroke([[335 + Math.cos(a) * 27, 140 + Math.sin(a) * 27], [335 + Math.cos(a) * 38, 140 + Math.sin(a) * 38]], 4, gold); } }

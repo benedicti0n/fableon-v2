@@ -146,6 +146,12 @@
         },
         "thumbnailText": {
           "type": "string"
+        },
+        "accent": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },

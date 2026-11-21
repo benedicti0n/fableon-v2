@@ -17,11 +17,20 @@ async function metrics(paths) {
   try { return JSON.parse(r.stdout.trim().split('\n').at(-1)); } catch { return []; }
 }
 
+const storyboardFps = (projectDir) => { try { return JSON.parse(readFileSync(join(projectDir, 'storyboard.json'), 'utf8')).fps ?? 30; } catch { return 30; } };
+
 export function candidateFrames(projectDir) {
   const shots = JSON.parse(readFileSync(join(projectDir, 'shots.json'), 'utf8'));
   const board = JSON.parse(readFileSync(join(projectDir, 'board.json'), 'utf8'));
   const frames = existsSync(join(projectDir, 'frames.json')) ? JSON.parse(readFileSync(join(projectDir, 'frames.json'), 'utf8')) : { keys: [] };
   const script = JSON.parse(readFileSync(join(projectDir, 'script.json'), 'utf8'));
+  const words = existsSync(join(projectDir, 'words.json')) ? JSON.parse(readFileSync(join(projectDir, 'words.json'), 'utf8')) : [];
+  const cast = existsSync(join(projectDir, 'cast.json')) ? JSON.parse(readFileSync(join(projectDir, 'cast.json'), 'utf8')) : { characters: [] };
+  const variantAt = (ch) => Math.max(...(ch.variants ?? []).map((v) => {
+    const m = /^(\d+):(\d+)/.exec(String(v.at)); if (!m) return 0;
+    const hit = words.find((w) => w.line === Number(m[1]) && w.wordIndex === Number(m[2])) ?? words.filter((w) => w.line === Number(m[1]))[Number(m[2])];
+    return hit ? Math.round(hit.a * (storyboardFps(projectDir))) : 0;
+  }), 0);
   const beatByLine = new Map((script.lines ?? []).map((l) => [l.n, l.beat]));
   const beatOf = (shot) => {
     const lines = (shot.lines ?? []).map((n) => beatByLine.get(n)).filter(Boolean);
@@ -32,7 +41,15 @@ export function candidateFrames(projectDir) {
     const shot = board.shots?.[i] ?? {};
     const trans = shot.transition;
     const pad = trans ? Math.max(10, Math.round(Number(trans.frames ?? 7) * 2)) : 10;
-    const frame = Math.min(b - 1, Math.max(a + pad, Math.round((a + b) / 2)));
+    let frame = Math.min(b - 1, Math.max(a + pad, Math.round((a + b) / 2)));
+    const castIds = (shot.actors ?? []).map((x) => x.cast).filter(Boolean);
+    for (const id of castIds) {
+      const ch = (cast.characters ?? []).find((x) => x.id === id); const vf = ch ? variantAt(ch) : 0;
+      if (!(vf > frame && vf < b - 8)) continue;
+      const after = (frames.keys ?? []).filter((k) => k.shot === shot.id && k.frames?.some((f) => f >= vf + 15) && k.subjects?.some((x) => x.id === id && x.headBox && x.headBox.x0 > 0.01 && x.headBox.x1 < 0.99 && x.headBox.y1 < 0.99))
+        .sort((x, y) => Math.min(...x.frames.filter((f) => f >= vf + 15)) - Math.min(...y.frames.filter((f) => f >= vf + 15)))[0];
+      frame = after ? Math.min(b - 1, after.frames.filter((f) => f >= vf + 15)[0]) : Math.min(b - 1, vf + 30);
+    }
     const key = (frames.keys ?? []).filter((k) => k.shot === shot.id && k.frames?.some((f) => Math.abs(f - frame) <= 12)).sort((x, y) => Math.abs((x.frames?.[0] ?? 0) - frame) - Math.abs((y.frames?.[0] ?? 0) - frame))[0] ?? null;
     const subject = key?.subjects?.[0] ?? null;
     const subjects = key?.subjects ?? [];
@@ -97,12 +114,13 @@ const fontData = () => {
 };
 
 /** Compose one cover from a candidate image. Text stays above the bottom 25% and right 15%. */
-export async function composeCover(projectDir, { image, text, template = 'title', out = 'publish/cover.jpg' } = {}) {
+export async function composeCover(projectDir, { image, text, template = 'title', out = 'publish/cover.jpg', accent: accentWord = null } = {}) {
   if (!image || !existsSync(join(projectDir, image))) throw new Error(`cover candidate ${image} is missing`);
   const img = readFileSync(join(projectDir, image)).toString('base64');
   const font = fontData();
   const words = String(text || '').split(/\s+/).filter(Boolean);
-  const accent = words.length > 1 ? 1 : 0;
+  let accent = words.length > 1 ? 1 : 0;
+  if (accentWord) { const clean = String(accentWord).replace(/[?!।,.;:'"()]/g, ''); const hits = words.map((w, i) => (w.replace(/[?!।,.;:'"()]/g, '').includes(clean) || clean.includes(w.replace(/[?!।,.;:'"()]/g, '')) ? i : -1)).filter((i) => i >= 0); if (hits.length) accent = hits[hits.length - 1]; }
   const styled = words.map((w, i) => `<span class="${i === accent ? 'accent' : ''}">${w.replace(/[&<>]/g, '')}</span>`).join(' ');
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>
     @font-face{font-family:'NotoDeva';src:url(data:font/woff2;base64,${font ?? ''}) format('woff2');font-weight:900}

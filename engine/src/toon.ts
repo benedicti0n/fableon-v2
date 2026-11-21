@@ -360,7 +360,7 @@ export const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k
 /** face v2 (front / 3-4). u = 1 % of the head path width W. Eyes 26u apart on the centre line, brows 20u up, mouth 20u
  *  down, everything slid toward the facing side. No blush, no catchlights. */
 export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing: number, look: number, lid: number, brim: boolean,
-  skin: string, moustache?: string, stout = false, featureRim = false) => {
+  skin: string, moustache?: string, stout = false, featureRim = false, browFloor?: number) => {
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy;
   const rimCol = mix(skin, "#ffffff", 0.2);
@@ -371,6 +371,7 @@ export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr,
     if (featureRim) p.stroke(ellPts(x, ey, (kind === "shock" ? 12.5 : 8.5) * u, (kind === "shock" ? 12.5 : 10.5) * u), 1.2 * u, rimCol);
     eye(p, kind, x, ey, u, side, look, skin, line);
     const [dI, dO] = F.brow; let by = ey - (brim ? 17 : 20) * u;
+    if (browFloor !== undefined) by = Math.max(by, browFloor);
     if (expr === "smirk" && side > 0) by -= 8 * u;
     if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u, line);
     else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u, line);

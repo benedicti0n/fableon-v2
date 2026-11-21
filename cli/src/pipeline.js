@@ -1,6 +1,6 @@
 // Phase 1 pipeline: init -> voice -> shots -> stills/render -> audio -> assemble -> qa (all against one project folder).
 import { copyFileSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { basename, join } from 'node:path';
 import { ASSEMBLE_MJS, CLI, RENDER_CJS, ROOT, findPython, run } from './env.js';
 import { assertProjectInputs, initProject, projectDir, quality, requireFile } from './project.js';
@@ -331,6 +331,10 @@ export async function runQa(dirArg) {
   writeFileSync(metaVideo, JSON.stringify(meta, null, 2) + '\n');
   const projectJson = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
   await run(py, [join(ROOT, 'tools', 'qa', 'short_qa.py'), join(dir, 'final.mp4'), out, metaVideo], { cwd: ROOT, env: { ...process.env, ...styleQaEnv(projectJson) } });
+  const colorEnabled = !projectJson.style || projectJson.style === 'toon3d';
+  const colorRun = colorEnabled ? spawnSync(py, [join(ROOT, 'tools', 'qa', 'color_qa.py'), dir], { encoding: 'utf8' }) : null;
+  const colorLines = colorRun ? (colorRun.stdout || '').trim().split('\n').filter((l) => l.startsWith('COLOR ')) : [`COLOR SKIP style ${projectJson.style}`];
+  const colorOk = colorRun ? colorRun.status === 0 : true;
   let voiceOk = true;
   if (existsSync(join(dir, 'voice.wav')) && existsSync(join(dir, 'words.json'))) {
     try { await run(py, [join(ROOT, 'tools', 'qa', 'voice_qa.py'), dir], { cwd: ROOT }); }
@@ -352,7 +356,7 @@ export async function runQa(dirArg) {
   const white = listOf((/white (\[[^\]]*\])/.exec(framesLine) || [])[1] || '[]');
   const spanList = (t) => { const out = []; const re = /\((\d+)\s*,\s*(\d+)\)/g; let m; while ((m = re.exec(t))) out.push([Number(m[1]), Number(m[2])]); return out; };
   const frozen = spanList(framesLine);
-  const ok = !black.length && !white.length && !frozen.length && !unexplained.length && voiceOk;
+  const ok = !black.length && !white.length && !frozen.length && !unexplained.length && voiceOk && colorOk;
   const md = [
     '# QA summary',
     '',
@@ -362,6 +366,7 @@ export async function runQa(dirArg) {
     `- planned events ignored (±3 frames; concat/encode has a 2-frame start offset): ${eventFrames.size} frames from ${existsSync(join(dir, 'events.json')) ? 'events.json' : 'cuts.json'} + board punches/kicks`,
     `- pops reported by QA: ${pops.length ? pops.join(', ') : 'none'}`,
     `- unexplained pops: ${unexplained.length ? unexplained.join(', ') : 'none'}`,
+    ...colorLines,
     '',
     `- voice QA: ${voiceOk ? 'PASS' : 'FAIL'} (${join(dir, 'voice-qa.md')})`,
     `- look QA: ${look ? `${look.warnings.length} warning(s)` : 'not run'} (${join(dir, 'look-qa.md')})`,

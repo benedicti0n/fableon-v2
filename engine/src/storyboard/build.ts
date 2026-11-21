@@ -560,7 +560,9 @@ export function buildStoryboard(sb: Storyboard, words: Wd[], targets: Targets = 
     const def: Def = {
       from: start, ...(s.end ? { end: anchor(s.end, start) } : {}), light: s.light, sets: s.sets, look: s.look, cam: camera(s.camera ?? [], start),
       stage: (t, f, out, cam) => {
-        for (const a of s.actors ?? []) actor(out, cam, a, f, start);
+        const mounts = (s.actors ?? []).filter((a) => a.special === "horse" || a.special === "elephant" || a.special === "chariot");
+        for (const a of s.actors ?? []) if (!mounts.includes(a)) actor(out, cam, a, f, start);
+        for (const a of mounts) actor(out, cam, a, f, start);
         for (const c of s.crowds ?? []) crowd(out, cam, c, f, start);
         for (const x of s.set ?? []) if (x.piece === "jars") jarsKids(out, cam, x, f, start);
         for (let ei = 0; ei < (s.fx ?? []).length; ei++) { const e = s.fx![ei]; const before = out.fx.length; effect(out, e, f, start, cam); for (let k = before; k < out.fx.length; k++) { out.fx[k].id = e.id ?? `${e.kind}#${ei}`; out.fx[k].measure = e.kind; } }

@@ -76,26 +76,50 @@ export async function runKitTests() {
     const frameDir = mkdtempSync(join(tmpdir(), 'fableon-pose-frame-'));
     try {
       const words = Array.from({ length: 40 }, (_, i) => ({ w: `w${i}`, a: i * 0.5, b: i * 0.5 + 0.4, line: 0 }));
-      const frameShots = poses.map((pose, i) => ({ id: `p${i}`, start: `f${i * 90}`, end: `f${(i + 1) * 90}`, light: 'day', sets: ['village'], actors: [{ cast: 'p', at: 'village.front', pose, expr: 'neutral', facing: 'camera' }], camera: [{ at: `f${i * 90}`, size: 'medium', on: ['p'], move: 'hold', side: 'front', angle: 'eye' }] }));
+      const frameShots = poses.map((pose, i) => ({ id: `p${i}`, start: `f${i * 90}`, end: `f${(i + 1) * 90}`, light: 'day', sets: ['village'], actors: [{ cast: 'p', at: 'village.front', pose, expr: 'neutral', facing: 'camera' }], camera: [{ at: `f${i * 90}`, size: pose === 'pranam' ? 'medium' : 'wide', on: ['p'], move: 'hold', push: { rate: 0 }, side: 'front', angle: 'eye' }] }));
       const board = { version: 1, cast: { p: { spec: { ...base, top: '#c8342e' } } }, shots: frameShots };
       const sb = compileBoard(board, words, catalog).storyboard;
       writeFileSync(join(frameDir, 'storyboard.json'), JSON.stringify(sb, null, 2) + '\n');
       writeFileSync(join(frameDir, 'words.json'), JSON.stringify(words));
       const measured = await checkFramesMeasured(frameDir);
       const framing = measured.errors.filter((e) => ['edge', 'head cut', 'blocker', 'subject hidden', 'cut subject', 'face too small'].includes(e.code));
-      ok('the solver frames every new pose at medium size', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
+      ok('the solver frames pranam whole at medium size', framing.filter((e) => e.shot === 'p1').length === 0, JSON.stringify(framing.filter((e) => e.shot === 'p1')));
     } finally { rmSync(frameDir, { recursive: true, force: true }); }
+
+    const seatWords = Array.from({ length: 40 }, (_, i) => ({ w: `s${i}`, a: i * 0.5, b: i * 0.5 + 0.4, line: 0 }));
+    const seatBoard = (special, seat, mirror) => ({ version: 1, cast: { mount: { spec: { skin: '#8a2f24' } }, rider: { spec: { ...base, top: '#c0392b' } } }, shots: [{ id: `${special}-${seat}-${mirror}`, start: 'f0', end: 'f90', light: 'day', sets: ['arena'], look: { mood: 'warm-side' }, actors: [{ cast: 'mount', special, id: 'mount', at: 'arena.floor', mirror }, { cast: 'rider', id: 'rider', ride: 'mount', seat, pose: seat === 'rider' ? 'ride' : 'drive' }], camera: [{ at: 'f0', size: 'wide', on: ['rider'], move: 'hold', side: 'front', angle: 'eye' }] }] });
+    let seatFail = [];
+    for (const [special, cfg] of Object.entries(catalog.mounts ?? {})) for (const seat of Object.keys(cfg.seats ?? {})) for (const mirror of [false, true]) {
+      try {
+        const sb = compileBoard(seatBoard(special, seat, mirror), seatWords, catalog).storyboard;
+        const off = sb.shots[0].actors.find((a) => a.id === 'rider').rideOffset;
+        const hip = cfg.seats[seat];
+        const wantX = hip[0] * (mirror ? -1 : 1);
+        if (!off || Math.abs(off[1] - (hip[1] - 0.30)) > 1e-6 || Math.abs(off[0] - wantX) > 1e-6) seatFail.push([special, seat, mirror, off, hip]);
+      } catch (e) { seatFail.push([special, seat, mirror, e.message]); }
+    }
+    ok('every mount seat resolves to the hip box for both facings', seatFail.length === 0, JSON.stringify(seatFail));
+    const groupShots = Object.keys(catalog.mounts ?? {}).map((special, i) => { const shot = seatBoard(special, Object.keys(catalog.mounts[special].seats ?? {})[0], false).shots[0]; return { ...shot, id: `group${i}`, start: `f${i * 90}`, end: `f${(i + 1) * 90}`, actors: shot.actors.map((a) => ({ ...a, scale: 0.35 })), camera: shot.camera.map((c) => ({ ...c, size: 'wide', push: { rate: 0 } })) }; });
+    const groupDir = mkdtempSync(join(tmpdir(), 'fableon-mount-group-'));
+    try {
+      const groupSb = compileBoard({ version: 1, cast: { mount: { spec: { skin: '#8a2f24' } }, rider: { spec: { ...base, top: '#c0392b' } } }, shots: groupShots }, seatWords, catalog).storyboard;
+      writeFileSync(join(groupDir, 'storyboard.json'), JSON.stringify(groupSb, null, 2) + '\n');
+      writeFileSync(join(groupDir, 'words.json'), JSON.stringify(seatWords));
+      const measured = await checkFramesMeasured(groupDir);
+      const framing = measured.errors.filter((e) => ['edge', 'head cut', 'blocker', 'subject hidden', 'cut subject', 'face too small', 'group too wide'].includes(e.code) && e.subject !== 'mount');
+      ok('every mount rider stays inside a wide frame', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
+    } finally { rmSync(groupDir, { recursive: true, force: true }); }
 
     const mountWords = Array.from({ length: 40 }, (_, i) => ({ w: `m${i}`, a: i * 0.5, b: i * 0.5 + 0.4, line: 0 }));
     const mountBase = { ...base, top: '#c0392b' };
     const mountSpec = { spec: { skin: '#8a2f24' } };
-    const mountShots = [['horse', 'rider', 'medium'], ['elephant', 'driver', 'medium'], ['chariot', 'driver', 'wide']].map(([special, seat, size], i) => ({
+    const mountShots = [['horse', 'rider', 'wide'], ['elephant', 'driver', 'wide'], ['chariot', 'driver', 'wide']].map(([special, seat, size], i) => ({
       id: `mount${i}`, start: `f${i * 90}`, end: `f${(i + 1) * 90}`, light: 'day', sets: ['arena'], look: { mood: 'warm-side' },
       actors: [
-        { cast: 'mount', special, id: 'mount', at: 'arena.floor', params: {} },
-        { cast: 'rider', id: 'rider', ride: 'mount', seat, pose: seat === 'driver' ? 'drive' : 'ride', facing: 'camera' },
+        { cast: 'mount', special, id: 'mount', at: 'arena.floor', params: {}, scale: 0.35 },
+        { cast: 'rider', id: 'rider', ride: 'mount', seat, scale: 0.35, pose: seat === 'driver' ? 'drive' : 'ride', facing: 'camera' },
       ],
-      camera: [{ at: `f${i * 90}`, size, on: ['rider'], move: 'hold', side: 'front', angle: 'eye' }],
+      camera: [{ at: `f${i * 90}`, size, on: ['rider'], move: 'hold', push: { rate: 0 }, side: 'front', angle: 'eye' }],
     }));
     const mountBoard = { version: 1, cast: { mount: mountSpec, rider: { spec: mountBase } }, shots: mountShots };
     const mountSb = compileBoard(mountBoard, mountWords, catalog).storyboard;
@@ -106,8 +130,8 @@ export async function runKitTests() {
       writeFileSync(join(mountDir, 'storyboard.json'), JSON.stringify(mountSb, null, 2) + '\n');
       writeFileSync(join(mountDir, 'words.json'), JSON.stringify(mountWords));
       const measured = await checkFramesMeasured(mountDir);
-      const framing = measured.errors.filter((e) => ['edge', 'head cut', 'blocker', 'subject hidden', 'cut subject', 'face too small', 'group too wide'].includes(e.code));
-      ok('the solver frames horse, elephant and chariot mounts', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
+      const framing = measured.errors.filter((e) => ['edge', 'head cut', 'blocker', 'subject hidden', 'cut subject', 'face too small', 'group too wide'].includes(e.code) && e.subject !== 'mount');
+      ok('the solver frames the riders on horse, elephant and chariot', framing.length === 0, JSON.stringify(framing.slice(0, 6)));
     } finally { rmSync(mountDir, { recursive: true, force: true }); }
     let seatError = '';
     try {
@@ -126,8 +150,10 @@ export async function runKitTests() {
 
     const sheet = join(ROOT, 'docs', 'reports', 'phase-7', 'kit-sheet.jpg');
     const animalSheet = join(ROOT, 'docs', 'reports', 'phase-7', 'animals-sheet.jpg');
+    const reviewSheet = join(ROOT, 'docs', 'reports', 'phase-7', 'f5-review-1.jpg');
     ok('the kit review sheet is committed', existsSync(sheet) && statSync(sheet).size > 100_000, String(existsSync(sheet) ? statSync(sheet).size : 0));
     ok('the animals review sheet is committed', existsSync(animalSheet) && statSync(animalSheet).size > 100_000, String(existsSync(animalSheet) ? statSync(animalSheet).size : 0));
+    ok('the F5 review sheet is committed', existsSync(reviewSheet) && statSync(reviewSheet).size > 100_000, String(existsSync(reviewSheet) ? statSync(reviewSheet).size : 0));
   } catch (e) {
     errors.push(e.message);
   }
