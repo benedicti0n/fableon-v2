@@ -1,237 +1,261 @@
 # Episode census
 
-Generated 2026-11-21T08:22:12.816Z. Inventory episodes: 70.
+Generated 2026-11-21T11:34:01.833Z. Inventory episodes: 70.
+
+## Section mapping
+
+Parsed section counts per book (verified against the standard Ganguli numbering):
+
+| book | sections |
+|---|---:|
+| 1 | 234 |
+| 2 | 79 |
+| 3 | 313 |
+| 4 | 72 |
+| 5 | 199 |
+| 6 | 124 |
+| 7 | 196 |
+| 8 | 96 |
+| 9 | 65 |
+| 10 | 18 |
+| 11 | 27 |
+| 12 | 362 |
+| 13 | 168 |
+| 14 | 92 |
+| 15 | 39 |
+| 16 | 8 |
+| 17 | 3 |
+| 18 | 6 |
+
+Every mapped range is a real section range; no episode uses the Adi Anukramanika/Parva-sangraha summary, and no episode uses a keyword-window fallback. Books 8–11 and 16–18 number their sections with Arabic numerals. Book 3 keeps the source’s later nonstandard headings (CCLXL, CCLXLI, … CCCXIII) verbatim so every range matches the text.
 
 ## Coverage
 
-| episode | book | sections | parts | stageable | missing |
-|---|---:|---|---:|---|---|
-| janamejaya-snake-sacrifice · Janamejaya’s snake sacrifice | 1 | I–I | 1 | yes | — |
-| bhima-naga · Bhima in the Naga realm | 1 | II–II | 1 | yes | — |
-| kauravas-birth · The birth of the Kauravas | 1 | I–I | 1 | yes | — |
-| drona-ball-well · Drona and the ball in the well | 1 | CXV–CXV | 1 | yes | — |
-| bird-eye-test · The bird’s eye test | 1 | II–II | 1 | yes | — |
-| ekalavya · Ekalavya | 1 | LXVII–LXVII | 1 | no | places:sabha |
-| karna-tournament · Karna at the tournament | 1 | I–I | 1 | yes | — |
-| house-of-lac · The house of lac | 1 | I–I | 1 | yes | — |
-| hidimba · Hidimba | 1 | II–II | 1 | yes | — |
-| draupadi-swayamvara · Draupadi’s swayamvara | 1 | I–I | 1 | yes | — |
-| arjuna-ulupi · Arjuna and Ulupi | 1 | II–II | 1 | yes | — |
-| arjuna-subhadra · Arjuna and Subhadra | 1 | I–I | 1 | no | places:dwarka |
-| khandava-fire · The Khandava forest fire | 1 | I–I | 1 | yes | — |
-| parikshit-takshaka · Parikshit and Takshaka | 1 | I–I | 1 | yes | — |
-| shakuntala-dushyanta · Shakuntala and Dushyanta | 1 | II–II | 1 | yes | — |
-| maya-hall · Maya builds the assembly hall | 2 | I–I | 1 | no | places:sabha |
-| bhima-jarasandha · Bhima and Jarasandha | 2 | XIV–XIV | 1 | no | places:dwarka, places:mountain |
-| shishupala-insults · Shishupala’s hundred insults | 2 | IV–IV | 1 | no | places:sabha |
-| duryodhana-illusion · Duryodhana in the hall of illusions | 2 | XI–XI | 1 | no | places:sabha, places:mountain |
-| dice-game · The dice game | 2 | XLVII–XLVII | 1 | no | places:sabha |
-| draupadi-assembly · Draupadi in the assembly | 2 | II–II | 1 | no | places:dwarka, places:sabha |
-| bhima-vows · Bhima’s vows | 2 | II–II | 1 | no | places:dwarka |
-| second-game-exile · The second game and the exile | 2 | V–V | 1 | no | places:sabha |
-| akshaya-patra-durvasa · The akshaya patra and Durvasa’s visit | 3 | LXXXIV–LXXXIV | 1 | yes | — |
-| arjuna-kirata · Arjuna and the Kirata | 3 | XXXIX–XXXIX | 1 | no | places:mountain |
-| arjuna-heaven · Arjuna in Indra’s heaven | 3 | II–II | 1 | yes | — |
-| bhima-hanuman · Bhima meets Hanuman | 3 | CXLV–CXLV | 1 | no | places:mountain, places:mountain, animals:lions, animals:tigers, animals:buffaloes, animals:jackals, animals:gavayas, animals:peacocks, animals:kokilas, animals:ruddy-geese, animals:gallinules, animals:ducks, animals:karandavas, animals:plavas, animals:parrots, animals:herons |
-| saugandhika · The Saugandhika lotus | 3 | LXXXIV–LXXXIV | 1 | no | places:saugandhika-vana-saugandhika-woods, places:saraswati-river-as-goddess-plaksha, places:suvarna-tirtha, places:source-of-the-ganges-gangodbheda, places:gaya-with-akshaya-vata, places:varanasi-with-kapilahrada-and-avimukta, places:gopratra-on-the-sarayu, animals:tortoise-asura, animals:bull-rudra-s-emblem, places:mountain, places:lake |
-| nahusha-python · Nahusha the python | 3 | III–III | 1 | no | places:ganges-riverbank |
-| jayadratha-abduction · Jayadratha’s abduction of Draupadi | 3 | CCLXII–CCLXII | 1 | yes | — |
-| karna-armour · Karna gives away his armour | 3 | XXXII–XXXII | 1 | yes | — |
-| yaksha-questions · The Yaksha’s questions | 3 | XXXIX–XXXIX | 2 | no | places:mountain, places:lake |
-| nala-damayanti · Nala and Damayanti | 3 | LII–LII | 2 | yes | — |
-| weapons-shami · The weapons in the shami tree | 4 | II–II | 1 | yes | — |
-| bhima-cook-jimuta · Bhima the cook and the wrestler Jimuta | 4 | XIII–XIII | 1 | no | animals:tigers, animals:lions |
-| kichaka · Kichaka | 4 | XIV–XIV | 1 | yes | — |
-| brihannala-uttara-cattle · Brihannala, Uttara and the cattle raid | 4 | X–X | 1 | yes | — |
-| arjuna-duryodhana-krishna · Arjuna and Duryodhana at Krishna’s bedside | 5 | I–I | 1 | yes | — |
-| shalya-hospitality · Shalya won over by hospitality | 5 | LXI–LXI | 1 | yes | — |
-| amba-vow · Amba’s vow | 5 | keyword window | 1 | no | places:sabha, places:dwarka |
-| krishna-peace-cosmic · Krishna’s peace mission and the cosmic form | 5 | V–V | 1 | no | places:dwarka, places:land-of-the-kurus-and-pandavas-filled-with-marching-forces |
-| kunti-karna · Kunti and Karna | 5 | I–I | 1 | yes | — |
-| krishna-offer-karna · Krishna’s offer to Karna | 5 | I–I | 1 | yes | — |
-| conches · The conches | 6 | XXV–XXV | 1 | no | places:kurukshetra, animals:white-steeds, vehicles:great-car-of-krishna-and-arjuna |
-| gita-cosmic · The Gita and the cosmic form | 6 | XIII–XIII | 1 | no | places:kurukshetra |
-| yudhishthira-blessings · Yudhishthira asks the elders’ blessings | 6 | keyword window | 1 | no | places:kurukshetra |
-| krishna-wheel · Krishna takes up the wheel | 6 | III–III | 1 | no | places:sky-over-the-kuru-realm, animals:asses, animals:kine, animals:vultures, animals:parrots, animals:wood-peckers, animals:jackals, animals:cocks, animals:peacocks, animals:garudas |
-| bhishma-fall · Bhishma’s fall and the bed of arrows | 6 | XIII–XIII | 1 | no | places:kurukshetra |
-| abhimanyu-chakravyuha · Abhimanyu in the chakravyuha | 7 | X–X | 1 | no | places:kurukshetra |
-| jayadratha-false-sunset · Jayadratha and the false sunset | 7 | XIV–XIV | 1 | no | places:kurukshetra, animals:steeds |
-| ghatotkacha-night · Ghatotkacha’s night and Karna’s spear | 7 | VIII–VIII | 1 | no | places:kurukshetra, animals:drona-s-red-steeds, vehicles:drona-s-car-with-standard |
-| ashwatthama-dead · “Ashwatthama is dead” | 7 | keyword window | 1 | no | places:kurukshetra |
-| bhima-dushasana · Bhima and Dushasana | 8 | 1–1 | 1 | no | places:kaurava-camp-at-night, places:duryodhana-s-tent, places:kurukshetra |
-| karna-wheel · Karna’s wheel | 8 | 9–9 | 1 | no | places:kurukshetra |
-| duryodhana-lake · Duryodhana in the lake | 9 | 1–1 | 1 | no | places:kuru-camp, places:kurukshetra, places:lake |
-| mace-duel · The mace duel | 9 | 3–3 | 1 | no | places:kurukshetra |
-| owl-crows-night-raid · The owl and the crows, the night raid | 10 | 1–1 | 1 | no | places:banyan-covered-with-roosting-crows, animals:steeds, vehicles:cars |
-| ashwatthama-gem · Ashwatthama’s gem | 10 | 11–11 | 1 | no | places:pandava-camp, animals:steeds, vehicles:bhima-s-car, vehicles:nakula-s-car |
-| dhritarashtra-iron-bhima · Dhritarashtra and the iron Bhima | 11 | 12–12 | 1 | no | places:banks-of-the-ganga |
-| gandhari-curse · Gandhari’s curse | 11 | 1–1 | 1 | yes | — |
-| bhishma-teachings · Bhishma’s teachings from the bed of arrows | 12 | IV–IV | 2 | no | vehicles:golden-car-of-duryodhana, vehicles:karna-s-car |
-| arjuna-babruvahana · Arjuna and Babruvahana | 14 | keyword window | 1 | no | places:bank-of-the-ganga, places:gate-of-varanasi, places:under-a-sacred-fig-tree |
-| mongoose · The half-golden mongoose | 14 | XC–XC | 1 | no | places:kurukshetra |
-| elders-forest · The elders’ last forest | 15 | III–III | 1 | yes | — |
-| samba-pestle · Samba and the iron pestle | 16 | keyword window | 1 | no | places:dwarka, places:prabhasa, animals:celestial-snakes-karkotaka-vasuki-takshaka-etc, animals:white-snake-rama-s-serpent-form, vehicles:krishna-s-car, vehicles:baladeva-s-car |
-| yadava-end · The end of the Yadavas | 16 | 2–2 | 1 | no | places:dvaraka, places:dwarka, animals:rats, animals:mice, animals:sarikas, animals:sarashas, animals:goats, animals:jackals, animals:pigeons, animals:asses, animals:kine, animals:mules, animals:cats, animals:bitches |
-| krishna-jara · Krishna and the hunter Jara | 16 | 1–1 | 1 | no | places:dwarka, places:dwarka |
-| dwarka-sea · Dwarka and the sea | 16 | keyword window | 1 | no | places:dwarka, places:prabhasa, places:dwarka, animals:rats-and-mice, animals:sarikas, animals:pigeons, animals:asses, animals:jackals, animals:white-snake-rama-s-serpent, vehicles:krishna-s-car, vehicles:rama-s-car, vehicles:daruka-s-car |
-| great-journey-dog · The great journey and the dog | 17 | 1–1 | 1 | no | places:dwarka, places:dwarka, places:dwarka, places:mountain |
-| yudhishthira-test · Yudhishthira’s last test | 18 | 1–1 | 1 | no | places:heaven |
+| episode | book | range | key names | first sentence | stageable | missing |
+|---|---:|---|---:|---|---|---|
+| janamejaya-snake-sacrifice · Janamejaya’s snake sacrifice | 1 | L–LVIII | Janamejaya:19, Takshaka:42, snake:37 | (Astika Parva continued) 'Sauti continued, 'The ministers said, 'That king of kings then, spent with hunger and exertion, and having placed the snake  | yes | — |
+| bhima-naga · Bhima in the Naga realm | 1 | CXXIX–CXXIX | Bhima:14, Nagas:3 | (Sambhava Parva continued) "Vaisampayana said, 'Meanwhile the Kauravas and the Pandavas, after having thus sported there, set out, without Bhima, for  | yes | — |
+| kauravas-birth · The birth of the Kauravas | 1 | CXV–CXXVII | Gandhari:14, sons:48 | (Sambhava Parva continued) "Vaisampayana said, 'Meanwhile, O Janamejaya, Dhritarashtra begat upon Gandhari a hundred sons, and upon a Vaisya wife anot | no | places:sabha, places:mountain |
+| drona-ball-well · Drona and the ball in the well | 1 | CXXXI–CXXXIII | Drona:33, ball:6, well:7 | (Sambhava Parva continued) "Vaisampayana said, 'Desirous of giving his grandsons a superior education, Bhishma was on the look-out for a teacher endue | yes | — |
+| bird-eye-test · The bird’s eye test | 1 | CXXXV–CXXXV | bird:3, Drona:10 | (Sambhava Parva continued) "Vaisampayana said, 'When everyone had failed, Drona smilingly called Arjuna and said unto him, 'By thee the aim must be sh | yes | — |
+| ekalavya · Ekalavya | 1 | CXXXIV–CXXXIV | Ekalavya:9 | (Sambhava Parva continued) "Vaisampayana said, 'Thus worshipped by Bhishma, Drona, that first of men, endued with great energy, took up his quarters i | yes | — |
+| karna-tournament · Karna at the tournament | 1 | CXXXVIII–CXXXIX | Karna:29, Arjuna:4, arena:4 | (Sambhava Parva continued) "Vaisampayana continued, 'When the spectators, with eyes expanded with wonder, made way for that subjugator of hostile citi | yes | — |
+| house-of-lac · The house of lac | 1 | CXLIII–CLIII | lac:10, house:26, fire:15 | (Jatugriha Parva) "Vaisampayana said, 'Then the son of Suvala (Sakuni), king Duryodhana, Duhsasana and Kama, in consultation with one another, formed  | no | places:lake |
+| hidimba · Hidimba | 1 | CLIV–CLVIII | Hidimva:35, Bhima:36 | (Hidimva-vadha Parva) "Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a Rakshasa by name Hidimva dwelt on the Sala tree. P | yes | — |
+| draupadi-swayamvara · Draupadi’s swayamvara | 1 | CLXXXVI–CLXLIV | Draupadi:10, swayamvara:20, Arjuna:23 | (Swayamvara Parva) "Vaisampayana said, 'Then those tigers among men--those brothers--the five Pandavas, set out for Panchala to behold that country an | yes | — |
+| arjuna-ulupi · Arjuna and Ulupi | 1 | CCXV–CCXX | Ulupi:6, Arjuna:37 | (Arjuna-vanavasa Parva) "Vaisampayana said, 'The Pandavas, having established such a rule, continued to reside there. By the prowess of their arms the | no | places:dwarka, places:mountain |
+| arjuna-subhadra · Arjuna and Subhadra | 1 | CCXXI–CCXXIII | Subhadra:14, Arjuna:21 | (Subhadra-harana Parva) "Vaisampayana said, 'O best of monarchs, within a few days after this, there commenced on the Raivataka mountain, a grand fest | no | places:mountain, places:dwarka, places:sabha |
+| khandava-fire · The Khandava forest fire | 1 | CCXXIV–CCXXXVI | Khandava:48, Agni:53, fire:45 | (Khandava-daha Parva) "Vaisampayana said, 'The Pandavas, after they had taken up their abode at Indraprastha at the command of Dhritarashtra and Bhish | yes | — |
+| parikshit-takshaka · Parikshit and Takshaka | 1 | XL–XLIV | Parikshit:10, Takshaka:27, snake:20 | (Astika Parva continued) "Saunaka said, 'O son of Suta, I desire to know the reason why the illustrious Rishi whom thou hast named Jaratkaru came to b | yes | — |
+| shakuntala-dushyanta · Shakuntala and Dushyanta | 1 | LXIX–LXXIV | Sakuntala:28, Dushmanta:26 | (Sambhava Parva continued) "Janamejaya said, 'I desire to hear from thee about the birth and life of the high-souled Bharata and of the origin of Saku | no | places:sabha |
+| maya-hall · Maya builds the assembly hall | 2 | I–IV | Maya:17, sabha:6 | (Sabhakriya Parva) Om! After having bowed down to Narayana, and Nara, the most exalted male being, and also to the goddess Saraswati, must the word Ja | no | places:sabha |
+| bhima-jarasandha · Bhima and Jarasandha | 2 | XX–XXIV | Jarasandha:46, Bhima:28 | (Jarasandhta-badha Parva) "Krishna said,--both Hansa and Dimvaka have fallen; Kansa also with all his followers has been slain. The time hath, therefo | no | places:mountain |
+| shishupala-insults · Shishupala’s hundred insults | 2 | XXXIX–XLIV | Sisupala:16, Krishna:23 | (Sisupala-badha Parva) "Vaisampayana said,--Beholding that vast assembly of kings agitated with wrath, even like the terrific sea agitated by the wind | no | places:sabha |
+| duryodhana-illusion · Duryodhana in the hall of illusions | 2 | XLVI–XLVIII | Duryodhana:28, assembly:8 | Vaisampayana said,--"That bull among men, Duryodhana, continued to dwell in that, assembly house (of the Pandavas). And with Sakuni, the Kuru prince s | no | places:sabha |
+| dice-game · The dice game | 2 | XLIX–LXV | dice:43, Sakuni:40, Yudhishthira:99 | Janamejaya said,--"O thou foremost of all conversant with the Vedas, how did that game at dice take place, fraught with such evil to the cousins and t | no | places:sabha |
+| draupadi-assembly · Draupadi in the assembly | 2 | LXVI–LXIX | Draupadi:36, assembly:53 | Vaisampayana said,--"Intoxicated with pride, the son of Dhritarashtra spake,--'Fie on Kshatta! and casting his eyes upon the Pratikamin in attendance, | no | places:sabha |
+| bhima-vows · Bhima’s vows | 2 | LXX–LXX | Bhima:5, thigh:2 | "Karna said,--'Of all the persons in the assembly, three, viz., Bhishma, Vidura, and the preceptor of the Kurus (Drona) appear to be independent; for  | no | places:sabha |
+| second-game-exile · The second game and the exile | 2 | LXXVI–LXXIX | exile:6, woods:9 | Vaisampayana said,--"Then the vanquished sons of Pritha prepared for their exile into the woods. And they, one after another, in due order, casting of | no | places:sabha |
+| akshaya-patra-durvasa · The akshaya patra and Durvasa’s visit | 3 | CCLX–CCLXI | Durvasa:9, Duryodhana:6, food:6 | Janamejaya said, "While the high-souled Pandavas were living in those woods, delighted with the pleasant conversation they held with the Munis, and en | yes | — |
+| arjuna-kirata · Arjuna and the Kirata | 3 | XXXVIII–XLI | Kirata:20, Arjuna:37 | (Kairata Parva) Janemejaya said, "O illustrious one, I desire to hear in detail the history of the acquisition of weapons by Arjuna of spotless deeds. | no | places:mountain |
+| arjuna-heaven · Arjuna in Indra’s heaven | 3 | XLII–LI | Indra:20, heaven:13, Arjuna:57 | (Indralokagamana Parva) Vaisampayana said, "After the Lokapalas had gone away, Arjuna--that slayer of all foes--began to think, O monarch, of the car  | no | places:mountain |
+| bhima-hanuman · Bhima meets Hanuman | 3 | CXLV–CL | Hanuman:27, Bhima:36 | Vaisampayana said, "There observing cleanliness, those tigers among men dwelt for six nights, in expectation of beholding Dhananjaya. And it came to p | no | places:mountain, places:lake |
+| saugandhika · The Saugandhika lotus | 3 | CLI–CLIV | Saugandhika:6, lotus:11, Bhima:22 | Vaisampayana said, "When that foremost of monkeys had gone away, Bhima, the best of strong men, began to range the huge Gandhamadana along that path.  | no | places:lake, places:mountain |
+| nahusha-python · Nahusha the python | 3 | CLXXVIII–CLXXX | Nahusha:4, serpent:19, Bhima:6 | Vaisampayana continued, "And the powerful Bhimasena, having thus come under the power of the snake, thought of its mighty and wonderful prowess; and s | no | places:mountain |
+| jayadratha-abduction · Jayadratha’s abduction of Draupadi | 3 | CCLXIII–CCLXX | Jayadratha:27, Draupadi:15 | Kotika said, "Excellent lady, who art thou that standest alone, leaning on a branch of the Kadamva tree at this hermitage and looking grand like a fla | yes | — |
+| karna-armour · Karna gives away his armour | 3 | CCLXLVIII–CCCVIII | Karna:37, Sakra:10, ear-rings:49 | Janamejaya said,--"What, O Brahmana, was that great fear entertained by Yudhishthira in respect of Karna, for which Lomasa had conveyed to the son of  | yes | — |
+| yaksha-questions · The Yaksha’s questions | 3 | CCCX–CCCXII | Yaksha:56, Yudhishthira:57 | Yudhishthira said, "There is no limit to calamities. Nor is it possible to ascertain either their final or efficient cause. It is the Lord of justice  | no | places:lake |
+| nala-damayanti · Nala and Damayanti | 3 | LII–LXXIX | Nala:237, Damayanti:171 | (Nalopakhyana Parva) Janamejaya said, "When the high-souled Partha went to Indra's region for obtaining weapons, what did Yudhishthira and the other s | no | places:sabha |
+| weapons-shami · The weapons in the shami tree | 4 | XXXIX–XLVI | weapons:13, Sami:5 | Vaisampayana said, "Beholding that bull among men seated on the car in the habit of a person of the third sex, driving toward the Sami tree, having ta | yes | — |
+| bhima-cook-jimuta · Bhima the cook and the wrestler Jimuta | 4 | X–XIII | Jimuta:2, Bhima:3 | Vaisampayana said, "Then clad in a cowherd's dress, and speaking the dialect of cowherds, Sahadeva came to the cowpen of Virata's city. And beholding  | no | places:sabha |
+| kichaka · Kichaka | 4 | XIV–XXV | Kichaka:108, Draupadi:30 | (Kichaka-badha Parva) Vaisampayana said, "Living in such disguise, those mighty warriors, the sons of Pritha, passed ten months in Matsya's city. And, | no | places:sabha |
+| brihannala-uttara-cattle · Brihannala, Uttara and the cattle raid | 4 | XXXVI–LXVI | Uttara:52, cattle:3, Arjuna:134 | "Uttara said, 'Firm as I am in the use of the bow, I would set out this very day in the track of the kine if only some one skilled in the management o | no | places:sabha |
+| arjuna-duryodhana-krishna · Arjuna and Duryodhana at Krishna’s bedside | 5 | VII–VII | Arjuna:6, Duryodhana:6, Krishna:17 | Vaisampayana said, "Having despatched the priest to the city called after the elephant they sent messengers to the kings of various countries. And hav | no | places:dwarka |
+| shalya-hospitality · Shalya won over by hospitality | 5 | VIII–VIII | Salya:14, Duryodhana:13 | Vaisampayana said, "O king, having learnt the news from the messengers, Salya, accompanied by a large body of troops and by his sons, all of whom were | yes | — |
+| amba-vow · Amba’s vow | 5 | CLXXIV–CLXXVI | Amva:4, Bhishma:14 | "'Duryodhana said, "For what reason, O chief of the Bharatas, wilt thou not slay Sikhandin even if thou beholdest him approach thee as a foe with arms | no | places:sabha |
+| krishna-peace-cosmic · Krishna’s peace mission and the cosmic form | 5 | LXXIX–CXXXIX | Krishna:101, peace:74, form:11 | "The holy one said, 'It shall be, O thou of mighty arms, what thou, O Pandavas, sayest, I will strive to bring about that which would be beneficial to | no | places:sabha |
+| kunti-karna · Kunti and Karna | 5 | CXLIV–CXLVI | Kunti:8, Karna:21 | Vaisampayana said, "Upon the failure of Krishna's solicitations (for peace), and after he had started for the Pandavas from the Kurus, Kshatri approac | yes | — |
+| krishna-offer-karna · Krishna’s offer to Karna | 5 | CXL–CXLIII | Krishna:22, Karna:13 | "Dhritarashtra said, 'O Sanjaya, in the midst of all the princes and the servants, the slayer of Madhu took Karna upon his car and went out (of our ci | yes | — |
+| conches · The conches | 6 | I–I | conches:3 | (Jamvu-khanda Nirmana Parva) OM! HAVING BOWED down to Narayana, and Nara, the most exalted of male beings, and also to the goddess Saraswati, must the | no | places:kurukshetra |
+| gita-cosmic · The Gita and the cosmic form | 6 | XIII–XLII | Gita:21, Krishna:22, Arjuna:67 | (Bhagavat-Gita Parva) Vaisampayana said,--"Possessing a knowledge of the past, the present and the future, and seeing all things as if present before  | no | places:kurukshetra, places:sabha |
+| yudhishthira-blessings · Yudhishthira asks the elders’ blessings | 6 | XLIII–XLIII | Yudhishthira:30, Bhishma:14, blessing:1 | Sanjaya said,--"Beholding Dhananjaya then to take up once again (his) arrows and Gandiva, the mighty car-warriors (of the Pandava party) uttered a tre | no | places:kurukshetra |
+| krishna-wheel · Krishna takes up the wheel | 6 | LIX–LIX | Krishna:11, discus:7 | Dhritarashtra said, "After that dreadful vow had been made in battle by Bhishma enraged by the words of my son, what, O Sanjaya, did Bhishma do unto t | no | places:kurukshetra |
+| bhishma-fall · Bhishma’s fall and the bed of arrows | 6 | CXX–CXXIV | Bhishma:95, arrows:57 | Sanjaya said, "Thus all the Pandavas, placing Sikhandin before them pierced Bhishma in that battle repeatedly surrounding him on all sides. And all th | no | places:kurukshetra |
+| abhimanyu-chakravyuha · Abhimanyu in the chakravyuha | 7 | XXXI–XLVIII | Abhimanyu:129 | (Abhimanyu-badha Parva) "Sanjaya said, 'Having been first broken by Arjuna of immeasurable prowess, and owing also to the failure of Drona's vow, in c | no | places:kurukshetra |
+| jayadratha-false-sunset · Jayadratha and the false sunset | 7 | LXXXV–CXLV | Jayadratha:82, Arjuna:299, sun:89 | (Jayadratha-Vadha Parva) "Dhritarashtra said, 'After Abhimanyu's slaughter when the next day came, what did the Pandavas, afflicted with grief and sor | no | places:kurukshetra |
+| ghatotkacha-night · Ghatotkacha’s night and Karna’s spear | 7 | CLII–CLXXXIII | Ghatotkacha:148, Karna:299 | (Ghatotkacha-badha Parva) "Sanjaya said, 'That elephant force of thine, O king, swelling with might, fought everywhere, prevailing over the Pandava fo | no | places:kurukshetra |
+| ashwatthama-dead · “Ashwatthama is dead” | 7 | CLXXXIV–CXCVI | Aswatthaman:26, Drona:176 | (Drona-vadha Parva) "Sanjaya said, 'Thus addressed by Vyasa, the heroic king Yudhishthira the just refrained, O bull of Bharata's race, from himself s | no | places:kurukshetra |
+| bhima-dushasana · Bhima and Dushasana | 8 | 83–84 | Duhshasana:19, Bhima:26 | "Sanjaya said, 'Fighting fiercely, prince Duhshasana achieved the most difficult feats in that encounter. With a single shaft he cut off Bhima's bow,  | no | places:kurukshetra |
+| karna-wheel · Karna’s wheel | 8 | 90–96 | Karna:147, wheel:11 | "Sanjaya said, 'Flying away in consequence of the falling of Arjuna's arrows, the broken divisions of the Kauravas, staying at a distance, continued t | no | places:kurukshetra |
+| duryodhana-lake · Duryodhana in the lake | 9 | 29–35 | Duryodhana:68, lake:37 | (Hrada-pravesa Parva) "Sanjaya said, 'After this, the followers of Subala's son, O monarch, became filled with rage. Prepared to lay down their lives  | no | places:kurukshetra, places:lake |
+| mace-duel · The mace duel | 9 | 55–65 | mace:57, Duryodhana:71, Bhima:43 | Vaishampayana said, "Even thus, O Janamejaya, did that terrible battle take place. King Dhritarashtra, in great sorrow, said these words with referenc | no | places:kurukshetra |
+| owl-crows-night-raid · The owl and the crows, the night raid | 10 | 1–8 | owl:4, crows:7, night:25 | Om! Having bowed down unto Narayana, and Nara the most exalted of male beings, and unto the goddess Sarasvati, must the word Jaya be uttered! "Sanjaya | no | places:kurukshetra |
+| ashwatthama-gem · Ashwatthama’s gem | 10 | 15–16 | gem:13, Drona:9 | Vaishampayana said, "At the very sight, O tiger among men, of those two Rishis possessed of splendour like that of fire, Dhananjaya quickly resolved t | no | places:kurukshetra |
+| dhritarashtra-iron-bhima · Dhritarashtra and the iron Bhima | 11 | 1–12 | Dhritarashtra:27, Bhima:12, iron:4 | (Jalapradanika-parva) Om! Having bowed down unto Narayana and Nara, the foremost of male beings, and unto the goddess Sarasvati, must the word Jaya be | no | places:sabha |
+| gandhari-curse · Gandhari’s curse | 11 | 20–27 | Gandhari:12, curse:3 | "Gandhari said, 'He whose might and courage were regarded, O Keshava, as a one and half times superior to those of his sire and thee, he who resembled | no | places:kurukshetra |
+| bhishma-teachings · Bhishma’s teachings from the bed of arrows | 12 | I–CXXX | Bhishma:161, Yudhishthira:242 | (Rajadharmanusasana Parva) Om! Having bowed down to Narayana, and Nara, the foremost of male beings, and unto the goddess Saraswati, must the word Jay | no | places:kurukshetra |
+| arjuna-babruvahana · Arjuna and Babruvahana | 14 | LXXIX–LXXXVIII | Vabhruvahana:15, Arjuna:41 | "Vaisampayana said, 'The ruler of Manipura, Vabhruvahana, hearing that his sire Arjuna had arrived within his dominions, went out with humility, with  | no | places:dwarka |
+| mongoose · The half-golden mongoose | 14 | XC–XCII | mongoose:13 | "Janamejaya said, 'It behoveth thee to tell me of any wonderful incident that occurred in the sacrifice of my grandsires.' "Vaisampayana said, 'Hear,  | yes | — |
+| elders-forest · The elders’ last forest | 15 | I–XXVIII | forest:29 | (Asramavasa Parva) OM! AFTER HAVING bowed down to Narayana, and Nara, the foremost of men, and unto the goddess Saraswati also, must the word Jaya be  | yes | — |
+| samba-pestle · Samba and the iron pestle | 16 | 1–4 | Samva:6, bolt:13 | Om! Having bowed down unto Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word "Jaya" be uttered. "Vaishampa | no | places:dwarka |
+| yadava-end · The end of the Yadavas | 16 | 5–8 | Yadavas:1 | "Vaishampayana said: 'Meanwhile Daruka, going to the Kurus and seeing those mighty car-warriors, the son of Pritha, informed them of how the Vrishnis  | no | places:dwarka, places:sabha |
+| krishna-jara · Krishna and the hunter Jara | 16 | 3–6 | Krishna:17, Jara:2 | "Vaishampayana said: 'At that time the Vrishni ladies dreamed every night that a woman of black complexion and white teeth, entering their abodes, lau | no | places:dwarka |
+| dwarka-sea · Dwarka and the sea | 16 | 7–8 | Arjuna:18, sea:1 | "Vaishampayana said: 'That scorcher of foes, Vibhatsu, thus addressed by his maternal uncle, replied, with great cheerlessness of heart, unto Vasudeva | no | places:sabha, places:dwarka |
+| great-journey-dog · The great journey and the dog | 17 | 1–3 | Yudhishthira:28, dog:14 | Om! Having bowed down unto Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word "Jaya" be uttered. "Janamejay | no | places:mountain |
+| yudhishthira-test · Yudhishthira’s last test | 18 | 1–6 | Yudhishthira:30 | Om! Having bowed down into Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word "Jaya" be uttered. "Janamejay | no | places:sabha |
 
 ## Matrix
 
 | kind | have | spec | stand-in | missing |
 |---|---:|---:|---:|---:|
-| places | 7 | 0 | 71 | 70 |
-| characters | 124 | 552 | 0 | 0 |
-| props | 93 | 151 | 0 | 0 |
-| actions | 49 | 280 | 0 | 0 |
-| animals | 41 | 0 | 0 | 52 |
-| effects | 7 | 34 | 0 | 0 |
-| vehicles | 6 | 0 | 0 | 12 |
+| places | 79 | 0 | 27 | 69 |
+| characters | 170 | 657 | 0 | 0 |
+| animals | 45 | 0 | 0 | 0 |
+| vehicles | 31 | 0 | 0 | 0 |
+| props | 113 | 168 | 0 | 0 |
+| actions | 57 | 333 | 0 | 0 |
+| effects | 43 | 120 | 0 | 0 |
+
+## Stageable now and after each set
+
+| state | stageable |
+|---|---:|
+| now (verified) | 19 |
+| after places:sabha | 35 |
+| after places:mountain | 24 |
+| after places:lake | 21 |
+| after places:dwarka | 23 |
+| after all four | 53 |
 
 ## Proposed build list
 
-| item | effort | episodes helped / unlocked |
-|---|---:|---|
-| places:dwarka | 8 | arjuna-subhadra, bhima-vows, krishna-jara |
-| animals:jackals | 3 | bhima-hanuman, krishna-wheel, yadava-end, dwarka-sea |
-| places:sabha | 8 | ekalavya, maya-hall, shishupala-insults, dice-game, draupadi-assembly, second-game-exile, amba-vow |
-| animals:asses | 3 | krishna-wheel, yadava-end, dwarka-sea |
-| animals:steeds | 3 | jayadratha-false-sunset, owl-crows-night-raid, ashwatthama-gem |
-| places:mountain | 8 | bhima-jarasandha, duryodhana-illusion, arjuna-kirata, great-journey-dog |
-| animals:lions | 3 | bhima-hanuman, bhima-cook-jimuta |
-| animals:tigers | 3 | bhima-cook-jimuta |
-| animals:peacocks | 3 | bhima-hanuman, krishna-wheel |
-| animals:parrots | 3 | bhima-hanuman, krishna-wheel |
-| animals:kine | 3 | krishna-wheel, yadava-end |
-| animals:sarikas | 3 | yadava-end, dwarka-sea |
-| animals:pigeons | 3 | yadava-end, dwarka-sea |
-| vehicles:krishna-s-car | 5 | samba-pestle, dwarka-sea |
-| places:lake | 8 | yaksha-questions |
-| animals:buffaloes | 3 | bhima-hanuman |
-| animals:gavayas | 3 | bhima-hanuman |
-| animals:kokilas | 3 | bhima-hanuman |
-| animals:ruddy-geese | 3 | bhima-hanuman |
-| animals:gallinules | 3 | bhima-hanuman |
-| animals:ducks | 3 | bhima-hanuman |
-| animals:karandavas | 3 | bhima-hanuman |
-| animals:plavas | 3 | bhima-hanuman |
-| animals:herons | 3 | bhima-hanuman |
+Only mustShow needs are counted here. `unlocks now` means the item is the episode’s last missing need; `episodes helped` also counts episodes that still need another set.
+
+| item | effort | episodes helped | unlocks now | episodes |
+|---|---:|---:|---:|---|
+| places:sabha | 8 | 21 | 16 | kauravas-birth, arjuna-subhadra, shakuntala-dushyanta, maya-hall, shishupala-insults, duryodhana-illusion, dice-game, draupadi-assembly, bhima-vows, second-game-exile, nala-damayanti, bhima-cook-jimuta |
+| places:mountain | 8 | 10 | 5 | kauravas-birth, arjuna-ulupi, arjuna-subhadra, bhima-jarasandha, arjuna-kirata, arjuna-heaven, bhima-hanuman, saugandhika, nahusha-python, great-journey-dog |
+| places:dwarka | 8 | 8 | 4 | arjuna-ulupi, arjuna-subhadra, arjuna-duryodhana-krishna, arjuna-babruvahana, samba-pestle, yadava-end, krishna-jara, dwarka-sea |
+| places:lake | 8 | 5 | 2 | house-of-lac, bhima-hanuman, saugandhika, yaksha-questions, duryodhana-lake |
 
 ## Sensitive moments
 
 | episode | moment | treatment |
 |---|---|---|
-| janamejaya-snake-sacrifice | Draupadi being dragged into court and disrobed | Off-screen or reaction-based: show only the reaction of Dhritarashtra as he hears of it, with no visual depiction of the act. |
-| janamejaya-snake-sacrifice | Bhimasena drinking Duhsasana's blood | Off-screen or reaction-based: imply through sound and the horrified reactions of onlookers, without showing the act. |
-| janamejaya-snake-sacrifice | Mass violence of the Kurukshetra war with eighteen Akshauhinis slain | Off-screen or reaction-based: depict Dhritarashtra's anguish and the darkness that assails him, not the battlefield carnage. |
-| janamejaya-snake-sacrifice | Aswatthaman's weapon wounding the embryo in Uttara's womb | Off-screen or reaction-based: show only the pronouncement of curses by Dwaipayana and Krishna, and the reaction of those present. |
-| bhima-naga | Bhima seized and crushed in the serpent's coils | Show the coils closing around Bhima off-screen or as a reaction shot of Yudhishthira's alarm; no visible crushing. |
-| kauravas-birth | Draupadi dragged into court and disrobed | off-screen, show reactions of courtiers and Draupadi's distress |
-| kauravas-birth | Bhima drinking Duhsasana's blood | off-screen, show Bhima's fierce expression and others' horror |
-| kauravas-birth | Mass violence in war | off-screen, show aftermath or reactions |
-| drona-ball-well | Gandhari strikes her womb in grief | Show from behind or silhouette; focus on her anguished expression and the reaction of attendants, not the physical act. |
-| drona-ball-well | Ball of flesh expelled from womb | Depict as a non-graphic, stylized mass; use shadow or off-screen suggestion. |
-| drona-ball-well | Ominous howling of carnivorous animals at Duryodhana's birth | Use silhouettes and sound effects; avoid showing animals attacking. |
-| bird-eye-test | Rama annihilates the Kshatriya race and forms lakes of blood | Show only distant aftermath and the blood-lakes as still water; no on-screen slaughter |
-| bird-eye-test | Eighteen Akshauhinis slain at Samanta-panchaka | Reference only in narration over an empty battlefield; no mass-violence imagery |
-| ekalavya | The text lists many incarnations and births, including Kunti casting her newborn into the water and Karna giving up his ear-rings and armour | Show these only as narrated recollection: silhouettes, a closed hand, a distant river glint, and reaction shots of listeners; no graphic birth or mutilation imagery |
-| karna-tournament | Karna's low birth is taunted by the crowd and he is initially denied the right to fight Arjuna | Show the crowd's reaction and Karna's determined expression; avoid explicit insults, use murmurs and reaction shots. |
-| house-of-lac | Purochana and others burn in the house of lac | Show flames engulfing the house from outside, with silhouettes and reactions of the escaping Pandavas; no explicit burning bodies. |
-| hidimba | Bhima slays Hidimba | Off-screen; show reaction of Pandavas and Hidimba's fall implied by sound. |
-| arjuna-subhadra | Forcible seizure of Subhadra | Show from a distance, silhouetted, with reaction shots of onlookers; no physical struggle depicted. |
-| khandava-fire | Burning of the Khandava forest and its creatures | Off-screen; show only flames and smoke from a distance, with reaction shots of Arjuna and Krishna. |
-| bhima-jarasandha | Kansa and Sunaman slain by Krishna and Rama | off-screen, reaction shots of Yadavas |
-| bhima-jarasandha | Hansa and Dimvaka killing themselves in Yamuna | off-screen, shown as news received |
-| bhima-jarasandha | Kings imprisoned in hillfort | show dark cells and chains, no violence |
-| shishupala-insults | Shishupala's insults (verbal abuse) | Show Shishupala's angry face and reaction shots of the assembled kings and sages; avoid explicit offensive language, use bleeps or vague murmurs. |
-| draupadi-assembly | Krishna's departure and the Pandavas' sorrowful parting | Show from behind and in reaction shots; tears and gazes, no lingering on grief |
-| bhima-vows | Krishna's departure and the Pandavas' sorrowful farewell | Show emotional reaction shots and gazes; no violence. |
-| akshaya-patra-durvasa | Durvasa's curse if food is unavailable | Show Durvasa's stern expression and raised hand; cut to the Pandavas' anxious reactions; curse implied off-screen |
-| arjuna-kirata | Muka the Danava is killed by arrows | off-screen; show arrows striking and Muka falling, then reaction of Arjuna and Kirata |
-| arjuna-kirata | Arjuna is beaten to a ball of flesh, bloodied and senseless | reaction-based; show shadow or silhouette of struggle, then Arjuna lying bruised but not graphic |
-| bhima-hanuman | Bhima slays elephants, lions, and other animals | Off-screen; show reaction shots of forest creatures fleeing and Bhima's shadow or silhouette, with sounds only. |
-| saugandhika | Rama renounces his body and ascends to heaven at Gopratra | Show from behind and in silhouette as a radiant ascent; no bodily detail. |
-| saugandhika | Vishnu recovers the tirtha from the tortoise Asura | Off-screen struggle implied by shaking water and a reaction shot of onlookers. |
-| saugandhika | References to sin of slaying a Brahmana being washed away | Mention only in narration over a calm bathing scene; no violence shown. |
-| yaksha-questions | Muka the Danava is slain by arrows | Show the boar struck and falling off-screen; focus on the arrows hitting and the reaction of Arjuna and Kirata. |
-| yaksha-questions | Arjuna is beaten to a ball of flesh and falls unconscious | Use shadow or silhouette; show the struggle and then Arjuna lying still, with reaction from Uma and spirits. |
-| yaksha-questions | Arjuna's sword breaks on Kirata's crown | Show the sword shattering with sparks, but avoid graphic detail. |
-| nala-damayanti | Draupadi brought into public assembly (referenced) | off-screen, reaction-based; show Yudhishthira's grief and remembrance, no visual of disrobing |
-| nala-damayanti | Gambling match and loss of kingdom (referenced) | off-screen, reaction-based; show Yudhishthira's distress and recollection |
-| bhima-cook-jimuta | Bhima kills Jimuta by dashing him to the ground | off-screen or reaction-based: show the whirling and then cut to the crowd's astonished reaction, with the impact implied by sound and a dust cloud. |
-| bhima-cook-jimuta | Bhima kills numerous other athletes and men | off-screen, summarized by a montage of reaction shots and the king's pleasure, avoiding graphic violence. |
-| bhima-cook-jimuta | Bhima fights tigers, lions, and elephants | off-screen or stylized, with reaction shots of the crowd and the king, avoiding explicit animal cruelty. |
-| amba-vow | The dice game where Yudhishthira was deceitfully defeated | Off-screen; show reaction shots of characters and dice being rolled, but no direct depiction of the game. |
-| amba-vow | The hardships of the Pandavas in exile | Mentioned in dialogue; show brief flashbacks of suffering but no graphic violence. |
-| amba-vow | The impending war and mass violence | Implied through dialogue and preparations; no battle scenes shown. |
-| conches | Arjuna's grief-stricken collapse and refusal to fight | Show trembling hands, slipping bow, and despondent posture; no graphic violence |
-| gita-cosmic | Bhishma's death | off-screen; show Sanjaya's grief-stricken report and Dhritarashtra's reaction |
-| krishna-wheel | Vyasa describes monstrous births and unnatural offspring among women and animals | Show only reaction shots of Dhritarashtra and symbolic silhouettes; keep births off-screen |
-| krishna-wheel | Vyasa foretells a great slaughter and rivers of blood | Use reaction-based treatment with abstract blood-red river imagery and no graphic violence |
-| krishna-wheel | Vyasa says Death himself has been born as Dhritarashtra's son | Show Dhritarashtra's anguished reaction; no depiction of Duryodhana |
-| krishna-wheel | Reference to the slaughter of kinsmen | Keep off-screen; convey through Vyasa's sorrowful tone and Dhritarashtra's bowed head |
-| bhishma-fall | Bhishma slain by Sikhandin and lying on a bed of arrows | Show the aftermath only: the bed of arrows and fallen figure in long shot, no impact or piercing shown; Sanjaya's reaction and Dhritarashtra's stillness carry the grief. |
-| bhishma-fall | Reference to the match at dice that led to the war | Mentioned only in Sanjaya's speech; no dice scene depicted. |
-| abhimanyu-chakravyuha | Dhritarashtra collapses in grief | show collapse and distress off-screen or as reaction shots; avoid lingering on suffering |
-| jayadratha-false-sunset | Drona causes mass slaughter, described as a river of blood and dead bodies | off-screen, reaction-based: show warriors' fearful faces and the aftermath with scattered weapons, avoiding explicit gore |
-| jayadratha-false-sunset | Abhimanyu slays Paurava's driver with a kick | off-screen: show the kick from a distance or imply it with a sound effect and reaction |
-| jayadratha-false-sunset | Abhimanyu seizes Paurava by the hair and drags him | reaction-based: show the horrified reactions of onlookers, and Abhimanyu's determined face, without graphic detail |
-| ghatotkacha-night | Drona slain by Dhrishtadyumna | off-screen; show only the reaction of warriors and the uproar in the welkin |
-| ghatotkacha-night | mass slaughter of soldiers by Drona | reaction-based; show fleeing soldiers and dust, no gore |
-| ashwatthama-dead | Kumara is slain by Drona | off-screen; show Drona's arrow released and reaction of Pandava troops |
-| ashwatthama-dead | Vyaghradatta and Singhasena beheaded by Drona | off-screen; show Drona's arrows and the falling bodies obscured by dust or reaction shots |
-| ashwatthama-dead | Mass slaughter of Samsaptakas by Arjuna | stylized; show arrows and falling weapons, avoid explicit gore |
-| bhima-dushasana | Karna is slain by Arjuna | Cut away at the moment of the fatal shot; show only the reaction of the Dhartarashtras and Sanjaya's bowed head. |
-| bhima-dushasana | Recollection of Draupadi brought into the assembly after the dice match | Depict only the anxious, regretful faces of the four kings in the tent; no reenactment of the assembly or disrobing. |
-| bhima-dushasana | Reference to the immense slaughter of the war | Show grief-stricken kings and empty camp shadows; no bodies or blood. |
-| karna-wheel | Karna's death | off-screen; show reaction of Dhritarashtra and Sanjaya's narration |
-| karna-wheel | Duhshasana's death and blood-drinking | off-screen; show Duryodhana's reaction |
-| karna-wheel | Draupadi's disrobing attempt | off-screen; show reaction of Dhritarashtra or Sanjaya |
-| karna-wheel | mass violence of battle | off-screen; use sounds and reactions |
-| duryodhana-lake | Duryodhana's thighs broken and death | off-screen; show Bhimasena's mace strike and reaction of onlookers |
-| duryodhana-lake | mass slaughter of troops | off-screen; show aftermath with bodies covered or distant |
-| duryodhana-lake | Sanjaya's report of deaths | reaction-based; show Dhritarashtra and others fainting |
-| mace-duel | mass slaughter of 25,000 foot-soldiers by Bhima | off-screen; show Bhima's mace swinging and the reaction of fleeing soldiers, with dust obscuring the field |
-| mace-duel | soldiers killing one another in confusion | reaction-based; show panicked faces and shadows of combat, no explicit gore |
-| mace-duel | elephants with severed trunks | off-screen; imply through sound and reaction of mahouts |
-| owl-crows-night-raid | Owl tears wings, cuts heads, breaks legs of crows | Show owl's shadow and talons striking; cut to reaction of Ashvatthama watching; imply slaughter off-screen with falling feathers and silhouettes |
-| owl-crows-night-raid | Ashvatthama resolves to slay sleeping Pandavas and Pancalas | Show his face and clenched fist in firelight; no depiction of the planned massacre |
-| ashwatthama-gem | Draupadi's sons and brothers slain in battle | Off-screen; conveyed through Draupadi's grief-stricken reaction and dialogue. |
-| ashwatthama-gem | Draupadi sits in praya (vow to fast unto death) | Show her seated with determined expression, but avoid prolonged focus on self-harm; emphasize her resolve and the urgency of the Pandavas' response. |
-| dhritarashtra-iron-bhima | Dhritarashtra breaks the iron statue, thinking it is Bhima, and vomits blood | Show the breaking of the statue in silhouette or from a distance; focus on the sound of cracking metal and Dhritarashtra's reaction, avoiding graphic detail. |
-| dhritarashtra-iron-bhima | Dhritarashtra falls down vomiting blood | Show from a distance or with a reaction shot of onlookers; avoid close-up of blood. |
-| gandhari-curse | Reference to the slaughter of Duryodhana, Duhshasana, Karna, and Drona | Off-screen; conveyed through Dhritarashtra's grief-stricken words and reaction shots. |
-| gandhari-curse | Mass violence: eighteen Akshauhinis slain, earth desolate | Off-screen; depicted as a somber report by Sanjaya, with reaction shots of Dhritarashtra. |
-| bhishma-teachings | Abduction of the maiden by Duryodhana | Off-screen or reaction-based: show the maiden's nurse and eunuch guard reacting in shock, and the kings' uproar, without depicting the forceful seizure. |
-| bhishma-teachings | Karna felling bows and arrows and depriving kings of drivers | Off-screen or reaction-based: show the kings' bows being struck away and drivers falling, but avoid graphic injury; focus on the kings' dismay and retreat. |
-| arjuna-babruvahana | Yudhishthira drops down like an elephant pierced by the hunter | off-screen or reaction-based: show Yudhishthira collapsing from a distance, with reactions of Bhima and Krishna |
-| arjuna-babruvahana | Samvarta covers Marutta with mud and ashes and phlegm and spittle | off-screen or reaction-based: show Samvarta's gesture and Marutta's reaction, but not the actual covering |
-| mongoose | Family afflicted by severe famine and hunger | Show emaciated bodies and weak postures, but avoid graphic suffering; focus on their steadfastness. |
-| mongoose | Brahmana family gives away all their food, leaving none for themselves | Depict as act of generosity; show their peaceful expressions despite hunger. |
-| elders-forest | Bhima recounts killing Duryodhana and others | off-screen; show only Bhima's angry gestures and Dhritarashtra's reaction |
-| elders-forest | Dhritarashtra faints | reaction-based; show Yudhishthira's concern and others weeping |
-| samba-pestle | Satyaki beheads Kritavarma with a sword | Off-screen; show the raised sword and the reaction of onlookers, with the sound of the blow. |
-| samba-pestle | Yadavas kill each other with iron bolts and pots | Use stylized silhouettes or shadows, avoid graphic gore; focus on the chaos and Krishna's reaction. |
-| samba-pestle | Krishna slays many Yadavas with iron bolts | Show Krishna hurling the bolt and the effect from a distance, with no explicit bloodshed. |
-| samba-pestle | Jara shoots Krishna at the heel | Show the arrow striking from a distance, then focus on Jara's horrified reaction and Krishna's serene acceptance. |
-| samba-pestle | Vabhru is slain by an iron bolt | Off-screen; show the bolt flying and Vabhru falling, with reaction from Krishna. |
-| samba-pestle | Rama's death and serpent form | Show the white snake emerging from his mouth and ascending, without graphic detail. |
-| yadava-end | rats and mice eating hair and nails of slumbering men | Show shadows or reaction of sleepers, not graphic detail |
-| yadava-end | animals giving birth to different species (asses from kine, elephants from mules, cats from bitches, mice from mongoose) | Depict as symbolic omens, perhaps in a dream or vision sequence, avoiding realistic depiction |
-| yadava-end | social disorder: wives deceiving husbands, husbands deceiving wives, disrespect to Brahmanas and preceptors | Show arguments and turning away, focus on emotional reactions rather than explicit deception |
-| yadava-end | headless trunks surrounding the sun | Show as a distant omen in the sky, stylized and not gory |
-| krishna-jara | Samva brings forth the iron bolt (miscarriage-like) | Show only the sages' reaction and a glow behind a curtain; no graphic imagery. |
-| krishna-jara | threat of impalement for making wine | Mention in dialogue only; no visual depiction. |
-| dwarka-sea | Satyaki beheads Kritavarma | Off-screen; show Satyaki's furious rush and sword raised, cut to reaction of horrified onlookers, then show Kritavarma's body fallen. |
-| dwarka-sea | Yadavas slaughter each other with iron bolts | Use stylized silhouettes and shadows; focus on Krishna's sorrowful reaction and the chaos of battle sounds, avoiding explicit gore. |
-| dwarka-sea | Krishna is shot by Jara | Show Jara aiming and releasing arrow, then cut to Krishna's serene face as he is struck; no blood, focus on his peaceful expression and ascension. |
-| dwarka-sea | Vabhru slain by hunter's mallet | Off-screen impact; show the hunter's swing and Vabhru's fall, with reaction from Krishna. |
-| dwarka-sea | Rama's death and white snake issuing from mouth | Show the snake emerging in a glow of light, avoiding grotesque detail; emphasize the divine transformation. |
-| great-journey-dog | The great slaughter of the Vrishnis is mentioned | Off-screen; only reported in dialogue, no visuals. |
-| great-journey-dog | Ladies weep aloud beholding the princes in bark attire | Show reaction shots of sorrow, no graphic distress. |
-| yudhishthira-test | Draupadi was dragged into the assembly | off-screen, reaction-based: show Yudhishthira's anger and companions' shock, no visual of the dragging |
-| yudhishthira-test | friends and kinsmen slaughtered | off-screen, reaction-based: show Yudhishthira's grief and anger, no battle visuals |
+| janamejaya-snake-sacrifice | Snakes falling into fire | Off-screen, only reactions and effect lines |
+| janamejaya-snake-sacrifice | Takshaka's fear and insensibility | Shown as trembling and faintness, no gore |
+| bhima-naga | Duryodhana's poison plot against Bhima | off-screen; shown only through Yuyutsu's warning and Bhima swallowing and digesting it without effect |
+| bhima-naga | Duryodhana's gladness at Bhima's absence | deadpan reaction shot of Duryodhana entering the city in joy, no gloating dialogue |
+| bhima-naga | Kunti's fear that Bhima may be slain | shown as her anxious prayer and embrace, no violence depicted |
+| kauravas-birth | Birth of iron ball | Focus on Gandhari's reaction and Vyasa's intervention |
+| kauravas-birth | Pandu's death | Show aftermath with arrows as effect lines, no gore |
+| drona-ball-well | Drupada insults Drona's poverty and birth | Paraphrase the class-based rejection without slurs; show Drona's dignified exit and resolve. |
+| drona-ball-well | Aswatthaman cries for milk and drinks rice-water | Show the child's joy and Drona's pain without mocking the poor. |
+| bird-eye-test | Vulture's head is shot off | Show arrow striking and head falling as effect lines; no blood or gore. |
+| bird-eye-test | Alligator seizes Drona's thigh | Show alligator's jaws near thigh, but no wound or blood; Drona's reaction is distress, not graphic. |
+| bird-eye-test | Alligator is killed by arrows | Show arrows entering water and alligator releasing Drona; death is off-screen, only arrows as effect lines. |
+| ekalavya | Ekalavya cutting off his thumb | off-screen, only resolve and consequence |
+| karna-tournament | Bhima ridicules Karna's lineage | paraphrase the insult, no slurs; show Karna's quiet sigh and look at the sun |
+| karna-tournament | Karna and Arjuna prepare to fight | show tension and raised bows, no actual combat or wounds |
+| karna-tournament | Kunti swoons | show her collapse and Vidura reviving her with sandal-paste and water, no distress close-up |
+| hidimba | Hidimva male threatens to eat humans and drink blood | Off-screen, only his words and hungry expressions; no gore. |
+| hidimba | Bhima slays Hidimva male | Death shown as a fall or aftermath with effect lines; no blood or wounds. |
+| hidimba | Hidimva male rushes to kill his sister | Off-screen, only reactions and Bhima's intervention. |
+| draupadi-swayamvara | Draupadi's selection | focus on her prayer and the endless cloth |
+| arjuna-subhadra | abduction | consensual framing |
+| khandava-fire | death | off-screen |
+| parikshit-takshaka | Parikshit places dead snake on Samika | shown as disrespect, no gore |
+| parikshit-takshaka | Takshaka bites Parikshit | off-screen, reaction of ministers, fall shown as effect |
+| parikshit-takshaka | Parikshit's death | aftermath with arrows as effect lines, no wounds |
+| shakuntala-dushyanta | Dushmanta's rejection of Shakuntala | Focus on emotional resolve and celestial intervention rather than public humiliation. |
+| dice-game | Draupadi is staked and summoned to the assembly | Show only her prayer and the reactions of the assembly; no pulling or body exposure. |
+| dice-game | Dussasana's attempt to disrobe Draupadi | Off-screen; show only the endless cloth and reactions. |
+| dice-game | Bhima's vow and anger | Show his clenched fists and mace, but no violence. |
+| draupadi-assembly | Dussasana seizes and drags Draupadi by her hair | shown only as her prayer, dishevelled hair and the assembly's reaction; no pulling of body or garment shown |
+| draupadi-assembly | Draupadi's garment is dragged off | never shown; only her prayer, the endless many-hued cloth appearing and the crowd's uproar |
+| draupadi-assembly | Bhima's oath to tear Dussasana's breast and drink his blood | spoken oath only, no gore or wound shown |
+| draupadi-assembly | Karna's insulting words about Draupadi having many husbands | paraphrased as his argument in the assembly, no slurs |
+| bhima-vows | Duryodhana uncovers his thigh to Draupadi | Show Duryodhana's gesture from behind or side, focus on Draupadi's reaction and Bhima's anger, no explicit exposure. |
+| bhima-vows | Draupadi in the assembly | Never show pulling or her body; only her prayer, the endless cloth, and reactions. |
+| bhima-vows | Bhima's vow to break thigh | Show Bhima's anger and vow, not the actual breaking. |
+| akshaya-patra-durvasa | Draupadi's recollection of Dussasana in her prayer | only her clasped hands and prayer are shown; the assembly and any pulling stay off-screen |
+| akshaya-patra-durvasa | Durvasa's wrath and threat to the Pandavas | shown through the ascetics' fear and flight, no violence |
+| akshaya-patra-durvasa | Duryodhana's scheming satisfaction | deadpan on his smug expression and Karna's handshake, no gloating over victims |
+| arjuna-kirata | Arjuna's body bruised and mangled | Focus on the aftermath and his resolve to worship |
+| arjuna-heaven | Urvasi's curse | shown as a verbal curse, no physical harm |
+| bhima-hanuman | Bhima slays animals in the forest | off-screen; only reactions of fleeing animals and effect lines |
+| bhima-hanuman | Hanuman's gigantic form | shown as awe-inspiring, no violence |
+| bhima-hanuman | Bhima's fight with Hanuman | no wounds or blood; only effort and sweat |
+| saugandhika | Bhima defeats the Rakshasas with his mace | off-screen impact; show only reactions and aftermath with arrows as effect lines, no blood or gore |
+| saugandhika | Slaughtered Yakshas with smashed bodies | show only aftermath with arrows as effect lines, no wounds or blood |
+| nahusha-python | Nahusha coils around Bhima and holds him captive | Show the coils wrapping around Bhima, but no blood or wounds; focus on Bhima's restrained struggle and the serpent's massive form. |
+| nahusha-python | Nahusha threatens to devour Bhima | Off-screen; only the dialogue and Bhima's worried expression are shown. |
+| karna-armour | Karna peels mail | radiant removal, no blood |
+| karna-armour | Kunti's conception | dreamlike light |
+| karna-armour | Karna's abandonment | drifting box, no distress |
+| yaksha-questions | Brothers fall dead after drinking water | Shown as collapsing as if asleep, no blood or wounds; effect lines indicate death. |
+| yaksha-questions | Arjuna shoots arrows at invisible Yaksha | Arrows shown as effect lines, no harm depicted. |
+| weapons-shami | Uttara fears touching a corpse in the tree | shown as his reluctance and Arjuna's reassurance; no corpse shown |
+| weapons-shami | Arjuna's eunuch disguise discussed | handled as a vow and identity reveal, no mockery |
+| weapons-shami | Kuru warriors' fear and portents | deadpan humour at the proud army's alarm, not at victims |
+| bhima-cook-jimuta | Bhima dashes Jimuta to death | Off-screen impact; show Bhima's final throw and the crowd's reaction, then Jimuta lying still with no blood or wounds. |
+| bhima-cook-jimuta | Bhima fights tigers and lions | Off-screen; only mention or show reactions of spectators, no animal cruelty. |
+| bhima-cook-jimuta | Draupadi distressed | Show her sighing and looking distressed, but no physical suffering or undress. |
+| brihannala-uttara-cattle | Uttara's fear | focus on his internal resolve and growth |
+| brihannala-uttara-cattle | battle violence | stylized arrow effects, no gore |
+| shalya-hospitality | Salya's army oppresses the creatures of the earth | shown only as trembling ground and marching silhouettes, no suffering |
+| shalya-hospitality | Recollection of Draupadi's miseries at the dice game and by Jata and Kichaka | mentioned in speech only, no depiction |
+| shalya-hospitality | Karna to be dispirited and slain | stated as intention in dialogue, no violence shown |
+| amba-vow | Bhishma abducts the three maidens by force | shown as chariot departure and the maidens' distress, no physical grabbing |
+| amba-vow | Salwa rejects Amba | shown through his turned back and her tears, no insults paraphrased |
+| amba-vow | Amba wails outside Salwa city | shown as silhouette at dusk, grief conveyed by posture and sound |
+| krishna-peace-cosmic | Draupadi's assembly | prayer and cloth only |
+| kunti-karna | Kunti reveals she abandoned newborn Karna | shown only through her words and his reaction, no infant shown |
+| kunti-karna | Karna's natural ear-rings and coat of mail | described as adornment, no body horror |
+| kunti-karna | Karna pledges to spare four brothers but fight Arjuna | resolve stated in dialogue, no battle shown |
+| krishna-offer-karna | Karna recalls being abandoned as a baby and Radha cleansing his urine and evacuations | paraphrase as 'she cared for me as a mother' without explicit details |
+| krishna-offer-karna | Karna speaks of Bhima drinking Dussasana's blood and Duryodhana's death | off-screen, only mentioned in dialogue, no visual |
+| krishna-offer-karna | Portents include showers of flesh and blood | mentioned only, no visual gore |
+| conches | combatants eject urine and excreta in fear | off-screen; shown only as trembling ranks and startled faces |
+| conches | black cloud showers flesh and blood | stylised dark cloud effect only, no gore |
+| conches | covenants forbid striking the unprepared and retreating | shown as solemn agreement, no violence |
+| gita-cosmic | Bhishma's fall is described | shown as a distant fall or aftermath with arrows as effect lines, no blood or wounds |
+| gita-cosmic | Arjuna's despondency and tears | shown with emotional focus, no graphic distress |
+| gita-cosmic | Durga's appearance | shown as a radiant divine vision, no violent image |
+| yudhishthira-blessings | Yudhishthira's approach | portrayed as a humble act of respect |
+| krishna-wheel | Krishna rushing with discus | Focus on divine wrath and Arjuna's intervention, avoid graphic violence. |
+| bhishma-fall | Bhishma's fall | fall shown as impact with arrows |
+| ghatotkacha-night | Ghatotkacha's fall | off-screen |
+| ashwatthama-dead | Drona's death | Focus on Yoga and spiritual ascent; beheading is off-screen or aftermath |
+| bhima-dushasana | Bhima cuts off Dushasana's head | off-screen, shown as a fall or aftermath with arrows as effect lines |
+| bhima-dushasana | Bhima drinks Dushasana's blood | off-screen, shown through reactions |
+| bhima-dushasana | Draupadi's disrobing and seizure of tresses | mentioned only, never shown |
+| karna-wheel | Karna death | off-screen fall |
+| mace-duel | Duryodhana's fall | off-screen reaction |
+| owl-crows-night-raid | slaughter of sleeping warriors | off-screen through reactions and shadows |
+| ashwatthama-gem | Ashwatthama throws weapon into wombs | off-screen, only the act of throwing and reaction shown |
+| ashwatthama-gem | Draupadi's praya vow | shown as her sitting in vow, not self-harm |
+| ashwatthama-gem | Bhima drinking Duhshasana's blood | mentioned only, not shown |
+| dhritarashtra-iron-bhima | Dhritarashtra crushing the iron statue | Focus on the statue breaking and Dhritarashtra's reaction, not the physical injury. |
+| gandhari-curse | Draupadi's prayer | off-screen |
+| gandhari-curse | Gandhari's curse | resolve and consequence |
+| bhishma-teachings | Karna's death | Off-screen aftermath |
+| arjuna-babruvahana | Arjuna's death | off-screen fall |
+| mongoose | Famine and the family's hunger | shown as emaciation and empty vessels, no suffering close-ups |
+| mongoose | Jamadagni's milk spoiled by Anger | off-screen, only the vessel and reaction |
+| mongoose | Vasu's fall to the nether regions | aftermath only, no fall shown |
+| mongoose | Sacrificial animals seized | off-screen, only the Rishis' compassion and objection |
+| elders-forest | Bhima recalls the dice match and Draupadi's humiliation | only Bhima's angry words and reactions; no pulling or body shown |
+| elders-forest | Kunti recalls Dussasana dragging Draupadi by her hair | off-screen; only Kunti's grief and resolve shown |
+| elders-forest | deaths of Duryodhana and the Kauravas recalled | no blood or wounds; only mention and reaction |
+| elders-forest | Bhima's iron mace imagery | arms described as iron clubs, no violence shown |
+| krishna-jara | Death of Yadavas | Off-screen through reactions |
+| dwarka-sea | Death of Krishna and Vrishnis | Off-screen, focus on aftermath and funeral rites |
+| dwarka-sea | Abhira attack | Focus on Arjuna's struggle and the crowd's flight |
+| great-journey-dog | Draupadi's fall | Show as a peaceful collapse |
+| great-journey-dog | Pandavas' fall | Show as a peaceful collapse |
+| great-journey-dog | Dog's transformation | Show as a magical shimmer |
+| yudhishthira-test | The sinful region | No gore or blood shown, only atmospheric darkness and stench |
 
 ## Expected Phase 7 list
 
@@ -240,3 +264,4 @@ Generated 2026-11-21T08:22:12.816Z. Inventory episodes: 70.
 - Himalayan mountainside: missing set.
 - Forest lake: missing set.
 - Dwarka coast: missing set, runner-up.
+- Kurukshetra: Phase 8, excluded from the Phase 7 build list.

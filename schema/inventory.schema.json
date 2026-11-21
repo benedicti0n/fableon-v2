@@ -37,6 +37,7 @@
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "mustShow": { "type": "boolean" },
+        "role": { "enum": ["mustShow", "background", "mentioned"] },
         "note": { "type": "string", "maxLength": 160 }
       }
     },
@@ -48,6 +49,7 @@
         "name": { "type": "string", "minLength": 1 },
         "timeOfDay": { "enum": ["day", "golden", "dusk", "night", "dawn", "interior"] },
         "mustShow": { "type": "boolean" },
+        "role": { "enum": ["mustShow", "background", "mentioned"] },
         "note": { "type": "string", "maxLength": 160 }
       }
     },
@@ -62,6 +64,7 @@
         "mustHave": { "type": "array", "items": { "type": "string", "maxLength": 80 } },
         "speaking": { "type": "boolean" },
         "mustShow": { "type": "boolean" },
+        "role": { "enum": ["mustShow", "background", "mentioned"] },
         "note": { "type": "string", "maxLength": 160 }
       }
     },

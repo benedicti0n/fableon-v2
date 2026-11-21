@@ -24,7 +24,11 @@
     "city": "city",
     "naga realm": "naga",
     "underworld": "naga",
-    "arena": "arena"
+    "arena": "arena",
+    "banyan tree": "deer",
+    "banyan": "deer",
+    "prabhasa": "dwarka",
+    "heaven": "palace"
   },
   "characters": {
     "arjuna": "arjuna",
@@ -72,12 +76,34 @@
     "jackal": "dog",
     "lion": "boar",
     "tiger": "boar",
-    "buffalo": "boar"
+    "buffalo": "boar",
+    "steeds": "horse",
+    "white steeds": "horse",
+    "red steeds": "horse",
+    "kine": "cow",
+    "cows": "cow",
+    "uchchaihsravas": "horse",
+    "airavata": "elephant",
+    "snakes": "naga",
+    "tortoise": "turtle"
   },
   "vehicles": {
     "chariot": "chariot",
     "ratha": "chariot",
-    "boat": "boat"
+    "boat": "boat",
+    "krishna's car": "chariot",
+    "karna's car": "chariot",
+    "drona's car": "chariot",
+    "car": "chariot",
+    "chariot with standard": "chariot",
+    "celestial car": "chariot",
+    "daruka's car": "chariot",
+    "arjuna's car": "chariot",
+    "daruka s car": "chariot",
+    "arjuna s car": "chariot",
+    "krishna s car": "chariot",
+    "karna s car": "chariot",
+    "drona s car": "chariot"
   },
   "props": {
     "bow": "bow",
@@ -106,7 +132,9 @@
     "crown": "crown",
     "garland": "garland",
     "jar": "jar",
-    "torch": "torch"
+    "torch": "torch",
+    "discus": "chakra",
+    "mace of iron": "mace"
   },
   "actions": {
     "stand": "stand",

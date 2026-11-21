@@ -15,564 +15,236 @@
     {
       "id": "janamejaya-snake-sacrifice",
       "title": "Janamejaya’s snake sacrifice",
-      "chars": 44127,
-      "inputTokens": 11932,
+      "chars": 35555,
+      "inputTokens": 9789,
       "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "bhima-naga",
-      "title": "Bhima in the Naga realm",
-      "chars": 52080,
-      "inputTokens": 13920,
-      "outputTokens": 1800,
-      "costUsd": 0.00634
-    },
-    {
-      "id": "kauravas-birth",
-      "title": "The birth of the Kauravas",
-      "chars": 44127,
-      "inputTokens": 11932,
-      "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "drona-ball-well",
-      "title": "Drona and the ball in the well",
-      "chars": 6215,
-      "inputTokens": 2454,
-      "outputTokens": 1800,
-      "costUsd": 0.0029
+      "costUsd": 0.0051
     },
     {
       "id": "bird-eye-test",
       "title": "The bird’s eye test",
-      "chars": 52080,
-      "inputTokens": 13920,
+      "chars": 3081,
+      "inputTokens": 1671,
       "outputTokens": 1800,
-      "costUsd": 0.00634
-    },
-    {
-      "id": "ekalavya",
-      "title": "Ekalavya",
-      "chars": 22466,
-      "inputTokens": 6517,
-      "outputTokens": 1800,
-      "costUsd": 0.00412
-    },
-    {
-      "id": "karna-tournament",
-      "title": "Karna at the tournament",
-      "chars": 44127,
-      "inputTokens": 11932,
-      "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "house-of-lac",
-      "title": "The house of lac",
-      "chars": 44127,
-      "inputTokens": 11932,
-      "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "hidimba",
-      "title": "Hidimba",
-      "chars": 52080,
-      "inputTokens": 13920,
-      "outputTokens": 1800,
-      "costUsd": 0.00634
+      "costUsd": 0.00266
     },
     {
       "id": "draupadi-swayamvara",
       "title": "Draupadi’s swayamvara",
-      "chars": 44127,
-      "inputTokens": 11932,
+      "chars": 41943,
+      "inputTokens": 11386,
       "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "arjuna-ulupi",
-      "title": "Arjuna and Ulupi",
-      "chars": 52080,
-      "inputTokens": 13920,
-      "outputTokens": 1800,
-      "costUsd": 0.00634
-    },
-    {
-      "id": "arjuna-subhadra",
-      "title": "Arjuna and Subhadra",
-      "chars": 44127,
-      "inputTokens": 11932,
-      "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "khandava-fire",
-      "title": "The Khandava forest fire",
-      "chars": 44127,
-      "inputTokens": 11932,
-      "outputTokens": 1800,
-      "costUsd": 0.00574
+      "costUsd": 0.00558
     },
     {
       "id": "parikshit-takshaka",
       "title": "Parikshit and Takshaka",
-      "chars": 44127,
-      "inputTokens": 11932,
+      "chars": 22334,
+      "inputTokens": 6484,
       "outputTokens": 1800,
-      "costUsd": 0.00574
-    },
-    {
-      "id": "shakuntala-dushyanta",
-      "title": "Shakuntala and Dushyanta",
-      "chars": 52080,
-      "inputTokens": 13920,
-      "outputTokens": 1800,
-      "costUsd": 0.00634
-    },
-    {
-      "id": "maya-hall",
-      "title": "Maya builds the assembly hall",
-      "chars": 3315,
-      "inputTokens": 1729,
-      "outputTokens": 1800,
-      "costUsd": 0.00268
-    },
-    {
-      "id": "bhima-jarasandha",
-      "title": "Bhima and Jarasandha",
-      "chars": 11194,
-      "inputTokens": 3699,
-      "outputTokens": 1800,
-      "costUsd": 0.00327
-    },
-    {
-      "id": "shishupala-insults",
-      "title": "Shishupala’s hundred insults",
-      "chars": 5292,
-      "inputTokens": 2223,
-      "outputTokens": 1800,
-      "costUsd": 0.00283
-    },
-    {
-      "id": "duryodhana-illusion",
-      "title": "Duryodhana in the hall of illusions",
-      "chars": 8652,
-      "inputTokens": 3063,
-      "outputTokens": 1800,
-      "costUsd": 0.00308
-    },
-    {
-      "id": "dice-game",
-      "title": "The dice game",
-      "chars": 3248,
-      "inputTokens": 1712,
-      "outputTokens": 1800,
-      "costUsd": 0.00267
+      "costUsd": 0.00411
     },
     {
       "id": "draupadi-assembly",
       "title": "Draupadi in the assembly",
-      "chars": 5429,
-      "inputTokens": 2258,
+      "chars": 32096,
+      "inputTokens": 8924,
       "outputTokens": 1800,
-      "costUsd": 0.00284
+      "costUsd": 0.00484
     },
     {
       "id": "bhima-vows",
       "title": "Bhima’s vows",
-      "chars": 5429,
-      "inputTokens": 2258,
+      "chars": 7177,
+      "inputTokens": 2695,
       "outputTokens": 1800,
-      "costUsd": 0.00284
-    },
-    {
-      "id": "second-game-exile",
-      "title": "The second game and the exile",
-      "chars": 23401,
-      "inputTokens": 6751,
-      "outputTokens": 1800,
-      "costUsd": 0.00419
+      "costUsd": 0.00297
     },
     {
       "id": "akshaya-patra-durvasa",
       "title": "The akshaya patra and Durvasa’s visit",
-      "chars": 24003,
-      "inputTokens": 6901,
+      "chars": 11724,
+      "inputTokens": 3831,
       "outputTokens": 1800,
-      "costUsd": 0.00423
-    },
-    {
-      "id": "arjuna-kirata",
-      "title": "Arjuna and the Kirata",
-      "chars": 12297,
-      "inputTokens": 3975,
-      "outputTokens": 1800,
-      "costUsd": 0.00335
-    },
-    {
-      "id": "arjuna-heaven",
-      "title": "Arjuna in Indra’s heaven",
-      "chars": 14239,
-      "inputTokens": 4460,
-      "outputTokens": 1800,
-      "costUsd": 0.0035
+      "costUsd": 0.00331
     },
     {
       "id": "bhima-hanuman",
       "title": "Bhima meets Hanuman",
-      "chars": 13810,
-      "inputTokens": 4353,
+      "chars": 39237,
+      "inputTokens": 10710,
       "outputTokens": 1800,
-      "costUsd": 0.00347
+      "costUsd": 0.00537
     },
     {
       "id": "saugandhika",
       "title": "The Saugandhika lotus",
-      "chars": 24003,
-      "inputTokens": 6901,
+      "chars": 13671,
+      "inputTokens": 4318,
       "outputTokens": 1800,
-      "costUsd": 0.00423
+      "costUsd": 0.00346
     },
     {
       "id": "nahusha-python",
       "title": "Nahusha the python",
-      "chars": 13157,
-      "inputTokens": 4190,
+      "chars": 21086,
+      "inputTokens": 6172,
       "outputTokens": 1800,
-      "costUsd": 0.00342
+      "costUsd": 0.00401
     },
     {
       "id": "jayadratha-abduction",
       "title": "Jayadratha’s abduction of Draupadi",
-      "chars": 2486,
-      "inputTokens": 1522,
+      "chars": 45132,
+      "inputTokens": 12183,
       "outputTokens": 1800,
-      "costUsd": 0.00262
+      "costUsd": 0.00581
     },
     {
       "id": "karna-armour",
       "title": "Karna gives away his armour",
-      "chars": 9971,
-      "inputTokens": 3393,
+      "chars": 48604,
+      "inputTokens": 13051,
       "outputTokens": 1800,
-      "costUsd": 0.00318
-    },
-    {
-      "id": "yaksha-questions",
-      "title": "The Yaksha’s questions",
-      "chars": 12297,
-      "inputTokens": 3975,
-      "outputTokens": 1800,
-      "costUsd": 0.00335
-    },
-    {
-      "id": "nala-damayanti",
-      "title": "Nala and Damayanti",
-      "chars": 8606,
-      "inputTokens": 3052,
-      "outputTokens": 1800,
-      "costUsd": 0.00308
-    },
-    {
-      "id": "weapons-shami",
-      "title": "The weapons in the shami tree",
-      "chars": 4465,
-      "inputTokens": 2017,
-      "outputTokens": 1800,
-      "costUsd": 0.00277
-    },
-    {
-      "id": "bhima-cook-jimuta",
-      "title": "Bhima the cook and the wrestler Jimuta",
-      "chars": 7388,
-      "inputTokens": 2747,
-      "outputTokens": 1800,
-      "costUsd": 0.00298
-    },
-    {
-      "id": "kichaka",
-      "title": "Kichaka",
-      "chars": 9068,
-      "inputTokens": 3167,
-      "outputTokens": 1800,
-      "costUsd": 0.00311
+      "costUsd": 0.00608
     },
     {
       "id": "brihannala-uttara-cattle",
       "title": "Brihannala, Uttara and the cattle raid",
-      "chars": 2610,
-      "inputTokens": 1553,
+      "chars": 90000,
+      "inputTokens": 23400,
       "outputTokens": 1800,
-      "costUsd": 0.00263
+      "costUsd": 0.00918
     },
     {
       "id": "arjuna-duryodhana-krishna",
       "title": "Arjuna and Duryodhana at Krishna’s bedside",
-      "chars": 5283,
-      "inputTokens": 2221,
+      "chars": 6011,
+      "inputTokens": 2403,
       "outputTokens": 1800,
-      "costUsd": 0.00283
+      "costUsd": 0.00288
     },
     {
       "id": "shalya-hospitality",
       "title": "Shalya won over by hospitality",
-      "chars": 4077,
-      "inputTokens": 1920,
+      "chars": 8481,
+      "inputTokens": 3021,
       "outputTokens": 1800,
-      "costUsd": 0.00274
-    },
-    {
-      "id": "amba-vow",
-      "title": "Amba’s vow",
-      "chars": 29183,
-      "inputTokens": 8196,
-      "outputTokens": 1800,
-      "costUsd": 0.00462
+      "costUsd": 0.00307
     },
     {
       "id": "krishna-peace-cosmic",
       "title": "Krishna’s peace mission and the cosmic form",
-      "chars": 2602,
-      "inputTokens": 1551,
+      "chars": 90000,
+      "inputTokens": 23400,
       "outputTokens": 1800,
-      "costUsd": 0.00263
+      "costUsd": 0.00918
     },
     {
       "id": "kunti-karna",
       "title": "Kunti and Karna",
-      "chars": 5283,
-      "inputTokens": 2221,
+      "chars": 11340,
+      "inputTokens": 3735,
       "outputTokens": 1800,
-      "costUsd": 0.00283
+      "costUsd": 0.00328
     },
     {
       "id": "krishna-offer-karna",
       "title": "Krishna’s offer to Karna",
-      "chars": 5283,
-      "inputTokens": 2221,
+      "chars": 23575,
+      "inputTokens": 6794,
       "outputTokens": 1800,
-      "costUsd": 0.00283
+      "costUsd": 0.0042
     },
     {
       "id": "conches",
       "title": "The conches",
-      "chars": 6976,
-      "inputTokens": 2644,
-      "outputTokens": 1800,
-      "costUsd": 0.00295
-    },
-    {
-      "id": "gita-cosmic",
-      "title": "The Gita and the cosmic form",
-      "chars": 2190,
-      "inputTokens": 1448,
-      "outputTokens": 1800,
-      "costUsd": 0.00259
-    },
-    {
-      "id": "yudhishthira-blessings",
-      "title": "Yudhishthira asks the elders’ blessings",
-      "chars": 35954,
-      "inputTokens": 9889,
-      "outputTokens": 1800,
-      "costUsd": 0.00513
-    },
-    {
-      "id": "krishna-wheel",
-      "title": "Krishna takes up the wheel",
-      "chars": 14494,
-      "inputTokens": 4524,
-      "outputTokens": 1800,
-      "costUsd": 0.00352
-    },
-    {
-      "id": "bhishma-fall",
-      "title": "Bhishma’s fall and the bed of arrows",
-      "chars": 2190,
-      "inputTokens": 1448,
-      "outputTokens": 1800,
-      "costUsd": 0.00259
-    },
-    {
-      "id": "abhimanyu-chakravyuha",
-      "title": "Abhimanyu in the chakravyuha",
-      "chars": 12334,
-      "inputTokens": 3984,
-      "outputTokens": 1800,
-      "costUsd": 0.00336
-    },
-    {
-      "id": "jayadratha-false-sunset",
-      "title": "Jayadratha and the false sunset",
-      "chars": 14208,
-      "inputTokens": 4452,
-      "outputTokens": 1800,
-      "costUsd": 0.0035
-    },
-    {
-      "id": "ghatotkacha-night",
-      "title": "Ghatotkacha’s night and Karna’s spear",
-      "chars": 5895,
-      "inputTokens": 2374,
-      "outputTokens": 1800,
-      "costUsd": 0.00287
-    },
-    {
-      "id": "ashwatthama-dead",
-      "title": "“Ashwatthama is dead”",
-      "chars": 35975,
-      "inputTokens": 9894,
-      "outputTokens": 1800,
-      "costUsd": 0.00513
-    },
-    {
-      "id": "bhima-dushasana",
-      "title": "Bhima and Dushasana",
-      "chars": 3812,
-      "inputTokens": 1853,
-      "outputTokens": 1800,
-      "costUsd": 0.00272
-    },
-    {
-      "id": "karna-wheel",
-      "title": "Karna’s wheel",
-      "chars": 14494,
-      "inputTokens": 4524,
-      "outputTokens": 1800,
-      "costUsd": 0.00352
-    },
-    {
-      "id": "duryodhana-lake",
-      "title": "Duryodhana in the lake",
-      "chars": 8101,
-      "inputTokens": 2926,
-      "outputTokens": 1800,
-      "costUsd": 0.00304
-    },
-    {
-      "id": "mace-duel",
-      "title": "The mace duel",
-      "chars": 9418,
-      "inputTokens": 3255,
-      "outputTokens": 1800,
-      "costUsd": 0.00314
-    },
-    {
-      "id": "owl-crows-night-raid",
-      "title": "The owl and the crows, the night raid",
-      "chars": 10177,
-      "inputTokens": 3445,
-      "outputTokens": 1800,
-      "costUsd": 0.00319
-    },
-    {
-      "id": "ashwatthama-gem",
-      "title": "Ashwatthama’s gem",
-      "chars": 4563,
-      "inputTokens": 2041,
-      "outputTokens": 1800,
-      "costUsd": 0.00277
-    },
-    {
-      "id": "dhritarashtra-iron-bhima",
-      "title": "Dhritarashtra and the iron Bhima",
-      "chars": 4628,
-      "inputTokens": 2057,
-      "outputTokens": 1800,
-      "costUsd": 0.00278
-    },
-    {
-      "id": "gandhari-curse",
-      "title": "Gandhari’s curse",
-      "chars": 7170,
-      "inputTokens": 2693,
-      "outputTokens": 1800,
-      "costUsd": 0.00297
-    },
-    {
-      "id": "bhishma-teachings",
-      "title": "Bhishma’s teachings from the bed of arrows",
-      "chars": 3143,
-      "inputTokens": 1686,
-      "outputTokens": 1800,
-      "costUsd": 0.00267
-    },
-    {
-      "id": "arjuna-babruvahana",
-      "title": "Arjuna and Babruvahana",
-      "chars": 23941,
-      "inputTokens": 6886,
-      "outputTokens": 1800,
-      "costUsd": 0.00423
-    },
-    {
-      "id": "mongoose",
-      "title": "The half-golden mongoose",
-      "chars": 22274,
-      "inputTokens": 6469,
-      "outputTokens": 1800,
-      "costUsd": 0.0041
-    },
-    {
-      "id": "elders-forest",
-      "title": "The elders’ last forest",
-      "chars": 13371,
-      "inputTokens": 4243,
-      "outputTokens": 1800,
-      "costUsd": 0.00343
-    },
-    {
-      "id": "samba-pestle",
-      "title": "Samba and the iron pestle",
-      "chars": 23953,
-      "inputTokens": 6889,
-      "outputTokens": 1800,
-      "costUsd": 0.00423
-    },
-    {
-      "id": "yadava-end",
-      "title": "The end of the Yadavas",
-      "chars": 3861,
-      "inputTokens": 1866,
-      "outputTokens": 1800,
-      "costUsd": 0.00272
-    },
-    {
-      "id": "krishna-jara",
-      "title": "Krishna and the hunter Jara",
-      "chars": 5101,
-      "inputTokens": 2176,
+      "chars": 5096,
+      "inputTokens": 2174,
       "outputTokens": 1800,
       "costUsd": 0.00281
     },
     {
-      "id": "dwarka-sea",
-      "title": "Dwarka and the sea",
-      "chars": 23953,
-      "inputTokens": 6889,
+      "id": "gita-cosmic",
+      "title": "The Gita and the cosmic form",
+      "chars": 90000,
+      "inputTokens": 23400,
       "outputTokens": 1800,
-      "costUsd": 0.00423
+      "costUsd": 0.00918
     },
     {
-      "id": "great-journey-dog",
-      "title": "The great journey and the dog",
-      "chars": 7154,
-      "inputTokens": 2689,
+      "id": "yudhishthira-blessings",
+      "title": "Yudhishthira asks the elders’ blessings",
+      "chars": 15775,
+      "inputTokens": 4844,
       "outputTokens": 1800,
-      "costUsd": 0.00297
+      "costUsd": 0.00361
     },
     {
-      "id": "yudhishthira-test",
-      "title": "Yudhishthira’s last test",
-      "chars": 3989,
-      "inputTokens": 1898,
+      "id": "krishna-wheel",
+      "title": "Krishna takes up the wheel",
+      "chars": 25337,
+      "inputTokens": 7235,
       "outputTokens": 1800,
-      "costUsd": 0.00273
+      "costUsd": 0.00433
+    },
+    {
+      "id": "abhimanyu-chakravyuha",
+      "title": "Abhimanyu in the chakravyuha",
+      "chars": 85921,
+      "inputTokens": 22381,
+      "outputTokens": 1800,
+      "costUsd": 0.00887
+    },
+    {
+      "id": "jayadratha-false-sunset",
+      "title": "Jayadratha and the false sunset",
+      "chars": 90000,
+      "inputTokens": 23400,
+      "outputTokens": 1800,
+      "costUsd": 0.00918
+    },
+    {
+      "id": "bhima-dushasana",
+      "title": "Bhima and Dushasana",
+      "chars": 16078,
+      "inputTokens": 4920,
+      "outputTokens": 1800,
+      "costUsd": 0.00364
+    },
+    {
+      "id": "karna-wheel",
+      "title": "Karna’s wheel",
+      "chars": 77142,
+      "inputTokens": 20186,
+      "outputTokens": 1800,
+      "costUsd": 0.00822
+    },
+    {
+      "id": "mace-duel",
+      "title": "The mace duel",
+      "chars": 87598,
+      "inputTokens": 22800,
+      "outputTokens": 1800,
+      "costUsd": 0.009
+    },
+    {
+      "id": "ashwatthama-gem",
+      "title": "Ashwatthama’s gem",
+      "chars": 11002,
+      "inputTokens": 3651,
+      "outputTokens": 1800,
+      "costUsd": 0.00326
+    },
+    {
+      "id": "arjuna-babruvahana",
+      "title": "Arjuna and Babruvahana",
+      "chars": 53573,
+      "inputTokens": 14294,
+      "outputTokens": 1800,
+      "costUsd": 0.00645
     }
   ],
-  "totalUsd": 0.2633,
-  "at": "2026-11-21T08:01:25.354Z"
+  "totalUsd": 0.1536,
+  "at": "2026-11-21T11:00:15.251Z"
 }

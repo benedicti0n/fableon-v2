@@ -1,6 +1,26 @@
 {
   "version": 1,
   "source": "K. M. Ganguli, The Mahabharata, Books 1-18 (public domain)",
+  "sectionCounts": {
+    "1": 234,
+    "2": 79,
+    "3": 313,
+    "4": 72,
+    "5": 199,
+    "6": 124,
+    "7": 196,
+    "8": 96,
+    "9": 65,
+    "10": 18,
+    "11": 27,
+    "12": 362,
+    "13": 168,
+    "14": 92,
+    "15": 39,
+    "16": 8,
+    "17": 3,
+    "18": 6
+  },
   "episodes": [
     {
       "id": "janamejaya-snake-sacrifice",
@@ -12,15 +32,29 @@
         "snake sacrifice"
       ],
       "sections": [
-        "I",
-        "I"
+        "L",
+        "LVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Janamejaya’s snake sacrifice"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "L",
+          "LVIII"
+        ],
+        "keys": {
+          "Janamejaya": 19,
+          "Takshaka": 42,
+          "snake": 37
+        },
+        "first": "(Astika Parva continued) 'Sauti continued, 'The ministers said, 'That king of kings then, spent with hunger and exertion, and having placed the snake upon the shoulders of that Muni, came back to his capital. The Muni ha",
+        "verified": true
+      }
     },
     {
       "id": "bhima-naga",
@@ -32,15 +66,28 @@
         "Bhima"
       ],
       "sections": [
-        "II",
-        "II"
+        "CXXIX",
+        "CXXIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhima in the Naga realm"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXXIX",
+          "CXXIX"
+        ],
+        "keys": {
+          "Bhima": 14,
+          "Nagas": 3
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana said, 'Meanwhile the Kauravas and the Pandavas, after having thus sported there, set out, without Bhima, for Hastinapura, some on horses, some on elephants, while others preferred",
+        "verified": true
+      }
     },
     {
       "id": "kauravas-birth",
@@ -52,15 +99,28 @@
         "Kauravas"
       ],
       "sections": [
-        "I",
-        "I"
+        "CXV",
+        "CXXVII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The birth of the Kauravas"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXV",
+          "CXXVII"
+        ],
+        "keys": {
+          "Gandhari": 14,
+          "sons": 48
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana said, 'Meanwhile, O Janamejaya, Dhritarashtra begat upon Gandhari a hundred sons, and upon a Vaisya wife another besides those hundred. And Pandu had, by his two wives Kunti and M",
+        "verified": true
+      }
     },
     {
       "id": "drona-ball-well",
@@ -72,15 +132,29 @@
         "Drona"
       ],
       "sections": [
-        "CXV",
-        "CXV"
+        "CXXXI",
+        "CXXXIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Drona and the ball in the well"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXXXI",
+          "CXXXIII"
+        ],
+        "keys": {
+          "Drona": 33,
+          "ball": 6,
+          "well": 7
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana said, 'Desirous of giving his grandsons a superior education, Bhishma was on the look-out for a teacher endued with energy and well-skilled in the science of arms. Deciding, O chi",
+        "verified": true
+      }
     },
     {
       "id": "bird-eye-test",
@@ -92,15 +166,28 @@
         "Drona"
       ],
       "sections": [
-        "II",
-        "II"
+        "CXXXV",
+        "CXXXV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The bird’s eye test"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXXXV",
+          "CXXXV"
+        ],
+        "keys": {
+          "bird": 3,
+          "Drona": 10
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana said, 'When everyone had failed, Drona smilingly called Arjuna and said unto him, 'By thee the aim must be shot; therefore, turn thy eyes to it. Thou must let fly the arrow as soo",
+        "verified": true
+      }
     },
     {
       "id": "ekalavya",
@@ -110,15 +197,27 @@
         "Ekalavya"
       ],
       "sections": [
-        "LXVII",
-        "LXVII"
+        "CXXXIV",
+        "CXXXIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Ekalavya"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXXXIV",
+          "CXXXIV"
+        ],
+        "keys": {
+          "Ekalavya": 9
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana said, 'Thus worshipped by Bhishma, Drona, that first of men, endued with great energy, took up his quarters in the abode of the Kurus and continued to live there, receiving their ",
+        "verified": true
+      }
     },
     {
       "id": "karna-tournament",
@@ -129,15 +228,29 @@
         "tournament"
       ],
       "sections": [
-        "I",
-        "I"
+        "CXXXVIII",
+        "CXXXIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Karna at the tournament"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXXXVIII",
+          "CXXXIX"
+        ],
+        "keys": {
+          "Karna": 29,
+          "Arjuna": 4,
+          "arena": 4
+        },
+        "first": "(Sambhava Parva continued) \"Vaisampayana continued, 'When the spectators, with eyes expanded with wonder, made way for that subjugator of hostile cities, Karna, that hero with his natural mail and face brightened with ea",
+        "verified": true
+      }
     },
     {
       "id": "house-of-lac",
@@ -148,15 +261,29 @@
         "lac"
       ],
       "sections": [
-        "I",
-        "I"
+        "CXLIII",
+        "CLIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The house of lac"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CXLIII",
+          "CLIII"
+        ],
+        "keys": {
+          "lac": 10,
+          "house": 26,
+          "fire": 15
+        },
+        "first": "(Jatugriha Parva) \"Vaisampayana said, 'Then the son of Suvala (Sakuni), king Duryodhana, Duhsasana and Kama, in consultation with one another, formed an evil conspiracy. With the sanction of Dhritarashtra, the king of th",
+        "verified": true
+      }
     },
     {
       "id": "hidimba",
@@ -166,15 +293,28 @@
         "Hidimba"
       ],
       "sections": [
-        "II",
-        "II"
+        "CLIV",
+        "CLVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Hidimba"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CLIV",
+          "CLVIII"
+        ],
+        "keys": {
+          "Hidimva": 35,
+          "Bhima": 36
+        },
+        "first": "(Hidimva-vadha Parva) \"Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a Rakshasa by name Hidimva dwelt on the Sala tree. Possessed of great energy and prowess, he was a cruel cannibal of visag",
+        "verified": true
+      }
     },
     {
       "id": "draupadi-swayamvara",
@@ -185,15 +325,29 @@
         "Draupadi"
       ],
       "sections": [
-        "I",
-        "I"
+        "CLXXXVI",
+        "CLXLIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Draupadi’s swayamvara"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CLXXXVI",
+          "CLXLIV"
+        ],
+        "keys": {
+          "Draupadi": 10,
+          "swayamvara": 20,
+          "Arjuna": 23
+        },
+        "first": "(Swayamvara Parva) \"Vaisampayana said, 'Then those tigers among men--those brothers--the five Pandavas, set out for Panchala to behold that country and Draupadi and the festivities (in view of her marriage). And those ti",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-ulupi",
@@ -203,15 +357,28 @@
         "Ulupi"
       ],
       "sections": [
-        "II",
-        "II"
+        "CCXV",
+        "CCXX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Arjuna and Ulupi"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CCXV",
+          "CCXX"
+        ],
+        "keys": {
+          "Ulupi": 6,
+          "Arjuna": 37
+        },
+        "first": "(Arjuna-vanavasa Parva) \"Vaisampayana said, 'The Pandavas, having established such a rule, continued to reside there. By the prowess of their arms they brought many kings under their sway. And Krishna became obedient unt",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-subhadra",
@@ -221,15 +388,28 @@
         "Subhadra"
       ],
       "sections": [
-        "I",
-        "I"
+        "CCXXI",
+        "CCXXIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Arjuna and Subhadra"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CCXXI",
+          "CCXXIII"
+        ],
+        "keys": {
+          "Subhadra": 14,
+          "Arjuna": 21
+        },
+        "first": "(Subhadra-harana Parva) \"Vaisampayana said, 'O best of monarchs, within a few days after this, there commenced on the Raivataka mountain, a grand festival of the Vrishnis and the Andhakas. At the mountain-festival of the",
+        "verified": true
+      }
     },
     {
       "id": "khandava-fire",
@@ -240,15 +420,29 @@
         "fire"
       ],
       "sections": [
-        "I",
-        "I"
+        "CCXXIV",
+        "CCXXXVI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The Khandava forest fire"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "CCXXIV",
+          "CCXXXVI"
+        ],
+        "keys": {
+          "Khandava": 48,
+          "Agni": 53,
+          "fire": 45
+        },
+        "first": "(Khandava-daha Parva) \"Vaisampayana said, 'The Pandavas, after they had taken up their abode at Indraprastha at the command of Dhritarashtra and Bhishma began to bring other kings under their sway. All the subjects (of t",
+        "verified": true
+      }
     },
     {
       "id": "parikshit-takshaka",
@@ -259,15 +453,29 @@
         "Takshaka"
       ],
       "sections": [
-        "I",
-        "I"
+        "XL",
+        "XLIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Parikshit and Takshaka"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "XL",
+          "XLIV"
+        ],
+        "keys": {
+          "Parikshit": 10,
+          "Takshaka": 27,
+          "snake": 20
+        },
+        "first": "(Astika Parva continued) \"Saunaka said, 'O son of Suta, I desire to know the reason why the illustrious Rishi whom thou hast named Jaratkaru came to be so called on earth. It behoveth thee to tell us the etymology of the",
+        "verified": true
+      }
     },
     {
       "id": "shakuntala-dushyanta",
@@ -279,15 +487,28 @@
         "Dushyanta"
       ],
       "sections": [
-        "II",
-        "II"
+        "LXIX",
+        "LXXIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Shakuntala and Dushyanta"
-      ]
+      ],
+      "mapping": {
+        "book": 1,
+        "range": [
+          "LXIX",
+          "LXXIV"
+        ],
+        "keys": {
+          "Sakuntala": 28,
+          "Dushmanta": 26
+        },
+        "first": "(Sambhava Parva continued) \"Janamejaya said, 'I desire to hear from thee about the birth and life of the high-souled Bharata and of the origin of Sakuntala. And, O holy one, I also desire to hear all about Dushmanta--tha",
+        "verified": true
+      }
     },
     {
       "id": "maya-hall",
@@ -299,14 +520,27 @@
       ],
       "sections": [
         "I",
-        "I"
+        "IV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Maya builds the assembly hall"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "I",
+          "IV"
+        ],
+        "keys": {
+          "Maya": 17,
+          "sabha": 6
+        },
+        "first": "(Sabhakriya Parva) Om! After having bowed down to Narayana, and Nara, the most exalted male being, and also to the goddess Saraswati, must the word Jaya be uttered. \"Vaisampayana said,--\"Then, in the presence of Vasudeva",
+        "verified": true
+      }
     },
     {
       "id": "bhima-jarasandha",
@@ -316,15 +550,28 @@
         "Jarasandha"
       ],
       "sections": [
-        "XIV",
-        "XIV"
+        "XX",
+        "XXIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhima and Jarasandha"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "XX",
+          "XXIV"
+        ],
+        "keys": {
+          "Jarasandha": 46,
+          "Bhima": 28
+        },
+        "first": "(Jarasandhta-badha Parva) \"Krishna said,--both Hansa and Dimvaka have fallen; Kansa also with all his followers has been slain. The time hath, therefore come for the destruction of Jarasandha. He is incapable of being va",
+        "verified": true
+      }
     },
     {
       "id": "shishupala-insults",
@@ -335,15 +582,28 @@
         "Shishupala"
       ],
       "sections": [
-        "IV",
-        "IV"
+        "XXXIX",
+        "XLIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Shishupala’s hundred insults"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "XXXIX",
+          "XLIV"
+        ],
+        "keys": {
+          "Sisupala": 16,
+          "Krishna": 23
+        },
+        "first": "(Sisupala-badha Parva) \"Vaisampayana said,--Beholding that vast assembly of kings agitated with wrath, even like the terrific sea agitated by the winds that blow at the time of the universal dissolution, Yudhishthira add",
+        "verified": true
+      }
     },
     {
       "id": "duryodhana-illusion",
@@ -354,15 +614,28 @@
         "illusion"
       ],
       "sections": [
-        "XI",
-        "XI"
+        "XLVI",
+        "XLVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Duryodhana in the hall of illusions"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "XLVI",
+          "XLVIII"
+        ],
+        "keys": {
+          "Duryodhana": 28,
+          "assembly": 8
+        },
+        "first": "Vaisampayana said,--\"That bull among men, Duryodhana, continued to dwell in that, assembly house (of the Pandavas). And with Sakuni, the Kuru prince slowly examined the whole of that mansion, and the Kuru prince beheld i",
+        "verified": true
+      }
     },
     {
       "id": "dice-game",
@@ -373,15 +646,29 @@
         "Sakuni"
       ],
       "sections": [
-        "XLVII",
-        "XLVII"
+        "XLIX",
+        "LXV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The dice game"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "XLIX",
+          "LXV"
+        ],
+        "keys": {
+          "dice": 43,
+          "Sakuni": 40,
+          "Yudhishthira": 99
+        },
+        "first": "Janamejaya said,--\"O thou foremost of all conversant with the Vedas, how did that game at dice take place, fraught with such evil to the cousins and through which my grand-sires, the son of Pandu, were plunged into such ",
+        "verified": true
+      }
     },
     {
       "id": "draupadi-assembly",
@@ -392,15 +679,28 @@
         "assembly"
       ],
       "sections": [
-        "II",
-        "II"
+        "LXVI",
+        "LXIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Draupadi in the assembly"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "LXVI",
+          "LXIX"
+        ],
+        "keys": {
+          "Draupadi": 36,
+          "assembly": 53
+        },
+        "first": "Vaisampayana said,--\"Intoxicated with pride, the son of Dhritarashtra spake,--'Fie on Kshatta! and casting his eyes upon the Pratikamin in attendance, commanded him, in the midst of all those reverend seniors, saying,--'",
+        "verified": true
+      }
     },
     {
       "id": "bhima-vows",
@@ -411,15 +711,28 @@
         "vow"
       ],
       "sections": [
-        "II",
-        "II"
+        "LXX",
+        "LXX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhima’s vows"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "LXX",
+          "LXX"
+        ],
+        "keys": {
+          "Bhima": 5,
+          "thigh": 2
+        },
+        "first": "\"Karna said,--'Of all the persons in the assembly, three, viz., Bhishma, Vidura, and the preceptor of the Kurus (Drona) appear to be independent; for they always speak of their master as wicked, always censure him, and n",
+        "verified": true
+      }
     },
     {
       "id": "second-game-exile",
@@ -430,15 +743,28 @@
         "exile"
       ],
       "sections": [
-        "V",
-        "V"
+        "LXXVI",
+        "LXXIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The second game and the exile"
-      ]
+      ],
+      "mapping": {
+        "book": 2,
+        "range": [
+          "LXXVI",
+          "LXXIX"
+        ],
+        "keys": {
+          "exile": 6,
+          "woods": 9
+        },
+        "first": "Vaisampayana said,--\"Then the vanquished sons of Pritha prepared for their exile into the woods. And they, one after another, in due order, casting off their royal robes, attired themselves in deer-skins. And Dussasana, ",
+        "verified": true
+      }
     },
     {
       "id": "akshaya-patra-durvasa",
@@ -449,15 +775,29 @@
         "Durvasa"
       ],
       "sections": [
-        "LXXXIV",
-        "LXXXIV"
+        "CCLX",
+        "CCLXI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The akshaya patra and Durvasa’s visit"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CCLX",
+          "CCLXI"
+        ],
+        "keys": {
+          "Durvasa": 9,
+          "Duryodhana": 6,
+          "food": 6
+        },
+        "first": "Janamejaya said, \"While the high-souled Pandavas were living in those woods, delighted with the pleasant conversation they held with the Munis, and engaged in distributing the food they obtained from the sun, with variou",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-kirata",
@@ -467,15 +807,28 @@
         "Kirata"
       ],
       "sections": [
-        "XXXIX",
-        "XXXIX"
+        "XXXVIII",
+        "XLI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Arjuna and the Kirata"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "XXXVIII",
+          "XLI"
+        ],
+        "keys": {
+          "Kirata": 20,
+          "Arjuna": 37
+        },
+        "first": "(Kairata Parva) Janemejaya said, \"O illustrious one, I desire to hear in detail the history of the acquisition of weapons by Arjuna of spotless deeds. O tell me how that tiger among men, Dhananjaya, of mighty arms and po",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-heaven",
@@ -486,15 +839,29 @@
         "Indra"
       ],
       "sections": [
-        "II",
-        "II"
+        "XLII",
+        "LI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Arjuna in Indra’s heaven"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "XLII",
+          "LI"
+        ],
+        "keys": {
+          "Indra": 20,
+          "heaven": 13,
+          "Arjuna": 57
+        },
+        "first": "(Indralokagamana Parva) Vaisampayana said, \"After the Lokapalas had gone away, Arjuna--that slayer of all foes--began to think, O monarch, of the car of Indra! And as Gudakesa gifted with great intelligence was thinking ",
+        "verified": true
+      }
     },
     {
       "id": "bhima-hanuman",
@@ -505,14 +872,27 @@
       ],
       "sections": [
         "CXLV",
-        "CXLV"
+        "CL"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhima meets Hanuman"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CXLV",
+          "CL"
+        ],
+        "keys": {
+          "Hanuman": 27,
+          "Bhima": 36
+        },
+        "first": "Vaisampayana said, \"There observing cleanliness, those tigers among men dwelt for six nights, in expectation of beholding Dhananjaya. And it came to pass that all of a sudden there blew a wind from the north-east and bro",
+        "verified": true
+      }
     },
     {
       "id": "saugandhika",
@@ -522,15 +902,29 @@
         "Saugandhika"
       ],
       "sections": [
-        "LXXXIV",
-        "LXXXIV"
+        "CLI",
+        "CLIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The Saugandhika lotus"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CLI",
+          "CLIV"
+        ],
+        "keys": {
+          "Saugandhika": 6,
+          "lotus": 11,
+          "Bhima": 22
+        },
+        "first": "Vaisampayana said, \"When that foremost of monkeys had gone away, Bhima, the best of strong men, began to range the huge Gandhamadana along that path. And he went on, thinking of Hanuman's body and splendour unrivalled on",
+        "verified": true
+      }
     },
     {
       "id": "nahusha-python",
@@ -541,15 +935,29 @@
         "python"
       ],
       "sections": [
-        "III",
-        "III"
+        "CLXXVIII",
+        "CLXXX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Nahusha the python"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CLXXVIII",
+          "CLXXX"
+        ],
+        "keys": {
+          "Nahusha": 4,
+          "serpent": 19,
+          "Bhima": 6
+        },
+        "first": "Vaisampayana continued, \"And the powerful Bhimasena, having thus come under the power of the snake, thought of its mighty and wonderful prowess; and said unto it, 'Be thou pleased to tell me, O snake, who thou art. And, ",
+        "verified": true
+      }
     },
     {
       "id": "jayadratha-abduction",
@@ -559,15 +967,28 @@
         "Jayadratha"
       ],
       "sections": [
-        "CCLXII",
-        "CCLXII"
+        "CCLXIII",
+        "CCLXX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Jayadratha’s abduction of Draupadi"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CCLXIII",
+          "CCLXX"
+        ],
+        "keys": {
+          "Jayadratha": 27,
+          "Draupadi": 15
+        },
+        "first": "Kotika said, \"Excellent lady, who art thou that standest alone, leaning on a branch of the Kadamva tree at this hermitage and looking grand like a flame of fire blazing at night time, and fanned by the wind? Exquisitely ",
+        "verified": true
+      }
     },
     {
       "id": "karna-armour",
@@ -578,15 +999,29 @@
         "Karna"
       ],
       "sections": [
-        "XXXII",
-        "XXXII"
+        "CCLXLVIII",
+        "CCCVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Karna gives away his armour"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CCLXLVIII",
+          "CCCVIII"
+        ],
+        "keys": {
+          "Karna": 37,
+          "Sakra": 10,
+          "ear-rings": 49
+        },
+        "first": "Janamejaya said,--\"What, O Brahmana, was that great fear entertained by Yudhishthira in respect of Karna, for which Lomasa had conveyed to the son of Pandu a message of deep import from Indra in these words, That intense",
+        "verified": true
+      }
     },
     {
       "id": "yaksha-questions",
@@ -596,8 +1031,8 @@
         "Yaksha"
       ],
       "sections": [
-        "XXXIX",
-        "XXXIX"
+        "CCCX",
+        "CCCXII"
       ],
       "parts": 2,
       "notInSource": [],
@@ -605,7 +1040,20 @@
       "partTitles": [
         "The Yaksha’s questions · part 1",
         "The Yaksha’s questions · part 2"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "CCCX",
+          "CCCXII"
+        ],
+        "keys": {
+          "Yaksha": 56,
+          "Yudhishthira": 57
+        },
+        "first": "Yudhishthira said, \"There is no limit to calamities. Nor is it possible to ascertain either their final or efficient cause. It is the Lord of justice alone who distributeth the fruits of both virtue and vice.' Thereupon ",
+        "verified": true
+      }
     },
     {
       "id": "nala-damayanti",
@@ -617,7 +1065,7 @@
       ],
       "sections": [
         "LII",
-        "LII"
+        "LXXIX"
       ],
       "parts": 2,
       "notInSource": [],
@@ -625,7 +1073,20 @@
       "partTitles": [
         "Nala and Damayanti · part 1",
         "Nala and Damayanti · part 2"
-      ]
+      ],
+      "mapping": {
+        "book": 3,
+        "range": [
+          "LII",
+          "LXXIX"
+        ],
+        "keys": {
+          "Nala": 237,
+          "Damayanti": 171
+        },
+        "first": "(Nalopakhyana Parva) Janamejaya said, \"When the high-souled Partha went to Indra's region for obtaining weapons, what did Yudhishthira and the other sons of Pandu do?\" Vaisampayana said, \"When the high-souled Partha went",
+        "verified": true
+      }
     },
     {
       "id": "weapons-shami",
@@ -636,15 +1097,28 @@
         "weapons"
       ],
       "sections": [
-        "II",
-        "II"
+        "XXXIX",
+        "XLVI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The weapons in the shami tree"
-      ]
+      ],
+      "mapping": {
+        "book": 4,
+        "range": [
+          "XXXIX",
+          "XLVI"
+        ],
+        "keys": {
+          "weapons": 13,
+          "Sami": 5
+        },
+        "first": "Vaisampayana said, \"Beholding that bull among men seated on the car in the habit of a person of the third sex, driving toward the Sami tree, having taken (the flying) Uttara up, all the great car-warriors of the Kurus wi",
+        "verified": true
+      }
     },
     {
       "id": "bhima-cook-jimuta",
@@ -655,7 +1129,7 @@
         "cook"
       ],
       "sections": [
-        "XIII",
+        "X",
         "XIII"
       ],
       "parts": 1,
@@ -663,7 +1137,20 @@
       "status": "mapped",
       "partTitles": [
         "Bhima the cook and the wrestler Jimuta"
-      ]
+      ],
+      "mapping": {
+        "book": 4,
+        "range": [
+          "X",
+          "XIII"
+        ],
+        "keys": {
+          "Jimuta": 2,
+          "Bhima": 3
+        },
+        "first": "Vaisampayana said, \"Then clad in a cowherd's dress, and speaking the dialect of cowherds, Sahadeva came to the cowpen of Virata's city. And beholding that bull among men, who was shining in splendour, the king was struck",
+        "verified": true
+      }
     },
     {
       "id": "kichaka",
@@ -674,14 +1161,27 @@
       ],
       "sections": [
         "XIV",
-        "XIV"
+        "XXV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Kichaka"
-      ]
+      ],
+      "mapping": {
+        "book": 4,
+        "range": [
+          "XIV",
+          "XXV"
+        ],
+        "keys": {
+          "Kichaka": 108,
+          "Draupadi": 30
+        },
+        "first": "(Kichaka-badha Parva) Vaisampayana said, \"Living in such disguise, those mighty warriors, the sons of Pritha, passed ten months in Matsya's city. And, O monarch, although herself deserving to be waited upon by others, th",
+        "verified": true
+      }
     },
     {
       "id": "brihannala-uttara-cattle",
@@ -692,15 +1192,29 @@
         "cattle"
       ],
       "sections": [
-        "X",
-        "X"
+        "XXXVI",
+        "LXVI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Brihannala, Uttara and the cattle raid"
-      ]
+      ],
+      "mapping": {
+        "book": 4,
+        "range": [
+          "XXXVI",
+          "LXVI"
+        ],
+        "keys": {
+          "Uttara": 52,
+          "cattle": 3,
+          "Arjuna": 134
+        },
+        "first": "\"Uttara said, 'Firm as I am in the use of the bow, I would set out this very day in the track of the kine if only some one skilled in the management of horses becomes my charioteer. I do not, however, know the man who ma",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-duryodhana-krishna",
@@ -711,15 +1225,29 @@
         "Krishna"
       ],
       "sections": [
-        "I",
-        "I"
+        "VII",
+        "VII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Arjuna and Duryodhana at Krishna’s bedside"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "VII",
+          "VII"
+        ],
+        "keys": {
+          "Arjuna": 6,
+          "Duryodhana": 6,
+          "Krishna": 17
+        },
+        "first": "Vaisampayana said, \"Having despatched the priest to the city called after the elephant they sent messengers to the kings of various countries. And having sent messengers to other places, the Kuru hero Dhananjaya, that bu",
+        "verified": true
+      }
     },
     {
       "id": "shalya-hospitality",
@@ -730,15 +1258,28 @@
         "hospitality"
       ],
       "sections": [
-        "LXI",
-        "LXI"
+        "VIII",
+        "VIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Shalya won over by hospitality"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "VIII",
+          "VIII"
+        ],
+        "keys": {
+          "Salya": 14,
+          "Duryodhana": 13
+        },
+        "first": "Vaisampayana said, \"O king, having learnt the news from the messengers, Salya, accompanied by a large body of troops and by his sons, all of whom were mighty in battle, was coming to the Pandavas. His encampment covered ",
+        "verified": true
+      }
     },
     {
       "id": "amba-vow",
@@ -748,13 +1289,29 @@
         "Amba",
         "amba"
       ],
-      "sections": null,
+      "sections": [
+        "CLXXIV",
+        "CLXXVI"
+      ],
       "parts": 1,
       "notInSource": [],
       "status": "unmapped",
       "partTitles": [
         "Amba’s vow"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "CLXXIV",
+          "CLXXVI"
+        ],
+        "keys": {
+          "Amva": 4,
+          "Bhishma": 14
+        },
+        "first": "\"'Duryodhana said, \"For what reason, O chief of the Bharatas, wilt thou not slay Sikhandin even if thou beholdest him approach thee as a foe with arms upraised? Thou hadst, O mighty-armed one, formerly told me,--'I will ",
+        "verified": true
+      }
     },
     {
       "id": "krishna-peace-cosmic",
@@ -765,15 +1322,29 @@
         "cosmic"
       ],
       "sections": [
-        "V",
-        "V"
+        "LXXIX",
+        "CXXXIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Krishna’s peace mission and the cosmic form"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "LXXIX",
+          "CXXXIX"
+        ],
+        "keys": {
+          "Krishna": 101,
+          "peace": 74,
+          "form": 11
+        },
+        "first": "\"The holy one said, 'It shall be, O thou of mighty arms, what thou, O Pandavas, sayest, I will strive to bring about that which would be beneficial to both the Pandavas and the Kurus. Between the two kinds of acts, war a",
+        "verified": true
+      }
     },
     {
       "id": "kunti-karna",
@@ -784,15 +1355,28 @@
         "Karna"
       ],
       "sections": [
-        "I",
-        "I"
+        "CXLIV",
+        "CXLVI"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Kunti and Karna"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "CXLIV",
+          "CXLVI"
+        ],
+        "keys": {
+          "Kunti": 8,
+          "Karna": 21
+        },
+        "first": "Vaisampayana said, \"Upon the failure of Krishna's solicitations (for peace), and after he had started for the Pandavas from the Kurus, Kshatri approached Pritha and said these words slowly in grief, 'O mother of living c",
+        "verified": true
+      }
     },
     {
       "id": "krishna-offer-karna",
@@ -803,15 +1387,28 @@
         "Karna"
       ],
       "sections": [
-        "I",
-        "I"
+        "CXL",
+        "CXLIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Krishna’s offer to Karna"
-      ]
+      ],
+      "mapping": {
+        "book": 5,
+        "range": [
+          "CXL",
+          "CXLIII"
+        ],
+        "keys": {
+          "Krishna": 22,
+          "Karna": 13
+        },
+        "first": "\"Dhritarashtra said, 'O Sanjaya, in the midst of all the princes and the servants, the slayer of Madhu took Karna upon his car and went out (of our city). What did that slayer of hostile heroes, that one of immeasurable ",
+        "verified": true
+      }
     },
     {
       "id": "conches",
@@ -822,15 +1419,27 @@
         "conches"
       ],
       "sections": [
-        "XXV",
-        "XXV"
+        "I",
+        "I"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The conches"
-      ]
+      ],
+      "mapping": {
+        "book": 6,
+        "range": [
+          "I",
+          "I"
+        ],
+        "keys": {
+          "conches": 3
+        },
+        "first": "(Jamvu-khanda Nirmana Parva) OM! HAVING BOWED down to Narayana, and Nara, the most exalted of male beings, and also to the goddess Saraswati, must the word 'Jaya' be uttered. Janamejaya said,--\"How did those heroes, the ",
+        "verified": true
+      }
     },
     {
       "id": "gita-cosmic",
@@ -842,14 +1451,28 @@
       ],
       "sections": [
         "XIII",
-        "XIII"
+        "XLII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The Gita and the cosmic form"
-      ]
+      ],
+      "mapping": {
+        "book": 6,
+        "range": [
+          "XIII",
+          "XLII"
+        ],
+        "keys": {
+          "Gita": 21,
+          "Krishna": 22,
+          "Arjuna": 67
+        },
+        "first": "(Bhagavat-Gita Parva) Vaisampayana said,--\"Possessing a knowledge of the past, the present and the future, and seeing all things as if present before his eyes, the learned son of Gavalgana, O Bharata, coming quickly from",
+        "verified": true
+      }
     },
     {
       "id": "yudhishthira-blessings",
@@ -859,13 +1482,30 @@
         "blessings",
         "elders"
       ],
-      "sections": null,
+      "sections": [
+        "XLIII",
+        "XLIII"
+      ],
       "parts": 1,
       "notInSource": [],
       "status": "unmapped",
       "partTitles": [
         "Yudhishthira asks the elders’ blessings"
-      ]
+      ],
+      "mapping": {
+        "book": 6,
+        "range": [
+          "XLIII",
+          "XLIII"
+        ],
+        "keys": {
+          "Yudhishthira": 30,
+          "Bhishma": 14,
+          "blessing": 1
+        },
+        "first": "Sanjaya said,--\"Beholding Dhananjaya then to take up once again (his) arrows and Gandiva, the mighty car-warriors (of the Pandava party) uttered a tremendous shout. And those heroes, viz., the Pandavas and the Somakas, a",
+        "verified": true
+      }
     },
     {
       "id": "krishna-wheel",
@@ -876,15 +1516,28 @@
         "Krishna"
       ],
       "sections": [
-        "III",
-        "III"
+        "LIX",
+        "LIX"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Krishna takes up the wheel"
-      ]
+      ],
+      "mapping": {
+        "book": 6,
+        "range": [
+          "LIX",
+          "LIX"
+        ],
+        "keys": {
+          "Krishna": 11,
+          "discus": 7
+        },
+        "first": "Dhritarashtra said, \"After that dreadful vow had been made in battle by Bhishma enraged by the words of my son, what, O Sanjaya, did Bhishma do unto the sons of Pandu or what did the Panchalas do unto the grandsire? Tell",
+        "verified": true
+      }
     },
     {
       "id": "bhishma-fall",
@@ -895,15 +1548,28 @@
         "Bhishma"
       ],
       "sections": [
-        "XIII",
-        "XIII"
+        "CXX",
+        "CXXIV"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhishma’s fall and the bed of arrows"
-      ]
+      ],
+      "mapping": {
+        "book": 6,
+        "range": [
+          "CXX",
+          "CXXIV"
+        ],
+        "keys": {
+          "Bhishma": 95,
+          "arrows": 57
+        },
+        "first": "Sanjaya said, \"Thus all the Pandavas, placing Sikhandin before them pierced Bhishma in that battle repeatedly surrounding him on all sides. And all the Srinjayas, uniting together, struck him with dreadful Sataghnis, and",
+        "verified": true
+      }
     },
     {
       "id": "abhimanyu-chakravyuha",
@@ -914,15 +1580,27 @@
         "chakravyuha"
       ],
       "sections": [
-        "X",
-        "X"
+        "XXXI",
+        "XLVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Abhimanyu in the chakravyuha"
-      ]
+      ],
+      "mapping": {
+        "book": 7,
+        "range": [
+          "XXXI",
+          "XLVIII"
+        ],
+        "keys": {
+          "Abhimanyu": 129
+        },
+        "first": "(Abhimanyu-badha Parva) \"Sanjaya said, 'Having been first broken by Arjuna of immeasurable prowess, and owing also to the failure of Drona's vow, in consequence of Yudhishthira having been well-protected, thy warriors we",
+        "verified": true
+      }
     },
     {
       "id": "jayadratha-false-sunset",
@@ -933,15 +1611,25 @@
         "sunset"
       ],
       "sections": [
-        "XIV",
-        "XIV"
+        "LXXXV",
+        "CXLV"
       ],
       "parts": 1,
       "notInSource": [],
-      "status": "mapped",
-      "partTitles": [
-        "Jayadratha and the false sunset"
-      ]
+      "mapping": {
+        "book": 7,
+        "range": [
+          "LXXXV",
+          "CXLV"
+        ],
+        "keys": {
+          "Jayadratha": 82,
+          "Arjuna": 299,
+          "sun": 89
+        },
+        "first": "(Jayadratha-Vadha Parva) \"Dhritarashtra said, 'After Abhimanyu's slaughter when the next day came, what did the Pandavas, afflicted with grief and sorrow do? Who amongst my warriors fought with them? Knowing, as they did",
+        "verified": true
+      }
     },
     {
       "id": "ghatotkacha-night",
@@ -951,15 +1639,28 @@
         "Ghatotkacha"
       ],
       "sections": [
-        "VIII",
-        "VIII"
+        "CLII",
+        "CLXXXIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Ghatotkacha’s night and Karna’s spear"
-      ]
+      ],
+      "mapping": {
+        "book": 7,
+        "range": [
+          "CLII",
+          "CLXXXIII"
+        ],
+        "keys": {
+          "Ghatotkacha": 148,
+          "Karna": 299
+        },
+        "first": "(Ghatotkacha-badha Parva) \"Sanjaya said, 'That elephant force of thine, O king, swelling with might, fought everywhere, prevailing over the Pandava force. Resolved to go to the other world, the Panchalas and the Kauravas",
+        "verified": true
+      }
     },
     {
       "id": "ashwatthama-dead",
@@ -969,13 +1670,29 @@
         "Aswatthama",
         "Ashwatthama"
       ],
-      "sections": null,
+      "sections": [
+        "CLXXXIV",
+        "CXCVI"
+      ],
       "parts": 1,
       "notInSource": [],
       "status": "unmapped",
       "partTitles": [
         "“Ashwatthama is dead”"
-      ]
+      ],
+      "mapping": {
+        "book": 7,
+        "range": [
+          "CLXXXIV",
+          "CXCVI"
+        ],
+        "keys": {
+          "Aswatthaman": 26,
+          "Drona": 176
+        },
+        "first": "(Drona-vadha Parva) \"Sanjaya said, 'Thus addressed by Vyasa, the heroic king Yudhishthira the just refrained, O bull of Bharata's race, from himself seeking to slay Karna. In consequence, however of the slaughter of Ghat",
+        "verified": true
+      }
     },
     {
       "id": "bhima-dushasana",
@@ -986,15 +1703,28 @@
         "Dushasana"
       ],
       "sections": [
-        "1",
-        "1"
+        "83",
+        "84"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Bhima and Dushasana"
-      ]
+      ],
+      "mapping": {
+        "book": 8,
+        "range": [
+          "83",
+          "84"
+        ],
+        "keys": {
+          "Duhshasana": 19,
+          "Bhima": 26
+        },
+        "first": "\"Sanjaya said, 'Fighting fiercely, prince Duhshasana achieved the most difficult feats in that encounter. With a single shaft he cut off Bhima's bow, and then with six shafts he pierced his foe's driver. Having achieved ",
+        "verified": true
+      }
     },
     {
       "id": "karna-wheel",
@@ -1005,15 +1735,28 @@
         "Karna"
       ],
       "sections": [
-        "9",
-        "9"
+        "90",
+        "96"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Karna’s wheel"
-      ]
+      ],
+      "mapping": {
+        "book": 8,
+        "range": [
+          "90",
+          "96"
+        ],
+        "keys": {
+          "Karna": 147,
+          "wheel": 11
+        },
+        "first": "\"Sanjaya said, 'Flying away in consequence of the falling of Arjuna's arrows, the broken divisions of the Kauravas, staying at a distance, continued to gaze at Arjuna's weapon swelling with energy and careering around wi",
+        "verified": true
+      }
     },
     {
       "id": "duryodhana-lake",
@@ -1024,15 +1767,28 @@
         "Duryodhana"
       ],
       "sections": [
-        "1",
-        "1"
+        "29",
+        "35"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Duryodhana in the lake"
-      ]
+      ],
+      "mapping": {
+        "book": 9,
+        "range": [
+          "29",
+          "35"
+        ],
+        "keys": {
+          "Duryodhana": 68,
+          "lake": 37
+        },
+        "first": "(Hrada-pravesa Parva) \"Sanjaya said, 'After this, the followers of Subala's son, O monarch, became filled with rage. Prepared to lay down their lives in that dreadful battle, they began to resist the Pandavas. Resolved t",
+        "verified": true
+      }
     },
     {
       "id": "mace-duel",
@@ -1043,15 +1799,29 @@
         "duel"
       ],
       "sections": [
-        "3",
-        "3"
+        "55",
+        "65"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The mace duel"
-      ]
+      ],
+      "mapping": {
+        "book": 9,
+        "range": [
+          "55",
+          "65"
+        ],
+        "keys": {
+          "mace": 57,
+          "Duryodhana": 71,
+          "Bhima": 43
+        },
+        "first": "Vaishampayana said, \"Even thus, O Janamejaya, did that terrible battle take place. King Dhritarashtra, in great sorrow, said these words with reference to it: \"Dhritarashtra said, 'Beholding Rama approach that spot when ",
+        "verified": true
+      }
     },
     {
       "id": "owl-crows-night-raid",
@@ -1063,14 +1833,28 @@
       ],
       "sections": [
         "1",
-        "1"
+        "8"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The owl and the crows, the night raid"
-      ]
+      ],
+      "mapping": {
+        "book": 10,
+        "range": [
+          "1",
+          "8"
+        ],
+        "keys": {
+          "owl": 4,
+          "crows": 7,
+          "night": 25
+        },
+        "first": "Om! Having bowed down unto Narayana, and Nara the most exalted of male beings, and unto the goddess Sarasvati, must the word Jaya be uttered! \"Sanjaya said, 'Those heroes then together proceeded towards the south. At the",
+        "verified": true
+      }
     },
     {
       "id": "ashwatthama-gem",
@@ -1081,15 +1865,28 @@
         "gem"
       ],
       "sections": [
-        "11",
-        "11"
+        "15",
+        "16"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Ashwatthama’s gem"
-      ]
+      ],
+      "mapping": {
+        "book": 10,
+        "range": [
+          "15",
+          "16"
+        ],
+        "keys": {
+          "gem": 13,
+          "Drona": 9
+        },
+        "first": "Vaishampayana said, \"At the very sight, O tiger among men, of those two Rishis possessed of splendour like that of fire, Dhananjaya quickly resolved to withdraw his celestial shaft. Joining his hands, he addressed those ",
+        "verified": true
+      }
     },
     {
       "id": "dhritarashtra-iron-bhima",
@@ -1100,7 +1897,7 @@
         "Bhima"
       ],
       "sections": [
-        "12",
+        "1",
         "12"
       ],
       "parts": 1,
@@ -1108,7 +1905,21 @@
       "status": "mapped",
       "partTitles": [
         "Dhritarashtra and the iron Bhima"
-      ]
+      ],
+      "mapping": {
+        "book": 11,
+        "range": [
+          "1",
+          "12"
+        ],
+        "keys": {
+          "Dhritarashtra": 27,
+          "Bhima": 12,
+          "iron": 4
+        },
+        "first": "(Jalapradanika-parva) Om! Having bowed down unto Narayana and Nara, the foremost of male beings, and unto the goddess Sarasvati, must the word Jaya be uttered. Janamejaya said, \"After Duryodhana had fallen and after all ",
+        "verified": true
+      }
     },
     {
       "id": "gandhari-curse",
@@ -1118,15 +1929,28 @@
         "Gandhari"
       ],
       "sections": [
-        "1",
-        "1"
+        "20",
+        "27"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Gandhari’s curse"
-      ]
+      ],
+      "mapping": {
+        "book": 11,
+        "range": [
+          "20",
+          "27"
+        ],
+        "keys": {
+          "Gandhari": 12,
+          "curse": 3
+        },
+        "first": "\"Gandhari said, 'He whose might and courage were regarded, O Keshava, as a one and half times superior to those of his sire and thee, he who resembled a fierce and proud lion, he who, without a follower, alone pierced th",
+        "verified": true
+      }
     },
     {
       "id": "bhishma-teachings",
@@ -1136,8 +1960,8 @@
         "Bhishma"
       ],
       "sections": [
-        "IV",
-        "IV"
+        "I",
+        "CXXX"
       ],
       "parts": 2,
       "notInSource": [],
@@ -1145,7 +1969,20 @@
       "partTitles": [
         "Bhishma’s teachings from the bed of arrows · part 1",
         "Bhishma’s teachings from the bed of arrows · part 2"
-      ]
+      ],
+      "mapping": {
+        "book": 12,
+        "range": [
+          "I",
+          "CXXX"
+        ],
+        "keys": {
+          "Bhishma": 161,
+          "Yudhishthira": 242
+        },
+        "first": "(Rajadharmanusasana Parva) Om! Having bowed down to Narayana, and Nara, the foremost of male beings, and unto the goddess Saraswati, must the word Jaya be uttered. \"Vaisampayana said, 'Having offered oblations, of water ",
+        "verified": true
+      }
     },
     {
       "id": "arjuna-babruvahana",
@@ -1154,13 +1991,25 @@
       "keywords": [
         "Babruvahana"
       ],
-      "sections": null,
+      "sections": [
+        "LXXIX",
+        "LXXXVIII"
+      ],
       "parts": 1,
       "notInSource": [],
-      "status": "unmapped",
-      "partTitles": [
-        "Arjuna and Babruvahana"
-      ]
+      "mapping": {
+        "book": 14,
+        "range": [
+          "LXXIX",
+          "LXXXVIII"
+        ],
+        "keys": {
+          "Vabhruvahana": 15,
+          "Arjuna": 41
+        },
+        "first": "\"Vaisampayana said, 'The ruler of Manipura, Vabhruvahana, hearing that his sire Arjuna had arrived within his dominions, went out with humility, with a number of Brahmanas and some treasure in his van.[194] Remembering, ",
+        "verified": true
+      }
     },
     {
       "id": "mongoose",
@@ -1171,14 +2020,26 @@
       ],
       "sections": [
         "XC",
-        "XC"
+        "XCII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The half-golden mongoose"
-      ]
+      ],
+      "mapping": {
+        "book": 14,
+        "range": [
+          "XC",
+          "XCII"
+        ],
+        "keys": {
+          "mongoose": 13
+        },
+        "first": "\"Janamejaya said, 'It behoveth thee to tell me of any wonderful incident that occurred in the sacrifice of my grandsires.' \"Vaisampayana said, 'Hear, O chief of kings of a most wonderful incident that occurred, O puissan",
+        "verified": true
+      }
     },
     {
       "id": "elders-forest",
@@ -1189,15 +2050,27 @@
         "elders"
       ],
       "sections": [
-        "III",
-        "III"
+        "I",
+        "XXVIII"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The elders’ last forest"
-      ]
+      ],
+      "mapping": {
+        "book": 15,
+        "range": [
+          "I",
+          "XXVIII"
+        ],
+        "keys": {
+          "forest": 29
+        },
+        "first": "(Asramavasa Parva) OM! AFTER HAVING bowed down to Narayana, and Nara, the foremost of men, and unto the goddess Saraswati also, must the word Jaya be uttered. \"Janamejaya said, 'After having acquired their kingdom, how d",
+        "verified": true
+      }
     },
     {
       "id": "samba-pestle",
@@ -1207,13 +2080,29 @@
         "Samba",
         "pestle"
       ],
-      "sections": null,
+      "sections": [
+        "1",
+        "4"
+      ],
       "parts": 1,
       "notInSource": [],
       "status": "unmapped",
       "partTitles": [
         "Samba and the iron pestle"
-      ]
+      ],
+      "mapping": {
+        "book": 16,
+        "range": [
+          "1",
+          "4"
+        ],
+        "keys": {
+          "Samva": 6,
+          "bolt": 13
+        },
+        "first": "Om! Having bowed down unto Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word \"Jaya\" be uttered. \"Vaishampayana said: 'When the thirty-sixth year (after the battle) was reached,",
+        "verified": true
+      }
     },
     {
       "id": "yadava-end",
@@ -1223,15 +2112,27 @@
         "Yadavas"
       ],
       "sections": [
-        "2",
-        "2"
+        "5",
+        "8"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The end of the Yadavas"
-      ]
+      ],
+      "mapping": {
+        "book": 16,
+        "range": [
+          "5",
+          "8"
+        ],
+        "keys": {
+          "Yadavas": 1
+        },
+        "first": "\"Vaishampayana said: 'Meanwhile Daruka, going to the Kurus and seeing those mighty car-warriors, the son of Pritha, informed them of how the Vrishnis had slain one another with iron bolts. Hearing that the Vrishnis along",
+        "verified": true
+      }
     },
     {
       "id": "krishna-jara",
@@ -1241,15 +2142,28 @@
         "Jara"
       ],
       "sections": [
-        "1",
-        "1"
+        "3",
+        "6"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Krishna and the hunter Jara"
-      ]
+      ],
+      "mapping": {
+        "book": 16,
+        "range": [
+          "3",
+          "6"
+        ],
+        "keys": {
+          "Krishna": 17,
+          "Jara": 2
+        },
+        "first": "\"Vaishampayana said: 'At that time the Vrishni ladies dreamed every night that a woman of black complexion and white teeth, entering their abodes, laughed aloud and ran through Dwaraka, snatching from them the auspicious",
+        "verified": true
+      }
     },
     {
       "id": "dwarka-sea",
@@ -1258,13 +2172,29 @@
       "keywords": [
         "Dwarka"
       ],
-      "sections": null,
+      "sections": [
+        "7",
+        "8"
+      ],
       "parts": 1,
       "notInSource": [],
       "status": "unmapped",
       "partTitles": [
         "Dwarka and the sea"
-      ]
+      ],
+      "mapping": {
+        "book": 16,
+        "range": [
+          "7",
+          "8"
+        ],
+        "keys": {
+          "Arjuna": 18,
+          "sea": 1
+        },
+        "first": "\"Vaishampayana said: 'That scorcher of foes, Vibhatsu, thus addressed by his maternal uncle, replied, with great cheerlessness of heart, unto Vasudeva who was equally cheerless, saying, \"O uncle, I am unable to look at t",
+        "verified": true
+      }
     },
     {
       "id": "great-journey-dog",
@@ -1276,14 +2206,27 @@
       ],
       "sections": [
         "1",
-        "1"
+        "3"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "The great journey and the dog"
-      ]
+      ],
+      "mapping": {
+        "book": 17,
+        "range": [
+          "1",
+          "3"
+        ],
+        "keys": {
+          "Yudhishthira": 28,
+          "dog": 14
+        },
+        "first": "Om! Having bowed down unto Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word \"Jaya\" be uttered. \"Janamejaya said: 'Having heard of that encounter with iron bolts between the he",
+        "verified": true
+      }
     },
     {
       "id": "yudhishthira-test",
@@ -1294,14 +2237,26 @@
       ],
       "sections": [
         "1",
-        "1"
+        "6"
       ],
       "parts": 1,
       "notInSource": [],
       "status": "mapped",
       "partTitles": [
         "Yudhishthira’s last test"
-      ]
+      ],
+      "mapping": {
+        "book": 18,
+        "range": [
+          "1",
+          "6"
+        ],
+        "keys": {
+          "Yudhishthira": 30
+        },
+        "first": "Om! Having bowed down into Narayana, and to Nara, the foremost of men, as also to the goddess Sarasvati, should the word \"Jaya\" be uttered. \"Janamejaya said, 'Having attained to Heaven, what regions were respectively att",
+        "verified": true
+      }
     }
   ]
 }
