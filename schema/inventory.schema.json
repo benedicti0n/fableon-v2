@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fableon.local/schema/inventory.schema.json",
+  "title": "Episode inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "episodes"],
+  "properties": {
+    "version": { "const": 1 },
+    "episodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "places", "characters", "animals", "vehicles", "props", "actions", "effects", "sounds", "sensitive"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "places": { "type": "array", "items": { "$ref": "#/$defs/Place" } },
+          "characters": { "type": "array", "items": { "$ref": "#/$defs/Character" } },
+          "animals": { "type": "array", "items": { "$ref": "#/$defs/Need" } },
+          "vehicles": { "type": "array", "items": { "$ref": "#/$defs/Need" } },
+          "props": { "type": "array", "items": { "$ref": "#/$defs/Need" } },
+          "actions": { "type": "array", "items": { "$ref": "#/$defs/Need" } },
+          "effects": { "type": "array", "items": { "$ref": "#/$defs/Need" } },
+          "crowd": { "type": "string", "maxLength": 120 },
+          "sounds": { "type": "array", "items": { "type": "string", "maxLength": 120 } },
+          "sensitive": { "type": "array", "items": { "$ref": "#/$defs/Sensitive" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Need": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "mustShow"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "mustShow": { "type": "boolean" },
+        "note": { "type": "string", "maxLength": 160 }
+      }
+    },
+    "Place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "timeOfDay", "mustShow"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "timeOfDay": { "enum": ["day", "golden", "dusk", "night", "dawn", "interior"] },
+        "mustShow": { "type": "boolean" },
+        "note": { "type": "string", "maxLength": 160 }
+      }
+    },
+    "Character": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "speaking", "mustShow"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["human", "divine", "demon", "sage", "animal", "hybrid"] },
+        "traits": { "type": "array", "items": { "type": "string", "maxLength": 80 } },
+        "mustHave": { "type": "array", "items": { "type": "string", "maxLength": 80 } },
+        "speaking": { "type": "boolean" },
+        "mustShow": { "type": "boolean" },
+        "note": { "type": "string", "maxLength": 160 }
+      }
+    },
+    "Sensitive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["moment", "treatment"],
+      "properties": {
+        "moment": { "type": "string", "minLength": 1 },
+        "treatment": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

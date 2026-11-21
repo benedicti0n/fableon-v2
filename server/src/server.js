@@ -139,6 +139,17 @@ export async function createServer({ root = join(ROOT, 'work'), token = newToken
   app.get('/api/health', async () => ({ ok: true, pid: process.pid, uptime: process.uptime(), root: projectRoot, version: '0.1.0' }));
   app.get('/api/doctor', async () => doctor());
 
+  app.get('/api/catalog', async () => {
+    const read = (rel, fallback) => { try { return JSON.parse(readFileSync(join(ROOT, rel), 'utf8')); } catch { return fallback; } };
+    return {
+      catalog: read('schema/catalog.json', {}),
+      episodes: read('docs/catalog/episodes.json', { episodes: [] }),
+      census: read('docs/catalog/census.json', { rows: [], build: [], matrix: {} }),
+      sheets: ['docs/reports/phase-7/kit-sheet.jpg', 'docs/reports/phase-7/animals-sheet.jpg'].filter((f) => existsSync(join(ROOT, f))),
+      censusMarkdown: existsSync(join(ROOT, 'docs/catalog/census.md')) ? readFileSync(join(ROOT, 'docs/catalog/census.md'), 'utf8') : '',
+    };
+  });
+
   app.get('/api/projects', async () => ({ projects: P.listProjects(projectRoot), root: projectRoot }));
   app.post('/api/projects', async (req, reply) => {
     const ctx = P.createProject(projectRoot, req.body ?? {});

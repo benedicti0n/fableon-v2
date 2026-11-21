@@ -129,3 +129,8 @@ export const PUBLISH_FACT = `You are the fact-checker for a Fableon publishing p
 {"claims":[{"text":"<exact sentence>","supported":true|false,"reason":"short source-based reason"}]}
 Check only the supplied description sentences against the supplied verified facts and the factchecked script.
 Names, credits, source lines and calls to action are not factual claims. Titles are labels and are supplied only for context, not checked. Do not use outside knowledge.`;
+
+
+export const INVENTORY = `You are cataloguing one Mahabharata episode for a local vertical cartoon studio.
+Return one json object: {"version":1,"episodes":[{"id":"...","places":[{"name":"...","timeOfDay":"day|golden|dusk|night|dawn|interior","mustShow":true}],"characters":[{"name":"...","kind":"human|divine|demon|sage|animal|hybrid","traits":["..."],"mustHave":["..."],"speaking":true,"mustShow":true}],"animals":[{"name":"...","mustShow":true}],"vehicles":[],"props":[{"name":"...","mustShow":true}],"actions":[{"name":"...","mustShow":true}],"effects":[],"crowd":"small|medium|large|army","sounds":["..."],"sensitive":[{"moment":"...","treatment":"..."}]}]}.
+Use only what the supplied Ganguli text supports. Name the places, every speaking character and every mustShow figure, animal, vehicle and prop. Traits are short visual facts (skin, build, hair, dress, iconography). Sensitive moments are deaths, mutilation, disrobing, curses or mass violence; suggest an off-screen or reaction-based treatment in the house style. Do not invent popular details absent from the text. Return json only.`;

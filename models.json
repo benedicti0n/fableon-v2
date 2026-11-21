@@ -232,6 +232,29 @@
           "maxTokens": 12000
         }
       ]
+    },
+    "inventory": {
+      "primary": {
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0.2,
+        "maxTokens": 16000
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.1-flash-lite",
+          "temperature": 0.2,
+          "maxTokens": 16000
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-v4-pro",
+          "temperature": 0.2,
+          "maxTokens": 16000
+        }
+      ]
     }
   },
   "timeoutMs": 120000,

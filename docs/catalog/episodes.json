@@ -1,0 +1,1307 @@
+{
+  "version": 1,
+  "source": "K. M. Ganguli, The Mahabharata, Books 1-18 (public domain)",
+  "episodes": [
+    {
+      "id": "janamejaya-snake-sacrifice",
+      "title": "Janamejaya’s snake sacrifice",
+      "book": 1,
+      "keywords": [
+        "Janamejaya",
+        "sarpasattra",
+        "snake sacrifice"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Janamejaya’s snake sacrifice"
+      ]
+    },
+    {
+      "id": "bhima-naga",
+      "title": "Bhima in the Naga realm",
+      "book": 1,
+      "keywords": [
+        "Naga",
+        "Nagas",
+        "Bhima"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima in the Naga realm"
+      ]
+    },
+    {
+      "id": "kauravas-birth",
+      "title": "The birth of the Kauravas",
+      "book": 1,
+      "keywords": [
+        "Gandhari",
+        "hundred sons",
+        "Kauravas"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The birth of the Kauravas"
+      ]
+    },
+    {
+      "id": "drona-ball-well",
+      "title": "Drona and the ball in the well",
+      "book": 1,
+      "keywords": [
+        "ball",
+        "well",
+        "Drona"
+      ],
+      "sections": [
+        "CXV",
+        "CXV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Drona and the ball in the well"
+      ]
+    },
+    {
+      "id": "bird-eye-test",
+      "title": "The bird’s eye test",
+      "book": 1,
+      "keywords": [
+        "bird",
+        "eye",
+        "Drona"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The bird’s eye test"
+      ]
+    },
+    {
+      "id": "ekalavya",
+      "title": "Ekalavya",
+      "book": 1,
+      "keywords": [
+        "Ekalavya"
+      ],
+      "sections": [
+        "LXVII",
+        "LXVII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Ekalavya"
+      ]
+    },
+    {
+      "id": "karna-tournament",
+      "title": "Karna at the tournament",
+      "book": 1,
+      "keywords": [
+        "Karna",
+        "tournament"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Karna at the tournament"
+      ]
+    },
+    {
+      "id": "house-of-lac",
+      "title": "The house of lac",
+      "book": 1,
+      "keywords": [
+        "house of lac",
+        "lac"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The house of lac"
+      ]
+    },
+    {
+      "id": "hidimba",
+      "title": "Hidimba",
+      "book": 1,
+      "keywords": [
+        "Hidimba"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Hidimba"
+      ]
+    },
+    {
+      "id": "draupadi-swayamvara",
+      "title": "Draupadi’s swayamvara",
+      "book": 1,
+      "keywords": [
+        "swayamvara",
+        "Draupadi"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Draupadi’s swayamvara"
+      ]
+    },
+    {
+      "id": "arjuna-ulupi",
+      "title": "Arjuna and Ulupi",
+      "book": 1,
+      "keywords": [
+        "Ulupi"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Arjuna and Ulupi"
+      ]
+    },
+    {
+      "id": "arjuna-subhadra",
+      "title": "Arjuna and Subhadra",
+      "book": 1,
+      "keywords": [
+        "Subhadra"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Arjuna and Subhadra"
+      ]
+    },
+    {
+      "id": "khandava-fire",
+      "title": "The Khandava forest fire",
+      "book": 1,
+      "keywords": [
+        "Khandava",
+        "fire"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The Khandava forest fire"
+      ]
+    },
+    {
+      "id": "parikshit-takshaka",
+      "title": "Parikshit and Takshaka",
+      "book": 1,
+      "keywords": [
+        "Parikshit",
+        "Takshaka"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Parikshit and Takshaka"
+      ]
+    },
+    {
+      "id": "shakuntala-dushyanta",
+      "title": "Shakuntala and Dushyanta",
+      "book": 1,
+      "keywords": [
+        "Sakuntala",
+        "Shakuntala",
+        "Dushyanta"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Shakuntala and Dushyanta"
+      ]
+    },
+    {
+      "id": "maya-hall",
+      "title": "Maya builds the assembly hall",
+      "book": 2,
+      "keywords": [
+        "Maya",
+        "assembly"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Maya builds the assembly hall"
+      ]
+    },
+    {
+      "id": "bhima-jarasandha",
+      "title": "Bhima and Jarasandha",
+      "book": 2,
+      "keywords": [
+        "Jarasandha"
+      ],
+      "sections": [
+        "XIV",
+        "XIV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima and Jarasandha"
+      ]
+    },
+    {
+      "id": "shishupala-insults",
+      "title": "Shishupala’s hundred insults",
+      "book": 2,
+      "keywords": [
+        "Sisupala",
+        "Shishupala"
+      ],
+      "sections": [
+        "IV",
+        "IV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Shishupala’s hundred insults"
+      ]
+    },
+    {
+      "id": "duryodhana-illusion",
+      "title": "Duryodhana in the hall of illusions",
+      "book": 2,
+      "keywords": [
+        "hall of illusions",
+        "illusion"
+      ],
+      "sections": [
+        "XI",
+        "XI"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Duryodhana in the hall of illusions"
+      ]
+    },
+    {
+      "id": "dice-game",
+      "title": "The dice game",
+      "book": 2,
+      "keywords": [
+        "dice",
+        "Sakuni"
+      ],
+      "sections": [
+        "XLVII",
+        "XLVII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The dice game"
+      ]
+    },
+    {
+      "id": "draupadi-assembly",
+      "title": "Draupadi in the assembly",
+      "book": 2,
+      "keywords": [
+        "Draupadi",
+        "assembly"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Draupadi in the assembly"
+      ]
+    },
+    {
+      "id": "bhima-vows",
+      "title": "Bhima’s vows",
+      "book": 2,
+      "keywords": [
+        "Bhima",
+        "vow"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima’s vows"
+      ]
+    },
+    {
+      "id": "second-game-exile",
+      "title": "The second game and the exile",
+      "book": 2,
+      "keywords": [
+        "second",
+        "exile"
+      ],
+      "sections": [
+        "V",
+        "V"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The second game and the exile"
+      ]
+    },
+    {
+      "id": "akshaya-patra-durvasa",
+      "title": "The akshaya patra and Durvasa’s visit",
+      "book": 3,
+      "keywords": [
+        "akshaya",
+        "Durvasa"
+      ],
+      "sections": [
+        "LXXXIV",
+        "LXXXIV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The akshaya patra and Durvasa’s visit"
+      ]
+    },
+    {
+      "id": "arjuna-kirata",
+      "title": "Arjuna and the Kirata",
+      "book": 3,
+      "keywords": [
+        "Kirata"
+      ],
+      "sections": [
+        "XXXIX",
+        "XXXIX"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Arjuna and the Kirata"
+      ]
+    },
+    {
+      "id": "arjuna-heaven",
+      "title": "Arjuna in Indra’s heaven",
+      "book": 3,
+      "keywords": [
+        "heaven",
+        "Indra"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Arjuna in Indra’s heaven"
+      ]
+    },
+    {
+      "id": "bhima-hanuman",
+      "title": "Bhima meets Hanuman",
+      "book": 3,
+      "keywords": [
+        "Hanuman"
+      ],
+      "sections": [
+        "CXLV",
+        "CXLV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima meets Hanuman"
+      ]
+    },
+    {
+      "id": "saugandhika",
+      "title": "The Saugandhika lotus",
+      "book": 3,
+      "keywords": [
+        "Saugandhika"
+      ],
+      "sections": [
+        "LXXXIV",
+        "LXXXIV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The Saugandhika lotus"
+      ]
+    },
+    {
+      "id": "nahusha-python",
+      "title": "Nahusha the python",
+      "book": 3,
+      "keywords": [
+        "Nahusha",
+        "python"
+      ],
+      "sections": [
+        "III",
+        "III"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Nahusha the python"
+      ]
+    },
+    {
+      "id": "jayadratha-abduction",
+      "title": "Jayadratha’s abduction of Draupadi",
+      "book": 3,
+      "keywords": [
+        "Jayadratha"
+      ],
+      "sections": [
+        "CCLXII",
+        "CCLXII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Jayadratha’s abduction of Draupadi"
+      ]
+    },
+    {
+      "id": "karna-armour",
+      "title": "Karna gives away his armour",
+      "book": 3,
+      "keywords": [
+        "armour",
+        "Karna"
+      ],
+      "sections": [
+        "XXXII",
+        "XXXII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Karna gives away his armour"
+      ]
+    },
+    {
+      "id": "yaksha-questions",
+      "title": "The Yaksha’s questions",
+      "book": 3,
+      "keywords": [
+        "Yaksha"
+      ],
+      "sections": [
+        "XXXIX",
+        "XXXIX"
+      ],
+      "parts": 2,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The Yaksha’s questions · part 1",
+        "The Yaksha’s questions · part 2"
+      ]
+    },
+    {
+      "id": "nala-damayanti",
+      "title": "Nala and Damayanti",
+      "book": 3,
+      "keywords": [
+        "Nala",
+        "Damayanti"
+      ],
+      "sections": [
+        "LII",
+        "LII"
+      ],
+      "parts": 2,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Nala and Damayanti · part 1",
+        "Nala and Damayanti · part 2"
+      ]
+    },
+    {
+      "id": "weapons-shami",
+      "title": "The weapons in the shami tree",
+      "book": 4,
+      "keywords": [
+        "shami",
+        "weapons"
+      ],
+      "sections": [
+        "II",
+        "II"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The weapons in the shami tree"
+      ]
+    },
+    {
+      "id": "bhima-cook-jimuta",
+      "title": "Bhima the cook and the wrestler Jimuta",
+      "book": 4,
+      "keywords": [
+        "Jimuta",
+        "cook"
+      ],
+      "sections": [
+        "XIII",
+        "XIII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima the cook and the wrestler Jimuta"
+      ]
+    },
+    {
+      "id": "kichaka",
+      "title": "Kichaka",
+      "book": 4,
+      "keywords": [
+        "Kichaka"
+      ],
+      "sections": [
+        "XIV",
+        "XIV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Kichaka"
+      ]
+    },
+    {
+      "id": "brihannala-uttara-cattle",
+      "title": "Brihannala, Uttara and the cattle raid",
+      "book": 4,
+      "keywords": [
+        "Brihannala",
+        "cattle"
+      ],
+      "sections": [
+        "X",
+        "X"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Brihannala, Uttara and the cattle raid"
+      ]
+    },
+    {
+      "id": "arjuna-duryodhana-krishna",
+      "title": "Arjuna and Duryodhana at Krishna’s bedside",
+      "book": 5,
+      "keywords": [
+        "bedside",
+        "Krishna"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Arjuna and Duryodhana at Krishna’s bedside"
+      ]
+    },
+    {
+      "id": "shalya-hospitality",
+      "title": "Shalya won over by hospitality",
+      "book": 5,
+      "keywords": [
+        "Shalya",
+        "hospitality"
+      ],
+      "sections": [
+        "LXI",
+        "LXI"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Shalya won over by hospitality"
+      ]
+    },
+    {
+      "id": "amba-vow",
+      "title": "Amba’s vow",
+      "book": 5,
+      "keywords": [
+        "Amba",
+        "amba"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "Amba’s vow"
+      ]
+    },
+    {
+      "id": "krishna-peace-cosmic",
+      "title": "Krishna’s peace mission and the cosmic form",
+      "book": 5,
+      "keywords": [
+        "peace",
+        "cosmic"
+      ],
+      "sections": [
+        "V",
+        "V"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Krishna’s peace mission and the cosmic form"
+      ]
+    },
+    {
+      "id": "kunti-karna",
+      "title": "Kunti and Karna",
+      "book": 5,
+      "keywords": [
+        "Kunti",
+        "Karna"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Kunti and Karna"
+      ]
+    },
+    {
+      "id": "krishna-offer-karna",
+      "title": "Krishna’s offer to Karna",
+      "book": 5,
+      "keywords": [
+        "Krishna",
+        "Karna"
+      ],
+      "sections": [
+        "I",
+        "I"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Krishna’s offer to Karna"
+      ]
+    },
+    {
+      "id": "conches",
+      "title": "The conches",
+      "book": 6,
+      "keywords": [
+        "conch",
+        "conches"
+      ],
+      "sections": [
+        "XXV",
+        "XXV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The conches"
+      ]
+    },
+    {
+      "id": "gita-cosmic",
+      "title": "The Gita and the cosmic form",
+      "book": 6,
+      "keywords": [
+        "Gita",
+        "cosmic"
+      ],
+      "sections": [
+        "XIII",
+        "XIII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The Gita and the cosmic form"
+      ]
+    },
+    {
+      "id": "yudhishthira-blessings",
+      "title": "Yudhishthira asks the elders’ blessings",
+      "book": 6,
+      "keywords": [
+        "blessings",
+        "elders"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "Yudhishthira asks the elders’ blessings"
+      ]
+    },
+    {
+      "id": "krishna-wheel",
+      "title": "Krishna takes up the wheel",
+      "book": 6,
+      "keywords": [
+        "wheel",
+        "Krishna"
+      ],
+      "sections": [
+        "III",
+        "III"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Krishna takes up the wheel"
+      ]
+    },
+    {
+      "id": "bhishma-fall",
+      "title": "Bhishma’s fall and the bed of arrows",
+      "book": 6,
+      "keywords": [
+        "bed of arrows",
+        "Bhishma"
+      ],
+      "sections": [
+        "XIII",
+        "XIII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhishma’s fall and the bed of arrows"
+      ]
+    },
+    {
+      "id": "abhimanyu-chakravyuha",
+      "title": "Abhimanyu in the chakravyuha",
+      "book": 7,
+      "keywords": [
+        "Abhimanyu",
+        "chakravyuha"
+      ],
+      "sections": [
+        "X",
+        "X"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Abhimanyu in the chakravyuha"
+      ]
+    },
+    {
+      "id": "jayadratha-false-sunset",
+      "title": "Jayadratha and the false sunset",
+      "book": 7,
+      "keywords": [
+        "Jayadratha",
+        "sunset"
+      ],
+      "sections": [
+        "XIV",
+        "XIV"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Jayadratha and the false sunset"
+      ]
+    },
+    {
+      "id": "ghatotkacha-night",
+      "title": "Ghatotkacha’s night and Karna’s spear",
+      "book": 7,
+      "keywords": [
+        "Ghatotkacha"
+      ],
+      "sections": [
+        "VIII",
+        "VIII"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Ghatotkacha’s night and Karna’s spear"
+      ]
+    },
+    {
+      "id": "ashwatthama-dead",
+      "title": "“Ashwatthama is dead”",
+      "book": 7,
+      "keywords": [
+        "Aswatthama",
+        "Ashwatthama"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "“Ashwatthama is dead”"
+      ]
+    },
+    {
+      "id": "bhima-dushasana",
+      "title": "Bhima and Dushasana",
+      "book": 8,
+      "keywords": [
+        "Duhshasana",
+        "Dushasana"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhima and Dushasana"
+      ]
+    },
+    {
+      "id": "karna-wheel",
+      "title": "Karna’s wheel",
+      "book": 8,
+      "keywords": [
+        "wheel",
+        "Karna"
+      ],
+      "sections": [
+        "9",
+        "9"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Karna’s wheel"
+      ]
+    },
+    {
+      "id": "duryodhana-lake",
+      "title": "Duryodhana in the lake",
+      "book": 9,
+      "keywords": [
+        "lake",
+        "Duryodhana"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Duryodhana in the lake"
+      ]
+    },
+    {
+      "id": "mace-duel",
+      "title": "The mace duel",
+      "book": 9,
+      "keywords": [
+        "mace",
+        "duel"
+      ],
+      "sections": [
+        "3",
+        "3"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The mace duel"
+      ]
+    },
+    {
+      "id": "owl-crows-night-raid",
+      "title": "The owl and the crows, the night raid",
+      "book": 10,
+      "keywords": [
+        "owl",
+        "crows"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The owl and the crows, the night raid"
+      ]
+    },
+    {
+      "id": "ashwatthama-gem",
+      "title": "Ashwatthama’s gem",
+      "book": 10,
+      "keywords": [
+        "Ashwatthama",
+        "gem"
+      ],
+      "sections": [
+        "11",
+        "11"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Ashwatthama’s gem"
+      ]
+    },
+    {
+      "id": "dhritarashtra-iron-bhima",
+      "title": "Dhritarashtra and the iron Bhima",
+      "book": 11,
+      "keywords": [
+        "iron",
+        "Bhima"
+      ],
+      "sections": [
+        "12",
+        "12"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Dhritarashtra and the iron Bhima"
+      ]
+    },
+    {
+      "id": "gandhari-curse",
+      "title": "Gandhari’s curse",
+      "book": 11,
+      "keywords": [
+        "Gandhari"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Gandhari’s curse"
+      ]
+    },
+    {
+      "id": "bhishma-teachings",
+      "title": "Bhishma’s teachings from the bed of arrows",
+      "book": 12,
+      "keywords": [
+        "Bhishma"
+      ],
+      "sections": [
+        "IV",
+        "IV"
+      ],
+      "parts": 2,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Bhishma’s teachings from the bed of arrows · part 1",
+        "Bhishma’s teachings from the bed of arrows · part 2"
+      ]
+    },
+    {
+      "id": "arjuna-babruvahana",
+      "title": "Arjuna and Babruvahana",
+      "book": 14,
+      "keywords": [
+        "Babruvahana"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "Arjuna and Babruvahana"
+      ]
+    },
+    {
+      "id": "mongoose",
+      "title": "The half-golden mongoose",
+      "book": 14,
+      "keywords": [
+        "mongoose"
+      ],
+      "sections": [
+        "XC",
+        "XC"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The half-golden mongoose"
+      ]
+    },
+    {
+      "id": "elders-forest",
+      "title": "The elders’ last forest",
+      "book": 15,
+      "keywords": [
+        "forest",
+        "elders"
+      ],
+      "sections": [
+        "III",
+        "III"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The elders’ last forest"
+      ]
+    },
+    {
+      "id": "samba-pestle",
+      "title": "Samba and the iron pestle",
+      "book": 16,
+      "keywords": [
+        "Samba",
+        "pestle"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "Samba and the iron pestle"
+      ]
+    },
+    {
+      "id": "yadava-end",
+      "title": "The end of the Yadavas",
+      "book": 16,
+      "keywords": [
+        "Yadavas"
+      ],
+      "sections": [
+        "2",
+        "2"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The end of the Yadavas"
+      ]
+    },
+    {
+      "id": "krishna-jara",
+      "title": "Krishna and the hunter Jara",
+      "book": 16,
+      "keywords": [
+        "Jara"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Krishna and the hunter Jara"
+      ]
+    },
+    {
+      "id": "dwarka-sea",
+      "title": "Dwarka and the sea",
+      "book": 16,
+      "keywords": [
+        "Dwarka"
+      ],
+      "sections": null,
+      "parts": 1,
+      "notInSource": [],
+      "status": "unmapped",
+      "partTitles": [
+        "Dwarka and the sea"
+      ]
+    },
+    {
+      "id": "great-journey-dog",
+      "title": "The great journey and the dog",
+      "book": 17,
+      "keywords": [
+        "journey",
+        "dog"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "The great journey and the dog"
+      ]
+    },
+    {
+      "id": "yudhishthira-test",
+      "title": "Yudhishthira’s last test",
+      "book": 18,
+      "keywords": [
+        "Yudhishthira"
+      ],
+      "sections": [
+        "1",
+        "1"
+      ],
+      "parts": 1,
+      "notInSource": [],
+      "status": "mapped",
+      "partTitles": [
+        "Yudhishthira’s last test"
+      ]
+    }
+  ]
+}

@@ -12,6 +12,8 @@ import { compileCommand } from './compile.js';
 import { framesCommand } from './frames.js';
 import { schemaCommand } from './schema.js';
 import { catalogCardCommand } from './catalog-card.js';
+import { estimateInventory, runInventory } from './inventory.js';
+import { writeCensus } from './census.js';
 import { reviewCommand } from './review.js';
 import { newCommand, statusCommand, approveCommand } from './core/commands.js';
 import { runCommand } from './run-command.js';
@@ -154,6 +156,26 @@ export function main(argv = process.argv) {
     .requiredOption('--project <dir>', 'project folder')
     .option('--notes <text>', 'director notes; reruns the shot-plan stage with them')
     .action(async (opts) => { try { await shotplanCommand(opts.project, opts); } catch (e) { console.error(`fableon: ${e.message}`); process.exit(1); } });
+
+  program
+    .command('inventory')
+    .description('estimate and run the episode inventory model op')
+    .option('--episodes <list>', 'comma-separated episode ids')
+    .option('--run', 'run the model after estimating')
+    .option('--no-cache', 'bypass the model cache')
+    .action(async (opts) => {
+      try {
+        const ids = opts.episodes ? String(opts.episodes).split(',').map((s) => s.trim()).filter(Boolean) : null;
+        if (!opts.run) { const e = estimateInventory(ids); console.log(`inventory estimate: ${e.episodes.length} episodes, $${e.totalUsd} (${e.model}); run with --run`); return; }
+        const r = await runInventory({ ids, noCache: opts.cache === false });
+        console.log(`inventory: ${r.inventory.episodes.length} episodes, estimate $${r.estimate.totalUsd}; docs/catalog/inventory.json`);
+      } catch (e) { printError(e); process.exit(1); }
+    });
+
+  program
+    .command('census')
+    .description('match the inventory to the catalog and write docs/catalog/census.md')
+    .action(() => { try { const d = writeCensus(); console.log(`census: ${d.rows.length} episodes, ${d.rows.filter((r) => r.stageable).length} stageable; docs/catalog/census.md`); } catch (e) { printError(e); process.exit(1); } });
 
   program
     .command('export')

@@ -79,6 +79,14 @@ export const OPS = [
     argsSchema: obj({ ...proj, frames: str, shots: str, quality: str, look: { type: 'object' }, tag: str, compare: bool }, ['project']), outputs: ['stills/'],
   },
   {
+    name: 'inventory', description: 'estimate and run the episode inventory model op', kind: 'job', heavy: true, cancellable: true,
+    argsSchema: obj({ episodes: { type: 'array', items: str }, estimate: bool, run: bool, noCache: bool }), outputs: ['docs/catalog/inventory.json'],
+  },
+  {
+    name: 'census', description: 'match the inventory to the catalog and write the census', kind: 'job', heavy: false, cancellable: false,
+    argsSchema: obj({}), outputs: ['docs/catalog/census.md'],
+  },
+  {
     name: 'export', description: 'create the upload package', kind: 'job', heavy: false, cancellable: true,
     argsSchema: obj({ ...proj, profiles: str }, ['project']), outputs: ['exports/'],
   },
@@ -150,6 +158,8 @@ export function opArgv(name, args = {}) {
     case 'lookcheck': return ['lookcheck', ...addProject([...(args.video ? ['--video', args.video] : [])])];
     case 'review': return ['review', ...addProject([...(args.compare ? ['--compare', args.compare] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.out ? ['--out', args.out] : []), ...(args.coverage ? ['--coverage'] : []), ...(args.split ? ['--split'] : [])])];
     case 'stills': return ['stills', ...addProject([...(args.frames ? ['--frames', args.frames] : []), ...(args.shots ? ['--shots', args.shots] : []), ...(args.quality ? ['--quality', args.quality] : []), ...(args.look ? ['--look', typeof args.look === 'string' ? args.look : JSON.stringify(args.look)] : []), ...(args.tag ? ['--tag', args.tag] : []), ...(args.compare ? ['--compare'] : [])])];
+    case 'inventory': return ['inventory', ...(args.episodes?.length ? ['--episodes', args.episodes.join(',')] : []), ...(args.run ? ['--run'] : []), ...(args.noCache ? ['--no-cache'] : [])];
+    case 'census': return ['census'];
     case 'export': return ['export', ...addProject(['--profiles', args.profiles ?? 'youtube-short'])];
     case 'sfx-preview': return ['sfx-preview', ...addProject(['--kind', args.kind, '--seed', String(args.seed ?? 1), '--gain-db', String(args.gainDb ?? 0)])];
     case 'voice-audition': return ['voice', 'audition', ...addProject([...(args.voices != null ? ['--voices', String(args.voices)] : []), ...(args.models ? ['--models', args.models] : []), ...(args.round != null ? ['--round', String(args.round)] : [])])];

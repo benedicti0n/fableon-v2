@@ -28,6 +28,7 @@ const Publish = React.lazy(() => import('./screens/Publish'));
 const Queue = React.lazy(() => import('./screens/Queue'));
 const Presets = React.lazy(() => import('./screens/Presets'));
 const Costs = React.lazy(() => import('./screens/Costs'));
+const Catalog = React.lazy(() => import('./screens/Catalog'));
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: true } } });
 
@@ -86,6 +87,7 @@ function App() {
     <Route path="/queue" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Queue /></main></div>} />
     <Route path="/costs" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Costs /></main></div>} />
     <Route path="/presets" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Presets /></main></div>} />
+    <Route path="/catalog" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Catalog /></main></div>} />
     <Route path="/settings" element={<div className="flex h-full"><LeftRail /><main className="min-w-0 flex-1 overflow-auto px-6 py-6"><Settings /></main></div>} />
     <Route path="/p/:id" element={<Navigate to="brief" replace />} />
     {['brief', 'research', 'script', 'voice', 'cast', 'shotplan', 'board', 'animatic', 'finish', 'publish'].map((stage) => <Route key={stage} path={`/p/:id/${stage}`} element={<ProjectFrame>{stage === 'brief' ? <Brief /> : stage === 'research' ? <Research /> : stage === 'script' ? <Script /> : stage === 'voice' ? <Voice /> : stage === 'cast' ? <Cast /> : stage === 'publish' ? <Publish /> : stage === 'finish' ? <Finish /> : stage === 'board' || stage === 'shotplan' ? <Board /> : <Animatic />}</ProjectFrame>} />)}
