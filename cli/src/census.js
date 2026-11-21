@@ -200,7 +200,7 @@ export function censusMarkdown(data) {
   for (const b of data.build) L.push(`| ${b.key} | ${b.effort} | ${b.help ?? 0} | ${b.unlocks?.length ?? 0} | ${(b.episodes ?? []).slice(0, 12).join(', ') || '—'} |`);
   L.push('', '## Sensitive moments', '', '| episode | moment | treatment |', '|---|---|---|');
   for (const r of data.rows) for (const s of r.sensitive ?? []) L.push(`| ${r.id} | ${clean(s.moment)} | ${clean(s.treatment)} |`);
-  L.push('', '## Expected Phase 7 list', '', '- Kit and animals: built (F4/F5).', '- Royal assembly hall: missing set; high value.', '- Himalayan mountainside: missing set.', '- Forest lake: missing set.', '- Dwarka coast: missing set, runner-up.', '- Kurukshetra: Phase 8, excluded from the Phase 7 build list.');
+  L.push('', '## Phase 7 note', '', '- Kit and animals: built (F4/F5).', '- The agreed Phase 7 candidates are the royal assembly hall, the Himalayan mountainside and the forest lake, with Dwarka as runner-up.', '- The corrected census ranks Dwarka above the lake on raw mustShow (8 episodes vs 5). The final set order remains a product call.', '- Kurukshetra is Phase 8, excluded from the Phase 7 build list.');
   return L.join('\n') + '\n';
 }
 

@@ -1,6 +1,6 @@
 # Episode census
 
-Generated 2026-11-21T11:34:01.833Z. Inventory episodes: 70.
+Generated 2026-11-21T11:40:46.765Z. Inventory episodes: 70.
 
 ## Section mapping
 
@@ -257,11 +257,9 @@ Only mustShow needs are counted here. `unlocks now` means the item is the episod
 | great-journey-dog | Dog's transformation | Show as a magical shimmer |
 | yudhishthira-test | The sinful region | No gore or blood shown, only atmospheric darkness and stench |
 
-## Expected Phase 7 list
+## Phase 7 note
 
 - Kit and animals: built (F4/F5).
-- Royal assembly hall: missing set; high value.
-- Himalayan mountainside: missing set.
-- Forest lake: missing set.
-- Dwarka coast: missing set, runner-up.
-- Kurukshetra: Phase 8, excluded from the Phase 7 build list.
+- The agreed Phase 7 candidates are the royal assembly hall, the Himalayan mountainside and the forest lake, with Dwarka as runner-up.
+- The corrected census ranks Dwarka above the lake on raw mustShow (8 episodes vs 5). The final set order remains a product call.
+- Kurukshetra is Phase 8, excluded from the Phase 7 build list.
