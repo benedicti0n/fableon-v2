@@ -46,7 +46,18 @@ def face_color(im, hb):
     near = (np.abs(q[:, 0] - (k // 400)) <= 1) & (np.abs(q[:, 1] - ((k // 20) % 20)) <= 1) & (np.abs(q[:, 2] - (k % 20)) <= 1)
     return p[near].mean(0)
 
-def main(project):
+def half_color(im, hb, left):
+    h, w, _ = im.shape
+    x0, y0, x1, y1 = hb["x0"] * w, hb["y0"] * h, hb["x1"] * w, hb["y1"] * h
+    xa, xb = (int(x0 + .12 * (x1 - x0)), int(x0 + .45 * (x1 - x0))) if left else (int(x1 - .45 * (x1 - x0)), int(x1 - .12 * (x1 - x0)))
+    ya, yb = int(y0 + .30 * (y1 - y0)), int(y0 + .78 * (y1 - y0))
+    p = im[ya:yb, xa:xb].reshape(-1, 3); lum = p @ np.array([.2126, .7152, .0722]); p = p[(lum > 18) & (lum < 245)]
+    if len(p) < 8: return None
+    q = (p // 12).astype(int); key = q[:, 0] * 400 + q[:, 1] * 20 + q[:, 2]; v, c = np.unique(key, return_counts=True); k = int(v[c.argmax()])
+    near = (np.abs(q[:, 0] - (k // 400)) <= 1) & (np.abs(q[:, 1] - ((k // 20) % 20)) <= 1) & (np.abs(q[:, 2] - (k % 20)) <= 1)
+    return p[near].mean(0)
+
+def main(project, spec_only=False, split=False):
     frames_path = os.path.join(project, "frames.json")
     story_path = os.path.join(project, "storyboard.json")
     if not os.path.exists(frames_path) or not os.path.exists(story_path):
@@ -58,7 +69,7 @@ def main(project):
     hero = next(iter(cast.keys()), None)
     qa = {}
     pp = os.path.join(project, "project.json")
-    if os.path.exists(pp):
+    if os.path.exists(pp) and not spec_only:
         try: qa = json.load(open(pp)).get("qa", {}).get("skin", {}) or {}
         except Exception: qa = {}
     rows, bad = [], 0
@@ -91,10 +102,15 @@ def main(project):
             ok = d <= LIMIT
             rows.append(f"COLOR {sid:20s} frame {tf:5d} side mode rgb {tuple(int(x) for x in rgb)} expected {skin} dE76 {d:5.2f} {'PASS' if ok else 'FAIL'}")
             if not ok: bad += 1
+            if split:
+                l, r = half_color(im, hb, True), half_color(im, hb, False)
+                if l is not None and r is not None and de(l, r) > 12:
+                    rows.append(f"SPLIT {sid:20s} frame {tf:5d} left {tuple(int(x) for x in l)} right {tuple(int(x) for x in r)} dE {de(l, r):5.2f}")
             seen.add(sid)
     print("\n".join(rows) if rows else "COLOR SKIP no sampled faces")
     print(f"COLOR {'PASS' if bad == 0 else 'FAIL'} ({len(rows) - bad}/{len(rows)} faces within dE76 {LIMIT:g})")
     return 0 if bad == 0 else 1
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1] if len(sys.argv) > 1 else "."))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    sys.exit(main(args[0] if args else ".", spec_only="--spec" in sys.argv, split="--split" in sys.argv))

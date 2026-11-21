@@ -151,9 +151,11 @@ export async function runKitTests() {
     const sheet = join(ROOT, 'docs', 'reports', 'phase-7', 'kit-sheet.jpg');
     const animalSheet = join(ROOT, 'docs', 'reports', 'phase-7', 'animals-sheet.jpg');
     const reviewSheet = join(ROOT, 'docs', 'reports', 'phase-7', 'f5-review-1.jpg');
+    const reviewSheet2 = join(ROOT, 'docs', 'reports', 'phase-7', 'f5-review-2.jpg');
     ok('the kit review sheet is committed', existsSync(sheet) && statSync(sheet).size > 100_000, String(existsSync(sheet) ? statSync(sheet).size : 0));
     ok('the animals review sheet is committed', existsSync(animalSheet) && statSync(animalSheet).size > 100_000, String(existsSync(animalSheet) ? statSync(animalSheet).size : 0));
     ok('the F5 review sheet is committed', existsSync(reviewSheet) && statSync(reviewSheet).size > 100_000, String(existsSync(reviewSheet) ? statSync(reviewSheet).size : 0));
+    ok('the F5 follow-up sheet is committed', existsSync(reviewSheet2) && statSync(reviewSheet2).size > 100_000, String(existsSync(reviewSheet2) ? statSync(reviewSheet2).size : 0));
   } catch (e) {
     errors.push(e.message);
   }

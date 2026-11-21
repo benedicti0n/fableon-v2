@@ -1,5 +1,5 @@
 // Project folder helpers: quality presets, input validation and workspace creation.
-import { existsSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
+import { existsSync, readdirSync, mkdirSync, copyFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { ROOT } from './env.js';
 import { FableonError, ERROR_CODES } from './core/errors.js';
@@ -53,5 +53,11 @@ export function initProject(name, from) {
     }
   };
   walk('');
+  const pj = join(dest, 'project.json');
+  if (existsSync(pj)) {
+    const project = JSON.parse(readFileSync(pj, 'utf8'));
+    project.look = { ...(project.look ?? {}), maskFill: true, skinNeutral: true };
+    writeFileSync(pj, JSON.stringify(project, null, 2) + '\n');
+  }
   return { dir: dest, copied: copied.sort(), from: basename(src) };
 }

@@ -335,7 +335,7 @@ export const person = (p: Pen, o: Spec, opts: Opts = {}) => {
     foot(300 + 0.5 * W, sole - 0.02 * HH, 1);
   }
   if (drive) { legLine(curve([300 - 15 * u, hipY], [300 - 0.34 * W, sole - 0.26 * HH], [300 - 0.3 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1)); foot(300 - 0.3 * W, sole - 0.06 * HH, -1); legLine(curve([300 + 15 * u, hipY], [300 + 0.34 * W, sole - 0.26 * HH], [300 + 0.3 * W, sole - 0.06 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + 0.3 * W, sole - 0.06 * HH, 1); }
-  if (ride) { for (const side of [-1, 1]) { legLine(curve([300 + side * 15 * u, hipY], [300 + side * 0.46 * W, sole - 0.2 * HH], [300 + side * 0.36 * W, sole - 0.05 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + side * 0.36 * W, sole - 0.05 * HH, side); } }
+  if (ride) { const side = 1; const leg = curve([300 + side * 15 * u, hipY], [300 + side * 0.46 * W, sole - 0.2 * HH], [300 + side * 0.36 * W, sole - 0.05 * HH]); p.stroke(leg, 12 * u, mix(lowerCol, INK, 0.1)); p.stroke(leg, 12 * u + 2.4 * u, INK); foot(300 + side * 0.36 * W, sole - 0.05 * HH, side); }
   if (pose === "guard") { for (const side of [-1, 1]) { legLine(curve([300 + side * 15 * u, hipY], [300 + side * 0.38 * W, sole - 0.3 * HH], [300 + side * 0.3 * W, sole - 0.05 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + side * 0.3 * W, sole - 0.05 * HH, side); } }
   if (pose === "strike" || pose === "lift") { for (const side of [-1, 1]) { legLine(curve([300 + side * 15 * u, hipY], [300 + side * 0.34 * W, sole - 0.3 * HH], [300 + side * 0.4 * W, sole - 0.05 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + side * 0.4 * W, sole - 0.05 * HH, side); } }
   if (pose === "dance") { legLine(curve([300 - 15 * u, hipY], [300 - 0.22 * W, sole - 0.36 * HH], [300 - 0.18 * W, sole - 0.05 * HH]), mix(lowerCol, INK, 0.1)); foot(300 - 0.18 * W, sole - 0.05 * HH, -1); legLine(curve([300 + 15 * u, hipY], [300 + 0.55 * W, sole - 0.7 * HH], [300 + 0.3 * W, sole - 0.62 * HH]), mix(lowerCol, INK, 0.1)); foot(300 + 0.3 * W, sole - 0.62 * HH, 1); }
@@ -659,15 +659,15 @@ export const horse = (p: Pen, opts: { phase?: number; col?: string; light?: numb
   p.shadedFill(hp, col, dark, light, 67); p.inkRing(hp, 11, thick);
   p.line(curve([650, 350], [700, 310], [748, 286]), dark, 26, false); // mane
   for (const [mx, my] of [[672, 330], [704, 310], [732, 306]]) p.stroke([[mx, my], [mx - 18, my + 16]], 8, dark);
-  p.poly([[754, 256], [746, 210], [782, 236]], col, 8); // near ear
-  p.poly([[754, 240], [760, 218], [774, 238]], "#c98c5c", 3);
-  p.poly([[780, 256], [792, 208], [820, 236]], dark, 7); // far ear
+  p.poly([[752, 226], [744, 180], [780, 206]], col, 8); // near ear
+  p.poly([[752, 210], [758, 188], [772, 208]], "#c98c5c", 3);
+  p.poly([[778, 226], [790, 178], [818, 206]], dark, 7); // far ear
   
-  p.line(curve([820, 260], [842, 270], [854, 290]), dark, 9, false); // forelock
-  p.poly([[840, 276], [918, 296], [910, 324], [830, 306]], col, 8); // long muzzle
-  p.ell(904, 302, 6, 5, mix(dark, INK, 0.5), 0); // nostril
-  p.stroke([[892, 322], [914, 316]], 3, dark); // mouth
-  p.ell(820, 258, 9, 11, WHITE, 0); p.dot(822, 258, 5, INK);
+  p.line(curve([818, 230], [840, 240], [852, 260]), dark, 9, false); // forelock
+  p.poly([[838, 246], [916, 266], [908, 294], [828, 276]], col, 8); // long muzzle
+  p.ell(902, 272, 6, 5, mix(dark, INK, 0.5), 0); // nostril
+  p.stroke([[890, 292], [912, 286]], 3, dark); // mouth
+  p.ell(818, 228, 9, 11, WHITE, 0); p.dot(820, 228, 5, INK);
   p.ell(846, 280, 7, 6, mix(dark, INK, 0.5), 0); // nostril
   p.stroke([[836, 304], [864, 298]], 4, dark); // mouth
   // near legs
@@ -735,10 +735,10 @@ export const cow = (p: Pen, opts: { phase?: number; col?: string; light?: number
   p.shadedFill(body, col, dark, light, 190); p.inkRing(body, 12, thick);
   p.ell(565, 330, 82, 35, col, 10); // hump
   p.line(curve([625, 390], [690, 360], [740, 360]), col, 66, true); // neck
-  const head = blobPts(765, 372, { a: 65, b: 47, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(12), noise: 0.006, seed: 42 });
+  const head = blobPts(765, 372, { a: 82, b: 55, nTop: 2.0, nBot: 2.2, egg: 0.1, asym: 0, rot: rad(12), noise: 0.006, seed: 42 });
   p.shadedFill(head, col, dark, light, 65); p.inkRing(head, 10, thick);
-  p.poly([[742, 340], [738, 300], [758, 320]], "#d9c9a6", 7);
-  p.poly([[784, 336], [802, 298], [808, 326]], "#d9c9a6", 7);
+  for (const s of [-1, 1]) p.stroke(curve([765 + s * 48, 338], [765 + s * 78, 318], [765 + s * 54, 292]), 8, "#d9c9a6");
+  p.ell(722, 382, 20, 12, col, 6); p.ell(808, 382, 20, 12, col, 6);
   p.ell(790, 365, 6, 8, INK, 0); p.ell(814, 390, 6, 5, mix(dark, INK, 0.5), 0);
   p.ell(484, 492, 34, 16, "#f2c0b0", 6); // udder
 };
@@ -765,8 +765,8 @@ export const dog = (p: Pen, opts: { phase?: number; col?: string; light?: number
   p.shadedFill(head, col, dark, light, 62); p.inkRing(head, 10, thick);
   p.ell(684, 396, 20, 34, dark, 7); // floppy near ear
   p.ell(744, 392, 18, 30, dark, 7); // floppy far ear
-  p.poly([[760, 400], [812, 416], [808, 432], [754, 424]], col, 7); // long snout
-  p.ell(806, 416, 6, 5, INK, 0); // nose
+  p.ell(792, 412, 32, 21, col, 7); // short thick muzzle
+  p.ell(817, 412, 8, 7, INK, 0); // black nose
   p.ell(738, 380, 7, 9, INK, 0); p.ell(770, 398, 7, 6, INK, 0);
   p.arc(752, 414, 17, 8, 20, 160, 4, dark);
 };

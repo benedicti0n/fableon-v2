@@ -9245,12 +9245,12 @@
     },
     "horse": {
       "description": "horse animal card",
-      "standing": 0.9418,
-      "seated": 0.9418,
+      "standing": 1.0066,
+      "seated": 1.0066,
       "eye": 0.8489,
       "eyeSeated": 0.8489,
       "head": 0.21,
-      "halfWidth": 0.9094
+      "halfWidth": 0.905
     },
     "elephant": {
       "description": "elephant animal card",
@@ -9263,21 +9263,21 @@
     },
     "cow": {
       "description": "cow animal card",
-      "standing": 0.756,
-      "seated": 0.756,
+      "standing": 0.7603,
+      "seated": 0.7603,
       "eye": 0.594,
       "eyeSeated": 0.594,
       "head": 0.23,
-      "halfWidth": 0.7214
+      "halfWidth": 0.7582
     },
     "calf": {
       "description": "calf animal card",
-      "standing": 0.756,
-      "seated": 0.756,
+      "standing": 0.7603,
+      "seated": 0.7603,
       "eye": 0.594,
       "eyeSeated": 0.594,
       "head": 0.23,
-      "halfWidth": 0.7214
+      "halfWidth": 0.7582
     },
     "dog": {
       "description": "dog animal card",
@@ -9286,7 +9286,7 @@
       "eye": 0.5616,
       "eyeSeated": 0.5616,
       "head": 0.22,
-      "halfWidth": 0.6804
+      "halfWidth": 0.7063
     },
     "monkey": {
       "description": "monkey animal card",
@@ -9843,12 +9843,12 @@
         "rider": [
           0,
           0.86,
-          0
+          -0.12
         ],
         "driver": [
           0,
           0.88,
-          0.12
+          -0.1
         ]
       }
     },
