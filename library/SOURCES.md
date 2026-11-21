@@ -1,3 +1,5 @@
 # Source library
 
 - `karna-tournament.txt` — K. M. Ganguli, *The Mahabharata*, Book 1: Adi Parva, Section CXXXVIII, “Sambhava Parva continued” (Karna enters the tournament). Public domain. Source: https://www.sacred-texts.com/hin/m01/m01139.htm. Retrieved once on 2026-11-20 with a generic local-research user agent, cached to this file; no personal data. The section text is used for the checkpoint short and the later episode census.
+
+- `ganguli/01.txt`–`ganguli/18.txt` — K. M. Ganguli, *The Mahabharata of Krishna-Dwaipayana Vyasa*, Books 1–18 (Adi through Svargarohana), public domain. Source: the plain-text KMG corpus mirrored at https://github.com/rahulnyk/mahabharata (`text/KMGanguli/01.txt` … `18.txt`), itself digitized from sacred-texts.com and Project Gutenberg. Downloaded once on 2026-11-21 with a generic local-research user agent at one request per second; cached locally. Project Gutenberg was unavailable during the download, so the GitHub mirror was used. Licence: public domain (Ganguli, 1883–1896).

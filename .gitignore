@@ -18,3 +18,5 @@ fixtures/*/frames.json
 .fableon/
 
 styles/_incoming/
+
+library/.inventory/
